@@ -226,4 +226,48 @@ describe 'parser' do
     expect(tree[:rules][:object_rule][0][:member_rule][:value_rule][:max]).to eq("100.003")
     expect(tree[:rules][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
   end
+
+  it 'should parse an array rule with rule names' do
+    tree = JCRValidator.parse( 'trule [ my_rule1, my_rule2 ]' )
+    expect(tree[:rules][:rule_name]).to eq("trule")
+    expect(tree[:rules][:array_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
+    expect(tree[:rules][:array_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
+    tree = JCRValidator.parse( 'trule ARRAY my_rule1 AND my_rule2 END_ARRAY' )
+    expect(tree[:rules][:rule_name]).to eq("trule")
+    expect(tree[:rules][:array_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
+    expect(tree[:rules][:array_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
+  end
+
+  it 'should parse an array rule with rule names and repitition' do
+    tree = JCRValidator.parse( 'trule [ 1*2 my_rule1, 1* my_rule2, *3 my_rule3 ]' )
+    expect(tree[:rules][:rule_name]).to eq("trule")
+    expect(tree[:rules][:array_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
+    expect(tree[:rules][:array_rule][0][:repetition_min]).to eq("1")
+    expect(tree[:rules][:array_rule][0][:repetition_max]).to eq("2")
+    expect(tree[:rules][:array_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
+    expect(tree[:rules][:array_rule][1][:repetition_min]).to eq("1")
+    expect(tree[:rules][:array_rule][1][:repetition_max]).to eq("")
+    expect(tree[:rules][:array_rule][2][:target_rule_name][:rule_name]).to eq("my_rule3")
+    expect(tree[:rules][:array_rule][2][:repetition_min]).to eq("")
+    expect(tree[:rules][:array_rule][2][:repetition_max]).to eq("3")
+  end
+
+  it 'should parse an array rule with an object rule' do
+    tree = JCRValidator.parse( 'trule [ my_rule1, { my_rule2 } ]' )
+    expect(tree[:rules][:rule_name]).to eq("trule")
+    expect(tree[:rules][:array_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
+    expect(tree[:rules][:array_rule][1][:object_rule][:target_rule_name][:rule_name]).to eq("my_rule2")
+  end
+
+  it 'should parse an array rule with an object rule and value rule' do
+    tree = JCRValidator.parse( 'trule [ : integer , { my_rule2 } ]' )
+  end
+
+  it 'should parse an array rule with a rulename and an array rule' do
+    tree = JCRValidator.parse( 'trule [ my_rule1 , [ my_rule2 ] ]' )
+  end
+
+  it 'should parse an array rule with a rulename and an array rule with an object rule and value rule' do
+    tree = JCRValidator.parse( 'trule [ my_rule1 , [ : integer, { my_rule2 } ] ]' )
+  end
 end

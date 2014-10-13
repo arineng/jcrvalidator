@@ -67,9 +67,21 @@ module JCRValidator
       spaces? >> object_def ).repeat  >> spaces? >> ( str('}') | str('END_OBJECT') )
       ).as(:object_rule)
     }
-    #rule(:array_rule) { }
-    #rule(:group_rule) { }
-    rule(:rules) { ( rule_name >> spaces? >> ( value_rule | member_rule | object_rule ) ).as(:rules) }
+    rule(:array_repetition) { (p_integer.maybe.as(:repetition_min) >> str('*') >> p_integer.maybe.as(:repetition_max)) |
+      (str('*') >> p_integer.as(:repetition_max))
+    }
+    rule(:array_def)  { array_repetition.maybe >> spaces? >> ( array_rule | object_rule | value_rule | rule_name.as(:target_rule_name) ) }
+    rule(:array_rule) { ( ( str('[') | str('ARRAY') ) >> spaces? >> array_def >> spaces? >>
+      ((str(',') | str('AND')) >> spaces? >> array_def).repeat >> spaces? >> ( str(']') | str('END_ARRAY') ) ).as(:array_rule)
+    }
+    rule(:group_def)  {
+      array_rule | object_rule | value_rule | rule_name.as(:target_rule_name)
+    }
+    rule(:group_rule) { ( ( str('(') | str('GROUP') ) >> spaces? >> gropu_def >>
+      ( spaces? >> ( str(',') | str('/') | str('&') | str('AND') | str('OR') | str('DEPENDS') ) ).repeat >>
+      spaces? >> ( str(')') | str('END_GROUP') ) ).as(:group_rule)
+    }
+    rule(:rules) { ( rule_name >> spaces? >> ( value_rule | member_rule | object_rule | array_rule | group_rule ) ).as(:rules) }
     #rule(:comments) { }
     #rule(:directives) { }
     rule(:top) { rules }
