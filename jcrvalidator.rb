@@ -66,13 +66,17 @@ module JCRValidator
       ( ( str('MEMBER') >> spcCmnt? ).maybe >> str('^').as(:any_member).maybe >> q_string.as(:member_name) >> spcCmnt? >>
         ( value_rule | rule_name.as(:target_rule_name) ) ).as(:member_rule)
     }
-    rule(:object_def ) { str('?').maybe.as(:member_optional) >> spcCmnt? >> ( group_rule | member_rule | rule_name.as(:target_rule_name) ) }
+    rule(:object_repetition) {
+      str('?').as(:member_optional) | ( p_integer.as(:repetition_min) >> str('*') >> p_integer.maybe.as(:repetition_max) ) |
+      ( str('*') >> p_integer.as(:repetition_max) )
+    }
+    rule(:object_def ) { object_repetition.maybe >> spcCmnt? >> ( group_rule | member_rule | rule_name.as(:target_rule_name) ) }
     rule(:object_rule) { ( ( str('{') | str('OBJECT') ) >> spcCmnt? >>
       object_def >> ( spcCmnt? >> ( str(',') | str('/') | str('&' ) | str('AND') | str('OR') | str('DEPENDS') ) >>
       spcCmnt? >> object_def ).repeat  >> spcCmnt? >> ( str('}') | str('END_OBJECT') )
       ).as(:object_rule)
     }
-    rule(:array_repetition) { (p_integer.maybe.as(:repetition_min) >> str('*') >> p_integer.maybe.as(:repetition_max)) |
+    rule(:array_repetition) { (p_integer.as(:repetition_min) >> str('*') >> p_integer.maybe.as(:repetition_max)) |
       (str('*') >> p_integer.as(:repetition_max))
     }
     rule(:array_def)  { array_repetition.maybe >> spcCmnt? >> ( group_rule | array_rule | object_rule | value_rule | rule_name.as(:target_rule_name) ) }
