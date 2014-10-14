@@ -26,8 +26,8 @@
       <file leaf-file-name="jcrvalidator.rb" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/jcrvalidator.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8662614" vertical-offset="675" max-vertical-offset="1995">
-              <caret line="83" column="110" selection-start-line="83" selection-start-column="110" selection-end-line="83" selection-end-column="110" />
+            <state vertical-scroll-proportion="0.75227964" vertical-offset="390" max-vertical-offset="2160">
+              <caret line="59" column="13" selection-start-line="59" selection-start-column="13" selection-end-line="59" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -36,8 +36,8 @@
       <file leaf-file-name="parser_spec.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="3499" max-vertical-offset="4170">
-              <caret line="270" column="75" selection-start-line="270" selection-start-column="75" selection-end-line="270" selection-end-column="75" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="2205" max-vertical-offset="6315">
+              <caret line="177" column="0" selection-start-line="177" selection-start-column="0" selection-end-line="177" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -378,12 +378,12 @@
       <created>1412621077891</created>
       <updated>1412621077891</updated>
       <workItem from="1412621083867" duration="4558000" />
-      <workItem from="1412860748704" duration="23353000" />
+      <workItem from="1412860748704" duration="32786000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="27911000" />
+    <option name="totallyTimeSpent" value="37344000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="22" width="1440" height="817" extended-state="6" />
@@ -453,16 +453,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3499" max-vertical-offset="4170">
-          <caret line="270" column="75" selection-start-line="270" selection-start-column="75" selection-end-line="270" selection-end-column="75" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="2205" max-vertical-offset="6315">
+          <caret line="177" column="0" selection-start-line="177" selection-start-column="0" selection-end-line="177" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/jcrvalidator.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8662614" vertical-offset="675" max-vertical-offset="1995">
-          <caret line="83" column="110" selection-start-line="83" selection-start-column="110" selection-end-line="83" selection-end-column="110" />
+        <state vertical-scroll-proportion="0.75227964" vertical-offset="390" max-vertical-offset="2160">
+          <caret line="59" column="13" selection-start-line="59" selection-start-column="13" selection-end-line="59" selection-end-column="13" />
           <folding />
         </state>
       </provider>
