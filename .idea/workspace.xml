@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3ebe9841-051a-4230-ba6c-8935dd0c40e4" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jcrvalidator.rb" afterPath="$PROJECT_DIR$/jcrvalidator.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spec/parser_spec.rb" afterPath="$PROJECT_DIR$/spec/parser_spec.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -40,8 +39,8 @@
       <file leaf-file-name="parser_spec.rb" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.23180874" vertical-offset="5653" max-vertical-offset="6615">
-              <caret line="362" column="49" selection-start-line="362" selection-start-column="49" selection-end-line="362" selection-end-column="49" />
+            <state vertical-scroll-proportion="0.64137214" vertical-offset="4963" max-vertical-offset="6840">
+              <caret line="372" column="54" selection-start-line="372" selection-start-column="54" selection-end-line="372" selection-end-column="54" />
               <folding />
             </state>
           </provider>
@@ -413,7 +412,7 @@
       <workItem from="1412621083867" duration="4558000" />
       <workItem from="1412860748704" duration="33508000" />
       <workItem from="1416490873063" duration="3086000" />
-      <workItem from="1417460326778" duration="4552000" />
+      <workItem from="1417460326778" duration="5135000" />
     </task>
     <task id="LOCAL-00001" summary="added copyright">
       <created>1416492211755</created>
@@ -435,11 +434,15 @@
       <created>1417470160190</created>
       <updated>1417470160190</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="added oring to arraying and added tests">
+      <created>1417470445079</created>
+      <updated>1417470445079</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="45704000" />
+    <option name="totallyTimeSpent" value="46287000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1920" height="1108" extended-state="6" />
@@ -493,7 +496,8 @@
     <MESSAGE value="removed alternate syntax" />
     <MESSAGE value="removed depends syntax" />
     <MESSAGE value="added tests for or in object" />
-    <option name="LAST_COMMIT_MESSAGE" value="added tests for or in object" />
+    <MESSAGE value="added oring to arraying and added tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="added oring to arraying and added tests" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -595,8 +599,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.23180874" vertical-offset="5653" max-vertical-offset="6615">
-          <caret line="362" column="49" selection-start-line="362" selection-start-column="49" selection-end-line="362" selection-end-column="49" />
+        <state vertical-scroll-proportion="0.64137214" vertical-offset="4963" max-vertical-offset="6840">
+          <caret line="372" column="54" selection-start-line="372" selection-start-column="54" selection-end-line="372" selection-end-column="54" />
           <folding />
         </state>
       </provider>
