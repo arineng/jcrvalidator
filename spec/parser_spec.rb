@@ -467,4 +467,19 @@ EX3
     expect(tree[1][:rule][:rule_name]).to eq("trule")
     expect(tree[2][:rule][:rule_name]).to eq("trule2")
   end
+
+  it 'should parse multiple commented rules with multiple directives' do
+    ex3 = <<EX3
+# include "a collection" file://blahbalh
+# pedantic
+trule [ ;comment 1
+  1*2 my_rule1, ;comment 2
+  ( my_rule2, my_rule3 ) ;comment 3
+] ;comment 4
+trule2( my_rule1 , [ : integer, { my_rule2 } ], ( my_rule3, my_rule4 ) )
+EX3
+    tree = JCRValidator.parse( ex3 )
+    expect(tree[2][:rule][:rule_name]).to eq("trule")
+    expect(tree[3][:rule][:rule_name]).to eq("trule2")
+  end
 end

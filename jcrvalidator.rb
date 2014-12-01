@@ -106,10 +106,10 @@ module JCRValidator
     rule(:rules) { spcCmnt? >> ( rule_name >> spcCmnt? >>
       ( value_rule | member_rule | object_rule | array_rule | group_rule ) ).as(:rule) >> spcCmnt?
     }
-    rule(:ignore_unknown_members) { str('ignore-unknown-members').as(:ignore_unknown_members) }
+    rule(:pedantic) { str('pedantic').as(:pedantic) }
     rule(:language_compatible_members) { str('language-compatible-members').as(:language_compatible_members) }
     rule(:include_d) { str('include').as(:include) >> spaces >> q_string.as(:collection) >> (spaces >> uri.as(:uri)).maybe }
-    rule(:directive_def) { ignore_unknown_members | language_compatible_members | include_d }
+    rule(:directive_def) { pedantic | language_compatible_members | include_d }
     rule(:directives) { ( str('#') >> spaces? >> directive_def >> match('[^\r\n]').repeat.maybe >> match('[\r\n]') ).as(:directive) }
     rule(:top) { ( rules | directives ).repeat }
 
