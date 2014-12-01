@@ -191,6 +191,13 @@ describe 'parser' do
     expect(tree[0][:rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
   end
 
+  it 'should parse an object rule with rule names or`ed' do
+    tree = JCRValidator.parse( 'trule { my_rule1 / my_rule2 }' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:object_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
+    expect(tree[0][:rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
+  end
+
   it 'should parse an object rule with embeded member rules with names 1' do
     tree = JCRValidator.parse( 'trule { "thing" my_value_rule, my_rule2 }' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
@@ -199,8 +206,25 @@ describe 'parser' do
     expect(tree[0][:rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
   end
 
+  it 'should parse an object rule with embeded member rules with names or`ed`' do
+    tree = JCRValidator.parse( 'trule { "thing" my_value_rule/ my_rule2 }' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:object_rule][0][:member_rule][:member_name][:q_string]).to eq("thing")
+    expect(tree[0][:rule][:object_rule][0][:member_rule][:target_rule_name][:rule_name]).to eq("my_value_rule")
+    expect(tree[0][:rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
+  end
+
   it 'should parse an object rule with embeded member rules with value rule 1' do
     tree = JCRValidator.parse( 'trule { "thing" : float ..100.003, my_rule2 }' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:object_rule][0][:member_rule][:member_name][:q_string]).to eq("thing")
+    expect(tree[0][:rule][:object_rule][0][:member_rule][:value_rule][:float_v]).to eq("float")
+    expect(tree[0][:rule][:object_rule][0][:member_rule][:value_rule][:max]).to eq("100.003")
+    expect(tree[0][:rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
+  end
+
+  it 'should parse an object rule with embeded member rules with value rule ored' do
+    tree = JCRValidator.parse( 'trule { "thing" : float ..100.003/ my_rule2 }' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:object_rule][0][:member_rule][:member_name][:q_string]).to eq("thing")
     expect(tree[0][:rule][:object_rule][0][:member_rule][:value_rule][:float_v]).to eq("float")
@@ -224,8 +248,18 @@ describe 'parser' do
     expect(tree[0][:rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
     expect(tree[0][:rule][:object_rule][1][:member_optional]).to eq("?")
   end
+
   it 'should parse an object rule with rule names with optionality 2' do
     tree = JCRValidator.parse( 'trule { ?my_rule1, ? my_rule2 }' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:object_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
+    expect(tree[0][:rule][:object_rule][0][:member_optional]).to eq("?")
+    expect(tree[0][:rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
+    expect(tree[0][:rule][:object_rule][1][:member_optional]).to eq("?")
+  end
+
+  it 'should parse an object rule with rule names with optionality with or' do
+    tree = JCRValidator.parse( 'trule { ?my_rule1/ ? my_rule2 }' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:object_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
     expect(tree[0][:rule][:object_rule][0][:member_optional]).to eq("?")

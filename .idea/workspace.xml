@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3ebe9841-051a-4230-ba6c-8935dd0c40e4" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jcrvalidator.rb" afterPath="$PROJECT_DIR$/jcrvalidator.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spec/parser_spec.rb" afterPath="$PROJECT_DIR$/spec/parser_spec.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="jcrvalidator.iws" />
@@ -39,8 +39,8 @@
       <file leaf-file-name="parser_spec.rb" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.9064449" vertical-offset="4573" max-vertical-offset="5535">
-              <caret line="363" column="2" selection-start-line="363" selection-start-column="2" selection-end-line="363" selection-end-column="2" />
+            <state vertical-scroll-proportion="-0.15592515" vertical-offset="4065" max-vertical-offset="6045">
+              <caret line="261" column="49" selection-start-line="261" selection-start-column="49" selection-end-line="261" selection-end-column="49" />
               <folding />
             </state>
           </provider>
@@ -83,9 +83,9 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/spec/parser_spec.rb" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/jcrvalidator.rb" />
+        <option value="$PROJECT_DIR$/spec/parser_spec.rb" />
       </list>
     </option>
   </component>
@@ -412,7 +412,7 @@
       <workItem from="1412621083867" duration="4558000" />
       <workItem from="1412860748704" duration="33508000" />
       <workItem from="1416490873063" duration="3086000" />
-      <workItem from="1417460326778" duration="4001000" />
+      <workItem from="1417460326778" duration="4268000" />
     </task>
     <task id="LOCAL-00001" summary="added copyright">
       <created>1416492211755</created>
@@ -426,11 +426,15 @@
       <created>1417469248103</created>
       <updated>1417469248103</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="removed depends syntax">
+      <created>1417469894584</created>
+      <updated>1417469894584</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="45153000" />
+    <option name="totallyTimeSpent" value="45420000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1920" height="1108" extended-state="6" />
@@ -482,7 +486,8 @@
     <MESSAGE value="added copyright" />
     <MESSAGE value="added text" />
     <MESSAGE value="removed alternate syntax" />
-    <option name="LAST_COMMIT_MESSAGE" value="removed alternate syntax" />
+    <MESSAGE value="removed depends syntax" />
+    <option name="LAST_COMMIT_MESSAGE" value="removed depends syntax" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -584,8 +589,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.9064449" vertical-offset="4573" max-vertical-offset="5535">
-          <caret line="363" column="2" selection-start-line="363" selection-start-column="2" selection-end-line="363" selection-end-column="2" />
+        <state vertical-scroll-proportion="-0.15592515" vertical-offset="4065" max-vertical-offset="6045">
+          <caret line="261" column="49" selection-start-line="261" selection-start-column="49" selection-end-line="261" selection-end-column="49" />
           <folding />
         </state>
       </provider>
