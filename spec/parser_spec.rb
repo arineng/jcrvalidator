@@ -456,7 +456,7 @@ EX3
 
   it 'should parse multiple commented rules with directives' do
     ex3 = <<EX3
-# include "a collection" file://blahbalh
+# include file://blahbalh ; a collection of rules
 trule [ ;comment 1
   1*2 my_rule1, ;comment 2
   ( my_rule2, my_rule3 ) ;comment 3
@@ -470,7 +470,7 @@ EX3
 
   it 'should parse multiple commented rules with multiple directives' do
     ex3 = <<EX3
-# include "a collection" file://blahbalh
+# include file://blahbalh ; a collection of rules
 # pedantic
 trule [ ;comment 1
   1*2 my_rule1, ;comment 2

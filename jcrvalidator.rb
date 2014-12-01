@@ -59,7 +59,7 @@ module JCRValidator
     rule(:null)      { str('null').as(:null) }
     rule(:base64)    { str('base64').as(:base64) }
     rule(:string)    { str('string').as(:string) >> spcCmnt? >> regex.maybe }
-    rule(:uri)       { str('uri').as(:uri) >> spcCmnt? >> uri_template.maybe }
+    rule(:uri_v)     { str('uri').as(:uri) >> spcCmnt? >> uri_template.maybe }
     rule(:integer_v) { str('integer').as(:integer_v) >> spcCmnt? >>
       ( integer.maybe.as(:min) >> str('..') >> integer.maybe.as(:max) | ( str('..') >> integer.as(:max) ) ).maybe
     }
@@ -71,7 +71,7 @@ module JCRValidator
     rule(:value_def) {
       (
         any | ip4 | ip6 | fqdn | idn | phone | email | base64 | full_time | full_date | date_time |
-        boolean | null | base64 | string | uri | float_v | integer_v | enumeration
+        boolean | null | base64 | string | uri_v | float_v | integer_v | enumeration
       )
     }
     rule(:value_rule) { ( str(':') >> spcCmnt? >> value_def ).as(:value_rule) }
@@ -108,7 +108,7 @@ module JCRValidator
     }
     rule(:pedantic) { str('pedantic').as(:pedantic) }
     rule(:language_compatible_members) { str('language-compatible-members').as(:language_compatible_members) }
-    rule(:include_d) { str('include').as(:include) >> spaces >> q_string.as(:collection) >> (spaces >> uri.as(:uri)).maybe }
+    rule(:include_d) { str('include').as(:include) >> spaces >> uri.as(:uri) }
     rule(:directive_def) { pedantic | language_compatible_members | include_d }
     rule(:directives) { ( str('#') >> spaces? >> directive_def >> match('[^\r\n]').repeat.maybe >> match('[\r\n]') ).as(:directive) }
     rule(:top) { ( rules | directives ).repeat }

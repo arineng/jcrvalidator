@@ -30,8 +30,8 @@
       <file leaf-file-name="jcrvalidator.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jcrvalidator.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1108" max-vertical-offset="2400">
-              <caret line="111" column="34" selection-start-line="111" selection-start-column="34" selection-end-line="111" selection-end-column="34" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1183" max-vertical-offset="2400">
+              <caret line="73" column="48" selection-start-line="73" selection-start-column="48" selection-end-line="73" selection-end-column="48" />
               <folding />
             </state>
           </provider>
@@ -40,8 +40,8 @@
       <file leaf-file-name="parser_spec.rb" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.95114344" vertical-offset="6315" max-vertical-offset="7350">
-              <caret line="482" column="16" selection-start-line="482" selection-start-column="16" selection-end-line="482" selection-end-column="16" />
+            <state vertical-scroll-proportion="0.75051975" vertical-offset="6358" max-vertical-offset="7350">
+              <caret line="472" column="49" selection-start-line="472" selection-start-column="49" selection-end-line="472" selection-end-column="49" />
               <folding />
             </state>
           </provider>
@@ -413,7 +413,7 @@
       <workItem from="1412621083867" duration="4558000" />
       <workItem from="1412860748704" duration="33508000" />
       <workItem from="1416490873063" duration="3086000" />
-      <workItem from="1417460326778" duration="6220000" />
+      <workItem from="1417460326778" duration="7729000" />
     </task>
     <task id="LOCAL-00001" summary="added copyright">
       <created>1416492211755</created>
@@ -447,11 +447,15 @@
       <created>1417471995509</created>
       <updated>1417471995509</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="changed ignore-unknown-members to pedantic">
+      <created>1417472134528</created>
+      <updated>1417472134528</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="47372000" />
+    <option name="totallyTimeSpent" value="48881000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1920" height="1108" extended-state="6" />
@@ -508,7 +512,8 @@
     <MESSAGE value="added oring to arraying and added tests" />
     <MESSAGE value="added tests for groups being optional in objects and groups having counts in arrays" />
     <MESSAGE value="removed the all-members-optional thing" />
-    <option name="LAST_COMMIT_MESSAGE" value="removed the all-members-optional thing" />
+    <MESSAGE value="changed ignore-unknown-members to pedantic" />
+    <option name="LAST_COMMIT_MESSAGE" value="changed ignore-unknown-members to pedantic" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -602,16 +607,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/jcrvalidator.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1108" max-vertical-offset="2400">
-          <caret line="111" column="34" selection-start-line="111" selection-start-column="34" selection-end-line="111" selection-end-column="34" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="390" max-vertical-offset="2400">
+          <caret line="73" column="48" selection-start-line="73" selection-start-column="48" selection-end-line="73" selection-end-column="48" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.95114344" vertical-offset="6315" max-vertical-offset="7350">
-          <caret line="482" column="16" selection-start-line="482" selection-start-column="16" selection-end-line="482" selection-end-column="16" />
+        <state vertical-scroll-proportion="0.75051975" vertical-offset="6358" max-vertical-offset="7350">
+          <caret line="472" column="49" selection-start-line="472" selection-start-column="49" selection-end-line="472" selection-end-column="49" />
           <folding />
         </state>
       </provider>
