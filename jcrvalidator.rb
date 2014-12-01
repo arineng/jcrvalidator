@@ -94,7 +94,7 @@ module JCRValidator
     }
     rule(:array_def)  { array_repetition.maybe >> spcCmnt? >> ( group_rule | array_rule | object_rule | value_rule | rule_name.as(:target_rule_name) ) }
     rule(:array_rule) { ( str('[') >> spcCmnt? >> array_def >> spcCmnt? >>
-      ( str(',') >> spcCmnt? >> array_def ).repeat >> spcCmnt? >> str(']') ).as(:array_rule)
+      ( ( str(',') | str('/') ) >> spcCmnt? >> array_def ).repeat >> spcCmnt? >> str(']') ).as(:array_rule)
     }
     rule(:group_def)  {
       group_rule | array_rule | object_rule | value_rule | rule_name.as(:target_rule_name)
