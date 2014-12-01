@@ -30,3 +30,5 @@ syntax. Once the JCR syntax specification is finalized, validation of JSON again
 This code is written in Ruby using Parslet. You will need to install Parslet. The easiest way to do
 that is via gem. This code was written and tested on Ruby 2.0. At present it can only run its unit
 tests. Feel free to fiddle with it.
+
+To run the unit tests, simply run the `rspec` command.

@@ -74,34 +74,34 @@ module JCRValidator
         boolean | null | base64 | string | uri | float_v | integer_v | enumeration
       )
     }
-    rule(:value_rule) { ( ( str(':') | str('VALUE') ) >> spcCmnt? >> value_def ).as(:value_rule) }
+    rule(:value_rule) { ( str(':') >> spcCmnt? >> value_def ).as(:value_rule) }
     rule(:member_rule) {
-      ( ( str('MEMBER') >> spcCmnt? ).maybe >> str('^').as(:any_member).maybe >> q_string.as(:member_name) >> spcCmnt? >>
-        ( value_rule | rule_name.as(:target_rule_name) ) ).as(:member_rule)
+      ( str('^').as(:any_member).maybe >> q_string.as(:member_name) >> spcCmnt? >>
+      ( value_rule | rule_name.as(:target_rule_name) ) ).as(:member_rule)
     }
     rule(:object_repetition) {
       str('?').as(:member_optional) | ( p_integer.as(:repetition_min) >> str('*') >> p_integer.maybe.as(:repetition_max) ) |
       ( str('*') >> p_integer.as(:repetition_max) )
     }
     rule(:object_def ) { object_repetition.maybe >> spcCmnt? >> ( group_rule | member_rule | rule_name.as(:target_rule_name) ) }
-    rule(:object_rule) { ( ( str('{') | str('OBJECT') ) >> spcCmnt? >>
-      object_def >> ( spcCmnt? >> ( str(',') | str('/') | str('&' ) | str('AND') | str('OR') | str('DEPENDS') ) >>
-      spcCmnt? >> object_def ).repeat  >> spcCmnt? >> ( str('}') | str('END_OBJECT') )
+    rule(:object_rule) { ( str('{') >> spcCmnt? >>
+      object_def >> ( spcCmnt? >> ( str(',') | str('/') | str('&' ) ) >>
+      spcCmnt? >> object_def ).repeat  >> spcCmnt? >> str('}')
       ).as(:object_rule)
     }
     rule(:array_repetition) { (p_integer.as(:repetition_min) >> str('*') >> p_integer.maybe.as(:repetition_max)) |
       (str('*') >> p_integer.as(:repetition_max))
     }
     rule(:array_def)  { array_repetition.maybe >> spcCmnt? >> ( group_rule | array_rule | object_rule | value_rule | rule_name.as(:target_rule_name) ) }
-    rule(:array_rule) { ( ( str('[') | str('ARRAY') ) >> spcCmnt? >> array_def >> spcCmnt? >>
-      ((str(',') | str('AND')) >> spcCmnt? >> array_def).repeat >> spcCmnt? >> ( str(']') | str('END_ARRAY') ) ).as(:array_rule)
+    rule(:array_rule) { ( str('[') >> spcCmnt? >> array_def >> spcCmnt? >>
+      ( str(',') >> spcCmnt? >> array_def).repeat >> spcCmnt? >> str(']') ).as(:array_rule)
     }
     rule(:group_def)  {
       group_rule | array_rule | object_rule | value_rule | rule_name.as(:target_rule_name)
     }
-    rule(:group_rule) { ( ( str('(') | str('GROUP') ) >> spcCmnt? >> group_def >> spcCmnt? >>
-      ( ( str(',') | str('/') | str('&') | str('AND') | str('OR') | str('DEPENDS') ) >> spcCmnt? >> group_def ).repeat >>
-      spcCmnt? >> ( str(')') | str('END_GROUP') ) ).as(:group_rule)
+    rule(:group_rule) { ( str('(') >> spcCmnt? >> group_def >> spcCmnt? >>
+      ( ( str(',') | str('/') | str('&') ) >> spcCmnt? >> group_def ).repeat >>
+      spcCmnt? >> str(')') ).as(:group_rule)
     }
     rule(:rules) { spcCmnt? >> ( rule_name >> spcCmnt? >>
       ( value_rule | member_rule | object_rule | array_rule | group_rule ) ).as(:rule) >> spcCmnt?
