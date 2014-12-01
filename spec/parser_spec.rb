@@ -379,6 +379,26 @@ describe 'parser' do
     expect(tree[0][:rule][:rule_name]).to eq("trule")
   end
 
+  it 'should parse a group rule with an optional rulename and an array rule with an object rule and value rule' do
+    tree = JCRValidator.parse( 'trule ( ?my_rule1 , [ : integer, { my_rule2 } ] )' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+  end
+
+  it 'should parse a group rule with an optional rulename and an optional array rule with an object rule and value rule' do
+    tree = JCRValidator.parse( 'trule ( ?my_rule1 , ? [ : integer, { my_rule2 } ] )' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+  end
+
+  it 'should parse a group rule with a repitition rulename and an array rule with an object rule and value rule' do
+    tree = JCRValidator.parse( 'trule ( 1*2 my_rule1 , [ : integer, { my_rule2 } ] )' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+  end
+
+  it 'should parse a group rule with a repitition rulename and a repetition array rule with an object rule and value rule' do
+    tree = JCRValidator.parse( 'trule ( 1*2 my_rule1 , *4[ : integer, { my_rule2 } ] )' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+  end
+
   it 'should parse a group rule with a rulename and an array rule with an object rule and value rule and another group' do
     tree = JCRValidator.parse( 'trule ( my_rule1 , [ : integer, { my_rule2 } ], ( my_rule3, my_rule4 ) )' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
@@ -437,7 +457,6 @@ EX3
   it 'should parse multiple commented rules with directives' do
     ex3 = <<EX3
 # include "a collection" file://blahbalh
-# all-members-optional
 trule [ ;comment 1
   1*2 my_rule1, ;comment 2
   ( my_rule2, my_rule3 ) ;comment 3
@@ -445,7 +464,7 @@ trule [ ;comment 1
 trule2( my_rule1 , [ : integer, { my_rule2 } ], ( my_rule3, my_rule4 ) )
 EX3
     tree = JCRValidator.parse( ex3 )
-    expect(tree[2][:rule][:rule_name]).to eq("trule")
-    expect(tree[3][:rule][:rule_name]).to eq("trule2")
+    expect(tree[1][:rule][:rule_name]).to eq("trule")
+    expect(tree[2][:rule][:rule_name]).to eq("trule2")
   end
 end

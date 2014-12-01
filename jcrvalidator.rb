@@ -96,8 +96,8 @@ module JCRValidator
     rule(:array_rule) { ( str('[') >> spcCmnt? >> array_def >> spcCmnt? >>
       ( ( str(',') | str('/') ) >> spcCmnt? >> array_def ).repeat >> spcCmnt? >> str(']') ).as(:array_rule)
     }
-    rule(:group_def)  {
-      group_rule | array_rule | object_rule | value_rule | rule_name.as(:target_rule_name)
+    rule(:group_def)  { ( str('?') | array_repetition ).maybe >> spcCmnt? >>
+      ( group_rule | array_rule | object_rule | value_rule | rule_name ).as(:target_rule_name)
     }
     rule(:group_rule) { ( str('(') >> spcCmnt? >> group_def >> spcCmnt? >>
       ( ( str(',') | str('/') ) >> spcCmnt? >> group_def ).repeat >>
@@ -108,9 +108,8 @@ module JCRValidator
     }
     rule(:ignore_unknown_members) { str('ignore-unknown-members').as(:ignore_unknown_members) }
     rule(:language_compatible_members) { str('language-compatible-members').as(:language_compatible_members) }
-    rule(:all_members_optional) { str('all-members-optional').as(:all_members_optional) }
     rule(:include_d) { str('include').as(:include) >> spaces >> q_string.as(:collection) >> (spaces >> uri.as(:uri)).maybe }
-    rule(:directive_def) { ignore_unknown_members | language_compatible_members | all_members_optional | include_d }
+    rule(:directive_def) { ignore_unknown_members | language_compatible_members | include_d }
     rule(:directives) { ( str('#') >> spaces? >> directive_def >> match('[^\r\n]').repeat.maybe >> match('[\r\n]') ).as(:directive) }
     rule(:top) { ( rules | directives ).repeat }
 
