@@ -149,6 +149,14 @@ module JCRValidator
 
   end
 
+  def self.printTree( tree )
+
+    tree.each do |node|
+      puts "named rule: " + node[:rule][:rule_name] if node[:rule]
+    end
+
+  end
+
 end
 
 

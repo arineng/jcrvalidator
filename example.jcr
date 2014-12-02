@@ -1,0 +1,19 @@
+# include file://blahbalh ; a collection of rules
+# pedantic
+trule [ ;comment 1
+  1*2 my_rule1, ;comment 2
+  ( my_rule2, my_rule3 ) ;comment 3
+] ;comment 4
+
+trule2( my_rule1 , [ : integer, { my_rule2 } ], ( my_rule3, my_rule4 ) )
+
+width "width" : integer 0..1280
+height "height" : integer 0..1024
+
+root {
+    "Image" {
+        width, height, "Title" :string,
+        "thumbnail" { width, height, "Url" :uri },
+        "IDs" [ *:integer ]
+    }
+}

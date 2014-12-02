@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+require_relative 'jcrvalidator'
+
+rules = File.read( ARGV[0] )
+
+tree = JCRValidator.parse( rules )
+JCRValidator.printTree( tree )
+
