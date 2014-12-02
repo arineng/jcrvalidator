@@ -28,8 +28,8 @@ module JCRValidator
     rule(:integer)   { ( str('-').maybe >> match('[0-9]').repeat ) }
     rule(:p_integer)   { ( match('[0-9]').repeat ) }
     rule(:float)     { str('-').maybe >> match('[0-9]').repeat(1) >> str('.' ) >> match('[0-9]').repeat(1) }
-    rule(:uri) { match('[\S]').repeat(1) }
-    rule(:uri_template) { match('[\S]').repeat(1).as(:uri_template) }
+    rule(:uri) { match('[a-zA-Z]').repeat(1) >> str(':') >> match('[\S]').repeat(1) }
+    rule(:uri_template) { ( match('[a-zA-Z]').repeat(1) >> str(':') >> match('[\S]').repeat(1) ).as(:uri_template) }
     rule(:regex)     {
       str('/') >>
         ( str('\\') >> match('[^\r\n]') | str('/').absent? >> match('[^\r\n]') ).repeat.as(:regex) >>
@@ -77,7 +77,7 @@ module JCRValidator
     rule(:value_rule) { ( str(':') >> spcCmnt? >> value_def ).as(:value_rule) }
     rule(:member_rule) {
       ( str('^').as(:any_member).maybe >> q_string.as(:member_name) >> spcCmnt? >>
-      ( value_rule | rule_name.as(:target_rule_name) ) ).as(:member_rule)
+      ( value_rule | array_rule | object_rule | rule_name.as(:target_rule_name) ) ).as(:member_rule)
     }
     rule(:object_repetition) {
       str('?').as(:member_optional) | ( p_integer.as(:repetition_min) >> str('*') >> p_integer.maybe.as(:repetition_max) ) |

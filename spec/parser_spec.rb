@@ -73,6 +73,11 @@ describe 'parser' do
     expect(tree[0][:rule][:value_rule][:uri_template]).to eq("http://example.com/{path}")
   end
 
+  it 'should parse an any' do
+    tree = JCRValidator.parse( 'trule : any' )
+    expect(tree[0][:rule][:value_rule][:any]).to eq("any")
+  end
+
   it 'should parse a integer value without a range' do
     tree = JCRValidator.parse( 'trule : integer' )
     expect(tree[0][:rule][:value_rule][:integer_v]).to eq("integer")
@@ -221,6 +226,27 @@ describe 'parser' do
     expect(tree[0][:rule][:object_rule][0][:member_rule][:value_rule][:float_v]).to eq("float")
     expect(tree[0][:rule][:object_rule][0][:member_rule][:value_rule][:max]).to eq("100.003")
     expect(tree[0][:rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
+  end
+
+  it 'should parse an object rule with rule name, embeded member rules with value, rule name' do
+    tree = JCRValidator.parse( 'trule { my_rule1, "thing" : float ..100.003, my_rule2 }' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:object_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
+    expect(tree[0][:rule][:object_rule][1][:member_rule][:member_name][:q_string]).to eq("thing")
+    expect(tree[0][:rule][:object_rule][1][:member_rule][:value_rule][:float_v]).to eq("float")
+    expect(tree[0][:rule][:object_rule][1][:member_rule][:value_rule][:max]).to eq("100.003")
+    expect(tree[0][:rule][:object_rule][2][:target_rule_name][:rule_name]).to eq("my_rule2")
+  end
+
+  it 'should parse a member rule as an object rule with rule name, embeded member rules with value, rule name' do
+    tree = JCRValidator.parse( 'trule "mem_rule" { my_rule1, "thing" : float ..100.003, my_rule2 }' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("mem_rule")
+    expect(tree[0][:rule][:member_rule][:object_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
+    expect(tree[0][:rule][:member_rule][:object_rule][1][:member_rule][:member_name][:q_string]).to eq("thing")
+    expect(tree[0][:rule][:member_rule][:object_rule][1][:member_rule][:value_rule][:float_v]).to eq("float")
+    expect(tree[0][:rule][:member_rule][:object_rule][1][:member_rule][:value_rule][:max]).to eq("100.003")
+    expect(tree[0][:rule][:member_rule][:object_rule][2][:target_rule_name][:rule_name]).to eq("my_rule2")
   end
 
   it 'should parse an object rule with embeded member rules with value rule ored' do
@@ -455,21 +481,21 @@ EX3
   end
 
   it 'should parse multiple commented rules with directives' do
-    ex3 = <<EX3
+    ex4 = <<EX4
 # include file://blahbalh ; a collection of rules
 trule [ ;comment 1
   1*2 my_rule1, ;comment 2
   ( my_rule2, my_rule3 ) ;comment 3
 ] ;comment 4
 trule2( my_rule1 , [ : integer, { my_rule2 } ], ( my_rule3, my_rule4 ) )
-EX3
-    tree = JCRValidator.parse( ex3 )
+EX4
+    tree = JCRValidator.parse( ex4 )
     expect(tree[1][:rule][:rule_name]).to eq("trule")
     expect(tree[2][:rule][:rule_name]).to eq("trule2")
   end
 
   it 'should parse multiple commented rules with multiple directives' do
-    ex3 = <<EX3
+    ex5 = <<EX5
 # include file://blahbalh ; a collection of rules
 # pedantic
 trule [ ;comment 1
@@ -477,9 +503,98 @@ trule [ ;comment 1
   ( my_rule2, my_rule3 ) ;comment 3
 ] ;comment 4
 trule2( my_rule1 , [ : integer, { my_rule2 } ], ( my_rule3, my_rule4 ) )
-EX3
-    tree = JCRValidator.parse( ex3 )
+EX5
+    tree = JCRValidator.parse( ex5 )
     expect(tree[2][:rule][:rule_name]).to eq("trule")
     expect(tree[3][:rule][:rule_name]).to eq("trule2")
+  end
+
+  it 'should parse ex1 from I-D' do
+    ex6 = <<EX6
+root [
+    2*2{
+        "precision" : string,
+        "Latitude" : float,
+        "Longitude" : float,
+        "Address" : string,
+        "City" : string,
+        "State" : string,
+        "Zip" : string,
+        "Country" : string
+    }
+]
+EX6
+    tree = JCRValidator.parse( ex6 )
+    expect(tree[0][:rule][:rule_name]).to eq("root")
+  end
+
+  it 'should parse ex2 from I-D' do
+    ex7 = <<EX7
+width "width" : integer 0..1280
+height "height" : integer 0..1024
+
+root {
+    "Image" {
+        width, height, "Title" :string,
+        "thumbnail" { width, height, "Url" :uri },
+        "IDs" [ *:integer ]
+    }
+}
+EX7
+    tree = JCRValidator.parse( ex7 )
+    expect(tree[2][:rule][:rule_name]).to eq("root")
+  end
+
+  it 'should parse ex3 from I-D' do
+    ex8 = <<EX8
+nameserver {
+
+     ; the host name of the name server
+     "name" : fqdn,
+
+     ; the ip addresses of the nameserver
+     "ipAddresses" [ *( :ip4 / :ip6 ) ],
+
+     common
+   }
+EX8
+    tree = JCRValidator.parse( ex8 )
+    expect(tree[0][:rule][:rule_name]).to eq("nameserver")
+  end
+
+  it 'should parse ex4 from I-D' do
+    ex9 = <<EX9
+any_member ^"" : any
+
+object_of_anything { *any_member }
+EX9
+    tree = JCRValidator.parse( ex9 )
+    expect(tree[0][:rule][:rule_name]).to eq("any_member")
+  end
+
+  it 'should parse ex5 from I-D' do
+    ex10 = <<EX10
+object_of_anything { *^"":any }
+EX10
+    tree = JCRValidator.parse( ex10 )
+    expect(tree[0][:rule][:rule_name]).to eq("object_of_anything")
+  end
+
+  it 'should parse ex6 from I-D' do
+    ex11 = <<EX11
+any_value : any
+
+array_of_any [ *any_value ]
+EX11
+    tree = JCRValidator.parse( ex11 )
+    expect(tree[0][:rule][:rule_name]).to eq("any_value")
+  end
+
+  it 'should parse ex7 from I-D' do
+    ex12 = <<EX12
+array_of_any [ *:any ]
+EX12
+    tree = JCRValidator.parse( ex12 )
+    expect(tree[0][:rule][:rule_name]).to eq("array_of_any")
   end
 end
