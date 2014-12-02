@@ -6,7 +6,7 @@ JSON Content Rules (JCR) is a JSON-specific schema language. JCR was created by 
 to better describe JSON structures in RDAP.
 
 The current version of the JCR specification can be found here:
-http://tools.ietf.org/html/draft-newton-json-content-rules-03
+http://tools.ietf.org/html/draft-newton-json-content-rules-04
 
 Comparison of proposed JSON schema languages:
 
