@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3ebe9841-051a-4230-ba6c-8935dd0c40e4" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/example.jcr" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jcr" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jcrvalidator.rb" afterPath="$PROJECT_DIR$/jcrvalidator.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="jcrvalidator.iws" />
@@ -28,10 +26,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="jcrvalidator.rb" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="jcrvalidator.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jcrvalidator.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.91270614" vertical-offset="1369" max-vertical-offset="2520">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1369" max-vertical-offset="2520">
               <caret line="154" column="65" selection-start-line="154" selection-start-column="65" selection-end-line="154" selection-end-column="65" />
               <folding />
             </state>
@@ -78,14 +76,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="README.md" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="README.md" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider editor-type-id="MarkdownPreviewEditor">
             <state />
           </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="495" max-vertical-offset="585">
-              <caret line="33" column="45" selection-start-line="33" selection-start-column="45" selection-end-line="33" selection-end-column="45" />
+            <state vertical-scroll-proportion="0.55278885" vertical-offset="0" max-vertical-offset="1004">
+              <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -105,12 +103,12 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/spec/parser_spec.rb" />
         <option value="$PROJECT_DIR$/jcr.sh" />
         <option value="$PROJECT_DIR$/example.jcr" />
         <option value="$PROJECT_DIR$/jcr" />
         <option value="$PROJECT_DIR$/jcrvalidator.rb" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -449,7 +447,7 @@
       <workItem from="1412860748704" duration="33508000" />
       <workItem from="1416490873063" duration="3086000" />
       <workItem from="1417460326778" duration="8107000" />
-      <workItem from="1417540420580" duration="6607000" />
+      <workItem from="1417540420580" duration="6725000" />
     </task>
     <task id="LOCAL-00001" summary="added copyright">
       <created>1416492211755</created>
@@ -495,11 +493,15 @@
       <created>1417550051620</created>
       <updated>1417550051620</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="added a command line to parse rules">
+      <created>1417553635765</created>
+      <updated>1417553635765</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="55866000" />
+    <option name="totallyTimeSpent" value="55984000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1920" height="1177" extended-state="6" />
@@ -559,7 +561,8 @@
     <MESSAGE value="changed ignore-unknown-members to pedantic" />
     <MESSAGE value="changed include directive syntax" />
     <MESSAGE value="added more test cases" />
-    <option name="LAST_COMMIT_MESSAGE" value="added more test cases" />
+    <MESSAGE value="added a command line to parse rules" />
+    <option name="LAST_COMMIT_MESSAGE" value="added a command line to parse rules" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -675,17 +678,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider editor-type-id="MarkdownPreviewEditor">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="495" max-vertical-offset="585">
-          <caret line="33" column="45" selection-start-line="33" selection-start-column="45" selection-end-line="33" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/example.jcr">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1031">
@@ -712,8 +704,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/jcrvalidator.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.91270614" vertical-offset="1369" max-vertical-offset="2520">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1369" max-vertical-offset="2520">
           <caret line="154" column="65" selection-start-line="154" selection-start-column="65" selection-end-line="154" selection-end-column="65" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider editor-type-id="MarkdownPreviewEditor">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.55278885" vertical-offset="0" max-vertical-offset="1004">
+          <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
           <folding />
         </state>
       </provider>
