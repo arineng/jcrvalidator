@@ -33,8 +33,8 @@
       <file leaf-file-name="jcrvalidator.rb" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jcrvalidator.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="765" max-vertical-offset="2595">
-              <caret line="64" column="21" selection-start-line="64" selection-start-column="21" selection-end-line="64" selection-end-column="21" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="345" max-vertical-offset="2595">
+              <caret line="31" column="43" selection-start-line="31" selection-start-column="43" selection-end-line="31" selection-end-column="43" />
               <folding />
             </state>
           </provider>
@@ -79,8 +79,8 @@
       <file leaf-file-name="parser_spec.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5096012" vertical-offset="360" max-vertical-offset="9390">
-              <caret line="47" column="21" selection-start-line="47" selection-start-column="21" selection-end-line="47" selection-end-column="21" />
+            <state vertical-scroll-proportion="0.68685377" vertical-offset="690" max-vertical-offset="9390">
+              <caret line="77" column="70" selection-start-line="77" selection-start-column="70" selection-end-line="77" selection-end-column="70" />
               <folding />
             </state>
           </provider>
@@ -414,7 +414,7 @@
       <workItem from="1417540420580" duration="7053000" />
       <workItem from="1417645732545" duration="53000" />
       <workItem from="1417645809700" duration="42000" />
-      <workItem from="1418566288821" duration="4674000" />
+      <workItem from="1418566288821" duration="4801000" />
     </task>
     <task id="LOCAL-00001" summary="added copyright">
       <created>1416492211755</created>
@@ -518,11 +518,17 @@
       <option name="project" value="LOCAL" />
       <updated>1418571764903</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="changed so that regex and string are separate now">
+      <created>1418588880013</created>
+      <option name="number" value="00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1418588880013</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="61081000" />
+    <option name="totallyTimeSpent" value="61208000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="823" extended-state="6" />
@@ -588,7 +594,8 @@
     <MESSAGE value="changed / to |" />
     <MESSAGE value="integer can be specified as 'integer', 0..1, or 1&#10;same for float" />
     <MESSAGE value="true and false added as values&#10;boolean removed&#10;tests for null added&#10;string constants allowed" />
-    <option name="LAST_COMMIT_MESSAGE" value="true and false added as values&#10;boolean removed&#10;tests for null added&#10;string constants allowed" />
+    <MESSAGE value="changed so that regex and string are separate now" />
+    <option name="LAST_COMMIT_MESSAGE" value="changed so that regex and string are separate now" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -916,8 +923,8 @@
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="765" max-vertical-offset="2595">
-          <caret line="64" column="21" selection-start-line="64" selection-start-column="21" selection-end-line="64" selection-end-column="21" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="345" max-vertical-offset="2595">
+          <caret line="31" column="43" selection-start-line="31" selection-start-column="43" selection-end-line="31" selection-end-column="43" />
           <folding />
         </state>
       </provider>
@@ -927,8 +934,8 @@
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5096012" vertical-offset="360" max-vertical-offset="9390">
-          <caret line="47" column="21" selection-start-line="47" selection-start-column="21" selection-end-line="47" selection-end-column="21" />
+        <state vertical-scroll-proportion="0.68685377" vertical-offset="690" max-vertical-offset="9390">
+          <caret line="77" column="70" selection-start-line="77" selection-start-column="70" selection-end-line="77" selection-end-column="70" />
           <folding />
         </state>
       </provider>

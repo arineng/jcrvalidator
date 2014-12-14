@@ -73,9 +73,9 @@ describe 'parser' do
   end
 
   it 'should parse a uri with a uri template' do
-    tree = JCRValidator.parse( 'trule : uri http://example.com/{path}' )
+    tree = JCRValidator.parse( 'trule : uri {scheme}://example.com/{path}' )
     expect(tree[0][:rule][:value_rule][:uri]).to eq("uri")
-    expect(tree[0][:rule][:value_rule][:uri_template]).to eq("http://example.com/{path}")
+    expect(tree[0][:rule][:value_rule][:uri_template]).to eq("{scheme}://example.com/{path}")
   end
 
   it 'should parse an any' do

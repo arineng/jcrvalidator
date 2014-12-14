@@ -29,7 +29,7 @@ module JCRValidator
     rule(:p_integer)   { ( match('[0-9]').repeat ) }
     rule(:float)     { str('-').maybe >> match('[0-9]').repeat(1) >> str('.' ) >> match('[0-9]').repeat(1) }
     rule(:uri) { match('[a-zA-Z]').repeat(1) >> str(':') >> match('[\S]').repeat(1) }
-    rule(:uri_template) { ( match('[a-zA-Z]').repeat(1) >> str(':') >> match('[\S]').repeat(1) ).as(:uri_template) }
+    rule(:uri_template) { ( match('[a-zA-Z{}]').repeat(1) >> str(':') >> match('[\S]').repeat(1) ).as(:uri_template) }
     rule(:regex)     {
       str('/') >>
         ( str('\\') >> match('[^\r\n]') | str('/').absent? >> match('[^\r\n]') ).repeat.as(:regex) >>
