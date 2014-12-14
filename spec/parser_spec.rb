@@ -197,7 +197,7 @@ describe 'parser' do
   end
 
   it 'should parse an object rule with rule names or`ed' do
-    tree = JCRValidator.parse( 'trule { my_rule1 / my_rule2 }' )
+    tree = JCRValidator.parse( 'trule { my_rule1 | my_rule2 }' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:object_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
     expect(tree[0][:rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
@@ -212,7 +212,7 @@ describe 'parser' do
   end
 
   it 'should parse an object rule with embeded member rules with names or`ed`' do
-    tree = JCRValidator.parse( 'trule { "thing" my_value_rule/ my_rule2 }' )
+    tree = JCRValidator.parse( 'trule { "thing" my_value_rule| my_rule2 }' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:object_rule][0][:member_rule][:member_name][:q_string]).to eq("thing")
     expect(tree[0][:rule][:object_rule][0][:member_rule][:target_rule_name][:rule_name]).to eq("my_value_rule")
@@ -250,7 +250,7 @@ describe 'parser' do
   end
 
   it 'should parse an object rule with embeded member rules with value rule ored' do
-    tree = JCRValidator.parse( 'trule { "thing" : float ..100.003/ my_rule2 }' )
+    tree = JCRValidator.parse( 'trule { "thing" : float ..100.003| my_rule2 }' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:object_rule][0][:member_rule][:member_name][:q_string]).to eq("thing")
     expect(tree[0][:rule][:object_rule][0][:member_rule][:value_rule][:float_v]).to eq("float")
@@ -285,7 +285,7 @@ describe 'parser' do
   end
 
   it 'should parse an object rule with rule names with optionality with or' do
-    tree = JCRValidator.parse( 'trule { ?my_rule1/ ? my_rule2 }' )
+    tree = JCRValidator.parse( 'trule { ?my_rule1| ? my_rule2 }' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:object_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
     expect(tree[0][:rule][:object_rule][0][:member_optional]).to eq("?")
@@ -318,7 +318,7 @@ describe 'parser' do
   end
 
   it 'should parse an array rule with rule names ored' do
-    tree = JCRValidator.parse( 'trule [ my_rule1/ my_rule2 ]' )
+    tree = JCRValidator.parse( 'trule [ my_rule1| my_rule2 ]' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:array_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
     expect(tree[0][:rule][:array_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
@@ -338,7 +338,7 @@ describe 'parser' do
   end
 
   it 'should parse an array rule with rule names ored for one and repetition' do
-    tree = JCRValidator.parse( 'trule [ 1*2 my_rule1, 1* my_rule2/ *3 my_rule3 ]' )
+    tree = JCRValidator.parse( 'trule [ 1*2 my_rule1, 1* my_rule2| *3 my_rule3 ]' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:array_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
     expect(tree[0][:rule][:array_rule][0][:repetition_min]).to eq("1")
@@ -351,7 +351,7 @@ describe 'parser' do
   end
 
   it 'should parse an array rule with rule names ored and repetition' do
-    tree = JCRValidator.parse( 'trule [ 1*2 my_rule1/ 1* my_rule2/ *3 my_rule3 ]' )
+    tree = JCRValidator.parse( 'trule [ 1*2 my_rule1| 1* my_rule2| *3 my_rule3 ]' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:array_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
     expect(tree[0][:rule][:array_rule][0][:repetition_min]).to eq("1")
@@ -386,17 +386,17 @@ describe 'parser' do
   end
 
   it 'should parse an array rule with a rulename and an array rule with an object rule and value rule all ored' do
-    tree = JCRValidator.parse( 'trule [ my_rule1 / [ : integer / { my_rule2 } ] ]' )
+    tree = JCRValidator.parse( 'trule [ my_rule1 | [ : integer | { my_rule2 } ] ]' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
   end
 
   it 'should parse an array rule with a rulename and a group rule' do
-    tree = JCRValidator.parse( 'trule [ my_rule1 / ( : integer / { my_rule2 } ) ]' )
+    tree = JCRValidator.parse( 'trule [ my_rule1 | ( : integer | { my_rule2 } ) ]' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
   end
 
   it 'should parse an array rule with a rulename and a group rule with count' do
-    tree = JCRValidator.parse( 'trule [ my_rule1 / 1*2( : integer / { my_rule2 } ) ]' )
+    tree = JCRValidator.parse( 'trule [ my_rule1 | 1*2( : integer | { my_rule2 } ) ]' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
   end
 
@@ -553,7 +553,7 @@ nameserver {
      "name" : fqdn,
 
      ; the ip addresses of the nameserver
-     "ipAddresses" [ *( :ip4 / :ip6 ) ],
+     "ipAddresses" [ *( :ip4 | :ip6 ) ],
 
      common
    }
