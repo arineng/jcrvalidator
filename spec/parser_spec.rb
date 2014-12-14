@@ -83,42 +83,51 @@ describe 'parser' do
     expect(tree[0][:rule][:value_rule][:integer_v]).to eq("integer")
   end
 
-  it 'should parse a integer value with a full range' do
-    tree = JCRValidator.parse( 'trule : integer 0..100' )
-    expect(tree[0][:rule][:value_rule][:integer_v]).to eq("integer")
-    expect(tree[0][:rule][:value_rule][:min]).to eq("0")
-    expect(tree[0][:rule][:value_rule][:max]).to eq("100")
+  it 'should parse a integer constant' do
+    tree = JCRValidator.parse( 'trule : 2' )
+    expect(tree[0][:rule][:value_rule][:integer]).to eq("2")
   end
 
-  it 'should parse a integer value with a min range' do
-    tree = JCRValidator.parse( 'trule : integer 0..' )
-    expect(tree[0][:rule][:value_rule][:integer_v]).to eq("integer")
-    expect(tree[0][:rule][:value_rule][:min]).to eq("0")
+  it 'should parse an integer full range' do
+    tree = JCRValidator.parse( 'trule : 0..100' )
+    expect(tree[0][:rule][:value_rule][:integer_min]).to eq("0")
+    expect(tree[0][:rule][:value_rule][:integer_max]).to eq("100")
   end
 
-  it 'should parse a integer value with a max range' do
-    tree = JCRValidator.parse( 'trule : integer ..100' )
-    expect(tree[0][:rule][:value_rule][:integer_v]).to eq("integer")
-    expect(tree[0][:rule][:value_rule][:max]).to eq("100")
+  it 'should parse an integer range with a min range' do
+    tree = JCRValidator.parse( 'trule : 0..' )
+    expect(tree[0][:rule][:value_rule][:integer_min]).to eq("0")
   end
 
-  it 'should parse a float value with a full range' do
-    tree = JCRValidator.parse( 'trule : float 0.0..100.0' )
+  it 'should parse an integer rangge with a max range' do
+    tree = JCRValidator.parse( 'trule : ..100' )
+    expect(tree[0][:rule][:value_rule][:integer_max]).to eq("100")
+  end
+
+  it 'should parse a float value' do
+    tree = JCRValidator.parse( 'trule : float' )
     expect(tree[0][:rule][:value_rule][:float_v]).to eq("float")
-    expect(tree[0][:rule][:value_rule][:min]).to eq("0.0")
-    expect(tree[0][:rule][:value_rule][:max]).to eq("100.0")
   end
 
-  it 'should parse a float value with a min range' do
-    tree = JCRValidator.parse( 'trule : float 0.3939..' )
-    expect(tree[0][:rule][:value_rule][:float_v]).to eq("float")
-    expect(tree[0][:rule][:value_rule][:min]).to eq("0.3939")
+  it 'should parse a float constant' do
+    tree = JCRValidator.parse( 'trule : 2.0' )
+    expect(tree[0][:rule][:value_rule][:float]).to eq("2.0")
   end
 
-  it 'should parse a float value with a max range' do
-    tree = JCRValidator.parse( 'trule : float ..100.003' )
-    expect(tree[0][:rule][:value_rule][:float_v]).to eq("float")
-    expect(tree[0][:rule][:value_rule][:max]).to eq("100.003")
+  it 'should parse a float range with a full range' do
+    tree = JCRValidator.parse( 'trule : 0.0..100.0' )
+    expect(tree[0][:rule][:value_rule][:float_min]).to eq("0.0")
+    expect(tree[0][:rule][:value_rule][:float_max]).to eq("100.0")
+  end
+
+  it 'should parse a float range with a min range' do
+    tree = JCRValidator.parse( 'trule : 0.3939..' )
+    expect(tree[0][:rule][:value_rule][:float_min]).to eq("0.3939")
+  end
+
+  it 'should parse a float range with a max range' do
+    tree = JCRValidator.parse( 'trule : ..100.003' )
+    expect(tree[0][:rule][:value_rule][:float_max]).to eq("100.003")
   end
 
   it 'should parse an enumeration 1' do
@@ -151,11 +160,10 @@ describe 'parser' do
     expect(tree[0][:rule][:value_rule][:enumeration][7][:q_string]).to eq("Y")
   end
 
-  it 'should parse a member rule with float value with a max range 3' do
-    tree = JCRValidator.parse( 'trule "thing" : float ..100.003' )
+  it 'should parse a member rule with float range with a max range 3' do
+    tree = JCRValidator.parse( 'trule "thing" : ..100.003' )
     expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("thing")
-    expect(tree[0][:rule][:member_rule][:value_rule][:float_v]).to eq("float")
-    expect(tree[0][:rule][:member_rule][:value_rule][:max]).to eq("100.003")
+    expect(tree[0][:rule][:member_rule][:value_rule][:float_max]).to eq("100.003")
   end
 
   it 'should parse a member rule with integer value' do
@@ -176,11 +184,10 @@ describe 'parser' do
     expect(tree[0][:rule][:member_rule][:value_rule][:email]).to eq("email")
   end
 
-  it 'should parse a member rule with integer value with a max range 1' do
-    tree = JCRValidator.parse( 'trule "thing" : integer ..100' )
+  it 'should parse a member rule with integer range with a max range 1' do
+    tree = JCRValidator.parse( 'trule "thing" : ..100' )
     expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("thing")
-    expect(tree[0][:rule][:member_rule][:value_rule][:integer_v]).to eq("integer")
-    expect(tree[0][:rule][:member_rule][:value_rule][:max]).to eq("100")
+    expect(tree[0][:rule][:member_rule][:value_rule][:integer_max]).to eq("100")
   end
 
   it 'should parse a member rule with a rule name' do
@@ -220,50 +227,45 @@ describe 'parser' do
   end
 
   it 'should parse an object rule with embeded member rules with value rule 1' do
-    tree = JCRValidator.parse( 'trule { "thing" : float ..100.003, my_rule2 }' )
+    tree = JCRValidator.parse( 'trule { "thing" : ..100.003, my_rule2 }' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:object_rule][0][:member_rule][:member_name][:q_string]).to eq("thing")
-    expect(tree[0][:rule][:object_rule][0][:member_rule][:value_rule][:float_v]).to eq("float")
-    expect(tree[0][:rule][:object_rule][0][:member_rule][:value_rule][:max]).to eq("100.003")
+    expect(tree[0][:rule][:object_rule][0][:member_rule][:value_rule][:float_max]).to eq("100.003")
     expect(tree[0][:rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
   end
 
   it 'should parse an object rule with rule name, embeded member rules with value, rule name' do
-    tree = JCRValidator.parse( 'trule { my_rule1, "thing" : float ..100.003, my_rule2 }' )
+    tree = JCRValidator.parse( 'trule { my_rule1, "thing" : ..100.003, my_rule2 }' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:object_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
     expect(tree[0][:rule][:object_rule][1][:member_rule][:member_name][:q_string]).to eq("thing")
-    expect(tree[0][:rule][:object_rule][1][:member_rule][:value_rule][:float_v]).to eq("float")
-    expect(tree[0][:rule][:object_rule][1][:member_rule][:value_rule][:max]).to eq("100.003")
+    expect(tree[0][:rule][:object_rule][1][:member_rule][:value_rule][:float_max]).to eq("100.003")
     expect(tree[0][:rule][:object_rule][2][:target_rule_name][:rule_name]).to eq("my_rule2")
   end
 
   it 'should parse a member rule as an object rule with rule name, embeded member rules with value, rule name' do
-    tree = JCRValidator.parse( 'trule "mem_rule" { my_rule1, "thing" : float ..100.003, my_rule2 }' )
+    tree = JCRValidator.parse( 'trule "mem_rule" { my_rule1, "thing" : ..100.003, my_rule2 }' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("mem_rule")
     expect(tree[0][:rule][:member_rule][:object_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
     expect(tree[0][:rule][:member_rule][:object_rule][1][:member_rule][:member_name][:q_string]).to eq("thing")
-    expect(tree[0][:rule][:member_rule][:object_rule][1][:member_rule][:value_rule][:float_v]).to eq("float")
-    expect(tree[0][:rule][:member_rule][:object_rule][1][:member_rule][:value_rule][:max]).to eq("100.003")
+    expect(tree[0][:rule][:member_rule][:object_rule][1][:member_rule][:value_rule][:float_max]).to eq("100.003")
     expect(tree[0][:rule][:member_rule][:object_rule][2][:target_rule_name][:rule_name]).to eq("my_rule2")
   end
 
   it 'should parse an object rule with embeded member rules with value rule ored' do
-    tree = JCRValidator.parse( 'trule { "thing" : float ..100.003| my_rule2 }' )
+    tree = JCRValidator.parse( 'trule { "thing" : ..100.003| my_rule2 }' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:object_rule][0][:member_rule][:member_name][:q_string]).to eq("thing")
-    expect(tree[0][:rule][:object_rule][0][:member_rule][:value_rule][:float_v]).to eq("float")
-    expect(tree[0][:rule][:object_rule][0][:member_rule][:value_rule][:max]).to eq("100.003")
+    expect(tree[0][:rule][:object_rule][0][:member_rule][:value_rule][:float_max]).to eq("100.003")
     expect(tree[0][:rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
   end
 
   it 'should parse an object rule with embeded member rules with value rule spelled out 1' do
-    tree = JCRValidator.parse( 'trule { "thing" : float ..100.003, my_rule2 }' )
+    tree = JCRValidator.parse( 'trule { "thing" : ..100.003, my_rule2 }' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:object_rule][0][:member_rule][:member_name][:q_string]).to eq("thing")
-    expect(tree[0][:rule][:object_rule][0][:member_rule][:value_rule][:float_v]).to eq("float")
-    expect(tree[0][:rule][:object_rule][0][:member_rule][:value_rule][:max]).to eq("100.003")
+    expect(tree[0][:rule][:object_rule][0][:member_rule][:value_rule][:float_max]).to eq("100.003")
     expect(tree[0][:rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
   end
 
@@ -294,12 +296,11 @@ describe 'parser' do
   end
 
   it 'should parse an object rule with embeded member rules with value rule with optionality 1' do
-    tree = JCRValidator.parse( 'trule { ? "thing" : float ..100.003, my_rule2 }' )
+    tree = JCRValidator.parse( 'trule { ? "thing" : ..100.003, my_rule2 }' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:object_rule][0][:member_rule][:member_name][:q_string]).to eq("thing")
     expect(tree[0][:rule][:object_rule][0][:member_optional]).to eq("?")
-    expect(tree[0][:rule][:object_rule][0][:member_rule][:value_rule][:float_v]).to eq("float")
-    expect(tree[0][:rule][:object_rule][0][:member_rule][:value_rule][:max]).to eq("100.003")
+    expect(tree[0][:rule][:object_rule][0][:member_rule][:value_rule][:float_max]).to eq("100.003")
     expect(tree[0][:rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
   end
 
@@ -530,8 +531,8 @@ EX6
 
   it 'should parse ex2 from I-D' do
     ex7 = <<EX7
-width "width" : integer 0..1280
-height "height" : integer 0..1024
+width "width" : 0..1280
+height "height" : 0..1024
 
 root {
     "Image" {

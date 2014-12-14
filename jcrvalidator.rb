@@ -60,18 +60,21 @@ module JCRValidator
     rule(:base64)    { str('base64').as(:base64) }
     rule(:string)    { str('string').as(:string) >> spcCmnt? >> regex.maybe }
     rule(:uri_v)     { str('uri').as(:uri) >> spcCmnt? >> uri_template.maybe }
-    rule(:integer_v) { str('integer').as(:integer_v) >> spcCmnt? >>
-      ( integer.maybe.as(:min) >> str('..') >> integer.maybe.as(:max) | ( str('..') >> integer.as(:max) ) ).maybe
+    rule(:integer_v) { str('integer').as(:integer_v) }
+    rule(:integer_r) {
+      integer.maybe.as(:integer_min) >> str('..') >> integer.maybe.as(:integer_max) | ( str('..') >> integer.as(:integer_max) )
     }
-    rule(:float_v)   { str('float').as(:float_v) >> spcCmnt? >>
-      ( ( float.as(:min) >> str('..') >> float.as(:max) ) | ( str('..') >> float.as(:max) ) |
-          float.as(:min) >> str('..') ).maybe
+    rule(:float_v)   { str('float').as(:float_v) }
+    rule(:float_r)   {
+        ( float.as(:float_min) >> str('..') >> float.as(:float_max) ) |
+        ( str('..') >> float.as(:float_max) ) |
+        float.as(:float_min) >> str('..')
     }
     rule(:enumeration) { (str('<') >> spcCmnt? >> enum_item >> ( spaces >> enum_item ).repeat.maybe >> spcCmnt? >> str('>')).as(:enumeration) }
     rule(:value_def) {
       (
         any | ip4 | ip6 | fqdn | idn | phone | email | base64 | full_time | full_date | date_time |
-        boolean | null | base64 | string | uri_v | float_v | integer_v | enumeration
+        boolean | null | base64 | string | uri_v | float_v | integer_v | enumeration | float_r | integer_r | float.as(:float) | integer.as(:integer)
       )
     }
     rule(:value_rule) { ( str(':') >> spcCmnt? >> value_def ).as(:value_rule) }
