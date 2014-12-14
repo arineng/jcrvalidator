@@ -60,7 +60,7 @@ module JCRValidator
     rule(:null)      { str('null').as(:null) }
     rule(:base64)    { str('base64').as(:base64) }
     rule(:string)    { str('string').as(:string) }
-    rule(:uri_v)     { str('uri').as(:uri) >> spcCmnt? >> uri_template.maybe }
+    rule(:uri_v)     { str('uri').as(:uri) }
     rule(:integer_v) { str('integer').as(:integer_v) }
     rule(:integer_r) {
       integer.maybe.as(:integer_min) >> str('..') >> integer.maybe.as(:integer_max) | ( str('..') >> integer.as(:integer_max) )
@@ -76,7 +76,7 @@ module JCRValidator
       (
         any | ip4 | ip6 | fqdn | idn | phone | email | base64 | full_time | full_date | date_time |
         null | base64 | string | uri_v | float_v | integer_v | enumeration | float_r | integer_r |
-        true_v | false_v | q_string | regex | float.as(:float) | integer.as(:integer)
+        true_v | false_v | q_string | uri_template | regex | float.as(:float) | integer.as(:integer)
       )
     }
     rule(:value_rule) { ( str(':') >> spcCmnt? >> value_def ).as(:value_rule) }
