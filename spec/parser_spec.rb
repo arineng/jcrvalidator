@@ -51,20 +51,19 @@ describe 'parser' do
     expect(tree[0][:rule][:value_rule][:q_string]).to eq("a string constant")
   end
 
-  it 'should parse a string without a regex' do
+  it 'should parse a string' do
     tree = JCRValidator.parse( 'trule : string' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:value_rule][:string]).to eq("string")
   end
 
-  it 'should parse a string with a regex 1' do
-    tree = JCRValidator.parse( 'trule : string /a.regex.goes.here.*/' )
+  it 'should parse a regex 1' do
+    tree = JCRValidator.parse( 'trule : /a.regex.goes.here.*/' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
-    expect(tree[0][:rule][:value_rule][:string]).to eq("string")
     expect(tree[0][:rule][:value_rule][:regex]).to eq("a.regex.goes.here.*")
   end
-  it 'should parse a string with a regex 2' do
-    tree = JCRValidator.parse( 'trule : string /a.regex\\.goes.here.*/' )
+  it 'should parse a 2' do
+    tree = JCRValidator.parse( 'trule : /a.regex\\.goes.here.*/' )
     expect(tree[0][:rule][:value_rule][:regex]).to eq("a.regex\\.goes.here.*")
   end
 
