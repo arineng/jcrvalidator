@@ -45,6 +45,12 @@ describe 'parser' do
     expect(tree[0][:rule][:value_rule][:ip6]).to eq("ip6")
   end
 
+  it 'should parse a string constant' do
+    tree = JCRValidator.parse( 'trule : "a string constant"' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:value_rule][:q_string]).to eq("a string constant")
+  end
+
   it 'should parse a string without a regex' do
     tree = JCRValidator.parse( 'trule : string' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
@@ -76,6 +82,21 @@ describe 'parser' do
   it 'should parse an any' do
     tree = JCRValidator.parse( 'trule : any' )
     expect(tree[0][:rule][:value_rule][:any]).to eq("any")
+  end
+
+  it 'should parse true' do
+    tree = JCRValidator.parse( 'trule : true' )
+    expect(tree[0][:rule][:value_rule][:true_v]).to eq("true")
+  end
+
+  it 'should parse false' do
+    tree = JCRValidator.parse( 'trule : false' )
+    expect(tree[0][:rule][:value_rule][:false_v]).to eq("false")
+  end
+
+  it 'should parse null' do
+    tree = JCRValidator.parse( 'trule : null' )
+    expect(tree[0][:rule][:value_rule][:null]).to eq("null")
   end
 
   it 'should parse a integer value without a range' do

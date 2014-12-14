@@ -55,7 +55,8 @@ module JCRValidator
     rule(:full_date) { str('full-date').as(:full_date) }
     rule(:full_time) { str('full-time').as(:full_time) }
     rule(:date_time) { str('date-time').as(:date_time) }
-    rule(:boolean)   { str('boolean').as(:boolean) }
+    rule(:true_v)    { str('true').as(:true_v) }
+    rule(:false_v)   { str('false').as(:false_v) }
     rule(:null)      { str('null').as(:null) }
     rule(:base64)    { str('base64').as(:base64) }
     rule(:string)    { str('string').as(:string) >> spcCmnt? >> regex.maybe }
@@ -74,7 +75,8 @@ module JCRValidator
     rule(:value_def) {
       (
         any | ip4 | ip6 | fqdn | idn | phone | email | base64 | full_time | full_date | date_time |
-        boolean | null | base64 | string | uri_v | float_v | integer_v | enumeration | float_r | integer_r | float.as(:float) | integer.as(:integer)
+        null | base64 | string | uri_v | float_v | integer_v | enumeration | float_r | integer_r |
+        true_v | false_v | q_string | float.as(:float) | integer.as(:integer)
       )
     }
     rule(:value_rule) { ( str(':') >> spcCmnt? >> value_def ).as(:value_rule) }
