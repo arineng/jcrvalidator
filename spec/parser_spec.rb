@@ -155,33 +155,33 @@ describe 'parser' do
   end
 
   it 'should parse an enumeration 1' do
-    tree = JCRValidator.parse( 'trule : < 1.0 2 true "yes" "Y" >' )
-    expect(tree[0][:rule][:value_rule][:enumeration][0][:float]).to eq("1.0")
-    expect(tree[0][:rule][:value_rule][:enumeration][1][:integer]).to eq("2")
-    expect(tree[0][:rule][:value_rule][:enumeration][2][:boolean]).to eq("true")
-    expect(tree[0][:rule][:value_rule][:enumeration][3][:q_string]).to eq("yes")
-    expect(tree[0][:rule][:value_rule][:enumeration][4][:q_string]).to eq("Y")
+    tree = JCRValidator.parse( 'trule : 1.0 2 true "yes" "Y"' )
+    expect(tree[0][:rule][:value_rule][0][:float]).to eq("1.0")
+    expect(tree[0][:rule][:value_rule][1][:integer]).to eq("2")
+    expect(tree[0][:rule][:value_rule][2][:true_v]).to eq("true")
+    expect(tree[0][:rule][:value_rule][3][:q_string]).to eq("yes")
+    expect(tree[0][:rule][:value_rule][4][:q_string]).to eq("Y")
   end
   it 'should parse an enumeration 2' do
-    tree = JCRValidator.parse( 'trule : < "no" false 1.0 2 true "yes" "Y" >' )
-    expect(tree[0][:rule][:value_rule][:enumeration][0][:q_string]).to eq("no")
-    expect(tree[0][:rule][:value_rule][:enumeration][1][:boolean]).to eq("false")
-    expect(tree[0][:rule][:value_rule][:enumeration][2][:float]).to eq("1.0")
-    expect(tree[0][:rule][:value_rule][:enumeration][3][:integer]).to eq("2")
-    expect(tree[0][:rule][:value_rule][:enumeration][4][:boolean]).to eq("true")
-    expect(tree[0][:rule][:value_rule][:enumeration][5][:q_string]).to eq("yes")
-    expect(tree[0][:rule][:value_rule][:enumeration][6][:q_string]).to eq("Y")
+    tree = JCRValidator.parse( 'trule : "no" false 1.0 2 true "yes" "Y"' )
+    expect(tree[0][:rule][:value_rule][0][:q_string]).to eq("no")
+    expect(tree[0][:rule][:value_rule][1][:false_v]).to eq("false")
+    expect(tree[0][:rule][:value_rule][2][:float]).to eq("1.0")
+    expect(tree[0][:rule][:value_rule][3][:integer]).to eq("2")
+    expect(tree[0][:rule][:value_rule][4][:true_v]).to eq("true")
+    expect(tree[0][:rule][:value_rule][5][:q_string]).to eq("yes")
+    expect(tree[0][:rule][:value_rule][6][:q_string]).to eq("Y")
   end
   it 'should parse an enumeration 3' do
-    tree = JCRValidator.parse( 'trule : < null "no" false 1.0 2 true "yes" "Y" >' )
-    expect(tree[0][:rule][:value_rule][:enumeration][0][:null]).to eq("null")
-    expect(tree[0][:rule][:value_rule][:enumeration][1][:q_string]).to eq("no")
-    expect(tree[0][:rule][:value_rule][:enumeration][2][:boolean]).to eq("false")
-    expect(tree[0][:rule][:value_rule][:enumeration][3][:float]).to eq("1.0")
-    expect(tree[0][:rule][:value_rule][:enumeration][4][:integer]).to eq("2")
-    expect(tree[0][:rule][:value_rule][:enumeration][5][:boolean]).to eq("true")
-    expect(tree[0][:rule][:value_rule][:enumeration][6][:q_string]).to eq("yes")
-    expect(tree[0][:rule][:value_rule][:enumeration][7][:q_string]).to eq("Y")
+    tree = JCRValidator.parse( 'trule : null "no" false 1.0 2 true "yes" "Y"' )
+    expect(tree[0][:rule][:value_rule][0][:null]).to eq("null")
+    expect(tree[0][:rule][:value_rule][1][:q_string]).to eq("no")
+    expect(tree[0][:rule][:value_rule][2][:false_v]).to eq("false")
+    expect(tree[0][:rule][:value_rule][3][:float]).to eq("1.0")
+    expect(tree[0][:rule][:value_rule][4][:integer]).to eq("2")
+    expect(tree[0][:rule][:value_rule][5][:true_v]).to eq("true")
+    expect(tree[0][:rule][:value_rule][6][:q_string]).to eq("yes")
+    expect(tree[0][:rule][:value_rule][7][:q_string]).to eq("Y")
   end
 
   it 'should parse a member rule with float range with a max range 3' do

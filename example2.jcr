@@ -10,6 +10,6 @@ rule6 : /a.*regex/
 rule7 : true
 rule8 : false
 rule9 : null
-rule10: integer | "string" | /a.*regex/ | string | integer |
+rule10: integer "string" /a.*regex/ string integer
 
 

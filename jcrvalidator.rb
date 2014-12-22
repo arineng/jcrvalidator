@@ -40,10 +40,6 @@ module JCRValidator
         ( str('\\') >> match('[^\r\n]') | str('"').absent? >> match('[^\r\n]') ).repeat.as(:q_string) >>
       str('"')
     }
-    rule(:enum_item) {
-      str('true').as(:boolean) | str('false').as(:boolean) |
-      str('null').as(:null) | q_string | float.as(:float) | integer.as(:integer)
-    }
     rule(:any)       { str('any').as(:any) }
     rule(:ip4)       { str('ip4').as(:ip4) }
     rule(:ip6)       { str('ip6').as(:ip6) }
@@ -71,15 +67,14 @@ module JCRValidator
         ( str('..') >> float.as(:float_max) ) |
         float.as(:float_min) >> str('..')
     }
-    rule(:enumeration) { (str('<') >> spcCmnt? >> enum_item >> ( spaces >> enum_item ).repeat.maybe >> spcCmnt? >> str('>')).as(:enumeration) }
     rule(:value_def) {
       (
         any | ip4 | ip6 | fqdn | idn | phone | email | base64 | full_time | full_date | date_time |
-        null | base64 | string | uri_v | float_v | integer_v | enumeration | float_r | integer_r |
+        null | base64 | string | uri_v | float_v | integer_v | float_r | integer_r |
         true_v | false_v | q_string | uri_template | regex | float.as(:float) | integer.as(:integer)
       )
     }
-    rule(:value_rule) { ( str(':') >> spcCmnt? >> value_def ).as(:value_rule) }
+    rule(:value_rule) { ( str(':') >> spcCmnt? >> value_def >> ( spcCmnt? >> value_def ).repeat.maybe ).as(:value_rule) }
     rule(:member_rule) {
       ( str('^').as(:any_member).maybe >> q_string.as(:member_name) >> spcCmnt? >>
       ( value_rule | array_rule | object_rule | rule_name.as(:target_rule_name) ) ).as(:member_rule)
