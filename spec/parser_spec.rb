@@ -197,8 +197,8 @@ describe 'parser' do
   end
 
   it 'should parse an any member rule with integer value' do
-    tree = JCRValidator.parse( 'trule ^"" : integer' )
-    expect(tree[0][:rule][:member_rule][:any_member]).to eq("^")
+    tree = JCRValidator.parse( 'trule /.*/ : integer' )
+    expect(tree[0][:rule][:member_rule][:member_regex][:regex]).to eq(".*")
     expect(tree[0][:rule][:member_rule][:value_rule][:integer_v]).to eq("integer")
   end
 
@@ -492,6 +492,30 @@ EX2
     expect(tree[0][:rule][:rule_name]).to eq("trule")
   end
 
+  it 'should parse group rules and value enumerations' do
+    ex2a = <<EX2A
+trule [ ;comment 1
+  1*2 my_rule1, ;comment 2
+  : ( string | integer ),
+  ( my_rule2 | my_rule3 ) ;comment 3
+] ;comment 4
+EX2A
+    tree = JCRValidator.parse( ex2a )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+  end
+
+  it 'should parse group rules and value enumerations that are ored' do
+    ex2b = <<EX2B
+trule [ ;comment 1
+  1*2 my_rule1, ;comment 2
+  : ( string | integer ) |
+  ( my_rule2 | my_rule3 ) ;comment 3
+] ;comment 4
+EX2B
+    tree = JCRValidator.parse( ex2b )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+  end
+
   it 'should parse multiple commented rules' do
     ex3 = <<EX3
 trule [ ;comment 1
@@ -589,7 +613,7 @@ EX8
 
   it 'should parse ex4 from I-D' do
     ex9 = <<EX9
-any_member ^"" : any
+any_member /.*/ : any
 
 object_of_anything { *any_member }
 EX9
@@ -599,7 +623,7 @@ EX9
 
   it 'should parse ex5 from I-D' do
     ex10 = <<EX10
-object_of_anything { *^"":any }
+object_of_anything { */.*/:any }
 EX10
     tree = JCRValidator.parse( ex10 )
     expect(tree[0][:rule][:rule_name]).to eq("object_of_anything")
