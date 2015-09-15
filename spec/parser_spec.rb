@@ -17,6 +17,21 @@ require 'pp'
 
 describe 'parser' do
 
+=begin
+  an example of printing out the ascii_tree
+
+  it 'should parse an ip4 value defintion 1' do
+    begin
+      tree = JCRValidator.parse( 'trule : ip4' )
+        expect(tree[0][:rule][:rule_name]).to eq("trule")
+        expect(tree[0][:rule][:value_rule][:ip4]).to eq("ip4")
+      rescue Parslet::ParseFailed => failure
+
+        puts failure.cause.ascii_tree
+      end
+  end
+=end
+
   it 'should parse an ip4 value defintion 1' do
     tree = JCRValidator.parse( 'trule : ip4' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
@@ -194,6 +209,10 @@ describe 'parser' do
     tree = JCRValidator.parse( 'trule "thing" : integer' )
     expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("thing")
     expect(tree[0][:rule][:member_rule][:value_rule][:integer_v]).to eq("integer")
+  end
+
+  it 'should not parse a repetition member string rule with integer value' do
+    expect{ tree = JCRValidator.parse( 'trule 1*2 "thing" : integer' ) }.to raise_error
   end
 
   it 'should parse an any member rule with integer value' do

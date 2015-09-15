@@ -129,10 +129,6 @@ module JCRValidator
     parser = Parser.new
     parser.parse(str)
 
-  rescue Parslet::ParseFailed => failure
-
-    puts failure.cause.ascii_tree
-
   end
 
   def self.parseAndTransform(str)
@@ -143,10 +139,6 @@ module JCRValidator
 
     transformer = Transformer.new
     transformer.apply( tree )
-
-  rescue Parslet::ParseFailed => failure
-
-    puts failure.cause.ascii_tree
 
   end
 
