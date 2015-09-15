@@ -62,7 +62,7 @@ describe 'parser' do
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:value_rule][:regex]).to eq("a.regex.goes.here.*")
   end
-  it 'should parse a 2' do
+  it 'should parse a regex 2' do
     tree = JCRValidator.parse( 'trule : /a.regex\\.goes.here.*/' )
     expect(tree[0][:rule][:value_rule][:regex]).to eq("a.regex\\.goes.here.*")
   end
@@ -200,6 +200,27 @@ describe 'parser' do
     tree = JCRValidator.parse( 'trule /.*/ : integer' )
     expect(tree[0][:rule][:member_rule][:member_regex][:regex]).to eq(".*")
     expect(tree[0][:rule][:member_rule][:value_rule][:integer_v]).to eq("integer")
+  end
+
+  it 'should parse an regex member rule with string value' do
+    tree = JCRValidator.parse( 'trule /a.regex\\.goes.here.*/ : string' )
+    expect(tree[0][:rule][:member_rule][:member_regex][:regex]).to eq("a.regex\\.goes.here.*")
+    expect(tree[0][:rule][:member_rule][:value_rule][:string]).to eq("string")
+  end
+
+  it 'should parse a repetition regex member rule with string value' do
+    tree = JCRValidator.parse( 'trule 1*2/a.regex\\.goes.here.*/ : string' )
+    expect(tree[0][:rule][:member_rule][:member_regex][:regex]).to eq("a.regex\\.goes.here.*")
+    expect(tree[0][:rule][:member_rule][:repetition_min]).to eq("1")
+    expect(tree[0][:rule][:member_rule][:repetition_max]).to eq("2")
+    expect(tree[0][:rule][:member_rule][:value_rule][:string]).to eq("string")
+  end
+
+  it 'should parse a repetition regex member rule with string value 2' do
+    tree = JCRValidator.parse( 'trule 1* /a.regex\\.goes.here.*/ : string' )
+    expect(tree[0][:rule][:member_rule][:member_regex][:regex]).to eq("a.regex\\.goes.here.*")
+    expect(tree[0][:rule][:member_rule][:repetition_min]).to eq("1")
+    expect(tree[0][:rule][:member_rule][:value_rule][:string]).to eq("string")
   end
 
   it 'should parse a member rule with an email value 2' do
