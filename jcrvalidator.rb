@@ -81,13 +81,10 @@ module JCRValidator
     rule(:min_max_repetition) { ( p_integer.as(:repetition_min) >> str('*') >> p_integer.maybe.as(:repetition_max) ) |
             ( str('*') >> p_integer.as(:repetition_max) ) }
     rule(:member_rule) {
-      ( ( min_max_repetition.maybe >> spcCmnt? >> regex.as(:member_regex) | q_string.as(:member_name) ) >> spcCmnt? >>
+      ( ( regex.as(:member_regex) | q_string.as(:member_name) ) >> spcCmnt? >>
       ( value_rule | array_rule | object_rule | rule_name.as(:target_rule_name) ) ).as(:member_rule)
     }
-    rule(:object_repetition) {
-      str('?').as(:member_optional) | min_max_repetition
-    }
-    rule(:object_def ) { object_repetition.maybe >> spcCmnt? >> ( group_rule | member_rule | rule_name.as(:target_rule_name) ) }
+    rule(:object_def ) { min_max_repetition.maybe >> spcCmnt? >> ( group_rule | member_rule | rule_name.as(:target_rule_name) ) }
     rule(:object_rule) { ( str('{') >> spcCmnt? >>
       object_def >> ( spcCmnt? >> ( str(',') | str('|') ) >>
       spcCmnt? >> object_def ).repeat  >> spcCmnt? >> str('}')
@@ -97,7 +94,7 @@ module JCRValidator
     rule(:array_rule) { ( str('[') >> spcCmnt? >> array_def >>
       ( spcCmnt? >> ( str(',') | str('|') ) >> spcCmnt? >> array_def ).repeat >> spcCmnt? >> str(']') ).as(:array_rule)
     }
-    rule(:group_def)  { ( str('?') | min_max_repetition ).maybe >> spcCmnt? >>
+    rule(:group_def)  { min_max_repetition.maybe >> spcCmnt? >>
       ( group_rule | array_rule | object_rule | value_rule | rule_name ).as(:target_rule_name)
     }
     rule(:group_rule) { ( str('(') >> spcCmnt? >> group_def >> spcCmnt? >>
