@@ -456,6 +456,51 @@ describe 'parser' do
     expect(tree[0][:rule][:rule_name]).to eq("trule")
   end
 
+  it 'should parse a group rule with a rulename only' do
+    tree = JCRValidator.parse( 'trule ( my_rule1 )' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+  end
+
+  it 'should parse a group rule with a only a rulename with repetition' do
+    tree = JCRValidator.parse( 'trule ( 0*15 my_rule1 )' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+  end
+
+  it 'should parse a group rule with a member rule only' do
+    tree = JCRValidator.parse( 'trule ( "thing" target_rule )' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+  end
+
+  it 'should parse a group rule with a member rule that has a value rule' do
+    tree = JCRValidator.parse( 'trule ( "thing" : integer )' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+  end
+
+  it 'should parse a group rule with a member rule specified with a regex that has a value rule' do
+    tree = JCRValidator.parse( 'trule ( /.*/ : integer )' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+  end
+
+  it 'should parse a group rule with a member rule specified with a regex and repetition that has a value rule' do
+    tree = JCRValidator.parse( 'trule ( 0 * 15 /.*/ : integer )' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+  end
+
+  it 'should parse a group rule with a member rule specified with a regex and only repetition max that has a value rule' do
+    tree = JCRValidator.parse( 'trule ( * 15 /.*/ : integer )' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+  end
+
+  it 'should parse a group rule with a member rule specified with a regex and only repetition min that has a value rule' do
+    tree = JCRValidator.parse( 'trule ( 1 * /.*/ : integer )' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+  end
+
+  it 'should parse a group rule with an array rule with an object rule and value rule' do
+    tree = JCRValidator.parse( 'trule ( [ : integer, { my_rule2 } ] )' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+  end
+
   it 'should parse a group rule with a rulename and an array rule with an object rule and value rule' do
     tree = JCRValidator.parse( 'trule ( my_rule1 , [ : integer, { my_rule2 } ] )' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
