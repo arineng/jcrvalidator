@@ -112,6 +112,11 @@ describe 'parser' do
     expect(tree[0][:rule][:value_rule][:false_v]).to eq("false")
   end
 
+  it 'should parse boolean' do
+    tree = JCRValidator.parse( 'trule : boolean' )
+    expect(tree[0][:rule][:value_rule][:boolean_v]).to eq("boolean")
+  end
+
   it 'should parse null' do
     tree = JCRValidator.parse( 'trule : null' )
     expect(tree[0][:rule][:value_rule][:null]).to eq("null")
