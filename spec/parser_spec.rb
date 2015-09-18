@@ -614,7 +614,8 @@ EX3
 
   it 'should parse multiple commented rules with directives' do
     ex4 = <<EX4
-# include file://blahbalh ; a collection of rules
+# ruleset-id http://arin.net/jcrexamples
+# import http://arin.net/otherexamples
 trule [ ;comment 1
   1*2 my_rule1, ;comment 2
   ( my_rule2, my_rule3 ) ;comment 3
@@ -622,15 +623,15 @@ trule [ ;comment 1
 trule2( my_rule1 , [ : integer, { my_rule2 } ], ( my_rule3, my_rule4 ) )
 EX4
     tree = JCRValidator.parse( ex4 )
-    expect(tree[1][:rule][:rule_name]).to eq("trule")
-    expect(tree[2][:rule][:rule_name]).to eq("trule2")
+    expect(tree[2][:rule][:rule_name]).to eq("trule")
+    expect(tree[3][:rule][:rule_name]).to eq("trule2")
   end
 
   it 'should parse multiple commented rules with multiple directives' do
     ex5 = <<EX5
 # jcr-version 4.0
 # ruleset-id http://arin.net/jcrexamples
-# include file://blahbalh ; a collection of rules
+# import http://arin.net/otherexamples as otherrules
 # pedantic
 trule [ ;comment 1
   1*2 my_rule1, ;comment 2
@@ -745,12 +746,13 @@ EX12
 
   it 'should parse groups of union with namespaced rule names' do
     ex12 = <<EX12
+# import http://ietf.org/rfcXXXX.jcr as rfcXXXX
 rfcXXXX.encodings : ( "base32" | "base64" )
 more_encodings : ( "base32hex" | "base64url" | "base16" )
 all_encodings ( rfcXXXX.encodings | more_encodings )
 EX12
     tree = JCRValidator.parse( ex12 )
-    expect(tree[0][:rule][:rule_name]).to eq("rfcXXXX.encodings")
+    expect(tree[1][:rule][:rule_name]).to eq("rfcXXXX.encodings")
   end
 
   it 'should parse union as unions' do
