@@ -74,10 +74,10 @@ module JCRValidator
         true_v | false_v | q_string | uri_template | regex | float.as(:float) | integer.as(:integer)
       )
     }
-    rule(:value_enum) {
+    rule(:value_union) {
       str('(') >> spcCmnt? >> value_def >> ( spcCmnt? >> str('|') >> spcCmnt? >> value_def ).repeat(1) >> spcCmnt? >> str(')')
     }
-    rule(:value_rule) { ( str(':') >> spcCmnt? >> ( value_enum | value_def ) ).as(:value_rule) }
+    rule(:value_rule) { ( str(':') >> spcCmnt? >> ( value_union | value_def ) ).as(:value_rule) }
     rule(:min_max_repetition) { ( p_integer.as(:repetition_min) >> spcCmnt? >> str('*') >> spcCmnt? >> p_integer.maybe.as(:repetition_max) ) |
             ( str('*') >> spcCmnt? >> p_integer.as(:repetition_max) ) }
     rule(:member_rule) {

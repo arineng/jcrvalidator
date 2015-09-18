@@ -169,7 +169,7 @@ describe 'parser' do
     expect(tree[0][:rule][:value_rule][:float_max]).to eq("100.003")
   end
 
-  it 'should parse an enumeration 1' do
+  it 'should parse an union 1' do
     tree = JCRValidator.parse( 'trule : ( 1.0 | 2 | true | "yes" | "Y" )' )
     expect(tree[0][:rule][:value_rule][0][:float]).to eq("1.0")
     expect(tree[0][:rule][:value_rule][1][:integer]).to eq("2")
@@ -178,7 +178,7 @@ describe 'parser' do
     expect(tree[0][:rule][:value_rule][4][:q_string]).to eq("Y")
   end
 
-  it 'should parse an enumeration 2' do
+  it 'should parse an union 2' do
     tree = JCRValidator.parse( 'trule : ( "no" | false | 1.0 | 2 | true | "yes" | "Y" )' )
     expect(tree[0][:rule][:value_rule][0][:q_string]).to eq("no")
     expect(tree[0][:rule][:value_rule][1][:false_v]).to eq("false")
@@ -189,7 +189,7 @@ describe 'parser' do
     expect(tree[0][:rule][:value_rule][6][:q_string]).to eq("Y")
   end
 
-  it 'should parse an enumeration 3' do
+  it 'should parse an union 3' do
     tree = JCRValidator.parse( 'trule : ( null | "no" | false | 1.0 | 2 | true | "yes" | "Y" )' )
     expect(tree[0][:rule][:value_rule][0][:null]).to eq("null")
     expect(tree[0][:rule][:value_rule][1][:q_string]).to eq("no")
@@ -570,7 +570,7 @@ EX2
     expect(tree[0][:rule][:rule_name]).to eq("trule")
   end
 
-  it 'should parse group rules and value enumerations' do
+  it 'should parse group rules and value union' do
     ex2a = <<EX2A
 trule [ ;comment 1
   1*2 my_rule1, ;comment 2
@@ -582,7 +582,7 @@ EX2A
     expect(tree[0][:rule][:rule_name]).to eq("trule")
   end
 
-  it 'should parse group rules and value enumerations that are ored' do
+  it 'should parse group rules and value union that are ored' do
     ex2b = <<EX2B
 trule [ ;comment 1
   1*2 my_rule1, ;comment 2
@@ -725,7 +725,7 @@ EX12
     expect(tree[0][:rule][:rule_name]).to eq("array_of_any")
   end
 
-  it 'should parse groups of enumerations' do
+  it 'should parse groups of union' do
     ex12 = <<EX12
 encodings : ( "base32" | "base64" )
 more_encodings : ( "base32hex" | "base64url" | "base16" )
@@ -735,9 +735,9 @@ EX12
     expect(tree[0][:rule][:rule_name]).to eq("encodings")
   end
 
-  it 'should parse enumerations as unions' do
+  it 'should parse union as unions' do
     ex12 = <<EX12
-encodings : ( "base32" | "base64" | integer | /^.{5,10}/ | ip4 )
+encodings : ( "base32" | "base64" | integer | /^.{5,10}/ | ip4 | ip6 | fqdn )
 EX12
     tree = JCRValidator.parse( ex12 )
     expect(tree[0][:rule][:rule_name]).to eq("encodings")
