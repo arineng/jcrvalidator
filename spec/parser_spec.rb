@@ -628,6 +628,7 @@ EX4
 
   it 'should parse multiple commented rules with multiple directives' do
     ex5 = <<EX5
+# jcr-version 4.0
 # include file://blahbalh ; a collection of rules
 # pedantic
 trule [ ;comment 1
@@ -637,8 +638,8 @@ trule [ ;comment 1
 trule2( my_rule1 , [ : integer, { my_rule2 } ], ( my_rule3, my_rule4 ) )
 EX5
     tree = JCRValidator.parse( ex5 )
-    expect(tree[2][:rule][:rule_name]).to eq("trule")
-    expect(tree[3][:rule][:rule_name]).to eq("trule2")
+    expect(tree[3][:rule][:rule_name]).to eq("trule")
+    expect(tree[4][:rule][:rule_name]).to eq("trule2")
   end
 
   it 'should parse ex1 from I-D' do
