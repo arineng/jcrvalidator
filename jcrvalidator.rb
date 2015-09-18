@@ -109,7 +109,8 @@ module JCRValidator
     rule(:language_compatible_members) { str('language-compatible-members').as(:language_compatible_members) }
     rule(:include_d) { str('include').as(:include) >> spaces >> uri.as(:uri) }
     rule(:jcr_version_d) { str('jcr-version') >> spaces >> float }
-    rule(:directive_def) { pedantic | language_compatible_members | include_d | jcr_version_d }
+    rule(:ruleset_id_d) { str('ruleset-id') >> spaces >> uri.as(:uri) }
+    rule(:directive_def) { pedantic | language_compatible_members | include_d | jcr_version_d | ruleset_id_d }
     rule(:directives) { ( str('#') >> spaces? >> directive_def >> match('[^\r\n]').repeat.maybe >> match('[\r\n]') ).as(:directive) }
     rule(:top) { ( rules | directives ).repeat }
 
