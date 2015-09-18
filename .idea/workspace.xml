@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3ebe9841-051a-4230-ba6c-8935dd0c40e4" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jcrvalidator.rb" afterPath="$PROJECT_DIR$/jcrvalidator.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spec/parser_spec.rb" afterPath="$PROJECT_DIR$/spec/parser_spec.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -78,21 +77,9 @@
       <file leaf-file-name="parser_spec.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.79460967">
-              <caret line="494" column="43" selection-start-line="494" selection-start-column="43" selection-end-line="494" selection-end-column="43" />
+            <state vertical-scroll-proportion="0.8466543">
+              <caret line="731" column="42" selection-start-line="731" selection-start-column="42" selection-end-line="731" selection-end-column="42" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="console.sql" pinned="false" current-in-tab="false">
-        <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/e6757db2-2116-4159-8924-a418ceff0726/console.sql">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="1" column="24" selection-start-line="1" selection-start-column="24" selection-end-line="1" selection-end-column="24" />
-              <folding>
-                <marker date="1442346018000" expanded="true" signature="113:137" placeholder="select * fro..rsa..." />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -117,7 +104,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <push-targets>
-      <push-target-info repo="$PROJECT_DIR$" source="master" target-remote="github" target-branch="master" />
+      <push-target-info repo="$PROJECT_DIR$" source="master" target-remote="origin" target-branch="master" />
     </push-targets>
   </component>
   <component name="GradleLocalSettings">
@@ -133,8 +120,8 @@
         <option value="$APPLICATION_CONFIG_DIR$/consoles/db/24be5579-bb93-4cef-9cb6-59dd79a674f9/console.sql" />
         <option value="$APPLICATION_CONFIG_DIR$/consoles/db/21d67ae6-9a0e-4135-b075-83136494572e/console.sql" />
         <option value="$APPLICATION_CONFIG_DIR$/consoles/db/514cf1c6-9886-402c-9f54-234cff8b96bb/console.sql" />
-        <option value="$APPLICATION_CONFIG_DIR$/consoles/db/e6757db2-2116-4159-8924-a418ceff0726/console.sql" />
         <option value="$PROJECT_DIR$/jcrvalidator.rb" />
+        <option value="$APPLICATION_CONFIG_DIR$/consoles/db/e6757db2-2116-4159-8924-a418ceff0726/console.sql" />
         <option value="$PROJECT_DIR$/spec/parser_spec.rb" />
       </list>
     </option>
@@ -229,6 +216,7 @@
     <property name="dynamic.classpath" value="false" />
     <property name="settings.editor.selected.configurable" value="database.main" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
+    <property name="Console.TableResult.DefaultCopyAction" value="Comma-separated Values (CSV)" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -490,7 +478,7 @@
       <workItem from="1442242308461" duration="895000" />
       <workItem from="1442259666798" duration="44000" />
       <workItem from="1442328458398" duration="4558000" />
-      <workItem from="1442426626656" duration="2644000" />
+      <workItem from="1442426626656" duration="5156000" />
     </task>
     <task id="LOCAL-00001" summary="added copyright">
       <created>1416492211755</created>
@@ -642,11 +630,17 @@
       <option name="project" value="LOCAL" />
       <updated>1442494169259</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="group rules didn't have member rules&#10;added optional spaces to repetition">
+      <created>1442496326280</created>
+      <option name="number" value="00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1442496326280</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="85470000" />
+    <option name="totallyTimeSpent" value="87982000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1200" extended-state="6" />
@@ -673,7 +667,7 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Database Console" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.30422536" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Database Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.6206468" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -718,7 +712,8 @@
     <MESSAGE value="added repetition to regex member rules" />
     <MESSAGE value="added a test for a failure of repetition for member string rules" />
     <MESSAGE value="removed ? in favor of *1&#10;repetition is no longer on member rules, moved to object rules so things are more consistent" />
-    <option name="LAST_COMMIT_MESSAGE" value="removed ? in favor of *1&#10;repetition is no longer on member rules, moved to object rules so things are more consistent" />
+    <MESSAGE value="group rules didn't have member rules&#10;added optional spaces to repetition" />
+    <option name="LAST_COMMIT_MESSAGE" value="group rules didn't have member rules&#10;added optional spaces to repetition" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1469,10 +1464,10 @@
     </entry>
     <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/e6757db2-2116-4159-8924-a418ceff0726/console.sql">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="1" column="24" selection-start-line="1" selection-start-column="24" selection-end-line="1" selection-end-column="24" />
+        <state vertical-scroll-proportion="-1.5">
+          <caret line="3" column="90" selection-start-line="3" selection-start-column="90" selection-end-line="3" selection-end-column="90" />
           <folding>
-            <marker date="1442346018000" expanded="true" signature="113:137" placeholder="select * fro..rsa..." />
+            <marker date="1442512287000" expanded="true" signature="-1:-1" placeholder="select * fro..rsa..." />
           </folding>
         </state>
       </provider>
@@ -1490,8 +1485,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.79460967">
-          <caret line="494" column="43" selection-start-line="494" selection-start-column="43" selection-end-line="494" selection-end-column="43" />
+        <state vertical-scroll-proportion="0.8466543">
+          <caret line="731" column="42" selection-start-line="731" selection-start-column="42" selection-end-line="731" selection-end-column="42" />
           <folding />
         </state>
       </provider>

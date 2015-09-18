@@ -177,6 +177,7 @@ describe 'parser' do
     expect(tree[0][:rule][:value_rule][3][:q_string]).to eq("yes")
     expect(tree[0][:rule][:value_rule][4][:q_string]).to eq("Y")
   end
+
   it 'should parse an enumeration 2' do
     tree = JCRValidator.parse( 'trule : ( "no" | false | 1.0 | 2 | true | "yes" | "Y" )' )
     expect(tree[0][:rule][:value_rule][0][:q_string]).to eq("no")
@@ -187,6 +188,7 @@ describe 'parser' do
     expect(tree[0][:rule][:value_rule][5][:q_string]).to eq("yes")
     expect(tree[0][:rule][:value_rule][6][:q_string]).to eq("Y")
   end
+
   it 'should parse an enumeration 3' do
     tree = JCRValidator.parse( 'trule : ( null | "no" | false | 1.0 | 2 | true | "yes" | "Y" )' )
     expect(tree[0][:rule][:value_rule][0][:null]).to eq("null")
@@ -721,5 +723,15 @@ array_of_any [ *:any ]
 EX12
     tree = JCRValidator.parse( ex12 )
     expect(tree[0][:rule][:rule_name]).to eq("array_of_any")
+  end
+
+  it 'should parse groups of enumerations' do
+    ex12 = <<EX12
+encodings : ( "base32" | "base64" )
+more_encodings : ( "base32hex" | "base64url" | "base16" )
+all_encodings ( encodings | more_encodings )
+EX12
+    tree = JCRValidator.parse( ex12 )
+    expect(tree[0][:rule][:rule_name]).to eq("encodings")
   end
 end
