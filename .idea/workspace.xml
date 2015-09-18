@@ -77,8 +77,8 @@
       <file leaf-file-name="parser_spec.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8466543">
-              <caret line="731" column="42" selection-start-line="731" selection-start-column="42" selection-end-line="731" selection-end-column="42" />
+            <state vertical-scroll-proportion="0.8643123">
+              <caret line="739" column="62" selection-start-line="739" selection-start-column="62" selection-end-line="739" selection-end-column="62" />
               <folding />
             </state>
           </provider>
@@ -104,7 +104,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <push-targets>
-      <push-target-info repo="$PROJECT_DIR$" source="master" target-remote="origin" target-branch="master" />
+      <push-target-info repo="$PROJECT_DIR$" source="master" target-remote="github" target-branch="master" />
     </push-targets>
   </component>
   <component name="GradleLocalSettings">
@@ -478,7 +478,7 @@
       <workItem from="1442242308461" duration="895000" />
       <workItem from="1442259666798" duration="44000" />
       <workItem from="1442328458398" duration="4558000" />
-      <workItem from="1442426626656" duration="5156000" />
+      <workItem from="1442426626656" duration="5876000" />
     </task>
     <task id="LOCAL-00001" summary="added copyright">
       <created>1416492211755</created>
@@ -636,11 +636,17 @@
       <option name="project" value="LOCAL" />
       <updated>1442496326280</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="added example of group of enumerations">
+      <created>1442581945533</created>
+      <option name="number" value="00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1442581945533</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="87982000" />
+    <option name="totallyTimeSpent" value="88702000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1200" extended-state="6" />
@@ -688,7 +694,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="added copyright" />
     <MESSAGE value="added text" />
     <MESSAGE value="removed alternate syntax" />
     <MESSAGE value="removed depends syntax" />
@@ -713,7 +718,8 @@
     <MESSAGE value="added a test for a failure of repetition for member string rules" />
     <MESSAGE value="removed ? in favor of *1&#10;repetition is no longer on member rules, moved to object rules so things are more consistent" />
     <MESSAGE value="group rules didn't have member rules&#10;added optional spaces to repetition" />
-    <option name="LAST_COMMIT_MESSAGE" value="group rules didn't have member rules&#10;added optional spaces to repetition" />
+    <MESSAGE value="added example of group of enumerations" />
+    <option name="LAST_COMMIT_MESSAGE" value="added example of group of enumerations" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1485,8 +1491,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8466543">
-          <caret line="731" column="42" selection-start-line="731" selection-start-column="42" selection-end-line="731" selection-end-column="42" />
+        <state vertical-scroll-proportion="0.8643123">
+          <caret line="739" column="62" selection-start-line="739" selection-start-column="62" selection-end-line="739" selection-end-column="62" />
           <folding />
         </state>
       </provider>

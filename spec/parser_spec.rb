@@ -734,4 +734,13 @@ EX12
     tree = JCRValidator.parse( ex12 )
     expect(tree[0][:rule][:rule_name]).to eq("encodings")
   end
+
+  it 'should parse enumerations as unions' do
+    ex12 = <<EX12
+encodings : ( "base32" | "base64" | integer | /^.{5,10}/ | ip4 )
+EX12
+    tree = JCRValidator.parse( ex12 )
+    expect(tree[0][:rule][:rule_name]).to eq("encodings")
+  end
+
 end
