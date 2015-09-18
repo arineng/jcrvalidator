@@ -689,6 +689,7 @@ nameserver {
      ; the ip addresses of the nameserver
      "ipAddresses" [ *( :ip4 | :ip6 ) ],
 
+     ; common rules for all structures
      common
    }
 EX8
@@ -740,6 +741,16 @@ all_encodings ( encodings | more_encodings )
 EX12
     tree = JCRValidator.parse( ex12 )
     expect(tree[0][:rule][:rule_name]).to eq("encodings")
+  end
+
+  it 'should parse groups of union with namespaced rule names' do
+    ex12 = <<EX12
+rfcXXXX.encodings : ( "base32" | "base64" )
+more_encodings : ( "base32hex" | "base64url" | "base16" )
+all_encodings ( rfcXXXX.encodings | more_encodings )
+EX12
+    tree = JCRValidator.parse( ex12 )
+    expect(tree[0][:rule][:rule_name]).to eq("rfcXXXX.encodings")
   end
 
   it 'should parse union as unions' do

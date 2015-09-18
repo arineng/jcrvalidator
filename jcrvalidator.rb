@@ -24,7 +24,7 @@ module JCRValidator
     rule(:comment)   { str(';') >> match('[^\r\n]').repeat.maybe >> match('[\r\n]') }
     rule(:spcCmnt?)   { spaces? >> comment.maybe >> spaces? }
 
-    rule(:rule_name) { (match('[a-zA-Z]') >> match('[a-zA-Z0-9\-_]').repeat).as(:rule_name) }
+    rule(:rule_name) { (match('[a-zA-Z]') >> match('[a-zA-Z0-9\-_\.]').repeat).as(:rule_name) }
     rule(:integer)   { ( str('-').maybe >> match('[0-9]').repeat ) }
     rule(:p_integer)   { ( match('[0-9]').repeat ) }
     rule(:float)     { str('-').maybe >> match('[0-9]').repeat(1) >> str('.' ) >> match('[0-9]').repeat(1) }
