@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3ebe9841-051a-4230-ba6c-8935dd0c40e4" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/jcr.rb" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/bin/jcr" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/jcr" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/jcrvalidator.rb" afterPath="$PROJECT_DIR$/lib/jcr/parser.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/jcr/check_groups.rb" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/spec/check_groups_spec.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/jcr/parser.rb" afterPath="$PROJECT_DIR$/lib/jcr/parser.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spec/parser_spec.rb" afterPath="$PROJECT_DIR$/spec/parser_spec.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -79,77 +77,31 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="parser_spec.rb" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="631" column="4" selection-start-line="631" selection-start-column="4" selection-end-line="631" selection-end-column="4" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="parser.rb" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/jcr/parser.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="17" column="10" selection-start-line="17" selection-start-column="10" selection-end-line="17" selection-end-column="10" />
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="jcr.rb" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/jcr.rb">
+      <file leaf-file-name="check_groups.rb" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/jcr/check_groups.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="19" selection-start-line="0" selection-start-column="19" selection-end-line="0" selection-end-column="19" />
+              <caret line="25" column="4" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="jcr" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bin/jcr">
+      <file leaf-file-name="check_groups_spec.rb" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/spec/check_groups_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="21" column="13" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/README.md">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.70281124">
-              <caret line="35" column="42" selection-start-line="35" selection-start-column="42" selection-end-line="35" selection-end-column="42" />
-              <folding />
-            </state>
-          </provider>
-          <provider editor-type-id="MarkdownPreviewEditor">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="example.jcr" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/example.jcr">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-8.275862">
-              <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
-              <folding />
-            </state>
-          </provider>
-          <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="example2.jcr" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/example2.jcr">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="4" column="12" selection-start-line="4" selection-start-column="12" selection-end-line="4" selection-end-column="12" />
+            <state vertical-scroll-proportion="0.36726806">
+              <caret line="19" column="23" selection-start-line="19" selection-start-column="23" selection-end-line="19" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -165,7 +117,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <push-targets>
-      <push-target-info repo="$PROJECT_DIR$" source="master" target-remote="origin" target-branch="master" />
+      <push-target-info repo="$PROJECT_DIR$" source="master" target-remote="github" target-branch="master" />
     </push-targets>
   </component>
   <component name="GradleLocalSettings">
@@ -185,11 +137,13 @@
         <option value="$PROJECT_DIR$/example2.jcr" />
         <option value="$PROJECT_DIR$/jcrvalidator.rb" />
         <option value="$PROJECT_DIR$/lib/jcr.rb" />
-        <option value="$PROJECT_DIR$/lib/jcr/parser.rb" />
-        <option value="$PROJECT_DIR$/spec/parser_spec.rb" />
         <option value="$PROJECT_DIR$/jcr" />
         <option value="$PROJECT_DIR$/bin/jcr" />
         <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/lib/jcr/parser.rb" />
+        <option value="$PROJECT_DIR$/spec/parser_spec.rb" />
+        <option value="$PROJECT_DIR$/lib/jcr/check_groups.rb" />
+        <option value="$PROJECT_DIR$/spec/check_groups_spec.rb" />
       </list>
     </option>
   </component>
@@ -349,6 +303,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/spec" />
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -761,7 +716,7 @@
       <workItem from="1442242308461" duration="895000" />
       <workItem from="1442259666798" duration="44000" />
       <workItem from="1442328458398" duration="4558000" />
-      <workItem from="1442426626656" duration="14283000" />
+      <workItem from="1442426626656" duration="15825000" />
     </task>
     <task id="LOCAL-00001" summary="added copyright">
       <created>1416492211755</created>
@@ -985,11 +940,23 @@
       <option name="project" value="LOCAL" />
       <updated>1442655058626</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="restructuring">
+      <created>1442656494374</created>
+      <option name="number" value="00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1442656494374</updated>
+    </task>
+    <task id="LOCAL-00039" summary="readme fix">
+      <created>1442656556712</created>
+      <option name="number" value="00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1442656556712</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="97109000" />
+    <option name="totallyTimeSpent" value="98651000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="6" />
@@ -1037,8 +1004,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="changed include directive syntax" />
-    <MESSAGE value="added more test cases" />
     <MESSAGE value="added a command line to parse rules" />
     <MESSAGE value="updated documentation" />
     <MESSAGE value="changed / to |" />
@@ -1062,28 +1027,15 @@
     <MESSAGE value="added namespaced rule names with dot" />
     <MESSAGE value="removed include, added import" />
     <MESSAGE value="changed examples and method names" />
-    <option name="LAST_COMMIT_MESSAGE" value="changed examples and method names" />
+    <MESSAGE value="restructuring" />
+    <MESSAGE value="readme fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="readme fix" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/example2.jcr">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="12" column="49" selection-start-line="12" selection-start-column="49" selection-end-line="12" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="175" column="71" selection-start-line="175" selection-start-column="71" selection-end-line="175" selection-end-column="71" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1761,16 +1713,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/e6757db2-2116-4159-8924-a418ceff0726/console.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.5">
-          <caret line="3" column="90" selection-start-line="3" selection-start-column="90" selection-end-line="3" selection-end-column="90" />
-          <folding>
-            <marker date="1442512287000" expanded="true" signature="-1:-1" placeholder="select * fro..rsa..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/example.jcr">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-8.275862">
@@ -1793,26 +1735,26 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/jcr/parser.rb">
+    <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="17" column="10" selection-start-line="17" selection-start-column="10" selection-end-line="17" selection-end-column="10" />
+        <state vertical-scroll-proportion="0.70281124">
+          <caret line="35" column="45" selection-start-line="35" selection-start-column="45" selection-end-line="35" selection-end-column="45" />
           <folding />
         </state>
+      </provider>
+      <provider editor-type-id="MarkdownPreviewEditor">
+        <state />
       </provider>
       <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
+    <entry file="file://$PROJECT_DIR$/bin/jcr">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="631" column="4" selection-start-line="631" selection-start-column="4" selection-end-line="631" selection-end-column="4" />
+        <state vertical-scroll-proportion="0.40592784">
+          <caret line="21" column="13" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
           <folding />
         </state>
-      </provider>
-      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/jcr.rb">
@@ -1823,26 +1765,50 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bin/jcr">
+    <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="21" column="13" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
+          <caret line="0" column="25" selection-start-line="0" selection-start-column="25" selection-end-line="0" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/e6757db2-2116-4159-8924-a418ceff0726/console.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="27" selection-start-line="0" selection-start-column="27" selection-end-line="0" selection-end-column="27" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
+    <entry file="file://$PROJECT_DIR$/lib/jcr/check_groups.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.70281124">
-          <caret line="35" column="42" selection-start-line="35" selection-start-column="42" selection-end-line="35" selection-end-column="42" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="25" column="4" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
           <folding />
         </state>
       </provider>
-      <provider editor-type-id="MarkdownPreviewEditor">
-        <state />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/jcr/parser.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
       </provider>
       <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
         <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spec/check_groups_spec.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.36726806">
+          <caret line="19" column="23" selection-start-line="19" selection-start-column="23" selection-end-line="19" selection-end-column="23" />
+          <folding />
+        </state>
       </provider>
     </entry>
   </component>
