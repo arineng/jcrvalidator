@@ -26,47 +26,26 @@ module JCR
     return rule_name_maping
   end
 
-  def self.check_rule_targets_for_names( tree, mapping )
-    tree.each do |node|
-      if node[:rule]
-        check_node_for_rule_name( node[:rule], mapping )
+  def self.check_rule_target_names( node, mapping )
+    if node.is_a? Array
+      node.each do |child_node|
+        check_rule_target_names( child_node, mapping )
       end
-    end
-  end
-
-  def self.check_node_for_rule_name( node, mapping )
-    if node.is_a?( Array )
-      node.each do |child|
-        check_node_for_rule_name( child, mapping )
-      end
-    else  #is a hash
-      if node[:member_rule]
-        check_target_rule_name( node[:member_rule], mapping )
-
-      elsif node[:array_rule]
-        node[:array_rule].each do |inner_rule|
-          unless check_target_rule_name( inner_rule, mapping )
-            check_node_for_rule_name( inner_rule, mapping )
-          end
+    else # is a hash
+      if node[:target_rule_name] && !mapping[ node[:target_rule_name][:rule_name].to_str ]
+        raise_rule_name_error node[:target_rule_name][:rule_name]
+      else
+        if node[:rule]
+          check_rule_target_names( node[:rule], mapping )
+        elsif node[:array_rule]
+          check_rule_target_names( node[:array_rule], mapping )
+        elsif node[:object_rule]
+          check_rule_target_names( node[:object_rule], mapping )
+        elsif node[:member_rule]
+          check_rule_target_names( node[:member_rule], mapping )
         end
-
-      elsif node[:object_rule]
-
-      elsif node[:group_rule]
-
       end
     end
-  end
-
-  def self.check_target_rule_name rule, mapping
-    if rule.is_a?(Hash) && rule[:target_rule_name]
-      trn = rule[:target_rule_name][:rule_name]
-      unless mapping[ trn.to_str ]
-        raise_rule_name_error trn
-      end
-      return true
-    end
-    return false
   end
 
   def self.raise_rule_name_error rule_name
