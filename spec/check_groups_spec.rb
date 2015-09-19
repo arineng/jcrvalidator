@@ -19,7 +19,6 @@ describe 'check_groups' do
 
   # stubbed out for now
   it 'should check groups' do
-    JCR.check_groups []
   end
 
 end

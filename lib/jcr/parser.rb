@@ -68,6 +68,9 @@ module JCR
         ( str('..') >> float.as(:float_max) ) |
         float.as(:float_min) >> str('..')
     }
+    rule(:comma_o)   { str(',').as(:comma_o) }
+    rule(:pipe_o)    { str('|').as(:pipe_o) }
+    rule(:comma_or_pipe) { pipe_o | comma_o }
     rule(:value_def) {
       (
         any | ip4 | ip6 | fqdn | idn | phone | email | base64 | full_time | full_date | date_time |
@@ -76,30 +79,30 @@ module JCR
       )
     }
     rule(:value_union) {
-      str('(') >> spcCmnt? >> value_def >> ( spcCmnt? >> str('|') >> spcCmnt? >> value_def ).repeat(1) >> spcCmnt? >> str(')')
+      str('(') >> spcCmnt? >> value_def >> ( spcCmnt? >> pipe_o >> spcCmnt? >> value_def ).repeat(1) >> spcCmnt? >> str(')')
     }
     rule(:value_rule) { ( str(':') >> spcCmnt? >> ( value_union | value_def ) ).as(:value_rule) }
     rule(:min_max_repetition) { ( p_integer.as(:repetition_min) >> spcCmnt? >> str('*') >> spcCmnt? >> p_integer.maybe.as(:repetition_max) ) |
             ( str('*') >> spcCmnt? >> p_integer.as(:repetition_max) ) }
     rule(:member_rule) {
       ( ( regex.as(:member_regex) | q_string.as(:member_name) ) >> spcCmnt? >>
-      ( value_rule | array_rule | object_rule | rule_name.as(:target_rule_name) ) ).as(:member_rule)
+      ( value_rule | array_rule | object_rule | group_rule | rule_name.as(:target_rule_name) ) ).as(:member_rule)
     }
     rule(:object_def ) { min_max_repetition.maybe >> spcCmnt? >> ( group_rule | member_rule | rule_name.as(:target_rule_name) ) }
     rule(:object_rule) { ( str('{') >> spcCmnt? >>
-      object_def >> ( spcCmnt? >> ( str(',') | str('|') ) >>
+      object_def >> ( spcCmnt? >> comma_or_pipe >>
       spcCmnt? >> object_def ).repeat  >> spcCmnt? >> str('}')
       ).as(:object_rule)
     }
     rule(:array_def)  { min_max_repetition.maybe >> spcCmnt? >> ( value_rule | group_rule | array_rule | object_rule | rule_name.as(:target_rule_name) ) }
     rule(:array_rule) { ( str('[') >> spcCmnt? >> array_def >>
-      ( spcCmnt? >> ( str(',') | str('|') ) >> spcCmnt? >> array_def ).repeat >> spcCmnt? >> str(']') ).as(:array_rule)
+      ( spcCmnt? >> comma_or_pipe >> spcCmnt? >> array_def ).repeat >> spcCmnt? >> str(']') ).as(:array_rule)
     }
     rule(:group_def)  { min_max_repetition.maybe >> spcCmnt? >>
       ( group_rule | array_rule | object_rule | value_rule | member_rule | rule_name ).as(:target_rule_name)
     }
     rule(:group_rule) { ( str('(') >> spcCmnt? >> group_def >> spcCmnt? >>
-      ( ( str(',') | str('|') ) >> spcCmnt? >> group_def ).repeat >>
+      ( comma_or_pipe >> spcCmnt? >> group_def ).repeat >>
       spcCmnt? >> str(')') ).as(:group_rule)
     }
     rule(:rules) { spcCmnt? >> ( rule_name >> spcCmnt? >>

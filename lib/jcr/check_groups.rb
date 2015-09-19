@@ -16,14 +16,18 @@ require 'jcr/parser'
 
 module JCR
 
-  def self.check_groups( tree )
-    tree.each do |node|
-      check_rule_for_group( node ) if node[:rule]
+  def self.check_groups( tree, mapping )
+    if tree.is_a? Array
+      tree.each do |node|
+        check_groups( node, mapping )
+      end
+    else # is a hash
+      if tree[:rule]
+        check_groups( tree[:rule], mapping )
+      elsif tree[:member_rule]
+
+      end
     end
-  end
-
-  def self.check_rule_for_group( node )
-
   end
 
 end

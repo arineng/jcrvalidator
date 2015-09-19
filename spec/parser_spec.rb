@@ -260,6 +260,28 @@ describe 'parser' do
     expect(tree[0][:rule][:member_rule][:target_rule_name][:rule_name]).to eq("my_value_rule")
   end
 
+  it 'should parse a member rule with a choice rule' do
+    tree = JCR.parse( 'trule "thing" ( an_array | an_object )' )
+    pp "",tree
+    expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("thing")
+    expect(tree[0][:rule][:member_rule][:group_rule][0][:target_rule_name][:rule_name]).to eq("an_array")
+    expect(tree[0][:rule][:member_rule][:group_rule][1][:target_rule_name][:rule_name]).to eq("an_object")
+  end
+
+  it 'should parse a member rule with an object rule' do
+    tree = JCR.parse( 'trule "thing" { an_array, an_object }' )
+    expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("thing")
+    expect(tree[0][:rule][:member_rule][:object_rule][0][:target_rule_name][:rule_name]).to eq("an_array")
+    expect(tree[0][:rule][:member_rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("an_object")
+  end
+
+  it 'should parse a member rule with an array rule' do
+    tree = JCR.parse( 'trule "thing" [ an_array, an_object ]' )
+    expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("thing")
+    expect(tree[0][:rule][:member_rule][:array_rule][0][:target_rule_name][:rule_name]).to eq("an_array")
+    expect(tree[0][:rule][:member_rule][:array_rule][1][:target_rule_name][:rule_name]).to eq("an_object")
+  end
+
   it 'should parse an object rule with rule names' do
     tree = JCR.parse( 'trule { my_rule1, my_rule2 }' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
