@@ -1,4 +1,4 @@
-# include file://blahbalh ; a collection of rules
+# ruleset-id file://blahbalh ; a collection of rules
 # pedantic
 
 rule1 : integer

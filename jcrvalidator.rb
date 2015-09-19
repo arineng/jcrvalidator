@@ -131,7 +131,8 @@ module JCRValidator
 
   end
 
-  def self.parseAndTransform(str)
+  def self.parse_and_transform(str)
+    # provided for the fun of it
 
     parser = Parser.new
     tree = parser.parse(str)
@@ -142,7 +143,7 @@ module JCRValidator
 
   end
 
-  def self.printTree( tree )
+  def self.print_tree( tree )
 
     tree.each do |node|
       puts "named rule: " + node[:rule][:rule_name] if node[:rule]
