@@ -33,5 +33,5 @@ tests. Feel free to fiddle with it.
 
 To run the unit tests, simply run the `rspec` command.
 
-To parse a set of rules: `bin/jcr example.jc`. If successfully parsed, it will print out a set of
+To parse a set of rules: `bin/jcr example.jcr`. If successfully parsed, it will print out a set of
 named rules. Otherwise you'll get a parse tree that attempts to be helpful about what went wrong.
