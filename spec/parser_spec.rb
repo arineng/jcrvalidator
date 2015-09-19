@@ -37,10 +37,12 @@ describe 'parser' do
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:value_rule][:ip4]).to eq("ip4")
   end
+
   it 'should parse an ip4 value defintion 2' do
     tree = JCR.parse( 'trule :ip4' )
     expect(tree[0][:rule][:value_rule][:ip4]).to eq("ip4")
   end
+
   it 'should parse an ip4 value defintion 3' do
     tree = JCR.parse( 'trule : ip4 ' )
     expect(tree[0][:rule][:value_rule][:ip4]).to eq("ip4")
@@ -204,6 +206,12 @@ describe 'parser' do
     expect(tree[0][:rule][:value_rule][5][:true_v]).to eq("true")
     expect(tree[0][:rule][:value_rule][6][:q_string]).to eq("yes")
     expect(tree[0][:rule][:value_rule][7][:q_string]).to eq("Y")
+  end
+
+  it 'should parse two rules' do
+    tree = JCR.parse( 'vrule : integer mrule "thing" vrule' )
+    expect(tree[0][:rule][:rule_name]).to eq("vrule")
+    expect(tree[1][:rule][:rule_name]).to eq("mrule")
   end
 
   it 'should parse a member rule with float range with a max range 3' do

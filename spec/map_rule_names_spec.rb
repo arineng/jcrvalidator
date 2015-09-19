@@ -16,10 +16,11 @@ require 'pp'
 require_relative '../lib/JCR/parser'
 require_relative '../lib/JCR/map_rule_names'
 
-describe 'check_groups' do
+describe 'check_names' do
 
   it 'should map rule names' do
     ex7 = <<EX7
+# ruleset-id http://blah.com
 width "width" : 0..1280
 height "height" : 0..1024
 
@@ -36,6 +37,37 @@ EX7
     expect( mapping["width"][:rule_name].to_str ).to eq( "width" )
     expect( mapping["height"][:rule_name].to_str ).to eq( "height" )
     expect( mapping["root"][:rule_name].to_str ).to eq( "root" )
+  end
+
+  it 'should check rule names' do
+    tree = JCR.parse( 'vrule : integer mrule "thing" vrule' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_targets_for_names( tree, mapping )
+  end
+
+  it 'should raise error' do
+    tree = JCR.parse( 'vrule : integer mrule "thing" missingrule' )
+    mapping = JCR.map_rule_names( tree )
+    expect{ JCR.check_rule_targets_for_names( tree, mapping ) }.to raise_error
+  end
+
+  it 'should find rule names in array' do
+    tree = JCR.parse( 'vrule1 : integer vrule2 : float arule [ vrule1, vrule2 ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_targets_for_names( tree, mapping )
+  end
+
+  it 'should find rule names in array of array' do
+    tree = JCR.parse( 'vrule1 : integer arule [ vrule1, [ vrule1 ] ]' )
+    pp tree
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_targets_for_names( tree, mapping )
+  end
+
+  it 'should not find rule names in array of array' do
+    tree = JCR.parse( 'vrule1 : integer arule [ vrule1, [ vrule2 ] ]' )
+    mapping = JCR.map_rule_names( tree )
+    expect{ JCR.check_rule_targets_for_names( tree, mapping ) }.to raise_error
   end
 
 end
