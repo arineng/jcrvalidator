@@ -16,14 +16,14 @@ require 'jcr/parser'
 
 module JCR
 
-  def self.check_groups( tree )
+  def self.map_rule_names( tree )
+    rule_name_maping = Hash.new
     tree.each do |node|
-      check_rule_for_group( node ) if node[:rule]
+      if node[:rule]
+        rule_name_maping[ node[:rule][:rule_name].to_str ] = node[:rule]
+      end
     end
-  end
-
-  def self.check_rule_for_group( node )
-
+    return rule_name_maping
   end
 
 end

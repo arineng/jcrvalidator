@@ -1,4 +1,4 @@
-# Copyright (c) 2015 American Registry for Internet Numbers
+# Copyright (C) 2015 American Registry for Internet Numbers (ARIN)
 #
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -11,19 +11,31 @@
 # WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 # IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+require 'rspec'
+require 'pp'
+require_relative '../lib/JCR/parser'
+require_relative '../lib/JCR/map_rule_names'
 
-require 'jcr/parser'
+describe 'check_groups' do
 
-module JCR
+  it 'should map rule names' do
+    ex7 = <<EX7
+width "width" : 0..1280
+height "height" : 0..1024
 
-  def self.check_groups( tree )
-    tree.each do |node|
-      check_rule_for_group( node ) if node[:rule]
-    end
-  end
-
-  def self.check_rule_for_group( node )
-
+root {
+    "Image" {
+        width, height, "Title" :string,
+        "thumbnail" { width, height, "Url" :uri },
+        "IDs" [ *:integer ]
+    }
+}
+EX7
+    tree = JCR.parse( ex7 )
+    mapping = JCR.map_rule_names( tree )
+    expect( mapping["width"][:rule_name].to_str ).to eq( "width" )
+    expect( mapping["height"][:rule_name].to_str ).to eq( "height" )
+    expect( mapping["root"][:rule_name].to_str ).to eq( "root" )
   end
 
 end
