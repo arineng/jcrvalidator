@@ -15,7 +15,7 @@ require 'pp'
 require 'parslet'
 
 
-module JCRValidator
+module JCR
 
   class Parser < Parslet::Parser
 
