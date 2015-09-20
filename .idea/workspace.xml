@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3ebe9841-051a-4230-ba6c-8935dd0c40e4" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/jcr/parser.rb" afterPath="$PROJECT_DIR$/lib/jcr/parser.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spec/parser_spec.rb" afterPath="$PROJECT_DIR$/spec/parser_spec.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/example2.jcr" afterPath="$PROJECT_DIR$/example2.jcr" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="jcrvalidator.iws" />
@@ -85,13 +84,36 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="parser.rb" pinned="false" current-in-tab="true">
+      <file leaf-file-name="parser.rb" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/jcr/parser.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.077319585">
+            <state vertical-scroll-proportion="0.0">
               <caret line="23" column="67" selection-start-line="23" selection-start-column="67" selection-end-line="23" selection-end-column="67" />
               <folding />
             </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="example2.jcr" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/example2.jcr">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="12" column="57" selection-start-line="12" selection-start-column="57" selection-end-line="12" selection-end-column="57" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="example.jcr" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/example.jcr">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.32128513">
+              <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
+              <folding />
+            </state>
+          </provider>
+          <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
+            <state />
           </provider>
         </entry>
       </file>
@@ -145,7 +167,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <push-targets>
-      <push-target-info repo="$PROJECT_DIR$" source="master" target-remote="github" target-branch="master" />
+      <push-target-info repo="$PROJECT_DIR$" source="master" target-remote="origin" target-branch="master" />
     </push-targets>
   </component>
   <component name="GradleLocalSettings">
@@ -162,7 +184,6 @@
         <option value="$APPLICATION_CONFIG_DIR$/consoles/db/514cf1c6-9886-402c-9f54-234cff8b96bb/console.sql" />
         <option value="$APPLICATION_CONFIG_DIR$/consoles/db/e6757db2-2116-4159-8924-a418ceff0726/console.sql" />
         <option value="$PROJECT_DIR$/example.jcr" />
-        <option value="$PROJECT_DIR$/example2.jcr" />
         <option value="$PROJECT_DIR$/jcrvalidator.rb" />
         <option value="$PROJECT_DIR$/lib/jcr.rb" />
         <option value="$PROJECT_DIR$/jcr" />
@@ -174,6 +195,7 @@
         <option value="$PROJECT_DIR$/spec/check_groups_spec.rb" />
         <option value="$PROJECT_DIR$/lib/jcr/parser.rb" />
         <option value="$PROJECT_DIR$/spec/parser_spec.rb" />
+        <option value="$PROJECT_DIR$/example2.jcr" />
       </list>
     </option>
   </component>
@@ -747,7 +769,7 @@
       <workItem from="1442242308461" duration="895000" />
       <workItem from="1442259666798" duration="44000" />
       <workItem from="1442328458398" duration="4558000" />
-      <workItem from="1442426626656" duration="38919000" />
+      <workItem from="1442426626656" duration="39028000" />
     </task>
     <task id="LOCAL-00001" summary="added copyright">
       <created>1416492211755</created>
@@ -1031,11 +1053,17 @@
       <option name="project" value="LOCAL" />
       <updated>1442761346244</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="comments can now end">
+      <created>1442767953656</created>
+      <option name="number" value="00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1442767953656</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="121745000" />
+    <option name="totallyTimeSpent" value="121854000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="6" />
@@ -1083,7 +1111,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="initial changes for new type of value enumerations" />
     <MESSAGE value="added more tests for enumerations&#10;took out ^&quot;&quot; for any and added regex for member names." />
     <MESSAGE value="added repetition to regex member rules" />
     <MESSAGE value="added a test for a failure of repetition for member string rules" />
@@ -1108,7 +1135,8 @@
     <MESSAGE value="initial pass at checking groups in members" />
     <MESSAGE value="members with group rule checking tests" />
     <MESSAGE value="unions are now gone in favor of straight-up group rules in value rules" />
-    <option name="LAST_COMMIT_MESSAGE" value="unions are now gone in favor of straight-up group rules in value rules" />
+    <MESSAGE value="comments can now end" />
+    <option name="LAST_COMMIT_MESSAGE" value="comments can now end" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1775,28 +1803,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/example.jcr">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-8.275862">
-          <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/example2.jcr">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="4" column="12" selection-start-line="4" selection-start-column="12" selection-end-line="4" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.70281124">
@@ -1880,8 +1886,30 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/jcr/parser.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.077319585">
+        <state vertical-scroll-proportion="0.0">
           <caret line="23" column="67" selection-start-line="23" selection-start-column="67" selection-end-line="23" selection-end-column="67" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/example2.jcr">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="12" column="57" selection-start-line="12" selection-start-column="57" selection-end-line="12" selection-end-column="57" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/example.jcr">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.32128513">
+          <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
           <folding />
         </state>
       </provider>
