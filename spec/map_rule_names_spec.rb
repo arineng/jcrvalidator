@@ -40,37 +40,37 @@ EX7
   end
 
   it 'should check rule names' do
-    tree = JCR.parse( 'vrule : integer mrule "thing" vrule' )
+    tree = JCR.parse( 'vrule : integer ;; mrule "thing" vrule' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
   end
 
   it 'should raise error' do
-    tree = JCR.parse( 'vrule : integer mrule "thing" missingrule' )
+    tree = JCR.parse( 'vrule : integer ;; mrule "thing" missingrule' )
     mapping = JCR.map_rule_names( tree )
     expect{ JCR.check_rule_target_names( tree, mapping ) }.to raise_error
   end
 
   it 'should find rule names in array' do
-    tree = JCR.parse( 'vrule1 : integer vrule2 : float arule [ vrule1, vrule2 ]' )
+    tree = JCR.parse( 'vrule1 : integer ;; vrule2 : float arule [ vrule1, vrule2 ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
   end
 
   it 'should find rule names in array of array' do
-    tree = JCR.parse( 'vrule1 : integer arule [ vrule1, [ vrule1 ] ]' )
+    tree = JCR.parse( 'vrule1 : integer ;; arule [ vrule1, [ vrule1 ] ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
   end
 
   it 'should not find rule names in array of array' do
-    tree = JCR.parse( 'vrule1 : integer arule [ vrule1, [ vrule2 ] ]' )
+    tree = JCR.parse( 'vrule1 : integer ;; arule [ vrule1, [ vrule2 ] ]' )
     mapping = JCR.map_rule_names( tree )
     expect{ JCR.check_rule_target_names( tree, mapping ) }.to raise_error
   end
 
   it 'should not find rule names in array of array in array' do
-    tree = JCR.parse( 'vrule1 : integer arule [ vrule1, [ vrule1, [ vrule2 ] ] ]' )
+    tree = JCR.parse( 'vrule1 : integer ;; arule [ vrule1, [ vrule1, [ vrule2 ] ] ]' )
     mapping = JCR.map_rule_names( tree )
     expect{ JCR.check_rule_target_names( tree, mapping ) }.to raise_error
   end
