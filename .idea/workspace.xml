@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3ebe9841-051a-4230-ba6c-8935dd0c40e4" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spec/check_groups_spec.rb" afterPath="$PROJECT_DIR$/spec/check_groups_spec.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="jcrvalidator.iws" />
@@ -769,13 +768,7 @@
       <workItem from="1442242308461" duration="895000" />
       <workItem from="1442259666798" duration="44000" />
       <workItem from="1442328458398" duration="4558000" />
-      <workItem from="1442426626656" duration="46459000" />
-    </task>
-    <task id="LOCAL-00005" summary="added tests for or in object">
-      <created>1417470160190</created>
-      <option name="number" value="00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1417470160190</updated>
+      <workItem from="1442426626656" duration="46471000" />
     </task>
     <task id="LOCAL-00006" summary="added oring to arraying and added tests">
       <created>1417470445079</created>
@@ -1065,11 +1058,17 @@
       <option name="project" value="LOCAL" />
       <updated>1442781024561</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="added checking for groups in objects">
+      <created>1442781118183</created>
+      <option name="number" value="00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1442781118183</updated>
+    </task>
+    <option name="localTasksCounter" value="55" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="129285000" />
+    <option name="totallyTimeSpent" value="129297000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="6" />
