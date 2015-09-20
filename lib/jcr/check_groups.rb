@@ -25,8 +25,38 @@ module JCR
     else # is a hash
       if tree[:rule]
         check_groups( tree[:rule], mapping )
+      elsif tree[:value_rule]
+        check_value_for_group( tree[:value_rule], mapping )
       elsif tree[:member_rule]
         check_member_for_group( tree[:member_rule], mapping )
+      end
+    end
+  end
+
+  def self.check_value_for_group node, mapping
+    if node[:group_rule]
+      disallowed_group_in_value?( node[:group_rule], mapping )
+    end
+  end
+
+  def self.disallowed_group_in_value? node, mapping
+    node.each do |groupee|
+      if groupee[:comma_o]
+        raise_group_error( 'AND (comma) operation in group rule of value rule', groupee[:comma_o] )
+      end
+      if groupee[:group_rule]
+        disallowed_group_in_value?( groupee[:group_rule], mapping )
+      elsif groupee[:target_rule_name]
+        trule = get_name_mapping( groupee[:target_rule_name][:rule_name], mapping )
+        if trule[:group_rule]
+          disallowed_group_in_value?( trule[:group_rule], mapping )
+        end
+      elsif groupee[:member_rule]
+        raise_group_error( "groups in value rules cannot have member rules", groupee[:member_rule] )
+      elsif groupee[:object_rule]
+        raise_group_error( "groups in value rules cannot have object rules", groupee[:member_rule] )
+      elsif groupee[:array_rule]
+        raise_group_error( "groups in value rules cannot have array rules", groupee[:member_rule] )
       end
     end
   end
