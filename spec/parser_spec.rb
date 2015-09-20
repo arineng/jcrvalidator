@@ -262,7 +262,6 @@ describe 'parser' do
 
   it 'should parse a member rule with a choice rule' do
     tree = JCR.parse( 'trule "thing" ( an_array | an_object )' )
-    pp "",tree
     expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("thing")
     expect(tree[0][:rule][:member_rule][:group_rule][0][:target_rule_name][:rule_name]).to eq("an_array")
     expect(tree[0][:rule][:member_rule][:group_rule][1][:target_rule_name][:rule_name]).to eq("an_object")

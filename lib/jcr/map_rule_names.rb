@@ -33,7 +33,7 @@ module JCR
       end
     else # is a hash
       if node[:target_rule_name] && !mapping[ node[:target_rule_name][:rule_name].to_str ]
-        raise_rule_name_error node[:target_rule_name][:rule_name]
+        raise_rule_name_missing node[:target_rule_name][:rule_name]
       else
         if node[:rule]
           check_rule_target_names( node[:rule], mapping )
@@ -48,7 +48,13 @@ module JCR
     end
   end
 
-  def self.raise_rule_name_error rule_name
+  def self.get_name_mapping rule_name, mapping
+    trule = mapping[ rule_name.to_str ]
+    raise_rule_name_missing( rule_name ) unless trule
+    return trule
+  end
+
+  def self.raise_rule_name_missing rule_name
     pos = rule_name.line_and_column
     name = rule_name.to_str
     raise "rule '" + name + "' at line " + pos[0].to_s + " column " + pos[1].to_s + " does not exist"

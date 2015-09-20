@@ -13,6 +13,7 @@
 # IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 require 'jcr/parser'
+require 'jcr/map_rule_names'
 
 module JCR
 
@@ -25,8 +26,49 @@ module JCR
       if tree[:rule]
         check_groups( tree[:rule], mapping )
       elsif tree[:member_rule]
-
+        check_member_for_group( tree[:member_rule], mapping )
       end
+    end
+  end
+
+  def self.check_member_for_group node, mapping
+    if node[:target_rule_name]
+      trule = get_name_mapping( node[:target_rule_name][:rule_name], mapping )
+      disallowed_group_in_member?( trule, mapping )
+    elsif node[:group_rule]
+      disallowed_group_in_member?( node[:group_rule], mapping )
+    else
+      check_groups( node, mapping )
+    end
+  end
+
+  def self.disallowed_group_in_member? node, mapping
+    node.each do |groupee|
+      if groupee[:comma_o]
+        raise_group_error( 'AND (comma) operation in group rule of member rule', groupee[:comma_o] )
+      end
+      if groupee[:group_rule]
+        disallowed_group_in_member?( groupee[:group_rule], mapping )
+      elsif groupee[:target_rule_name]
+        trule = get_name_mapping( groupee[:target_rule_name][:rule_name], mapping )
+        if trule[:group_rule]
+          disallowed_group_in_member?( trule[:group_rule], mapping )
+        end
+      elsif groupee[:member_rule]
+        raise_group_error( "groups in member rules cannot have member rules", groupee[:member_rule] )
+      else
+        check_groups( groupee, mapping )
+      end
+    end
+  end
+
+  def self.raise_group_error str, node
+    if node.is_a?( Parslet::Slice )
+      pos = node.line_and_column
+      name = node.to_str
+      raise "group rule error at line " + pos[0].to_s + " column " + pos[1].to_s + " name '" + name + "' :" + str
+    else
+      raise "group rule error with '" + node.to_s + "' :" + str
     end
   end
 
