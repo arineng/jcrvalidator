@@ -31,6 +31,8 @@ module JCR
         check_member_for_group( tree[:member_rule], mapping )
       elsif tree[:array_rule]
         check_array_for_group( tree[:array_rule], mapping )
+      elsif tree[:object_rule]
+        check_object_for_group( tree[:object_rule], mapping )
       end
     end
   end
@@ -42,6 +44,9 @@ module JCR
   end
 
   def self.disallowed_group_in_value? node, mapping
+    if node.is_a? Hash
+      node = [ node ]
+    end
     node.each do |groupee|
       if groupee[:comma_o]
         raise_group_error( 'AND (comma) operation in group rule of value rule', groupee[:comma_o] )
@@ -75,7 +80,11 @@ module JCR
   end
 
   def self.disallowed_group_in_member? node, mapping
+    if node.is_a? Hash
+      node = [ node ]
+    end
     node.each do |groupee|
+      pp "","groupee" , groupee, "node", node unless groupee.is_a? Hash
       if groupee[:comma_o]
         raise_group_error( 'AND (comma) operation in group rule of member rule', groupee[:comma_o] )
       end
@@ -112,6 +121,9 @@ module JCR
   end
 
   def self.disallowed_group_in_array? node, mapping
+    if node.is_a? Hash
+      node = [ node ]
+    end
     node.each do |groupee|
       if groupee[:group_rule]
         disallowed_group_in_array?( groupee[:group_rule], mapping )
@@ -122,6 +134,47 @@ module JCR
         end
       elsif groupee[:member_rule]
         raise_group_error( "groups in array rules cannot have member rules", groupee[:member_rule] )
+      else
+        check_groups( groupee, mapping )
+      end
+    end
+  end
+
+  def self.check_object_for_group node, mapping
+    if node.is_a?( Array )
+      node.each do |child_node|
+        check_object_for_group( child_node, mapping )
+      end
+    else
+      if node[:target_rule_name]
+        trule = get_name_mapping(node[:target_rule_name][:rule_name], mapping)
+        disallowed_group_in_object?(trule, mapping)
+      elsif node[:group_rule]
+        disallowed_group_in_object?(node[:group_rule], mapping)
+      else
+        check_groups(node, mapping)
+      end
+    end
+  end
+
+  def self.disallowed_group_in_object? node, mapping
+    if node.is_a? Hash
+      node = [ node ]
+    end
+    node.each do |groupee|
+      if groupee[:group_rule]
+        disallowed_group_in_object?( groupee[:group_rule], mapping )
+      elsif groupee[:target_rule_name]
+        trule = get_name_mapping( groupee[:target_rule_name][:rule_name], mapping )
+        if trule[:group_rule]
+          disallowed_group_in_object?( trule[:group_rule], mapping )
+        end
+      elsif groupee[:array_rule]
+        raise_group_error( "groups in object rules cannot have array rules", groupee[:member_rule] )
+      elsif groupee[:object_rule]
+        raise_group_error( "groups in object rules cannot have other object rules", groupee[:member_rule] )
+      elsif groupee[:value_rule]
+        raise_group_error( "groups in object rules cannot have value rules", groupee[:member_rule] )
       else
         check_groups( groupee, mapping )
       end
