@@ -367,4 +367,18 @@ describe 'check_groups' do
     expect{ JCR.check_groups( tree, mapping ) }.to raise_error
   end
 
+  it 'should error with object with group of value OR array' do
+    tree = JCR.parse( 'arule { ( "m2" :integer | [ :integer ] ) }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+  end
+
+  it 'should error with object with group of value OR value' do
+    tree = JCR.parse( 'arule { ( "m2" :integer | :integer ) }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+  end
+
 end
