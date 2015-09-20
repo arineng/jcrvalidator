@@ -176,36 +176,40 @@ describe 'parser' do
     expect(tree[0][:rule][:value_rule][:float_max]).to eq("100.003")
   end
 
-  it 'should parse an union 1' do
-    tree = JCR.parse( 'trule : ( 1.0 | 2 | true | "yes" | "Y" )' )
-    expect(tree[0][:rule][:value_rule][0][:float]).to eq("1.0")
-    expect(tree[0][:rule][:value_rule][1][:integer]).to eq("2")
-    expect(tree[0][:rule][:value_rule][2][:true_v]).to eq("true")
-    expect(tree[0][:rule][:value_rule][3][:q_string]).to eq("yes")
-    expect(tree[0][:rule][:value_rule][4][:q_string]).to eq("Y")
+  it 'should parse an value with group 1' do
+    begin
+      tree = JCR.parse( 'trule : ( :1.0 | :2 | :true | :"yes" | :"Y" )' )
+    rescue Parslet::ParseFailed => failure
+      puts failure.cause.ascii_tree
+    end
+    expect(tree[0][:rule][:value_rule][:group_rule][0][:value_rule][:float]).to eq("1.0")
+    expect(tree[0][:rule][:value_rule][:group_rule][1][:value_rule][:integer]).to eq("2")
+    expect(tree[0][:rule][:value_rule][:group_rule][2][:value_rule][:true_v]).to eq("true")
+    expect(tree[0][:rule][:value_rule][:group_rule][3][:value_rule][:q_string]).to eq("yes")
+    expect(tree[0][:rule][:value_rule][:group_rule][4][:value_rule][:q_string]).to eq("Y")
   end
 
-  it 'should parse an union 2' do
-    tree = JCR.parse( 'trule : ( "no" | false | 1.0 | 2 | true | "yes" | "Y" )' )
-    expect(tree[0][:rule][:value_rule][0][:q_string]).to eq("no")
-    expect(tree[0][:rule][:value_rule][1][:false_v]).to eq("false")
-    expect(tree[0][:rule][:value_rule][2][:float]).to eq("1.0")
-    expect(tree[0][:rule][:value_rule][3][:integer]).to eq("2")
-    expect(tree[0][:rule][:value_rule][4][:true_v]).to eq("true")
-    expect(tree[0][:rule][:value_rule][5][:q_string]).to eq("yes")
-    expect(tree[0][:rule][:value_rule][6][:q_string]).to eq("Y")
+  it 'should parse a value with group 2' do
+    tree = JCR.parse( 'trule : ( :"no" | :false | :1.0 | :2 | :true | :"yes" | :"Y" )' )
+    expect(tree[0][:rule][:value_rule][:group_rule][0][:value_rule][:q_string]).to eq("no")
+    expect(tree[0][:rule][:value_rule][:group_rule][1][:value_rule][:false_v]).to eq("false")
+    expect(tree[0][:rule][:value_rule][:group_rule][2][:value_rule][:float]).to eq("1.0")
+    expect(tree[0][:rule][:value_rule][:group_rule][3][:value_rule][:integer]).to eq("2")
+    expect(tree[0][:rule][:value_rule][:group_rule][4][:value_rule][:true_v]).to eq("true")
+    expect(tree[0][:rule][:value_rule][:group_rule][5][:value_rule][:q_string]).to eq("yes")
+    expect(tree[0][:rule][:value_rule][:group_rule][6][:value_rule][:q_string]).to eq("Y")
   end
 
-  it 'should parse an union 3' do
-    tree = JCR.parse( 'trule : ( null | "no" | false | 1.0 | 2 | true | "yes" | "Y" )' )
-    expect(tree[0][:rule][:value_rule][0][:null]).to eq("null")
-    expect(tree[0][:rule][:value_rule][1][:q_string]).to eq("no")
-    expect(tree[0][:rule][:value_rule][2][:false_v]).to eq("false")
-    expect(tree[0][:rule][:value_rule][3][:float]).to eq("1.0")
-    expect(tree[0][:rule][:value_rule][4][:integer]).to eq("2")
-    expect(tree[0][:rule][:value_rule][5][:true_v]).to eq("true")
-    expect(tree[0][:rule][:value_rule][6][:q_string]).to eq("yes")
-    expect(tree[0][:rule][:value_rule][7][:q_string]).to eq("Y")
+  it 'should parse a value with group 3' do
+    tree = JCR.parse( 'trule : ( :null | :"no" | :false | :1.0 | :2 | :true | :"yes" | :"Y" )' )
+    expect(tree[0][:rule][:value_rule][:group_rule][0][:value_rule][:null]).to eq("null")
+    expect(tree[0][:rule][:value_rule][:group_rule][1][:value_rule][:q_string]).to eq("no")
+    expect(tree[0][:rule][:value_rule][:group_rule][2][:value_rule][:false_v]).to eq("false")
+    expect(tree[0][:rule][:value_rule][:group_rule][3][:value_rule][:float]).to eq("1.0")
+    expect(tree[0][:rule][:value_rule][:group_rule][4][:value_rule][:integer]).to eq("2")
+    expect(tree[0][:rule][:value_rule][:group_rule][5][:value_rule][:true_v]).to eq("true")
+    expect(tree[0][:rule][:value_rule][:group_rule][6][:value_rule][:q_string]).to eq("yes")
+    expect(tree[0][:rule][:value_rule][:group_rule][7][:value_rule][:q_string]).to eq("Y")
   end
 
   it 'should parse two rules' do
@@ -794,30 +798,60 @@ EX12
     expect(tree[0][:rule][:rule_name]).to eq("array_of_any")
   end
 
-  it 'should parse groups of union' do
+  it 'should parse groups of values with groups' do
     ex12 = <<EX12
-encodings : ( "base32" | "base64" )
-more_encodings : ( "base32hex" | "base64url" | "base16" )
+encodings : ( :"base32" | :"base64" )
+more_encodings : ( :"base32hex" | :"base64url" | :"base16" )
 all_encodings ( encodings | more_encodings )
 EX12
     tree = JCR.parse( ex12 )
     expect(tree[0][:rule][:rule_name]).to eq("encodings")
   end
 
-  it 'should parse groups of union with namespaced rule names' do
+  it 'should parse groups of values with groups and values with groups with rules' do
+    ex12 = <<EX12
+encodings : ( :"base32" | :"base64" )
+more_encodings : ( :"base32hex" | :"base64url" | :"base16" )
+all_encodings : ( encodings | more_encodings )
+EX12
+    tree = JCR.parse( ex12 )
+    expect(tree[0][:rule][:rule_name]).to eq("encodings")
+  end
+
+  it 'should parse groups of values' do
+    ex12 = <<EX12
+encodings ( :"base32" | :"base64" )
+more_encodings ( :"base32hex" | :"base64url" | :"base16" )
+all_encodings ( encodings | more_encodings )
+EX12
+    tree = JCR.parse( ex12 )
+    expect(tree[0][:rule][:rule_name]).to eq("encodings")
+  end
+
+  it 'should parse groups of values and rulenames' do
+    ex12 = <<EX12
+encodings ( :"base32" | :"base64" )
+more_encodings ( :"base32hex" | :"base64url" | :"base16" )
+all_encodings ( :"rot13" | encodings | more_encodings )
+EX12
+    tree = JCR.parse( ex12 )
+    expect(tree[0][:rule][:rule_name]).to eq("encodings")
+  end
+
+  it 'should parse groups of values with namespaced rule names' do
     ex12 = <<EX12
 # import http://ietf.org/rfcXXXX.JCR as rfcXXXX
-rfcXXXX.encodings : ( "base32" | "base64" )
-more_encodings : ( "base32hex" | "base64url" | "base16" )
+rfcXXXX.encodings : ( :"base32" | :"base64" )
+more_encodings : ( :"base32hex" | :"base64url" | :"base16" )
 all_encodings ( rfcXXXX.encodings | more_encodings )
 EX12
     tree = JCR.parse( ex12 )
     expect(tree[1][:rule][:rule_name]).to eq("rfcXXXX.encodings")
   end
 
-  it 'should parse union as unions' do
+  it 'should parse groups as groups' do
     ex12 = <<EX12
-encodings : ( "base32" | "base64" | integer | /^.{5,10}/ | ip4 | ip6 | fqdn )
+encodings : ( :"base32" | :"base64" | :integer | :/^.{5,10}/ | :ip4 | :ip6 | :fqdn )
 EX12
     tree = JCR.parse( ex12 )
     expect(tree[0][:rule][:rule_name]).to eq("encodings")
