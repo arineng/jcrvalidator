@@ -29,6 +29,8 @@ module JCR
         check_value_for_group( tree[:value_rule], mapping )
       elsif tree[:member_rule]
         check_member_for_group( tree[:member_rule], mapping )
+      elsif tree[:array_rule]
+        check_array_for_group( tree[:array_rule], mapping )
       end
     end
   end
@@ -86,6 +88,40 @@ module JCR
         end
       elsif groupee[:member_rule]
         raise_group_error( "groups in member rules cannot have member rules", groupee[:member_rule] )
+      else
+        check_groups( groupee, mapping )
+      end
+    end
+  end
+
+  def self.check_array_for_group node, mapping
+    if node.is_a?( Array )
+      node.each do |child_node|
+        check_array_for_group( child_node, mapping )
+      end
+    else
+      if node[:target_rule_name]
+        trule = get_name_mapping(node[:target_rule_name][:rule_name], mapping)
+        disallowed_group_in_array?(trule, mapping)
+      elsif node[:group_rule]
+        disallowed_group_in_array?(node[:group_rule], mapping)
+      else
+        check_groups(node, mapping)
+      end
+    end
+  end
+
+  def self.disallowed_group_in_array? node, mapping
+    node.each do |groupee|
+      if groupee[:group_rule]
+        disallowed_group_in_array?( groupee[:group_rule], mapping )
+      elsif groupee[:target_rule_name]
+        trule = get_name_mapping( groupee[:target_rule_name][:rule_name], mapping )
+        if trule[:group_rule]
+          disallowed_group_in_array?( trule[:group_rule], mapping )
+        end
+      elsif groupee[:member_rule]
+        raise_group_error( "groups in array rules cannot have member rules", groupee[:member_rule] )
       else
         check_groups( groupee, mapping )
       end

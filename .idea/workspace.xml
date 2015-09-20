@@ -122,7 +122,7 @@
         <entry file="file://$PROJECT_DIR$/lib/jcr/check_groups.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="58" column="66" selection-start-line="58" selection-start-column="66" selection-end-line="58" selection-end-column="66" />
+              <caret line="99" column="50" selection-start-line="99" selection-start-column="50" selection-end-line="99" selection-end-column="50" />
               <folding />
             </state>
           </provider>
@@ -131,8 +131,8 @@
       <file leaf-file-name="check_groups_spec.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/spec/check_groups_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8505155">
-              <caret line="175" column="71" selection-start-line="175" selection-start-column="71" selection-end-line="175" selection-end-column="71" />
+            <state vertical-scroll-proportion="0.8646907">
+              <caret line="246" column="0" selection-start-line="246" selection-start-column="0" selection-end-line="246" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -168,7 +168,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <push-targets>
-      <push-target-info repo="$PROJECT_DIR$" source="master" target-remote="origin" target-branch="master" />
+      <push-target-info repo="$PROJECT_DIR$" source="master" target-remote="github" target-branch="master" />
     </push-targets>
   </component>
   <component name="GradleLocalSettings">
@@ -770,13 +770,7 @@
       <workItem from="1442242308461" duration="895000" />
       <workItem from="1442259666798" duration="44000" />
       <workItem from="1442328458398" duration="4558000" />
-      <workItem from="1442426626656" duration="40920000" />
-    </task>
-    <task id="LOCAL-00002" summary="added text">
-      <created>1416496069224</created>
-      <option name="number" value="00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1416496069224</updated>
+      <workItem from="1442426626656" duration="42480000" />
     </task>
     <task id="LOCAL-00003" summary="removed alternate syntax">
       <created>1417469248103</created>
@@ -1066,11 +1060,17 @@
       <option name="project" value="LOCAL" />
       <updated>1442768414742</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="added group checking for value rules">
+      <created>1442769959357</created>
+      <option name="number" value="00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1442769959357</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="123746000" />
+    <option name="totallyTimeSpent" value="125306000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="6" />
@@ -1118,7 +1118,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="added a test for a failure of repetition for member string rules" />
     <MESSAGE value="removed ? in favor of *1&#10;repetition is no longer on member rules, moved to object rules so things are more consistent" />
     <MESSAGE value="group rules didn't have member rules&#10;added optional spaces to repetition" />
     <MESSAGE value="added example of group of enumerations" />
@@ -1143,7 +1142,8 @@
     <MESSAGE value="comments can now end" />
     <MESSAGE value="fixed example" />
     <MESSAGE value="made tests more readable with embedded comments" />
-    <option name="LAST_COMMIT_MESSAGE" value="made tests more readable with embedded comments" />
+    <MESSAGE value="added group checking for value rules" />
+    <option name="LAST_COMMIT_MESSAGE" value="added group checking for value rules" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1911,15 +1911,15 @@
     <entry file="file://$PROJECT_DIR$/lib/jcr/check_groups.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="58" column="66" selection-start-line="58" selection-start-column="66" selection-end-line="58" selection-end-column="66" />
+          <caret line="99" column="50" selection-start-line="99" selection-start-column="50" selection-end-line="99" selection-end-column="50" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/spec/check_groups_spec.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8505155">
-          <caret line="175" column="71" selection-start-line="175" selection-start-column="71" selection-end-line="175" selection-end-column="71" />
+        <state vertical-scroll-proportion="0.8646907">
+          <caret line="246" column="0" selection-start-line="246" selection-start-column="0" selection-end-line="246" selection-end-column="0" />
           <folding />
         </state>
       </provider>
