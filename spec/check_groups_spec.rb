@@ -24,11 +24,32 @@ describe 'check_groups' do
     JCR.check_groups( tree, mapping )
   end
 
+  it 'should error with member with group of two ANDED values' do
+    tree = JCR.parse( 'mrule "thing" ( :integer , :float ) ' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+  end
+
+  it 'should error with member with group of ORed and ANDED values' do
+    tree = JCR.parse( 'mrule "thing" ( :integer | :string , :float ) ' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+  end
+
   it 'should be ok with 2 member with group of two OR values' do
     tree = JCR.parse( 'mrule "thing" ( :integer | :float ) mrule2 "thing2" ( :ip4 | :ip6 )' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     JCR.check_groups( tree, mapping )
+  end
+
+  it 'should error with 1 member with group of OR values and member with group of AND values' do
+    tree = JCR.parse( 'mrule "thing" ( :integer | :float ) mrule2 "thing2" ( :ip4 , :ip6 )' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
   end
 
   it 'should be ok with member with group of value OR group' do
@@ -38,11 +59,25 @@ describe 'check_groups' do
     JCR.check_groups( tree, mapping )
   end
 
+  it 'should error with member with group of value OR group' do
+    tree = JCR.parse( 'mrule "thing" ( :integer | ( :ip4 , :ip6 ) ) ' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+  end
+
   it 'should be ok with member with group of value OR rulename' do
     tree = JCR.parse( 'grule ( :ip4 | :ip6 ) mrule "thing" ( :integer | grule ) ' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     JCR.check_groups( tree, mapping )
+  end
+
+  it 'should error with member with group of value OR rulename with AND' do
+    tree = JCR.parse( 'grule ( :ip4 , :ip6 ) mrule "thing" ( :integer | grule ) ' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
   end
 
 end

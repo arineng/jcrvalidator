@@ -102,7 +102,7 @@ module JCR
       ( group_rule | array_rule | object_rule | value_rule | member_rule | rule_name.as(:target_rule_name) )
     }
     rule(:group_rule) { ( str('(') >> spcCmnt? >> group_def >> spcCmnt? >>
-      ( comma_or_pipe >> spcCmnt? >> group_def ).repeat >>
+      ( spcCmnt? >> comma_or_pipe >> spcCmnt? >> group_def ).repeat >>
       spcCmnt? >> str(')') ).as(:group_rule)
     }
     rule(:rules) { spcCmnt? >> ( rule_name >> spcCmnt? >>
