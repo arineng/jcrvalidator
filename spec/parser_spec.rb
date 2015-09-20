@@ -617,6 +617,22 @@ describe 'parser' do
     expect(tree[0][:rule][:rule_name]).to eq("trule")
   end
 
+  it 'should parse a value rule with a comment' do
+    tree = JCR.parse( 'trule : /.*/ ;\;;' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+  end
+
+  it 'should parse a member regex rule with a comment' do
+    tree = JCR.parse( 'trule /.*/ target_rule ;\;;' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+  end
+
+  it 'should parse two rules separated by a comment' do
+    tree = JCR.parse( 'trule1 : /.*/ ;; trule2 /.*/ target_rule' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule1")
+    expect(tree[1][:rule][:rule_name]).to eq("trule2")
+  end
+
   it 'should parse an array rule with rule names and repitition and a group rule with newlines' do
     ex1 = <<EX1
 trule [
@@ -639,12 +655,24 @@ EX2
     expect(tree[0][:rule][:rule_name]).to eq("trule")
   end
 
-  it 'should parse group rules and value union' do
+  it 'should parse group rules and value groups' do
     ex2a = <<EX2A
 trule [ ;comment 1
   1*2 my_rule1, ;comment 2
   : ( string | integer ),
   ( my_rule2 | my_rule3 ) ;comment 3
+] ;comment 4
+EX2A
+    tree = JCR.parse( ex2a )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+  end
+
+  it 'should parse group rules and value groups with embedded comments' do
+    ex2a = <<EX2A
+trule [ ;comment 1
+  1*2 ;one or two; my_rule1, ;comment 2
+  : ;can be string or integer; ( string | integer ),
+  ( my_rule2 | ;my third rule; my_rule3 ) ;comment 3
 ] ;comment 4
 EX2A
     tree = JCR.parse( ex2a )

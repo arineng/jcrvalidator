@@ -75,21 +75,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="parser_spec.rb" pinned="false" current-in-tab="true">
+      <file leaf-file-name="parser_spec.rb" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.76804125">
-              <caret line="853" column="77" selection-start-line="853" selection-start-column="77" selection-end-line="853" selection-end-column="77" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="674" column="31" selection-start-line="674" selection-start-column="31" selection-end-line="674" selection-end-column="31" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="parser.rb" pinned="false" current-in-tab="false">
+      <file leaf-file-name="parser.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/jcr/parser.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="80" column="0" selection-start-line="80" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.077319585">
+              <caret line="23" column="67" selection-start-line="23" selection-start-column="67" selection-end-line="23" selection-end-column="67" />
               <folding />
             </state>
           </provider>
@@ -145,7 +145,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <push-targets>
-      <push-target-info repo="$PROJECT_DIR$" source="master" target-remote="origin" target-branch="master" />
+      <push-target-info repo="$PROJECT_DIR$" source="master" target-remote="github" target-branch="master" />
     </push-targets>
   </component>
   <component name="GradleLocalSettings">
@@ -747,7 +747,7 @@
       <workItem from="1442242308461" duration="895000" />
       <workItem from="1442259666798" duration="44000" />
       <workItem from="1442328458398" duration="4558000" />
-      <workItem from="1442426626656" duration="36503000" />
+      <workItem from="1442426626656" duration="38919000" />
     </task>
     <task id="LOCAL-00001" summary="added copyright">
       <created>1416492211755</created>
@@ -1025,11 +1025,17 @@
       <option name="project" value="LOCAL" />
       <updated>1442756552681</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="unions are now gone in favor of straight-up group rules in value rules">
+      <created>1442761346244</created>
+      <option name="number" value="00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1442761346244</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="119329000" />
+    <option name="totallyTimeSpent" value="121745000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="6" />
@@ -1077,7 +1083,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="separated uri and uri template" />
     <MESSAGE value="initial changes for new type of value enumerations" />
     <MESSAGE value="added more tests for enumerations&#10;took out ^&quot;&quot; for any and added regex for member names." />
     <MESSAGE value="added repetition to regex member rules" />
@@ -1102,7 +1107,8 @@
     <MESSAGE value="work on the syntax for groups" />
     <MESSAGE value="initial pass at checking groups in members" />
     <MESSAGE value="members with group rule checking tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="members with group rule checking tests" />
+    <MESSAGE value="unions are now gone in favor of straight-up group rules in value rules" />
+    <option name="LAST_COMMIT_MESSAGE" value="unions are now gone in favor of straight-up group rules in value rules" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1861,10 +1867,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/jcr/parser.rb">
+    <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="80" column="0" selection-start-line="80" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
+          <caret line="674" column="31" selection-start-line="674" selection-start-column="31" selection-end-line="674" selection-end-column="31" />
           <folding />
         </state>
       </provider>
@@ -1872,10 +1878,10 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
+    <entry file="file://$PROJECT_DIR$/lib/jcr/parser.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.76804125">
-          <caret line="853" column="77" selection-start-line="853" selection-start-column="77" selection-end-line="853" selection-end-column="77" />
+        <state vertical-scroll-proportion="0.077319585">
+          <caret line="23" column="67" selection-start-line="23" selection-start-column="67" selection-end-line="23" selection-end-column="67" />
           <folding />
         </state>
       </provider>

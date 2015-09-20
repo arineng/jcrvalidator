@@ -21,7 +21,7 @@ module JCR
 
     rule(:spaces) { match('\s').repeat(1) }
     rule(:spaces?) { spaces.maybe }
-    rule(:comment)   { str(';') >> match('[^\r\n]').repeat.maybe >> match('[\r\n]') }
+    rule(:comment)   { str(';') >> ( str('\;') | match('[^\r\n;]') ).repeat.maybe >> match('[\r\n;]') }
     rule(:spcCmnt?)   { spaces? >> comment.maybe >> spaces? }
 
     rule(:rule_name) { (match('[a-zA-Z]') >> match('[a-zA-Z0-9\-_\.]').repeat).as(:rule_name) }
