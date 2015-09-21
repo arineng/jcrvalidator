@@ -55,9 +55,7 @@ module JCR
         disallowed_group_in_value?( groupee[:group_rule], mapping )
       elsif groupee[:target_rule_name]
         trule = get_name_mapping( groupee[:target_rule_name][:rule_name], mapping )
-        if trule[:group_rule]
-          disallowed_group_in_value?( trule[:group_rule], mapping )
-        end
+        disallowed_group_in_value?( trule[:group_rule], mapping )
       elsif groupee[:member_rule]
         raise_group_error( "groups in value rules cannot have member rules", groupee[:member_rule] )
       elsif groupee[:object_rule]
@@ -84,7 +82,6 @@ module JCR
       node = [ node ]
     end
     node.each do |groupee|
-      pp "","groupee" , groupee, "node", node unless groupee.is_a? Hash
       if groupee[:comma_o]
         raise_group_error( 'AND (comma) operation in group rule of member rule', groupee[:comma_o] )
       end

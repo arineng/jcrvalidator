@@ -22,6 +22,13 @@ describe 'check_groups' do
   # member rule tests
   #
 
+  it 'should error with member with referenced member' do
+    tree = JCR.parse( 'rrule "m1" :integer ;; mrule "thing" rrule' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+  end
+
   it 'should be ok with member with group of two OR values' do
     tree = JCR.parse( 'mrule "thing" ( :integer | :float ) ' )
     mapping = JCR.map_rule_names( tree )
@@ -102,6 +109,13 @@ describe 'check_groups' do
   #
   # value rule tests
   #
+  it 'should error with value with referenced member rule' do
+    tree = JCR.parse( 'rrule "m1" :string ;; rule : ( rrule )' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+  end
+
   it 'should be ok with value with group of two OR values' do
     tree = JCR.parse( 'rule : ( :integer | :float ) ' )
     mapping = JCR.map_rule_names( tree )
