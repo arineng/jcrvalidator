@@ -55,7 +55,6 @@ module JCR
     rule(:false_v)   { str('false').as(:false_v) }
     rule(:boolean_v) { str('boolean').as(:boolean_v) }
     rule(:null)      { str('null').as(:null) }
-    rule(:base64)    { str('base64').as(:base64) }
     rule(:string)    { str('string').as(:string) }
     rule(:uri_v)     { str('uri').as(:uri) }
     rule(:integer_v) { str('integer').as(:integer_v) }
@@ -73,7 +72,7 @@ module JCR
     rule(:comma_or_pipe) { pipe_o | comma_o }
     rule(:value_def) {
       (
-        any | ip4 | ip6 | fqdn | idn | phone | email | base64 | full_time | full_date | date_time |
+        any | ip4 | ip6 | fqdn | idn | phone | email | full_time | full_date | date_time |
         null | base64 | string | uri_v | float_v | integer_v | float_r | integer_r | boolean_v |
         true_v | false_v | q_string | uri_template | regex | float.as(:float) | integer.as(:integer)
       )
