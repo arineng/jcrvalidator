@@ -56,6 +56,25 @@ module JCR
         return bad_value( jcr, rule_atom, min, data ) unless data >= min
         max = jcr[:integer_max].to_s.to_i
         return bad_value( jcr, rule_atom, max, data ) unless data <= max
+      when jcr[:float_v]
+        sf = jcr[:float_v].to_s
+        if sf == "float"
+          return bad_value( jcr, rule_atom, "float", data ) unless data.is_a?( Float )
+        end
+      when jcr[:float]
+        f = jcr[:float_v].to_s.to_f
+        return bad_value( jcr, rule_atom, f, data ) unless data == f
+      when jcr[:float_min],jcr[:float_max]
+        min = jcr[:float_min].to_s.to_f
+        return bad_value( jcr, rule_atom, min, data ) unless data >= min
+        max = jcr[:float_max].to_s.to_f
+        return bad_value( jcr, rule_atom, max, data ) unless data <= max
+      when jcr[:true_v]
+        return bad_value( jcr, rule_atom, "true", data ) unless data
+      when jcr[:false_v]
+        return bad_value( jcr, rule_atom, "false", data ) if data
+      when jcr[:boolean_v]
+        return bad_value( jcr, rule_atom, "boolean", data ) unless ( data.is_a?( TrueClass ) || data.is_a?( FalseClass ) )
       when jcr[:string]
         return bad_value( jcr, rule_atom, "string", data ) unless data.is_a? String
       when jcr[:q_string]
