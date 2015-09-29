@@ -225,4 +225,16 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_falsey
   end
 
+  #
+  # null value test
+  #
+
+  it 'should pass a null' do
+    tree = JCR.parse( 'trule : null' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], nil, mapping )
+    expect( e.success ).to be_truthy
+  end
+
 end

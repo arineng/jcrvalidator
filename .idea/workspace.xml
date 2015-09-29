@@ -167,7 +167,7 @@
         <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_rules.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="76" column="121" selection-start-line="76" selection-start-column="121" selection-end-line="76" selection-end-column="121" />
+              <caret line="83" column="71" selection-start-line="83" selection-start-column="71" selection-end-line="83" selection-end-column="71" />
               <folding />
             </state>
           </provider>
@@ -196,8 +196,8 @@
       <file leaf-file-name="evaluate_rules_spec.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/spec/evaluate_rules_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.90335053">
-              <caret line="223" column="48" selection-start-line="223" selection-start-column="48" selection-end-line="223" selection-end-column="48" />
+            <state vertical-scroll-proportion="0.88917524">
+              <caret line="235" column="47" selection-start-line="235" selection-start-column="47" selection-end-line="235" selection-end-column="47" />
               <folding />
             </state>
           </provider>
@@ -220,7 +220,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <push-targets>
-      <push-target-info repo="$PROJECT_DIR$" source="master" target-remote="origin" target-branch="master" />
+      <push-target-info repo="$PROJECT_DIR$" source="master" target-remote="github" target-branch="master" />
     </push-targets>
   </component>
   <component name="GradleLocalSettings">
@@ -906,13 +906,7 @@
       <workItem from="1442328458398" duration="4558000" />
       <workItem from="1442426626656" duration="51501000" />
       <workItem from="1443107388311" duration="186000" />
-      <workItem from="1443114193143" duration="20139000" />
-    </task>
-    <task id="LOCAL-00009" summary="changed ignore-unknown-members to pedantic">
-      <created>1417472134528</created>
-      <option name="number" value="00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1417472134528</updated>
+      <workItem from="1443114193143" duration="20476000" />
     </task>
     <task id="LOCAL-00010" summary="changed include directive syntax">
       <created>1417473676992</created>
@@ -1202,11 +1196,17 @@
       <option name="project" value="LOCAL" />
       <updated>1443489599839</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="support for true and false and boolean">
+      <created>1443492646459</created>
+      <option name="number" value="00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1443492646459</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="154652000" />
+    <option name="totallyTimeSpent" value="154989000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -1254,7 +1254,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="booleans are back, baby!" />
     <MESSAGE value="jcr-version directive" />
     <MESSAGE value="ruleset-id directive" />
     <MESSAGE value="added namespaced rule names with dot" />
@@ -1279,7 +1278,8 @@
     <MESSAGE value="added more object group checking tests" />
     <MESSAGE value="a couple of simple rule reference fixes" />
     <MESSAGE value="started on evaluating rules" />
-    <option name="LAST_COMMIT_MESSAGE" value="started on evaluating rules" />
+    <MESSAGE value="support for true and false and boolean" />
+    <option name="LAST_COMMIT_MESSAGE" value="support for true and false and boolean" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2041,15 +2041,15 @@
     <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_rules.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="76" column="121" selection-start-line="76" selection-start-column="121" selection-end-line="76" selection-end-column="121" />
+          <caret line="83" column="71" selection-start-line="83" selection-start-column="71" selection-end-line="83" selection-end-column="71" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/spec/evaluate_rules_spec.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.90335053">
-          <caret line="223" column="48" selection-start-line="223" selection-start-column="48" selection-end-line="223" selection-end-column="48" />
+        <state vertical-scroll-proportion="0.88917524">
+          <caret line="235" column="47" selection-start-line="235" selection-start-column="47" selection-end-line="235" selection-end-column="47" />
           <folding />
         </state>
       </provider>

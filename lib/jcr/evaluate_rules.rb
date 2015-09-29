@@ -80,6 +80,8 @@ module JCR
       when jcr[:q_string]
         s = jcr[:q_string].to_s
         return bad_value( jcr, rule_atom, s, data ) unless data == s
+      when jcr[:null]
+        return bad_value( jcr, rule_atom, nil, data ) unless data == nil
       when jcr[:group_rule]
         return evaluate_group_rule jcr[:group_rule], rule_atom, data, mapping
       else
