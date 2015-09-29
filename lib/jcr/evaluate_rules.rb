@@ -41,49 +41,88 @@ module JCR
 
   def self.evaluate_value_rule jcr, rule_atom, data, mapping
     case
+
+      #
+      # any
+      #
+
       when jcr[:any]
         return Evaluation.new( true, nil )
+
+      #
+      # integers
+      #
+
       when jcr[:integer_v]
         si = jcr[:integer_v].to_s
         if si == "integer"
           return bad_value( jcr, rule_atom, "integer", data ) unless data.is_a?( Fixnum )
         end
       when jcr[:integer]
-        i = jcr[:integer_v].to_s.to_i
+        i = jcr[:integer].to_s.to_i
         return bad_value( jcr, rule_atom, i, data ) unless data == i
       when jcr[:integer_min],jcr[:integer_max]
         min = jcr[:integer_min].to_s.to_i
         return bad_value( jcr, rule_atom, min, data ) unless data >= min
         max = jcr[:integer_max].to_s.to_i
         return bad_value( jcr, rule_atom, max, data ) unless data <= max
+
+      #
+      # floats
+      #
+
       when jcr[:float_v]
         sf = jcr[:float_v].to_s
         if sf == "float"
           return bad_value( jcr, rule_atom, "float", data ) unless data.is_a?( Float )
         end
       when jcr[:float]
-        f = jcr[:float_v].to_s.to_f
+        f = jcr[:float].to_s.to_f
         return bad_value( jcr, rule_atom, f, data ) unless data == f
       when jcr[:float_min],jcr[:float_max]
         min = jcr[:float_min].to_s.to_f
         return bad_value( jcr, rule_atom, min, data ) unless data >= min
         max = jcr[:float_max].to_s.to_f
         return bad_value( jcr, rule_atom, max, data ) unless data <= max
+
+      #
+      # boolean
+      #
+
       when jcr[:true_v]
         return bad_value( jcr, rule_atom, "true", data ) unless data
       when jcr[:false_v]
         return bad_value( jcr, rule_atom, "false", data ) if data
       when jcr[:boolean_v]
         return bad_value( jcr, rule_atom, "boolean", data ) unless ( data.is_a?( TrueClass ) || data.is_a?( FalseClass ) )
+
+      #
+      # strings
+      #
+
       when jcr[:string]
         return bad_value( jcr, rule_atom, "string", data ) unless data.is_a? String
       when jcr[:q_string]
         s = jcr[:q_string].to_s
         return bad_value( jcr, rule_atom, s, data ) unless data == s
+
+      #
+      # null
+      #
+
       when jcr[:null]
         return bad_value( jcr, rule_atom, nil, data ) unless data == nil
+
+      #
+      # groups
+      #
+
       when jcr[:group_rule]
         return evaluate_group_rule jcr[:group_rule], rule_atom, data, mapping
+
+      #
+      # TODO when all value types are coded, this needs to be changed to raise an exception
+      #
       else
         return Evaluation.new( true, nil )
     end
