@@ -333,4 +333,88 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_falsey
   end
 
+  #
+  # domain value tests
+  #
+
+  it 'should pass fqdn as fqdn' do
+    tree = JCR.parse( 'trule : fqdn' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "www.example.com", mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a domain label starting with a dash' do
+    tree = JCR.parse( 'trule : fqdn' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "www.-example.com", mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a domain label ending with a dash' do
+    tree = JCR.parse( 'trule : fqdn' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "www.example-.com", mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a domain label containgin an underscore' do
+    tree = JCR.parse( 'trule : fqdn' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "www.example_fail.com", mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass idn as idn' do
+    tree = JCR.parse( 'trule : idn' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "www.e\u0092xample.com", mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail an idn as fqdn' do
+    tree = JCR.parse( 'trule : fqdn' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "www.e\u0092xample.com", mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass a fqdn as idn' do
+    tree = JCR.parse( 'trule : idn' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "www.example.com", mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail an idn label starting with a dash' do
+    tree = JCR.parse( 'trule : idn' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "www.-e\u0092xample.com", mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a idn label ending with a dash' do
+    tree = JCR.parse( 'trule : idn' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "www.e\u0092xample-.com", mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail an idn label containgin an underscore' do
+    tree = JCR.parse( 'trule : idn' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "www.e\u0092xample_fail.com", mapping )
+    expect( e.success ).to be_falsey
+  end
+
 end

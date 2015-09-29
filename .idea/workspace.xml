@@ -148,7 +148,7 @@
         <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="64" column="0" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
+              <caret line="779" column="14" selection-start-line="779" selection-start-column="14" selection-end-line="779" selection-end-column="14" />
               <folding />
             </state>
           </provider>
@@ -168,27 +168,7 @@
         <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_rules.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="132" column="41" selection-start-line="132" selection-start-column="41" selection-end-line="132" selection-end-column="41" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="map_rule_names.rb" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/jcr/map_rule_names.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="check_groups_spec.rb" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spec/check_groups_spec.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="26" column="0" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+              <caret line="167" column="30" selection-start-line="167" selection-start-column="30" selection-end-line="167" selection-end-column="30" />
               <folding />
             </state>
           </provider>
@@ -197,8 +177,8 @@
       <file leaf-file-name="evaluate_rules_spec.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/spec/evaluate_rules_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7345361">
-              <caret line="315" column="65" selection-start-line="315" selection-start-column="65" selection-end-line="315" selection-end-column="65" />
+            <state vertical-scroll-proportion="0.28479382">
+              <caret line="389" column="39" selection-start-line="389" selection-start-column="39" selection-end-line="389" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -221,7 +201,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <push-targets>
-      <push-target-info repo="$PROJECT_DIR$" source="master" target-remote="origin" target-branch="master" />
+      <push-target-info repo="$PROJECT_DIR$" source="master" target-remote="github" target-branch="master" />
     </push-targets>
   </component>
   <component name="GradleLocalSettings">
@@ -943,13 +923,7 @@
       <workItem from="1442328458398" duration="4558000" />
       <workItem from="1442426626656" duration="51501000" />
       <workItem from="1443107388311" duration="186000" />
-      <workItem from="1443114193143" duration="23786000" />
-    </task>
-    <task id="LOCAL-00013" summary="updated documentation">
-      <created>1417553754446</created>
-      <option name="number" value="00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1417553754446</updated>
+      <workItem from="1443114193143" duration="26789000" />
     </task>
     <task id="LOCAL-00014" summary="updated documentation">
       <created>1417553987158</created>
@@ -1239,11 +1213,17 @@
       <option name="project" value="LOCAL" />
       <updated>1443541868639</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <task id="LOCAL-00062" summary="added ip value rules">
+      <created>1443544621260</created>
+      <option name="number" value="00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1443544621260</updated>
+    </task>
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="158299000" />
+    <option name="totallyTimeSpent" value="161302000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -1291,7 +1271,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="removed include, added import" />
     <MESSAGE value="changed examples and method names" />
     <MESSAGE value="restructuring" />
     <MESSAGE value="readme fix" />
@@ -1316,7 +1295,8 @@
     <MESSAGE value="added null support" />
     <MESSAGE value="fixed bugs exposed by the two new tests provided by Peter" />
     <MESSAGE value="added regex rule evaulation" />
-    <option name="LAST_COMMIT_MESSAGE" value="added regex rule evaulation" />
+    <MESSAGE value="added ip value rules" />
+    <option name="LAST_COMMIT_MESSAGE" value="added ip value rules" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2059,7 +2039,7 @@
       </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="64" column="0" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
+          <caret line="779" column="14" selection-start-line="779" selection-start-column="14" selection-end-line="779" selection-end-column="14" />
           <folding />
         </state>
       </provider>
@@ -2078,15 +2058,15 @@
     <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_rules.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="132" column="41" selection-start-line="132" selection-start-column="41" selection-end-line="132" selection-end-column="41" />
+          <caret line="167" column="30" selection-start-line="167" selection-start-column="30" selection-end-line="167" selection-end-column="30" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/spec/evaluate_rules_spec.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7345361">
-          <caret line="315" column="65" selection-start-line="315" selection-start-column="65" selection-end-line="315" selection-end-column="65" />
+        <state vertical-scroll-proportion="0.28479382">
+          <caret line="389" column="39" selection-start-line="389" selection-start-column="39" selection-end-line="389" selection-end-column="39" />
           <folding />
         </state>
       </provider>

@@ -136,6 +136,42 @@ module JCR
         return bad_value( jcr, rule_atom, "IPv6 Address", data ) unless ip.ipv6?
 
       #
+      # domain names
+      #
+
+      when jcr[:fqdn]
+        return bad_value( jcr, rule_atom, "Fully Qualified Domain Name", data ) if data.empty?
+        a = data.split( '.' )
+        a.each do |label|
+          return bad_value( jcr, rule_atom, "Fully Qualified Domain Name", data ) if label.start_with?( '-' )
+          return bad_value( jcr, rule_atom, "Fully Qualified Domain Name", data ) if label.end_with?( '-' )
+          label.each_char do |char|
+            unless (char >= 'a' && char <= 'z') \
+              || (char >= 'A' && char <= 'Z') \
+              || (char >= '0' && char <='9') \
+              || char == '-'
+              return bad_value( jcr, rule_atom, "Fully Qualified Domain Name", data )
+            end
+          end
+        end
+      when jcr[:idn]
+        return bad_value( jcr, rule_atom, "Internationalized Domain Name", data ) if data.empty?
+        a = data.split( '.' )
+        a.each do |label|
+          return bad_value( jcr, rule_atom, "Internationalized Domain Name", data ) if label.start_with?( '-' )
+          return bad_value( jcr, rule_atom, "Internationalized Domain Name", data ) if label.end_with?( '-' )
+          label.each_char do |char|
+            unless (char >= 'a' && char <= 'z') \
+              || (char >= 'A' && char <= 'Z') \
+              || (char >= '0' && char <='9') \
+              || char == '-' \
+              || char.ord > 127
+              return bad_value( jcr, rule_atom, "Internationalized Domain Name", data )
+            end
+          end
+        end
+
+      #
       # null
       #
 
