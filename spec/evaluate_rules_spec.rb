@@ -253,4 +253,24 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_truthy
   end
 
+  #
+  # regex value test
+  #
+
+  it 'should pass a string matching a regular expression' do
+    tree = JCR.parse( 'trule : /[a-z]*/' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "aaa", mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a string not matching a regular expression' do
+    tree = JCR.parse( 'trule : /[a-z]*/' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "AAA", mapping )
+    expect( e.success ).to be_truthy
+  end
+
 end
