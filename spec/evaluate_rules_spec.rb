@@ -273,4 +273,64 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_truthy
   end
 
+  #
+  # IP address value tests
+  #
+
+  it 'should pass an IPv4 address that matches' do
+    tree = JCR.parse( 'trule : ip4' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "192.1.1.1", mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail an IPv4 address that does not match' do
+    tree = JCR.parse( 'trule : ip4' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "192.1.1.1.1.1.1", mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail an IPv4 address that is suppose to be an IPv6 address' do
+    tree = JCR.parse( 'trule : ip6' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "192.1.1.1", mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass an IPv6 address that matches' do
+    tree = JCR.parse( 'trule : ip6' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "2001:0000::1", mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass a fully expanded IPv6 address that matches' do
+    tree = JCR.parse( 'trule : ip6' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "2001:0000:0000:0000:0000:0000:0000:0001", mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail an IPv6 address that does not match' do
+    tree = JCR.parse( 'trule : ip6' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "2001:0000::1....", mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail an IPv6 address that is suppose to be an IPv4 address' do
+    tree = JCR.parse( 'trule : ip4' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "2001:0000::1", mapping )
+    expect( e.success ).to be_falsey
+  end
+
 end

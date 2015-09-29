@@ -12,6 +12,8 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 # IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+require 'ipaddr'
+
 require 'jcr/parser'
 require 'jcr/map_rule_names'
 require 'jcr/check_groups'
@@ -113,6 +115,25 @@ module JCR
       when jcr[:regex]
         regex = Regexp.new( jcr[:regex].to_s )
         return bad_value( jcr, rule_atom, regex, data ) unless data =~ regex
+
+      #
+      # ip addresses
+      #
+
+      when jcr[:ip4]
+        begin
+          ip = IPAddr.new( data )
+        rescue IPAddr::InvalidAddressError
+          return bad_value( jcr, rule_atom, "IPv4 Address", data )
+        end
+        return bad_value( jcr, rule_atom, "IPv4 Address", data ) unless ip.ipv4?
+      when jcr[:ip6]
+        begin
+          ip = IPAddr.new( data )
+        rescue IPAddr::InvalidAddressError
+          return bad_value( jcr, rule_atom, "IPv6 Address", data )
+        end
+        return bad_value( jcr, rule_atom, "IPv6 Address", data ) unless ip.ipv6?
 
       #
       # null
