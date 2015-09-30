@@ -125,6 +125,7 @@ module JCR
       #
 
       when jcr[:ip4]
+        return bad_value( jcr, rule_atom, "IPv4 Address", data ) unless data.is_a? String
         begin
           ip = IPAddr.new( data )
         rescue IPAddr::InvalidAddressError
@@ -132,6 +133,7 @@ module JCR
         end
         return bad_value( jcr, rule_atom, "IPv4 Address", data ) unless ip.ipv4?
       when jcr[:ip6]
+        return bad_value( jcr, rule_atom, "IPv6 Address", data ) unless data.is_a? String
         begin
           ip = IPAddr.new( data )
         rescue IPAddr::InvalidAddressError
@@ -144,6 +146,7 @@ module JCR
       #
 
       when jcr[:fqdn]
+        return bad_value( jcr, rule_atom, "Fully Qualified Domain Name", data ) unless data.is_a? String
         return bad_value( jcr, rule_atom, "Fully Qualified Domain Name", data ) if data.empty?
         a = data.split( '.' )
         a.each do |label|
@@ -159,6 +162,7 @@ module JCR
           end
         end
       when jcr[:idn]
+        return bad_value( jcr, rule_atom, "Internationalized Domain Name", data ) unless data.is_a? String
         return bad_value( jcr, rule_atom, "Internationalized Domain Name", data ) if data.empty?
         a = data.split( '.' )
         a.each do |label|
@@ -179,11 +183,13 @@ module JCR
       # uri and uri templates
       #
 
-      when jcr[:uri_v]
+      when jcr[:uri]
+        return bad_value( jcr, rule_atom, "URI", data ) unless data.is_a?( String )
         uri = Addressable::URI.parse( data )
         return bad_value( jcr, rule_atom, "URI", data ) unless uri.is_a?( Addressable::URI )
       when jcr[:uri_template]
         t = jcr[:uri_template].to_s
+        return bad_value( jcr, rule_atom, t, data ) unless data.is_a? String
         template = Addressable::Template.new( t )
         e = template.extract( data )
         if e == nil
@@ -195,13 +201,15 @@ module JCR
         end
 
       #
-      # email value rules
+      # phone and email value rules
       #
 
       when jcr[:email]
+        return bad_value( jcr, rule_atom, "Email Address", data ) unless data.is_a? String
         return bad_value( jcr, rule_atom, "Email Address", data ) unless EmailAddressValidator.validate( data, true )
 
       when jcr[:phone]
+        return bad_value( jcr, rule_atom, "Phone Number", data ) unless data.is_a? String
         p = BigPhoney::PhoneNumber.new( data )
         return bad_value( jcr, rule_atom, "Phone Number", data ) unless p.valid?
 

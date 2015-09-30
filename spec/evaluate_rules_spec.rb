@@ -293,6 +293,14 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_falsey
   end
 
+  it 'should fail an IPv4 address that is not a string' do
+    tree = JCR.parse( 'trule : ip4' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
+    expect( e.success ).to be_falsey
+  end
+
   it 'should fail an IPv4 address that is suppose to be an IPv6 address' do
     tree = JCR.parse( 'trule : ip6' )
     mapping = JCR.map_rule_names( tree )
@@ -325,6 +333,14 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_falsey
   end
 
+  it 'should fail an IPv6 address that is not a string' do
+    tree = JCR.parse( 'trule : ip6' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [], mapping )
+    expect( e.success ).to be_falsey
+  end
+
   it 'should fail an IPv6 address that is suppose to be an IPv4 address' do
     tree = JCR.parse( 'trule : ip4' )
     mapping = JCR.map_rule_names( tree )
@@ -343,6 +359,14 @@ describe 'evaluate_rules' do
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "www.example.com", mapping )
     expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a domain label that is not a string' do
+    tree = JCR.parse( 'trule : fqdn' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 22, mapping )
+    expect( e.success ).to be_falsey
   end
 
   it 'should fail a domain label starting with a dash' do
@@ -401,6 +425,14 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_falsey
   end
 
+  it 'should fail an idn that is not a string' do
+    tree = JCR.parse( 'trule : idn' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
+    expect( e.success ).to be_falsey
+  end
+
   it 'should fail a idn label ending with a dash' do
     tree = JCR.parse( 'trule : idn' )
     mapping = JCR.map_rule_names( tree )
@@ -429,6 +461,14 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should fail a URI that is not a string' do
+    tree = JCR.parse( 'trule : uri' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
+    expect( e.success ).to be_falsey
+  end
+
   it 'should pass a URI template' do
     tree = JCR.parse( 'trule : http://example.com/{?query*}' )
     mapping = JCR.map_rule_names( tree )
@@ -442,6 +482,14 @@ describe 'evaluate_rules' do
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "http://example.com", mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a non-string against URI template' do
+    tree = JCR.parse( 'trule : http://example.com/{?query*}' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {}, mapping )
     expect( e.success ).to be_falsey
   end
 
@@ -465,6 +513,14 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_falsey
   end
 
+  it 'should fail an email address when it is not a string' do
+    tree = JCR.parse( 'trule : email' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
+    expect( e.success ).to be_falsey
+  end
+
   #
   # Phone number value tests
   #
@@ -482,6 +538,14 @@ describe 'evaluate_rules' do
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "123", mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a phone number when a non-string datatype is given' do
+    tree = JCR.parse( 'trule : phone' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
     expect( e.success ).to be_falsey
   end
 
