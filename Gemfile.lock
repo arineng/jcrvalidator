@@ -2,6 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     addressable (2.3.8)
+    big-phoney (0.1.4)
     diff-lcs (1.2.5)
     email_address_validator (2.0.0)
     rspec (3.3.0)
@@ -23,6 +24,7 @@ PLATFORMS
 
 DEPENDENCIES
   addressable
+  big-phoney
   email_address_validator
   rspec
 

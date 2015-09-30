@@ -16,6 +16,7 @@ require 'ipaddr'
 require 'addressable/uri'
 require 'addressable/template'
 require 'email_address_validator'
+require 'big-phoney'
 
 require 'jcr/parser'
 require 'jcr/map_rule_names'
@@ -199,6 +200,10 @@ module JCR
 
       when jcr[:email]
         return bad_value( jcr, rule_atom, "Email Address", data ) unless EmailAddressValidator.validate( data, true )
+
+      when jcr[:phone]
+        p = BigPhoney::PhoneNumber.new( data )
+        return bad_value( jcr, rule_atom, "Phone Number", data ) unless p.valid?
 
       #
       # null

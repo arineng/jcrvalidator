@@ -157,26 +157,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="check_groups_spec.rb" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spec/check_groups_spec.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="115" column="76" selection-start-line="115" selection-start-column="76" selection-end-line="115" selection-end-column="76" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="map_rule_names_spec.rb" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spec/map_rule_names_spec.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="74" column="62" selection-start-line="74" selection-start-column="62" selection-end-line="74" selection-end-column="62" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="parser.rb" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/jcr/parser.rb">
           <provider selected="true" editor-type-id="text-editor">
@@ -187,11 +167,21 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="Gemfile" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Gemfile">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="4" column="14" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="evaluate_rules.rb" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_rules.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="200" column="115" selection-start-line="200" selection-start-column="115" selection-end-line="200" selection-end-column="115" />
+              <caret line="205" column="80" selection-start-line="205" selection-start-column="80" selection-end-line="205" selection-end-column="80" />
               <folding />
             </state>
           </provider>
@@ -200,8 +190,8 @@
       <file leaf-file-name="evaluate_rules_spec.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/spec/evaluate_rules_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.92268044">
-              <caret line="464" column="36" selection-start-line="464" selection-start-column="36" selection-end-line="464" selection-end-column="36" />
+            <state vertical-scroll-proportion="0.90850514">
+              <caret line="483" column="48" selection-start-line="483" selection-start-column="48" selection-end-line="483" selection-end-column="48" />
               <folding />
             </state>
           </provider>
@@ -254,6 +244,7 @@
         <option value="$PROJECT_DIR$/spec/map_rule_names_spec.rb" />
         <option value="$PROJECT_DIR$/spec/check_groups_spec.rb" />
         <option value="$PROJECT_DIR$/spec/parser_spec.rb" />
+        <option value="$PROJECT_DIR$/Gemfile" />
         <option value="$PROJECT_DIR$/lib/jcr/evaluate_rules.rb" />
         <option value="$PROJECT_DIR$/spec/evaluate_rules_spec.rb" />
       </list>
@@ -946,13 +937,7 @@
       <workItem from="1442328458398" duration="4558000" />
       <workItem from="1442426626656" duration="51501000" />
       <workItem from="1443107388311" duration="186000" />
-      <workItem from="1443114193143" duration="29196000" />
-    </task>
-    <task id="LOCAL-00017" summary="true and false added as values&#10;boolean removed&#10;tests for null added&#10;string constants allowed">
-      <created>1418571764903</created>
-      <option name="number" value="00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1418571764903</updated>
+      <workItem from="1443114193143" duration="30191000" />
     </task>
     <task id="LOCAL-00018" summary="changed so that regex and string are separate now">
       <created>1418588880013</created>
@@ -1242,11 +1227,17 @@
       <option name="project" value="LOCAL" />
       <updated>1443627034551</updated>
     </task>
-    <option name="localTasksCounter" value="66" />
+    <task id="LOCAL-00066" summary="added support for email">
+      <created>1443633019613</created>
+      <option name="number" value="00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1443633019613</updated>
+    </task>
+    <option name="localTasksCounter" value="67" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="163709000" />
+    <option name="totallyTimeSpent" value="164704000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -1294,7 +1285,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="added stub files checking groups" />
     <MESSAGE value="initial rule name mapping" />
     <MESSAGE value="working on name mapping" />
     <MESSAGE value="name checking works" />
@@ -1319,7 +1309,8 @@
     <MESSAGE value="added fqdn and idn evaluation support" />
     <MESSAGE value="base64 was repeated twice. removed extra one" />
     <MESSAGE value="added uri and uri template stuff" />
-    <option name="LAST_COMMIT_MESSAGE" value="added uri and uri template stuff" />
+    <MESSAGE value="added support for email" />
+    <option name="LAST_COMMIT_MESSAGE" value="added support for email" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1328,16 +1319,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/example.jcr">
-      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
       <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
         <state />
@@ -2068,6 +2049,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Gemfile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="4" column="14" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/lib/jcr/parser.rb">
       <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
         <state />
@@ -2082,15 +2071,15 @@
     <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_rules.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="200" column="115" selection-start-line="200" selection-start-column="115" selection-end-line="200" selection-end-column="115" />
+          <caret line="205" column="80" selection-start-line="205" selection-start-column="80" selection-end-line="205" selection-end-column="80" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/spec/evaluate_rules_spec.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.92268044">
-          <caret line="464" column="36" selection-start-line="464" selection-start-column="36" selection-end-line="464" selection-end-column="36" />
+        <state vertical-scroll-proportion="0.90850514">
+          <caret line="483" column="48" selection-start-line="483" selection-start-column="48" selection-end-line="483" selection-end-column="48" />
           <folding />
         </state>
       </provider>

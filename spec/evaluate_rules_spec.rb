@@ -465,4 +465,25 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_falsey
   end
 
+  #
+  # Phone number value tests
+  #
+
+  it 'should pass a phone number match' do
+    tree = JCR.parse( 'trule : phone' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "+34634976090", mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a phone number mismatch' do
+    tree = JCR.parse( 'trule : phone' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "123", mapping )
+    expect( e.success ).to be_falsey
+  end
+
+
 end
