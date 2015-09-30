@@ -26,7 +26,7 @@ describe 'check_groups' do
     tree = JCR.parse( 'rrule "m1" :integer ;; mrule "thing" rrule' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should be ok with member with group of two OR values' do
@@ -40,14 +40,14 @@ describe 'check_groups' do
     tree = JCR.parse( 'mrule "thing" ( :integer , :float ) ' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should error with member with group of ORed and ANDED values' do
     tree = JCR.parse( 'mrule "thing" ( :integer | :string , :float ) ' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should be ok with 2 member with group of two OR values' do
@@ -61,7 +61,7 @@ describe 'check_groups' do
     tree = JCR.parse( 'mrule "thing" ( :integer | :float ) ;; mrule2 "thing2" ( :ip4 , :ip6 )' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should be ok with member with group of value OR group' do
@@ -75,7 +75,7 @@ describe 'check_groups' do
     tree = JCR.parse( 'mrule "thing" ( :integer | ( :ip4 , :ip6 ) ) ' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should be ok with member with group of value OR rulename' do
@@ -89,14 +89,14 @@ describe 'check_groups' do
     tree = JCR.parse( 'grule ( :ip4 , :ip6 ) ;; mrule "thing" ( :integer | grule ) ' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should error with member with group of value OR rulename with AND' do
     tree = JCR.parse( 'grule ( "m1" :ip4 | :ip6 ) ;; mrule "thing" ( :integer | grule ) ' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should be ok with member with group of value OR rulename' do
@@ -113,7 +113,7 @@ describe 'check_groups' do
     tree = JCR.parse( 'rrule "m1" :string ;; rule : ( rrule )' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error NoMethodError
   end
 
   it 'should be ok with value with group of two OR values' do
@@ -127,14 +127,14 @@ describe 'check_groups' do
     tree = JCR.parse( 'rule : ( :integer , :float ) ' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should error with value with group of ORed and ANDED values' do
     tree = JCR.parse( 'rule : ( :integer | :string , :float ) ' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should be ok with 2 value with group of two OR values' do
@@ -148,7 +148,7 @@ describe 'check_groups' do
     tree = JCR.parse( 'rule : ( :integer | :float ) ;; rule2 : ( :ip4 , :ip6 )' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should be ok with value with group of value OR group' do
@@ -162,7 +162,7 @@ describe 'check_groups' do
     tree = JCR.parse( 'rule : ( :integer | ( :ip4 , :ip6 ) ) ' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should be ok with value with group of value OR rulename' do
@@ -176,35 +176,35 @@ describe 'check_groups' do
     tree = JCR.parse( 'grule ( :ip4 , :ip6 ) ;; arule "thing" ( :integer | grule ) ' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should error with value with group with member' do
     tree = JCR.parse( 'grule ( :ip4 | "thing" target ) ;; arule "thing" ( :integer | grule ) ' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should error with value with group of value OR group with member' do
     tree = JCR.parse( 'rule : ( :integer | ( :ip4 | "thing" target ) ) ' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should error with value with group of value OR group with array' do
     tree = JCR.parse( 'rule : ( :integer | ( :ip4 | [ :integer ] ) ) ' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should error with value with group of value OR group with object' do
     tree = JCR.parse( 'rule : ( :integer | ( :ip4 | { "thing" : integer } ) ) ' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   #
@@ -228,35 +228,35 @@ describe 'check_groups' do
     tree = JCR.parse( 'rule [ ( "thing" target ) ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should error with array with group of one value and one member' do
     tree = JCR.parse( 'rule [ ( :integer, "thing" target ) ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should error with array with value and group of one value and one member' do
     tree = JCR.parse( 'rule [ :string, ( :integer, "thing" target ) ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should error with array with group of OR values and array with group of values and member' do
     tree = JCR.parse( 'rule [ ( :integer | :float ) ] ;; rule2 [ ( :ip4 , "thing" target ) ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should error with array with group of value OR with group with member' do
     tree = JCR.parse( 'rule [ ( :integer | ( :ip4 | "thign" target ) ) ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should be ok with array with group of value OR rulename' do
@@ -270,7 +270,7 @@ describe 'check_groups' do
     tree = JCR.parse( 'grule ( :ip4 , "thing" target ) ;; arule [ ( :integer | grule ) ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   #
@@ -294,21 +294,21 @@ describe 'check_groups' do
     tree = JCR.parse( 'rule { ( "thing" :integer | :integer ) }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should error with object with two groups of members and values 1' do
     tree = JCR.parse( 'rule { ( "m1" :integer | "m2" :float ), ( "m3" :string, :string ) }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should error with object with two groups of members and values 2' do
     tree = JCR.parse( 'rule { ( "m1" :integer | :float ), ( "m3" :string, "m4" :string ) }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should be ok with object with group of value OR rulename' do
@@ -322,21 +322,21 @@ describe 'check_groups' do
     tree = JCR.parse( 'grule ( :ip4 , "thing" target ) ;; arule { ( "m2" :integer | grule ) }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should error with object with group of value OR rulename with member' do
     tree = JCR.parse( 'grule ( :ip4 , "thing" target ) ;; arule { ( "m2" :integer | "m1" grule ) }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should error with object with group of value OR rulename with member 2' do
     tree = JCR.parse( 'grule ( "thing" target ) ;; arule { ( "m2" :integer | "m1" grule ) }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should be ok with object with group of value OR rulename with value' do
@@ -350,49 +350,49 @@ describe 'check_groups' do
     tree = JCR.parse( 'grule ( [ :ip4 ], "thing" target ) ;; arule { ( "m2" :integer | grule ) }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should error with object with group of value OR rulename with array 2' do
     tree = JCR.parse( 'grule ( [ :ip4 ] ) ;; arule { ( "m2" :integer | grule ) }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should error with object with group of value OR rulename with value' do
     tree = JCR.parse( 'grule ( :ip4 ) ;; arule { ( "m2" :integer | grule ) }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should error with object with group of value OR rulename with object' do
     tree = JCR.parse( 'grule ( { "m1" :ip4 } ) ;; arule { ( "m2" :integer | grule ) }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should error with object with group of value OR object' do
     tree = JCR.parse( 'arule { ( "m2" :integer | { "m1" :integer } ) }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should error with object with group of value OR array' do
     tree = JCR.parse( 'arule { ( "m2" :integer | [ :integer ] ) }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should error with object with group of value OR value' do
     tree = JCR.parse( 'arule { ( "m2" :integer | :integer ) }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect{ JCR.check_groups( tree, mapping ) }.to raise_error
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
 end

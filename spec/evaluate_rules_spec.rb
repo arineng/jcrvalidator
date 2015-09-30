@@ -417,4 +417,31 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_falsey
   end
 
+  #
+  # URI and URI template value tests
+
+  it 'should pass a URI' do
+    tree = JCR.parse( 'trule : uri' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "http://example.com", mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass a URI template' do
+    tree = JCR.parse( 'trule : http://example.com/{?query*}' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "http://example.com/?foo=bar", mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a non-matching URI template' do
+    tree = JCR.parse( 'trule : http://example.com/{?query*}' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "http://example.com", mapping )
+    expect( e.success ).to be_falsey
+  end
+
 end

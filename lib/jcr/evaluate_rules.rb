@@ -13,6 +13,8 @@
 # IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 require 'ipaddr'
+require 'addressable/uri'
+require 'addressable/template'
 
 require 'jcr/parser'
 require 'jcr/map_rule_names'
@@ -168,6 +170,25 @@ module JCR
               || char.ord > 127
               return bad_value( jcr, rule_atom, "Internationalized Domain Name", data )
             end
+          end
+        end
+
+      #
+      # uri and uri templates
+      #
+
+      when jcr[:uri_v]
+        uri = Addressable::URI.parse( data )
+        return bad_value( jcr, rule_atom, "URI", data ) unless uri.is_a?( Addressable::URI )
+      when jcr[:uri_template]
+        t = jcr[:uri_template].to_s
+        template = Addressable::Template.new( t )
+        e = template.extract( data )
+        if e == nil
+          return bad_value( jcr, rule_atom, t, data )
+        else
+          e.each do |k,v|
+            return bad_value( jcr, rule_atom, t, data ) unless v
           end
         end
 

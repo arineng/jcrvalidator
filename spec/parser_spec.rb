@@ -231,7 +231,7 @@ describe 'parser' do
   end
 
   it 'should not parse a repetition member string rule with integer value' do
-    expect{ tree = JCR.parse( 'trule 1*2 "thing" : integer' ) }.to raise_error
+    expect{ tree = JCR.parse( 'trule 1*2 "thing" : integer' ) }.to raise_error Parslet::ParseFailed
   end
 
   it 'should parse an any member rule with integer value' do
