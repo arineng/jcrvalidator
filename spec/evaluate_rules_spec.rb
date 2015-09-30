@@ -593,4 +593,88 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_falsey
   end
 
+  #
+  # Date and Time value tests
+  #
+
+  it 'should pass a date-time string' do
+    tree = JCR.parse( 'trule : date-time' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "1985-04-12T23:20:50.52Z", mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a number being passed as date-time' do
+    tree = JCR.parse( 'trule : date-time' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a badly formatted date-time' do
+    tree = JCR.parse( 'trule : date-time' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "1985-04-12T23.20.50.52Z", mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass a full-date string' do
+    tree = JCR.parse( 'trule : full-date' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "1985-04-12", mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a number being passed as full-date' do
+    tree = JCR.parse( 'trule : full-date' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a badly formatted full-date' do
+    tree = JCR.parse( 'trule : full-date' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "1985-14-12", mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass a full-time string' do
+    tree = JCR.parse( 'trule : full-time' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "23:20:50.52", mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a number being passed as full-time' do
+    tree = JCR.parse( 'trule : full-time' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a badly formatted full-time with Z' do
+    tree = JCR.parse( 'trule : full-time' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "23.20.50.52Z", mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a badly formatted full-time with bad-data' do
+    tree = JCR.parse( 'trule : full-time' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "24.20.50.52", mapping )
+    expect( e.success ).to be_falsey
+  end
+
 end

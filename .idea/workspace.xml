@@ -177,8 +177,8 @@
       <file leaf-file-name="evaluate_rules.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_rules.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.44458762">
-              <caret line="226" column="67" selection-start-line="226" selection-start-column="67" selection-end-line="226" selection-end-column="67" />
+            <state vertical-scroll-proportion="0.11082474">
+              <caret line="245" column="0" selection-start-line="245" selection-start-column="0" selection-end-line="245" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -188,7 +188,7 @@
         <entry file="file://$PROJECT_DIR$/spec/evaluate_rules_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="591" column="57" selection-start-line="591" selection-start-column="57" selection-end-line="591" selection-end-column="57" />
+              <caret line="668" column="0" selection-start-line="668" selection-start-column="0" selection-end-line="668" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -934,13 +934,7 @@
       <workItem from="1442328458398" duration="4558000" />
       <workItem from="1442426626656" duration="51501000" />
       <workItem from="1443107388311" duration="186000" />
-      <workItem from="1443114193143" duration="34679000" />
-    </task>
-    <task id="LOCAL-00021" summary="initial changes for new type of value enumerations">
-      <created>1419354432822</created>
-      <option name="number" value="00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1419354432822</updated>
+      <workItem from="1443114193143" duration="36218000" />
     </task>
     <task id="LOCAL-00022" summary="added more tests for enumerations&#10;took out ^&quot;&quot; for any and added regex for member names.">
       <created>1419363617511</created>
@@ -1230,11 +1224,17 @@
       <option name="project" value="LOCAL" />
       <updated>1443642090029</updated>
     </task>
-    <option name="localTasksCounter" value="70" />
+    <task id="LOCAL-00070" summary="added base64 value evaluation">
+      <created>1443646311710</created>
+      <option name="number" value="00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1443646311711</updated>
+    </task>
+    <option name="localTasksCounter" value="71" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="169192000" />
+    <option name="totallyTimeSpent" value="170731000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -1282,7 +1282,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="work on the syntax for groups" />
     <MESSAGE value="initial pass at checking groups in members" />
     <MESSAGE value="members with group rule checking tests" />
     <MESSAGE value="unions are now gone in favor of straight-up group rules in value rules" />
@@ -1307,7 +1306,8 @@
     <MESSAGE value="added phone support" />
     <MESSAGE value="more string checking" />
     <MESSAGE value="even more string checking" />
-    <option name="LAST_COMMIT_MESSAGE" value="even more string checking" />
+    <MESSAGE value="added base64 value evaluation" />
+    <option name="LAST_COMMIT_MESSAGE" value="added base64 value evaluation" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2035,6 +2035,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Gemfile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="4" column="14" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
       <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
         <state />
@@ -2042,14 +2050,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="233" column="98" selection-start-line="233" selection-start-column="98" selection-end-line="233" selection-end-column="98" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Gemfile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="4" column="14" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
           <folding />
         </state>
       </provider>
@@ -2068,15 +2068,15 @@
     <entry file="file://$PROJECT_DIR$/spec/evaluate_rules_spec.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="591" column="57" selection-start-line="591" selection-start-column="57" selection-end-line="591" selection-end-column="57" />
+          <caret line="668" column="0" selection-start-line="668" selection-start-column="0" selection-end-line="668" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_rules.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.44458762">
-          <caret line="226" column="67" selection-start-line="226" selection-start-column="67" selection-end-line="226" selection-end-column="67" />
+        <state vertical-scroll-proportion="0.11082474">
+          <caret line="245" column="0" selection-start-line="245" selection-start-column="0" selection-end-line="245" selection-end-column="0" />
           <folding />
         </state>
       </provider>

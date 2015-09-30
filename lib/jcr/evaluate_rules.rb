@@ -13,6 +13,7 @@
 # IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 require 'ipaddr'
+require 'time'
 require 'addressable/uri'
 require 'addressable/template'
 require 'email_address_validator'
@@ -234,6 +235,34 @@ module JCR
               || char == '=' || char == '+' || char == '/'
             return bad_value( jcr, rule_atom, "Base 64 Data", data )
           end
+        end
+
+      #
+      # time and date values
+      #
+
+      when jcr[:date_time]
+        return bad_value( jcr, rule_atom, "Time and Date", data ) unless data.is_a? String
+        begin
+          Time.iso8601( data )
+        rescue ArgumentError
+          return bad_value( jcr, rule_atom, "Time and Date", data )
+        end
+      when jcr[:full_date]
+        return bad_value( jcr, rule_atom, "Date", data ) unless data.is_a? String
+        begin
+          d = data + "T23:20:50.52Z"
+          Time.iso8601( d )
+        rescue ArgumentError
+          return bad_value( jcr, rule_atom, "Date", data )
+        end
+      when jcr[:full_time]
+        return bad_value( jcr, rule_atom, "Time", data ) unless data.is_a? String
+        begin
+          t = "1985-04-12T" + data + "Z"
+          Time.iso8601( t )
+        rescue ArgumentError
+          return bad_value( jcr, rule_atom, "Time", data )
         end
 
       #
