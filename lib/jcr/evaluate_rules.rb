@@ -215,6 +215,28 @@ module JCR
         return bad_value( jcr, rule_atom, "Phone Number", data ) unless p.valid?
 
       #
+      # base64 values
+      #
+
+      when jcr[:base64]
+        return bad_value( jcr, rule_atom, "Base 64 Data", data ) unless data.is_a? String
+        return bad_value( jcr, rule_atom, "Base 64 Data", data ) if data.empty?
+        pad_start = false
+        data.each_char do |char|
+          if pad_start && char != '='
+            return bad_value( jcr, rule_atom, "Base 64 Data", data )
+          elsif char == '='
+            pad_start = true
+          end
+          unless (char >= 'a' && char <= 'z') \
+              || (char >= 'A' && char <= 'Z') \
+              || (char >= '0' && char <='9') \
+              || char == '=' || char == '+' || char == '/'
+            return bad_value( jcr, rule_atom, "Base 64 Data", data )
+          end
+        end
+
+      #
       # null
       #
 

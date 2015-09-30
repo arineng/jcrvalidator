@@ -177,8 +177,8 @@
       <file leaf-file-name="evaluate_rules.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_rules.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.314433">
-              <caret line="111" column="30" selection-start-line="111" selection-start-column="30" selection-end-line="111" selection-end-column="30" />
+            <state vertical-scroll-proportion="0.44458762">
+              <caret line="226" column="67" selection-start-line="226" selection-start-column="67" selection-end-line="226" selection-end-column="67" />
               <folding />
             </state>
           </provider>
@@ -188,7 +188,7 @@
         <entry file="file://$PROJECT_DIR$/spec/evaluate_rules_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="280" column="35" selection-start-line="280" selection-start-column="35" selection-end-line="280" selection-end-column="35" />
+              <caret line="591" column="57" selection-start-line="591" selection-start-column="57" selection-end-line="591" selection-end-column="57" />
               <folding />
             </state>
           </provider>
@@ -211,7 +211,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <push-targets>
-      <push-target-info repo="$PROJECT_DIR$" source="master" target-remote="github" target-branch="master" />
+      <push-target-info repo="$PROJECT_DIR$" source="master" target-remote="origin" target-branch="master" />
     </push-targets>
   </component>
   <component name="GradleLocalSettings">
@@ -934,13 +934,7 @@
       <workItem from="1442328458398" duration="4558000" />
       <workItem from="1442426626656" duration="51501000" />
       <workItem from="1443107388311" duration="186000" />
-      <workItem from="1443114193143" duration="31476000" />
-    </task>
-    <task id="LOCAL-00020" summary="separated uri and uri template">
-      <created>1418589393603</created>
-      <option name="number" value="00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1418589393603</updated>
+      <workItem from="1443114193143" duration="34679000" />
     </task>
     <task id="LOCAL-00021" summary="initial changes for new type of value enumerations">
       <created>1419354432822</created>
@@ -1230,11 +1224,17 @@
       <option name="project" value="LOCAL" />
       <updated>1443641819787</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <task id="LOCAL-00069" summary="even more string checking">
+      <created>1443642090029</created>
+      <option name="number" value="00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1443642090029</updated>
+    </task>
+    <option name="localTasksCounter" value="70" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="165989000" />
+    <option name="totallyTimeSpent" value="169192000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -1282,7 +1282,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="name checking works" />
     <MESSAGE value="work on the syntax for groups" />
     <MESSAGE value="initial pass at checking groups in members" />
     <MESSAGE value="members with group rule checking tests" />
@@ -1307,7 +1306,8 @@
     <MESSAGE value="added support for email" />
     <MESSAGE value="added phone support" />
     <MESSAGE value="more string checking" />
-    <option name="LAST_COMMIT_MESSAGE" value="more string checking" />
+    <MESSAGE value="even more string checking" />
+    <option name="LAST_COMMIT_MESSAGE" value="even more string checking" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2068,15 +2068,15 @@
     <entry file="file://$PROJECT_DIR$/spec/evaluate_rules_spec.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="280" column="35" selection-start-line="280" selection-start-column="35" selection-end-line="280" selection-end-column="35" />
+          <caret line="591" column="57" selection-start-line="591" selection-start-column="57" selection-end-line="591" selection-end-column="57" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_rules.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.314433">
-          <caret line="111" column="30" selection-start-line="111" selection-start-column="30" selection-end-line="111" selection-end-column="30" />
+        <state vertical-scroll-proportion="0.44458762">
+          <caret line="226" column="67" selection-start-line="226" selection-start-column="67" selection-end-line="226" selection-end-column="67" />
           <folding />
         </state>
       </provider>

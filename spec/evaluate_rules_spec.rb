@@ -557,5 +557,40 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_falsey
   end
 
+  #
+  # Base64 data type
+  #
+
+  it 'should pass a base64 string' do
+    tree = JCR.parse( 'trule : base64' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzdA==", mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a number that is not a base64 string' do
+    tree = JCR.parse( 'trule : base64' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a string with illegal base64 characters' do
+    tree = JCR.parse( 'trule : base64' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzdA%==", mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a string with base64 characters after padding' do
+    tree = JCR.parse( 'trule : base64' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzdA==aaa", mapping )
+    expect( e.success ).to be_falsey
+  end
 
 end
