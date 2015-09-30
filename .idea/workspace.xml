@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="3ebe9841-051a-4230-ba6c-8935dd0c40e4" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/jcr/evaluate_rules.rb" afterPath="$PROJECT_DIR$/lib/jcr/evaluate_rules.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spec/evaluate_rules_spec.rb" afterPath="$PROJECT_DIR$/spec/evaluate_rules_spec.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="jcrvalidator.iws" />
@@ -177,8 +176,8 @@
       <file leaf-file-name="evaluate_rules.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_rules.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.11082474">
-              <caret line="245" column="0" selection-start-line="245" selection-start-column="0" selection-end-line="245" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.632732">
+              <caret line="286" column="0" selection-start-line="286" selection-start-column="0" selection-end-line="286" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -934,13 +933,7 @@
       <workItem from="1442328458398" duration="4558000" />
       <workItem from="1442426626656" duration="51501000" />
       <workItem from="1443107388311" duration="186000" />
-      <workItem from="1443114193143" duration="36218000" />
-    </task>
-    <task id="LOCAL-00022" summary="added more tests for enumerations&#10;took out ^&quot;&quot; for any and added regex for member names.">
-      <created>1419363617511</created>
-      <option name="number" value="00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1419363617511</updated>
+      <workItem from="1443114193143" duration="36281000" />
     </task>
     <task id="LOCAL-00023" summary="added repetition to regex member rules">
       <created>1442341562505</created>
@@ -1230,11 +1223,17 @@
       <option name="project" value="LOCAL" />
       <updated>1443646311711</updated>
     </task>
-    <option name="localTasksCounter" value="71" />
+    <task id="LOCAL-00071" summary="added date and time value evaluation support">
+      <created>1443653592497</created>
+      <option name="number" value="00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1443653592498</updated>
+    </task>
+    <option name="localTasksCounter" value="72" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="170731000" />
+    <option name="totallyTimeSpent" value="170794000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -1282,7 +1281,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="initial pass at checking groups in members" />
     <MESSAGE value="members with group rule checking tests" />
     <MESSAGE value="unions are now gone in favor of straight-up group rules in value rules" />
     <MESSAGE value="comments can now end" />
@@ -1307,7 +1305,8 @@
     <MESSAGE value="more string checking" />
     <MESSAGE value="even more string checking" />
     <MESSAGE value="added base64 value evaluation" />
-    <option name="LAST_COMMIT_MESSAGE" value="added base64 value evaluation" />
+    <MESSAGE value="added date and time value evaluation support" />
+    <option name="LAST_COMMIT_MESSAGE" value="added date and time value evaluation support" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2075,8 +2074,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_rules.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.11082474">
-          <caret line="245" column="0" selection-start-line="245" selection-start-column="0" selection-end-line="245" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.632732">
+          <caret line="286" column="0" selection-start-line="286" selection-start-column="0" selection-end-line="286" selection-end-column="0" />
           <folding />
         </state>
       </provider>

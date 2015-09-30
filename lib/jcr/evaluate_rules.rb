@@ -283,7 +283,7 @@ module JCR
       # TODO when all value types are coded, this needs to be changed to raise an exception
       #
       else
-        return Evaluation.new( true, nil )
+        raise "unknown value rule evaluation. this shouldn't happen"
     end
     return Evaluation.new( true, nil )
   end
