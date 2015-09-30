@@ -15,6 +15,7 @@
 require 'ipaddr'
 require 'addressable/uri'
 require 'addressable/template'
+require 'email_address_validator'
 
 require 'jcr/parser'
 require 'jcr/map_rule_names'
@@ -191,6 +192,13 @@ module JCR
             return bad_value( jcr, rule_atom, t, data ) unless v
           end
         end
+
+      #
+      # email value rules
+      #
+
+      when jcr[:email]
+        return bad_value( jcr, rule_atom, "Email Address", data ) unless EmailAddressValidator.validate( data, true )
 
       #
       # null
