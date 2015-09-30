@@ -273,6 +273,14 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should fail a number not matching a regular expression' do
+    tree = JCR.parse( 'trule : /[a-z]*/' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
+    expect( e.success ).to be_falsey
+  end
+
   #
   # IP address value tests
   #

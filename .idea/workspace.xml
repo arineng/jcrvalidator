@@ -174,21 +174,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="evaluate_rules.rb" pinned="false" current-in-tab="false">
+      <file leaf-file-name="evaluate_rules.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_rules.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="135" column="88" selection-start-line="135" selection-start-column="88" selection-end-line="135" selection-end-column="88" />
+            <state vertical-scroll-proportion="1.314433">
+              <caret line="111" column="30" selection-start-line="111" selection-start-column="30" selection-end-line="111" selection-end-column="30" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="evaluate_rules_spec.rb" pinned="false" current-in-tab="true">
+      <file leaf-file-name="evaluate_rules_spec.rb" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/spec/evaluate_rules_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8311856">
-              <caret line="339" column="46" selection-start-line="339" selection-start-column="46" selection-end-line="339" selection-end-column="46" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="280" column="35" selection-start-line="280" selection-start-column="35" selection-end-line="280" selection-end-column="35" />
               <folding />
             </state>
           </provider>
@@ -242,8 +242,8 @@
         <option value="$PROJECT_DIR$/spec/check_groups_spec.rb" />
         <option value="$PROJECT_DIR$/spec/parser_spec.rb" />
         <option value="$PROJECT_DIR$/Gemfile" />
-        <option value="$PROJECT_DIR$/lib/jcr/evaluate_rules.rb" />
         <option value="$PROJECT_DIR$/spec/evaluate_rules_spec.rb" />
+        <option value="$PROJECT_DIR$/lib/jcr/evaluate_rules.rb" />
       </list>
     </option>
   </component>
@@ -934,13 +934,7 @@
       <workItem from="1442328458398" duration="4558000" />
       <workItem from="1442426626656" duration="51501000" />
       <workItem from="1443107388311" duration="186000" />
-      <workItem from="1443114193143" duration="31206000" />
-    </task>
-    <task id="LOCAL-00019" summary="changed so that uri templates can have {} characters">
-      <created>1418589029859</created>
-      <option name="number" value="00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1418589029859</updated>
+      <workItem from="1443114193143" duration="31476000" />
     </task>
     <task id="LOCAL-00020" summary="separated uri and uri template">
       <created>1418589393603</created>
@@ -1230,11 +1224,17 @@
       <option name="project" value="LOCAL" />
       <updated>1443640802143</updated>
     </task>
-    <option name="localTasksCounter" value="68" />
+    <task id="LOCAL-00068" summary="more string checking">
+      <created>1443641819787</created>
+      <option name="number" value="00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1443641819787</updated>
+    </task>
+    <option name="localTasksCounter" value="69" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="165719000" />
+    <option name="totallyTimeSpent" value="165989000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -1282,7 +1282,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="working on name mapping" />
     <MESSAGE value="name checking works" />
     <MESSAGE value="work on the syntax for groups" />
     <MESSAGE value="initial pass at checking groups in members" />
@@ -1307,7 +1306,8 @@
     <MESSAGE value="added uri and uri template stuff" />
     <MESSAGE value="added support for email" />
     <MESSAGE value="added phone support" />
-    <option name="LAST_COMMIT_MESSAGE" value="added phone support" />
+    <MESSAGE value="more string checking" />
+    <option name="LAST_COMMIT_MESSAGE" value="more string checking" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2065,18 +2065,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_rules.rb">
+    <entry file="file://$PROJECT_DIR$/spec/evaluate_rules_spec.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="135" column="88" selection-start-line="135" selection-start-column="88" selection-end-line="135" selection-end-column="88" />
+          <caret line="280" column="35" selection-start-line="280" selection-start-column="35" selection-end-line="280" selection-end-column="35" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/spec/evaluate_rules_spec.rb">
+    <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_rules.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8311856">
-          <caret line="339" column="46" selection-start-line="339" selection-start-column="46" selection-end-line="339" selection-end-column="46" />
+        <state vertical-scroll-proportion="1.314433">
+          <caret line="111" column="30" selection-start-line="111" selection-start-column="30" selection-end-line="111" selection-end-column="30" />
           <folding />
         </state>
       </provider>

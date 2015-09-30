@@ -118,6 +118,7 @@ module JCR
 
       when jcr[:regex]
         regex = Regexp.new( jcr[:regex].to_s )
+        return bad_value( jcr, rule_atom, regex, data ) unless data.is_a? String
         return bad_value( jcr, rule_atom, regex, data ) unless data =~ regex
 
       #
