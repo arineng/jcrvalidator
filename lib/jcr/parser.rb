@@ -24,7 +24,10 @@ module JCR
     rule(:comment)   { str(';') >> ( str('\;') | match('[^\r\n;]') ).repeat.maybe >> match('[\r\n;]') }
     rule(:spcCmnt?)   { spaces? >> comment.maybe >> spaces? }
 
-    rule(:rule_name) { (match('[a-zA-Z]') >> match('[a-zA-Z0-9\-_\.]').repeat).as(:rule_name) }
+	rule(:name)      { match('[a-zA-Z]') >> match('[a-zA-Z0-9\-_]').repeat }
+    rule(:rule_name) { name.as(:rule_name) }
+	rule(:alias_name) { name.as(:alias_name) }
+	rule(:target_rule_name) { ((alias_name >> str('.')).maybe >> rule_name).as(:target_rule_name) }
     rule(:integer)   { ( str('-').maybe >> match('[0-9]').repeat ) }
     rule(:p_integer)   { ( match('[0-9]').repeat ) }
     rule(:float)     { str('-').maybe >> match('[0-9]').repeat(1) >> str('.' ) >> match('[0-9]').repeat(1) }
@@ -83,20 +86,20 @@ module JCR
             ( str('*') >> spcCmnt? >> p_integer.as(:repetition_max) ) }
     rule(:member_rule) {
       ( ( regex.as(:member_regex) | q_string.as(:member_name) ) >> spcCmnt? >>
-      ( value_rule | array_rule | object_rule | group_rule | rule_name.as(:target_rule_name) ) ).as(:member_rule)
+      ( value_rule | array_rule | object_rule | group_rule | target_rule_name ) ).as(:member_rule)
     }
-    rule(:object_def ) { min_max_repetition.maybe >> spcCmnt? >> ( group_rule | member_rule | rule_name.as(:target_rule_name) ) }
+    rule(:object_def ) { min_max_repetition.maybe >> spcCmnt? >> ( group_rule | member_rule | target_rule_name ) }
     rule(:object_rule) { ( str('{') >> spcCmnt? >>
       object_def >> ( spcCmnt? >> comma_or_pipe >>
       spcCmnt? >> object_def ).repeat  >> spcCmnt? >> str('}')
       ).as(:object_rule)
     }
-    rule(:array_def)  { min_max_repetition.maybe >> spcCmnt? >> ( value_rule | group_rule | array_rule | object_rule | rule_name.as(:target_rule_name) ) }
+    rule(:array_def)  { min_max_repetition.maybe >> spcCmnt? >> ( value_rule | group_rule | array_rule | object_rule | target_rule_name ) }
     rule(:array_rule) { ( str('[') >> spcCmnt? >> array_def >>
       ( spcCmnt? >> comma_or_pipe >> spcCmnt? >> array_def ).repeat >> spcCmnt? >> str(']') ).as(:array_rule)
     }
     rule(:group_def)  { min_max_repetition.maybe >> spcCmnt? >>
-      ( group_rule | array_rule | object_rule | value_rule | member_rule | rule_name.as(:target_rule_name) )
+      ( group_rule | array_rule | object_rule | value_rule | member_rule | target_rule_name )
     }
     rule(:group_rule) { ( str('(') >> spcCmnt? >> group_def >> spcCmnt? >>
       ( spcCmnt? >> comma_or_pipe >> spcCmnt? >> group_def ).repeat >>
@@ -109,7 +112,7 @@ module JCR
     rule(:language_compatible_members) { str('language-compatible-members').as(:language_compatible_members) }
     rule(:jcr_version_d) { str('jcr-version') >> spaces >> float }
     rule(:ruleset_id_d) { str('ruleset-id') >> spaces >> uri.as(:uri) }
-    rule(:import_d) { str('import') >> spaces >> uri.as(:uri) >> ( spaces >> str('as') >> spaces >> rule_name ).maybe }
+    rule(:import_d) { str('import') >> spaces >> uri.as(:uri) >> ( spaces >> str('as') >> spaces >> alias_name ).maybe }
     rule(:directive_def) { pedantic | language_compatible_members | jcr_version_d | ruleset_id_d | import_d }
     rule(:directives) { ( str('#') >> spaces? >> directive_def >> match('[^\r\n]').repeat.maybe >> match('[\r\n]') ).as(:directive) }
     rule(:top) { ( rules | directives ).repeat }
