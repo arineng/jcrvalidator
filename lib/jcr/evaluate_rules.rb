@@ -279,9 +279,6 @@ module JCR
       when jcr[:group_rule]
         return evaluate_group_rule jcr[:group_rule], rule_atom, data, mapping
 
-      #
-      # TODO when all value types are coded, this needs to be changed to raise an exception
-      #
       else
         raise "unknown value rule evaluation. this shouldn't happen"
     end
