@@ -81,29 +81,34 @@ module JCR
       )
     }
     rule(:value_rule) { ( str(':') >> spcCmnt? >> ( group_rule | value_def ) ).as(:value_rule) }
+
     rule(:min_max_repetition) { ( p_integer.as(:repetition_min) >> spcCmnt? >> str('*') >> spcCmnt? >> p_integer.maybe.as(:repetition_max) ) |
             ( str('*') >> spcCmnt? >> p_integer.as(:repetition_max) ) }
     rule(:member_rule) {
-      ( ( regex.as(:member_regex) | q_string.as(:member_name) ) >> spcCmnt? >>
-      ( value_rule | array_rule | object_rule | group_rule | target_rule_name ) ).as(:member_rule)
+      ( ( regex.as(:member_regex) | q_string.as(:member_name) ) >> spcCmnt? >> type_rule ).as(:member_rule)
     }
+
     rule(:object_def ) { min_max_repetition.maybe >> spcCmnt? >> ( group_rule | member_rule | target_rule_name ) }
     rule(:object_rule) { ( str('{') >> spcCmnt? >>
       object_def >> ( spcCmnt? >> sequence_or_choice >>
       spcCmnt? >> object_def ).repeat  >> spcCmnt? >> str('}')
       ).as(:object_rule)
     }
-    rule(:array_def)  { min_max_repetition.maybe >> spcCmnt? >> ( value_rule | group_rule | array_rule | object_rule | target_rule_name ) }
+
+    rule(:array_def)  { min_max_repetition.maybe >> spcCmnt? >> type_rule }
     rule(:array_rule) { ( str('[') >> spcCmnt? >> array_def >>
       ( spcCmnt? >> sequence_or_choice >> spcCmnt? >> array_def ).repeat >> spcCmnt? >> str(']') ).as(:array_rule)
     }
-    rule(:group_def)  { min_max_repetition.maybe >> spcCmnt? >>
-      ( group_rule | array_rule | object_rule | value_rule | member_rule | target_rule_name )
-    }
+
+    rule(:group_def)  { min_max_repetition.maybe >> spcCmnt? >> ( type_rule | member_rule ) }
     rule(:group_rule) { ( str('(') >> spcCmnt? >> group_def >> spcCmnt? >>
-      ( spcCmnt? >> sequence_or_choice >> spcCmnt? >> group_def ).repeat >>
+      ( spcCmnt? >> comma_or_pipe >> spcCmnt? >> group_def ).repeat >>
       spcCmnt? >> str(')') ).as(:group_rule)
     }
+
+	rule(:type_rule) { value_rule | group_rule | array_rule | object_rule | target_rule_name }
+    rule(:rules) { spcCmnt? >> ( rule_name >> spcCmnt? >>
+      ( type_rule | member_rule ) ).as(:rule) >> spcCmnt?
     rule(:rule) { spcCmnt? >> ( rule_name >> spcCmnt? >>
       ( value_rule | member_rule | object_rule | array_rule | group_rule ) ).as(:rule) >> spcCmnt?
     }
