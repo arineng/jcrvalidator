@@ -48,8 +48,8 @@ module JCR
       node = [ node ]
     end
     node.each do |groupee|
-      if groupee[:comma_o]
-        raise_group_error( 'AND (comma) operation in group rule of value rule', groupee[:comma_o] )
+      if groupee[:sequence_combiner]
+        raise_group_error( 'AND (comma) operation in group rule of value rule', groupee[:sequence_combiner] )
       end
       if groupee[:group_rule]
         disallowed_group_in_value?( groupee[:group_rule], mapping )
@@ -82,8 +82,8 @@ module JCR
       node = [ node ]
     end
     node.each do |groupee|
-      if groupee[:comma_o]
-        raise_group_error( 'AND (comma) operation in group rule of member rule', groupee[:comma_o] )
+      if groupee[:sequence_combiner]
+        raise_group_error( 'AND (comma) operation in group rule of member rule', groupee[:sequence_combiner] )
       end
       if groupee[:group_rule]
         disallowed_group_in_member?( groupee[:group_rule], mapping )
