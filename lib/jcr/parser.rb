@@ -26,8 +26,8 @@ module JCR
 
 	rule(:name)      { match('[a-zA-Z]') >> match('[a-zA-Z0-9\-_]').repeat }
     rule(:rule_name) { name.as(:rule_name) }
-	rule(:alias_name) { name.as(:alias_name) }
-	rule(:target_rule_name) { ((alias_name >> str('.')).maybe >> rule_name).as(:target_rule_name) }
+	rule(:namespace_alias) { name.as(:namespace_alias) }
+	rule(:target_rule_name) { ((namespace_alias >> str('.')).maybe >> rule_name).as(:target_rule_name) }
     rule(:integer)   { ( str('-').maybe >> match('[0-9]').repeat ) }
     rule(:p_integer)   { ( match('[0-9]').repeat ) }
     rule(:float)     { str('-').maybe >> match('[0-9]').repeat(1) >> str('.' ) >> match('[0-9]').repeat(1) }
@@ -112,7 +112,7 @@ module JCR
     rule(:language_compatible_members) { str('language-compatible-members').as(:language_compatible_members) }
     rule(:jcr_version_d) { str('jcr-version') >> spaces >> float }
     rule(:ruleset_id_d) { str('ruleset-id') >> spaces >> uri.as(:uri) }
-    rule(:import_d) { str('import') >> spaces >> uri.as(:uri) >> ( spaces >> str('as') >> spaces >> alias_name ).maybe }
+    rule(:import_d) { str('import') >> spaces >> uri.as(:uri) >> ( spaces >> str('as') >> spaces >> namespace_alias ).maybe }
     rule(:directive_def) { pedantic | language_compatible_members | jcr_version_d | ruleset_id_d | import_d }
     rule(:directives) { ( str('#') >> spaces? >> directive_def >> match('[^\r\n]').repeat.maybe >> match('[\r\n]') ).as(:directive) }
     rule(:top) { ( rules | directives ).repeat }
