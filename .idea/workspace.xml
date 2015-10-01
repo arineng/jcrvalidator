@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3ebe9841-051a-4230-ba6c-8935dd0c40e4" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spec/check_groups_spec.rb" afterPath="$PROJECT_DIR$/spec/check_groups_spec.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/jcr/map_rule_names.rb" afterPath="$PROJECT_DIR$/lib/jcr/map_rule_names.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spec/map_rule_names_spec.rb" afterPath="$PROJECT_DIR$/spec/map_rule_names_spec.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
@@ -189,7 +188,7 @@
         <entry file="file://$PROJECT_DIR$/lib/jcr/map_rule_names.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="40" column="45" selection-start-line="40" selection-start-column="45" selection-end-line="40" selection-end-column="45" />
+              <caret line="24" column="72" selection-start-line="24" selection-start-column="72" selection-end-line="24" selection-end-column="72" />
               <folding />
             </state>
           </provider>
@@ -198,8 +197,8 @@
       <file leaf-file-name="map_rule_names_spec.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/spec/map_rule_names_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.71005154">
-              <caret line="56" column="0" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.8698454">
+              <caret line="85" column="54" selection-start-line="85" selection-start-column="54" selection-end-line="85" selection-end-column="54" />
               <folding />
             </state>
           </provider>
@@ -266,8 +265,8 @@
         <option value="$PROJECT_DIR$/spec/parser_spec.rb" />
         <option value="$PROJECT_DIR$/lib/jcr/evaluate_group_rules.rb" />
         <option value="$PROJECT_DIR$/spec/evaluate_group_rules_spec.rb" />
-        <option value="$PROJECT_DIR$/lib/jcr/map_rule_names.rb" />
         <option value="$PROJECT_DIR$/spec/check_groups_spec.rb" />
+        <option value="$PROJECT_DIR$/lib/jcr/map_rule_names.rb" />
         <option value="$PROJECT_DIR$/spec/map_rule_names_spec.rb" />
       </list>
     </option>
@@ -960,13 +959,7 @@
       <workItem from="1442426626656" duration="51501000" />
       <workItem from="1443107388311" duration="186000" />
       <workItem from="1443114193143" duration="37995000" />
-      <workItem from="1443716370098" duration="5800000" />
-    </task>
-    <task id="LOCAL-00029" summary="looking at turning enumerations into full blown unions">
-      <created>1442587847884</created>
-      <option name="number" value="00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1442587847884</updated>
+      <workItem from="1443716370098" duration="6295000" />
     </task>
     <task id="LOCAL-00030" summary="looking at turning enumerations into full blown unions">
       <created>1442587861432</created>
@@ -1256,11 +1249,17 @@
       <option name="project" value="LOCAL" />
       <updated>1443733182886</updated>
     </task>
-    <option name="localTasksCounter" value="78" />
+    <task id="LOCAL-00078" summary="fixed issues with mapping in value and group rules">
+      <created>1443739124872</created>
+      <option name="number" value="00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1443739124872</updated>
+    </task>
+    <option name="localTasksCounter" value="79" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="178308000" />
+    <option name="totallyTimeSpent" value="178803000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -1308,7 +1307,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="added checking for groups in arrays" />
     <MESSAGE value="added checking for groups in objects" />
     <MESSAGE value="added more object group checking tests" />
     <MESSAGE value="a couple of simple rule reference fixes" />
@@ -1333,7 +1331,8 @@
     <MESSAGE value="some code reorganization" />
     <MESSAGE value="target rule name evaluations... though it can't be tested" />
     <MESSAGE value="first attempt at groups" />
-    <option name="LAST_COMMIT_MESSAGE" value="first attempt at groups" />
+    <MESSAGE value="fixed issues with mapping in value and group rules" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed issues with mapping in value and group rules" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2089,15 +2088,15 @@
     <entry file="file://$PROJECT_DIR$/lib/jcr/map_rule_names.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="40" column="45" selection-start-line="40" selection-start-column="45" selection-end-line="40" selection-end-column="45" />
+          <caret line="24" column="72" selection-start-line="24" selection-start-column="72" selection-end-line="24" selection-end-column="72" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/spec/map_rule_names_spec.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.71005154">
-          <caret line="56" column="0" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.8698454">
+          <caret line="85" column="54" selection-start-line="85" selection-start-column="54" selection-end-line="85" selection-end-column="54" />
           <folding />
         </state>
       </provider>

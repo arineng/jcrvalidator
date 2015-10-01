@@ -81,4 +81,10 @@ EX7
     expect{ JCR.check_rule_target_names( tree, mapping ) }.to raise_error RuntimeError
   end
 
+  it 'should not allow rules with the same name' do
+    tree = JCR.parse( 'vrule : integer ;; vrule : string' )
+    expect{ JCR.map_rule_names( tree ) }.to raise_error RuntimeError
+  end
+
+
 end

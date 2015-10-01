@@ -20,7 +20,12 @@ module JCR
     rule_name_maping = Hash.new
     tree.each do |node|
       if node[:rule]
-        rule_name_maping[ node[:rule][:rule_name].to_str ] = node[:rule]
+        rn = node[:rule][:rule_name].to_str
+        if rule_name_maping[ rn ]
+          raise "Rule #{rn} already exists and is defined more than once"
+        else
+          rule_name_maping[ rn ] = node[:rule]
+        end
       end
     end
     return rule_name_maping
