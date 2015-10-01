@@ -736,6 +736,18 @@ EX5
     expect(tree[5][:rule][:rule_name]).to eq("trule2")
   end
 
+  it 'should parse jcr-version directive major and minor numbers' do
+    ex5a = <<EX5a
+# jcr-version 4.0
+# ruleset-id http://arin.net/JCRexamples
+# import http://arin.net/otherexamples as otherrules
+# pedantic
+EX5a
+    tree = JCR.parse( ex5a )
+    expect(tree[0][:directive][:jcr_version_d][:major_version]).to eq("4")
+    expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
+  end
+
   it 'should parse ex1 from I-D' do
     ex6 = <<EX6
 root [
