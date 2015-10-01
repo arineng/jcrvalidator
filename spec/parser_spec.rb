@@ -869,12 +869,27 @@ EX12
   it 'should parse groups of values with namespaced rule names' do
     ex12 = <<EX12
 # import http://ietf.org/rfcXXXX.JCR as rfcXXXX
-rfcXXXX.encodings : ( :"base32" | :"base64" )
+encodings : ( :"base32" | :"base64" )
 more_encodings : ( :"base32hex" | :"base64url" | :"base16" )
 all_encodings ( rfcXXXX.encodings | more_encodings )
 EX12
     tree = JCR.parse( ex12 )
-    expect(tree[1][:rule][:rule_name]).to eq("rfcXXXX.encodings")
+    expect(tree[3][:rule][:rule_name]).to eq("all_encodings")
+    expect(tree[3][:rule][:group_rule][0][:target_rule_name][:namespace_alias]).to eq("rfcXXXX")
+    expect(tree[3][:rule][:group_rule][0][:target_rule_name][:rule_name]).to eq("encodings")
+  end
+
+  it 'should parse groups of values with non-namespaced rule names' do
+    ex12 = <<EX12
+# import http://ietf.org/rfcXXXX.JCR as rfcXXXX
+encodings : ( :"base32" | :"base64" )
+more_encodings : ( :"base32hex" | :"base64url" | :"base16" )
+all_encodings ( more_encodings | rfcXXXX.encodings )
+EX12
+    tree = JCR.parse( ex12 )
+    expect(tree[3][:rule][:rule_name]).to eq("all_encodings")
+    # expect(tree[3][:rule][:group_rule][0][:target_rule_name][:namespace_alias]).to eq(nil)
+    expect(tree[3][:rule][:group_rule][0][:target_rule_name][:rule_name]).to eq("more_encodings")
   end
 
   it 'should parse groups as groups' do
