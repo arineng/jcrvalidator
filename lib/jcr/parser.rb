@@ -104,7 +104,7 @@ module JCR
       ( spcCmnt? >> comma_or_pipe >> spcCmnt? >> group_def ).repeat >>
       spcCmnt? >> str(')') ).as(:group_rule)
     }
-    rule(:rules) { spcCmnt? >> ( rule_name >> spcCmnt? >>
+    rule(:rule) { spcCmnt? >> ( rule_name >> spcCmnt? >>
       ( value_rule | member_rule | object_rule | array_rule | group_rule ) ).as(:rule) >> spcCmnt?
     }
     rule(:pedantic) { str('pedantic').as(:pedantic) }
@@ -113,8 +113,8 @@ module JCR
     rule(:ruleset_id_d) { str('ruleset-id') >> spaces >> uri.as(:uri) }
     rule(:import_d) { str('import') >> spaces >> uri.as(:uri) >> ( spaces >> str('as') >> spaces >> namespace_alias ).maybe }
     rule(:directive_def) { pedantic | language_compatible_members | jcr_version_d | ruleset_id_d | import_d }
-    rule(:directives) { ( str('#') >> spaces? >> directive_def >> match('[^\r\n]').repeat.maybe >> match('[\r\n]') ).as(:directive) }
-    rule(:top) { ( rules | directives ).repeat }
+    rule(:directive) { ( str('#') >> spaces? >> directive_def >> match('[^\r\n]').repeat.maybe >> match('[\r\n]') ).as(:directive) }
+    rule(:top) { ( rule | directive ).repeat }
 
     root(:top)
   end
