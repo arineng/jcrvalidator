@@ -27,7 +27,39 @@ require 'jcr/evaluate_rules'
 module JCR
 
   def self.evaluate_group_rule jcr, rule_atom, data, mapping
-    return Evaluation.new( true, nil )
+
+    retval = nil
+
+    if jcr.is_a? Hash
+      jcr = [ jcr ]
+    end
+    jcr.each do |rule|
+      e = evaluate_rule( rule, rule_atom, data, mapping )
+      unless retval
+        retval = e
+      end
+      if rule[:choice_combiner]
+        if e.success
+          retval = Evaluation.new( true, nil )
+          retval.child_evaluation = e
+          return retval # short circuit
+        else
+          retval = Evaluation.new( false, "Group evaluated to false" )
+          retval.child_evaluation = e
+        end
+      elsif rule[:sequence_combiner]
+        if !(e.success)
+          retval = Evaluation.new( false, "Group evaluated to false" )
+          retval.child_evaluation = e
+          return retval # short circuit
+        else
+          retval = Evaluation.new( true, nil )
+          retval.child_evaluation = e
+        end
+      end
+    end
+
+    return retval
   end
 
 end

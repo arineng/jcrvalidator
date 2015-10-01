@@ -17,4 +17,12 @@ require_relative '../lib/JCR/evaluate_group_rules'
 
 describe 'evaluate_group_rules' do
 
+  it 'should pass a group with string variable' do
+    tree = JCR.parse( 'trule : ( :string )' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", mapping )
+    expect( e.success ).to be_truthy
+  end
+
 end
