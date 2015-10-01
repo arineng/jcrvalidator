@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3ebe9841-051a-4230-ba6c-8935dd0c40e4" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/jcr/evaluate_rules.rb" afterPath="$PROJECT_DIR$/lib/jcr/evaluate_rules.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/jcr/parser.rb" afterPath="$PROJECT_DIR$/lib/jcr/parser.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="jcrvalidator.iws" />
@@ -147,17 +147,17 @@
         <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="233" column="98" selection-start-line="233" selection-start-column="98" selection-end-line="233" selection-end-column="98" />
+              <caret line="248" column="98" selection-start-line="248" selection-start-column="58" selection-end-line="248" selection-end-column="58" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="parser.rb" pinned="false" current-in-tab="false">
+      <file leaf-file-name="parser.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/jcr/parser.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="75" column="15" selection-start-line="75" selection-start-column="15" selection-end-line="75" selection-end-column="15" />
+            <state vertical-scroll-proportion="0.90850514">
+              <caret line="114" column="3" selection-start-line="114" selection-start-column="3" selection-end-line="114" selection-end-column="3" />
               <folding />
             </state>
           </provider>
@@ -173,11 +173,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="evaluate_rules.rb" pinned="false" current-in-tab="true">
+      <file leaf-file-name="evaluate_rules.rb" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_rules.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.59407216">
-              <caret line="281" column="0" selection-start-line="281" selection-start-column="0" selection-end-line="281" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="279" column="76" selection-start-line="279" selection-start-column="76" selection-end-line="279" selection-end-column="76" />
               <folding />
             </state>
           </provider>
@@ -236,13 +236,13 @@
         <option value="$PROJECT_DIR$/lib/jcr/check_groups.rb" />
         <option value="$APPLICATION_CONFIG_DIR$/consoles/db/e6757db2-2116-4159-8924-a418ceff0726/console.sql" />
         <option value="$PROJECT_DIR$/lib/jcr/jcr_node.rb" />
-        <option value="$PROJECT_DIR$/lib/jcr/parser.rb" />
         <option value="$PROJECT_DIR$/spec/map_rule_names_spec.rb" />
         <option value="$PROJECT_DIR$/spec/check_groups_spec.rb" />
         <option value="$PROJECT_DIR$/spec/parser_spec.rb" />
         <option value="$PROJECT_DIR$/Gemfile" />
         <option value="$PROJECT_DIR$/spec/evaluate_rules_spec.rb" />
         <option value="$PROJECT_DIR$/lib/jcr/evaluate_rules.rb" />
+        <option value="$PROJECT_DIR$/lib/jcr/parser.rb" />
       </list>
     </option>
   </component>
@@ -933,19 +933,7 @@
       <workItem from="1442328458398" duration="4558000" />
       <workItem from="1442426626656" duration="51501000" />
       <workItem from="1443107388311" duration="186000" />
-      <workItem from="1443114193143" duration="36574000" />
-    </task>
-    <task id="LOCAL-00024" summary="added a test for a failure of repetition for member string rules">
-      <created>1442349119378</created>
-      <option name="number" value="00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1442349119378</updated>
-    </task>
-    <task id="LOCAL-00025" summary="removed ? in favor of *1&#10;repetition is no longer on member rules, moved to object rules so things are more consistent">
-      <created>1442494169259</created>
-      <option name="number" value="00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1442494169259</updated>
+      <workItem from="1443114193143" duration="37995000" />
     </task>
     <task id="LOCAL-00026" summary="group rules didn't have member rules&#10;added optional spaces to repetition">
       <created>1442496326280</created>
@@ -1229,11 +1217,23 @@
       <option name="project" value="LOCAL" />
       <updated>1443653657364</updated>
     </task>
-    <option name="localTasksCounter" value="73" />
+    <task id="LOCAL-00073" summary="removed comment">
+      <created>1443656496431</created>
+      <option name="number" value="00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1443656496431</updated>
+    </task>
+    <task id="LOCAL-00074" summary="Merge branch 'factor_out_types' of https://github.com/codalogic/jcrvalidator into codalogic-factor_out_types&#10;&#10;# Conflicts:&#10;#&#9;lib/jcr/parser.rb&#10;">
+      <created>1443716263023</created>
+      <option name="number" value="00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1443716263023</updated>
+    </task>
+    <option name="localTasksCounter" value="75" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="171087000" />
+    <option name="totallyTimeSpent" value="172508000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -1281,8 +1281,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="unions are now gone in favor of straight-up group rules in value rules" />
-    <MESSAGE value="comments can now end" />
     <MESSAGE value="fixed example" />
     <MESSAGE value="made tests more readable with embedded comments" />
     <MESSAGE value="added group checking for value rules" />
@@ -1306,7 +1304,9 @@
     <MESSAGE value="added base64 value evaluation" />
     <MESSAGE value="added date and time value evaluation support" />
     <MESSAGE value="removed safe guard for unknown value evaluations" />
-    <option name="LAST_COMMIT_MESSAGE" value="removed safe guard for unknown value evaluations" />
+    <MESSAGE value="removed comment" />
+    <MESSAGE value="Merge branch 'factor_out_types' of https://github.com/codalogic/jcrvalidator into codalogic-factor_out_types&#10;&#10;# Conflicts:&#10;#&#9;lib/jcr/parser.rb&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'factor_out_types' of https://github.com/codalogic/jcrvalidator into codalogic-factor_out_types&#10;&#10;# Conflicts:&#10;#&#9;lib/jcr/parser.rb&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2048,18 +2048,7 @@
       </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="233" column="98" selection-start-line="233" selection-start-column="98" selection-end-line="233" selection-end-column="98" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/jcr/parser.rb">
-      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="75" column="15" selection-start-line="75" selection-start-column="15" selection-end-line="75" selection-end-column="15" />
+          <caret line="248" column="98" selection-start-line="248" selection-start-column="58" selection-end-line="248" selection-end-column="58" />
           <folding />
         </state>
       </provider>
@@ -2074,8 +2063,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_rules.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.59407216">
-          <caret line="281" column="0" selection-start-line="281" selection-start-column="0" selection-end-line="281" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="279" column="76" selection-start-line="279" selection-start-column="76" selection-end-line="279" selection-end-column="76" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/jcr/parser.rb">
+      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.90850514">
+          <caret line="114" column="3" selection-start-line="114" selection-start-column="3" selection-end-line="114" selection-end-column="3" />
           <folding />
         </state>
       </provider>

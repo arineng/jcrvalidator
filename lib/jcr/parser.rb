@@ -102,16 +102,14 @@ module JCR
 
     rule(:group_def)  { min_max_repetition.maybe >> spcCmnt? >> ( type_rule | member_rule ) }
     rule(:group_rule) { ( str('(') >> spcCmnt? >> group_def >> spcCmnt? >>
-      ( spcCmnt? >> comma_or_pipe >> spcCmnt? >> group_def ).repeat >>
+      ( spcCmnt? >> sequence_or_choice >> spcCmnt? >> group_def ).repeat >>
       spcCmnt? >> str(')') ).as(:group_rule)
     }
 
 	rule(:type_rule) { value_rule | group_rule | array_rule | object_rule | target_rule_name }
     rule(:rules) { spcCmnt? >> ( rule_name >> spcCmnt? >>
-      ( type_rule | member_rule ) ).as(:rule) >> spcCmnt?
-    rule(:rule) { spcCmnt? >> ( rule_name >> spcCmnt? >>
-      ( value_rule | member_rule | object_rule | array_rule | group_rule ) ).as(:rule) >> spcCmnt?
-    }
+      ( type_rule | member_rule ) ).as(:rule) >> spcCmnt? }
+
     rule(:pedantic) { str('pedantic').as(:pedantic) }
     rule(:language_compatible_members) { str('language-compatible-members').as(:language_compatible_members) }
     rule(:jcr_version_d) { str('jcr-version') >> spaces >> float }
@@ -119,7 +117,7 @@ module JCR
     rule(:import_d) { str('import') >> spaces >> uri.as(:uri) >> ( spaces >> str('as') >> spaces >> namespace_alias ).maybe }
     rule(:directive_def) { pedantic | language_compatible_members | jcr_version_d | ruleset_id_d | import_d }
     rule(:directive) { ( str('#') >> spaces? >> directive_def >> match('[^\r\n]').repeat.maybe >> match('[\r\n]') ).as(:directive) }
-    rule(:top) { ( rule | directive ).repeat }
+    rule(:top) { ( rules | directive ).repeat }
 
     root(:top)
   end
