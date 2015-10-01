@@ -26,7 +26,7 @@ require 'jcr/check_groups'
 module JCR
 
   class Evaluation
-    attr_accessor :success, :reason
+    attr_accessor :success, :reason, :child_evaluation
     def initialize success, reason
       @success = success
       @reason = reason
@@ -37,6 +37,10 @@ module JCR
     case
       when jcr[:rule]
         return evaluate_rule( jcr[:rule], rule_atom, data, mapping)
+      when jcr[:target_rule_name]
+        target = mapping[ jcr[:target_rule_name][:rule_name].to_s ]
+        raise "Target rule not in mapping. This should have been checked earlier." unless target
+        return evaluate_rule( target, target, data, mapping )
       when jcr[:value_rule]
         return evaluate_value_rule( jcr[:value_rule], rule_atom, data, mapping)
       when jcr[:group_rule]
