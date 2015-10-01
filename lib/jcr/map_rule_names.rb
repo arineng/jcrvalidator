@@ -37,6 +37,10 @@ module JCR
       else
         if node[:rule]
           check_rule_target_names( node[:rule], mapping )
+        elsif node[:group_rule]
+          check_rule_target_names( node[:group_rule], mapping )
+        elsif node[:value_rule]
+          check_rule_target_names( node[:value_rule], mapping )
         elsif node[:array_rule]
           check_rule_target_names( node[:array_rule], mapping )
         elsif node[:object_rule]

@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3ebe9841-051a-4230-ba6c-8935dd0c40e4" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/jcr/evaluate_group_rules.rb" afterPath="$PROJECT_DIR$/lib/jcr/evaluate_group_rules.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spec/evaluate_group_rules_spec.rb" afterPath="$PROJECT_DIR$/spec/evaluate_group_rules_spec.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spec/check_groups_spec.rb" afterPath="$PROJECT_DIR$/spec/check_groups_spec.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/jcr/map_rule_names.rb" afterPath="$PROJECT_DIR$/lib/jcr/map_rule_names.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spec/map_rule_names_spec.rb" afterPath="$PROJECT_DIR$/spec/map_rule_names_spec.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="jcrvalidator.iws" />
@@ -154,6 +155,16 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="check_groups_spec.rb" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/spec/check_groups_spec.rb">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="349" column="68" selection-start-line="349" selection-start-column="68" selection-end-line="349" selection-end-column="68" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="evaluate_value_rules_spec.rb" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/spec/evaluate_value_rules_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
@@ -164,11 +175,31 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="evaluate_group_rules_spec.rb" pinned="false" current-in-tab="true">
+      <file leaf-file-name="evaluate_group_rules_spec.rb" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/spec/evaluate_group_rules_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.42525774">
+            <state vertical-scroll-proportion="0.0">
               <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="map_rule_names.rb" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/jcr/map_rule_names.rb">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="40" column="45" selection-start-line="40" selection-start-column="45" selection-end-line="40" selection-end-column="45" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="map_rule_names_spec.rb" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/spec/map_rule_names_spec.rb">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.71005154">
+              <caret line="56" column="0" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -222,13 +253,10 @@
         <option value="$PROJECT_DIR$/jcr" />
         <option value="$PROJECT_DIR$/bin/jcr" />
         <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/lib/jcr/map_rule_names.rb" />
         <option value="$PROJECT_DIR$/example2.jcr" />
         <option value="$PROJECT_DIR$/lib/jcr/check_groups.rb" />
         <option value="$APPLICATION_CONFIG_DIR$/consoles/db/e6757db2-2116-4159-8924-a418ceff0726/console.sql" />
         <option value="$PROJECT_DIR$/lib/jcr/jcr_node.rb" />
-        <option value="$PROJECT_DIR$/spec/map_rule_names_spec.rb" />
-        <option value="$PROJECT_DIR$/spec/check_groups_spec.rb" />
         <option value="$PROJECT_DIR$/Gemfile" />
         <option value="$PROJECT_DIR$/lib/jcr/parser.rb" />
         <option value="$PROJECT_DIR$/lib/jcr/evaluate_value_rules.rb" />
@@ -238,6 +266,9 @@
         <option value="$PROJECT_DIR$/spec/parser_spec.rb" />
         <option value="$PROJECT_DIR$/lib/jcr/evaluate_group_rules.rb" />
         <option value="$PROJECT_DIR$/spec/evaluate_group_rules_spec.rb" />
+        <option value="$PROJECT_DIR$/lib/jcr/map_rule_names.rb" />
+        <option value="$PROJECT_DIR$/spec/check_groups_spec.rb" />
+        <option value="$PROJECT_DIR$/spec/map_rule_names_spec.rb" />
       </list>
     </option>
   </component>
@@ -929,13 +960,7 @@
       <workItem from="1442426626656" duration="51501000" />
       <workItem from="1443107388311" duration="186000" />
       <workItem from="1443114193143" duration="37995000" />
-      <workItem from="1443716370098" duration="4223000" />
-    </task>
-    <task id="LOCAL-00028" summary="looking at turning enumerations into full blown unions">
-      <created>1442587824511</created>
-      <option name="number" value="00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1442587824511</updated>
+      <workItem from="1443716370098" duration="5800000" />
     </task>
     <task id="LOCAL-00029" summary="looking at turning enumerations into full blown unions">
       <created>1442587847884</created>
@@ -1225,11 +1250,17 @@
       <option name="project" value="LOCAL" />
       <updated>1443724226039</updated>
     </task>
-    <option name="localTasksCounter" value="77" />
+    <task id="LOCAL-00077" summary="first attempt at groups">
+      <created>1443733182886</created>
+      <option name="number" value="00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1443733182886</updated>
+    </task>
+    <option name="localTasksCounter" value="78" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="176731000" />
+    <option name="totallyTimeSpent" value="178308000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -1277,7 +1308,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="added group checking for value rules" />
     <MESSAGE value="added checking for groups in arrays" />
     <MESSAGE value="added checking for groups in objects" />
     <MESSAGE value="added more object group checking tests" />
@@ -1302,7 +1332,8 @@
     <MESSAGE value="Merge branch 'factor_out_types' of https://github.com/codalogic/jcrvalidator into codalogic-factor_out_types&#10;&#10;# Conflicts:&#10;#&#9;lib/jcr/parser.rb&#10;" />
     <MESSAGE value="some code reorganization" />
     <MESSAGE value="target rule name evaluations... though it can't be tested" />
-    <option name="LAST_COMMIT_MESSAGE" value="target rule name evaluations... though it can't be tested" />
+    <MESSAGE value="first attempt at groups" />
+    <option name="LAST_COMMIT_MESSAGE" value="first attempt at groups" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1961,30 +1992,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/jcr/map_rule_names.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spec/map_rule_names_spec.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="74" column="62" selection-start-line="74" selection-start-column="62" selection-end-line="74" selection-end-column="62" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spec/check_groups_spec.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="115" column="76" selection-start-line="115" selection-start-column="76" selection-end-line="115" selection-end-column="76" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Gemfile">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -2065,8 +2072,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/spec/evaluate_group_rules_spec.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.42525774">
+        <state vertical-scroll-proportion="0.0">
           <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spec/check_groups_spec.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="349" column="68" selection-start-line="349" selection-start-column="68" selection-end-line="349" selection-end-column="68" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/jcr/map_rule_names.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="40" column="45" selection-start-line="40" selection-start-column="45" selection-end-line="40" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spec/map_rule_names_spec.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.71005154">
+          <caret line="56" column="0" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
           <folding />
         </state>
       </provider>
