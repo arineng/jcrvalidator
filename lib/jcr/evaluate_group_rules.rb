@@ -1,4 +1,4 @@
-# Copyright (C) 2015 American Registry for Internet Numbers (ARIN)
+# Copyright (c) 2015 American Registry for Internet Numbers
 #
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -11,10 +11,23 @@
 # WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 # IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-require 'rspec'
-require 'pp'
-require_relative '../lib/JCR/evaluate_rules'
 
-describe 'evaluate_rules' do
+require 'ipaddr'
+require 'time'
+require 'addressable/uri'
+require 'addressable/template'
+require 'email_address_validator'
+require 'big-phoney'
+
+require 'jcr/parser'
+require 'jcr/map_rule_names'
+require 'jcr/check_groups'
+require 'jcr/evaluate_rules'
+
+module JCR
+
+  def self.evaluate_group_rule jcr, rule_atom, data, mapping
+    return Evaluation.new( true, nil )
+  end
 
 end
