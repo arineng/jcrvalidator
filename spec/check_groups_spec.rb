@@ -283,6 +283,13 @@ describe 'check_groups' do
   #
   # object rule tests
   #
+  it 'should not barf on an empty object' do
+    tree = JCR.parse( 'rule { }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    JCR.check_groups( tree, mapping )
+  end
+
   it 'should be ok with object with group of two OR values' do
     tree = JCR.parse( 'rule { ( "thing" :integer | "thing2" :integer ) }' )
     mapping = JCR.map_rule_names( tree )

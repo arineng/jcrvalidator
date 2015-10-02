@@ -90,8 +90,8 @@ module JCR
 
     rule(:object_def ) { min_max_repetition.maybe >> spcCmnt? >> ( group_rule | member_rule | target_rule_name ) }
     rule(:object_rule) { ( str('{') >> spcCmnt? >>
-      object_def >> ( spcCmnt? >> sequence_or_choice >>
-      spcCmnt? >> object_def ).repeat  >> spcCmnt? >> str('}')
+      ( object_def >> ( spcCmnt? >> sequence_or_choice >>
+      spcCmnt? >> object_def ).repeat ).maybe  >> spcCmnt? >> str('}')
       ).as(:object_rule)
     }
 

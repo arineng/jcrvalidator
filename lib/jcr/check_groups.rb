@@ -142,7 +142,7 @@ module JCR
       node.each do |child_node|
         check_object_for_group( child_node, mapping )
       end
-    else
+    elsif node.is_a? Hash
       if node[:target_rule_name]
         trule = get_name_mapping(node[:target_rule_name][:rule_name], mapping)
         disallowed_group_in_object?(trule, mapping)

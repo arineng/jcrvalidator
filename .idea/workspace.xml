@@ -4,7 +4,6 @@
     <list default="true" id="3ebe9841-051a-4230-ba6c-8935dd0c40e4" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/jcr/check_groups.rb" afterPath="$PROJECT_DIR$/lib/jcr/check_groups.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spec/check_groups_spec.rb" afterPath="$PROJECT_DIR$/spec/check_groups_spec.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/jcr/map_rule_names.rb" afterPath="$PROJECT_DIR$/lib/jcr/map_rule_names.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/jcr/parser.rb" afterPath="$PROJECT_DIR$/lib/jcr/parser.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spec/parser_spec.rb" afterPath="$PROJECT_DIR$/spec/parser_spec.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
@@ -140,8 +139,8 @@
       <file leaf-file-name="check_groups.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/jcr/check_groups.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7152062">
-              <caret line="107" column="24" selection-start-line="107" selection-start-column="24" selection-end-line="107" selection-end-column="24" />
+            <state vertical-scroll-proportion="0.75386596">
+              <caret line="144" column="24" selection-start-line="144" selection-start-column="24" selection-end-line="144" selection-end-column="24" />
               <folding />
             </state>
           </provider>
@@ -151,7 +150,7 @@
         <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="442" column="0" selection-start-line="442" selection-start-column="0" selection-end-line="442" selection-end-column="0" />
+              <caret line="321" column="0" selection-start-line="321" selection-start-column="0" selection-end-line="321" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -161,7 +160,7 @@
         <entry file="file://$PROJECT_DIR$/lib/jcr/parser.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="102" column="43" selection-start-line="102" selection-start-column="43" selection-end-line="102" selection-end-column="43" />
+              <caret line="93" column="44" selection-start-line="93" selection-start-column="44" selection-end-line="93" selection-end-column="44" />
               <folding />
             </state>
           </provider>
@@ -171,7 +170,7 @@
         <entry file="file://$PROJECT_DIR$/spec/check_groups_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="213" column="30" selection-start-line="213" selection-start-column="30" selection-end-line="213" selection-end-column="30" />
+              <caret line="286" column="30" selection-start-line="286" selection-start-column="30" selection-end-line="286" selection-end-column="30" />
               <folding />
             </state>
           </provider>
@@ -287,10 +286,10 @@
         <option value="$PROJECT_DIR$/spec/evaluate_group_rules_spec.rb" />
         <option value="$PROJECT_DIR$/lib/jcr/evaluate_group_rules.rb" />
         <option value="$PROJECT_DIR$/lib/jcr/evaluate_array_rules.rb" />
+        <option value="$PROJECT_DIR$/lib/jcr/map_rule_names.rb" />
         <option value="$PROJECT_DIR$/lib/jcr/parser.rb" />
         <option value="$PROJECT_DIR$/spec/parser_spec.rb" />
         <option value="$PROJECT_DIR$/spec/check_groups_spec.rb" />
-        <option value="$PROJECT_DIR$/lib/jcr/map_rule_names.rb" />
         <option value="$PROJECT_DIR$/lib/jcr/check_groups.rb" />
       </list>
     </option>
@@ -983,13 +982,7 @@
       <workItem from="1442426626656" duration="51501000" />
       <workItem from="1443107388311" duration="186000" />
       <workItem from="1443114193143" duration="37995000" />
-      <workItem from="1443716370098" duration="9873000" />
-    </task>
-    <task id="LOCAL-00033" summary="jcr-version directive">
-      <created>1442601244401</created>
-      <option name="number" value="00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1442601244401</updated>
+      <workItem from="1443716370098" duration="10173000" />
     </task>
     <task id="LOCAL-00034" summary="ruleset-id directive">
       <created>1442601971719</created>
@@ -1279,11 +1272,17 @@
       <option name="project" value="LOCAL" />
       <updated>1443793622700</updated>
     </task>
-    <option name="localTasksCounter" value="82" />
+    <task id="LOCAL-00082" summary="changed rule syntax and code to support an empty array">
+      <created>1443794106125</created>
+      <option name="number" value="00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1443794106125</updated>
+    </task>
+    <option name="localTasksCounter" value="83" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="182381000" />
+    <option name="totallyTimeSpent" value="182681000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -1331,7 +1330,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="started on evaluating rules" />
     <MESSAGE value="support for true and false and boolean" />
     <MESSAGE value="added null support" />
     <MESSAGE value="fixed bugs exposed by the two new tests provided by Peter" />
@@ -1356,7 +1354,8 @@
     <MESSAGE value="duplicate rule name checking" />
     <MESSAGE value="group rule evaluation tests and code fix" />
     <MESSAGE value="start of work on evaluating array rules" />
-    <option name="LAST_COMMIT_MESSAGE" value="start of work on evaluating array rules" />
+    <MESSAGE value="changed rule syntax and code to support an empty array" />
+    <option name="LAST_COMMIT_MESSAGE" value="changed rule syntax and code to support an empty array" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2063,40 +2062,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/jcr/parser.rb">
-      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="102" column="43" selection-start-line="102" selection-start-column="43" selection-end-line="102" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
-      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="442" column="0" selection-start-line="442" selection-start-column="0" selection-end-line="442" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/spec/evaluate_group_rules_spec.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="48" column="36" selection-start-line="48" selection-start-column="36" selection-end-line="48" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spec/check_groups_spec.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="213" column="30" selection-start-line="213" selection-start-column="30" selection-end-line="213" selection-end-column="30" />
           <folding />
         </state>
       </provider>
@@ -2117,10 +2086,40 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/lib/jcr/parser.rb">
+      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="93" column="44" selection-start-line="93" selection-start-column="44" selection-end-line="93" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
+      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="321" column="0" selection-start-line="321" selection-start-column="0" selection-end-line="321" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spec/check_groups_spec.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="286" column="30" selection-start-line="286" selection-start-column="30" selection-end-line="286" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/lib/jcr/check_groups.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7152062">
-          <caret line="107" column="24" selection-start-line="107" selection-start-column="24" selection-end-line="107" selection-end-column="24" />
+        <state vertical-scroll-proportion="0.75386596">
+          <caret line="144" column="24" selection-start-line="144" selection-start-column="24" selection-end-line="144" selection-end-column="24" />
           <folding />
         </state>
       </provider>
