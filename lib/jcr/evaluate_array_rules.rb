@@ -54,31 +54,37 @@ module JCR
 
       repeat_min = 1
       repeat_max = 1
-      if rule[:repetition_min]
-        repeat_min = rule[:repetition_min]
+      o = rule[:repetition_min]
+      if o && o.is_a?( Parslet::Slice )
+        repeat_min = o.to_s.to_i
       end
-      if rule[:repetition_max]
-        repeat_max = rule[:repetition_max]
+      o = rule[:repetition_max]
+      if o && o.is_a?( Parslet::Slice )
+        repeat_max = o.to_s.to_i
       end
 
-      for i in 0..repeat_min do
+      for i in 1..repeat_min do
         if array_index == data.length
           return Evaluation.new( false, "array is not large enough for #{jcr} from #{rule_atom}" )
         else
-          retval = evaluate_rule( rule, rule_atom, data, mapping )
-          array_index = array_index + 1
+          retval = evaluate_rule( rule, rule_atom, data[ array_index ], mapping )
           break unless retval.success
+          array_index = array_index + 1
         end
       end
       if !retval || retval.success
-        for i in repeat_min..repeat_max do
+        for i in repeat_min..repeat_max-1 do
           break if array_index == data.length
-          e = evaluate_rule( rule, rule_atom, data, mapping )
+          e = evaluate_rule( rule, rule_atom, data[ array_index ], mapping )
+          break unless e.success
           array_index = array_index + 1
-          break unless retval.success
         end
       end
 
+    end
+
+    if data.length > array_index
+      retval = Evaluation.new( false, "More itmes in array than specified for #{jcr} from #{rule_atom}" )
     end
 
     return retval
