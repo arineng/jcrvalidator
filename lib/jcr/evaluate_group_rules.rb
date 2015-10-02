@@ -34,29 +34,12 @@ module JCR
       jcr = [ jcr ]
     end
     jcr.each do |rule|
-      e = evaluate_rule( rule, rule_atom, data, mapping )
-      unless retval
-        retval = e
+      if rule[:choice_combiner] && retval && retval.success
+        return retval # short circuit
+      elsif rule[:sequence_combiner] && retval && !retval.success
+        return retval # short circuit
       end
-      if rule[:choice_combiner]
-        if e.success
-          retval = Evaluation.new( true, nil )
-          retval.child_evaluation = e
-          return retval # short circuit
-        else
-          retval = Evaluation.new( false, "Group evaluated to false" )
-          retval.child_evaluation = e
-        end
-      elsif rule[:sequence_combiner]
-        if !(e.success)
-          retval = Evaluation.new( false, "Group evaluated to false" )
-          retval.child_evaluation = e
-          return retval # short circuit
-        else
-          retval = Evaluation.new( true, nil )
-          retval.child_evaluation = e
-        end
-      end
+      retval = evaluate_rule( rule, rule_atom, data, mapping )
     end
 
     return retval
