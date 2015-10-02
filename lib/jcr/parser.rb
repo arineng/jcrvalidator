@@ -107,7 +107,7 @@ module JCR
     }
 
 	rule(:type_rule) { value_rule | group_rule | array_rule | object_rule | target_rule_name }
-    rule(:rules) { spcCmnt? >> ( rule_name >> spcCmnt? >>
+    rule(:rule) { spcCmnt? >> ( rule_name >> spcCmnt? >>
       ( type_rule | member_rule ) ).as(:rule) >> spcCmnt? }
 
     rule(:pedantic) { str('pedantic').as(:pedantic) }
@@ -117,7 +117,7 @@ module JCR
     rule(:import_d) { str('import') >> spaces >> uri.as(:uri) >> ( spaces >> str('as') >> spaces >> namespace_alias ).maybe }
     rule(:directive_def) { pedantic | language_compatible_members | jcr_version_d | ruleset_id_d | import_d }
     rule(:directive) { ( str('#') >> spaces? >> directive_def >> match('[^\r\n]').repeat.maybe >> match('[\r\n]') ).as(:directive) }
-    rule(:top) { ( rules | directive ).repeat }
+    rule(:top) { ( rule | directive ).repeat }
 
     root(:top)
   end
