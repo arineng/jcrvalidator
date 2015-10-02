@@ -96,8 +96,8 @@ module JCR
     }
 
     rule(:array_def)  { min_max_repetition.maybe >> spcCmnt? >> type_rule }
-    rule(:array_rule) { ( str('[') >> spcCmnt? >> array_def >>
-      ( spcCmnt? >> sequence_or_choice >> spcCmnt? >> array_def ).repeat >> spcCmnt? >> str(']') ).as(:array_rule)
+    rule(:array_rule) { ( str('[') >> spcCmnt? >> ( array_def >>
+      ( spcCmnt? >> sequence_or_choice >> spcCmnt? >> array_def ).repeat ).maybe >> spcCmnt? >> str(']') ).as(:array_rule)
     }
 
     rule(:group_def)  { min_max_repetition.maybe >> spcCmnt? >> ( type_rule | member_rule ) }

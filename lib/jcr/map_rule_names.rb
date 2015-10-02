@@ -36,7 +36,7 @@ module JCR
       node.each do |child_node|
         check_rule_target_names( child_node, mapping )
       end
-    else # is a hash
+    elsif node.is_a? Hash
       if node[:target_rule_name] && !mapping[ node[:target_rule_name][:rule_name].to_str ]
         raise_rule_name_missing node[:target_rule_name][:rule_name]
       else

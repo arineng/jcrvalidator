@@ -437,6 +437,11 @@ describe 'parser' do
     expect(tree[0][:rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
   end
 
+  it 'should parse an empty array rule' do
+    tree = JCR.parse( 'trule [ ]' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+  end
+
   it 'should parse an array rule with rule names 1' do
     tree = JCR.parse( 'trule [ my_rule1, my_rule2 ]' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
