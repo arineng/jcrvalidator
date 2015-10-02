@@ -35,8 +35,10 @@ module JCR
       jcr = [ jcr ]
     end
 
-    # if the array is zero length and there are zero sub-rules
-    return Evaluation.new( true, nil ) if jcr.length == 0 && data.length == 0
+    # if the array is zero length and there are zero sub-rules (it is suppose to be empty)
+    return Evaluation.new( true, nil ) if jcr.is_a?( Parslet::Slice ) && data.length == 0
+    # if the array is not empty and there are zero sub-rules (it is suppose to be empty)
+    return Evaluation.new( false, "Non-empty array at #{jcr} from #{rule_atom}" ) if jcr.is_a?( Parslet::Slice ) && data.length != 0
 
     retval = nil
     array_index = 0
@@ -50,13 +52,33 @@ module JCR
         return retval # short circuit
       end
 
-      # if we have reached the end of the array and still have more
-      # rules to process, return false
-      if array_index == data.length
-        return Evaluation.new( false, "array is not large enough for #{jcr} from #{rule_atom}" )
+      repeat_min = 1
+      repeat_max = 1
+      if rule[:repetition_min]
+        repeat_min = rule[:repetition_min]
+      end
+      if rule[:repetition_max]
+        repeat_max = rule[:repetition_max]
       end
 
-      retval = evaluate_rule( rule, rule_atom, data, mapping )
+      for i in 0..repeat_min do
+        if array_index == data.length
+          return Evaluation.new( false, "array is not large enough for #{jcr} from #{rule_atom}" )
+        else
+          retval = evaluate_rule( rule, rule_atom, data, mapping )
+          array_index = array_index + 1
+          break unless retval.success
+        end
+      end
+      if !retval || retval.success
+        for i in repeat_min..repeat_max do
+          break if array_index == data.length
+          e = evaluate_rule( rule, rule_atom, data, mapping )
+          array_index = array_index + 1
+          break unless retval.success
+        end
+      end
+
     end
 
     return retval
