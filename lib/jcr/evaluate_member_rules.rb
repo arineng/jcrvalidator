@@ -40,7 +40,7 @@ module JCR
         member_match = true
       end
     else # must be regex
-      match_spec = jcr[:member_regex][:regex].to_s
+      match_spec = Regexp.new( jcr[:member_regex][:regex].to_s )
       if match_spec =~ data[ 0 ]
         member_match = true
       end
