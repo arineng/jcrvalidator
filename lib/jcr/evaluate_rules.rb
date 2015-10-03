@@ -47,6 +47,8 @@ module JCR
         return evaluate_group_rule( jcr[:group_rule], rule_atom, data, mapping)
       when jcr[:array_rule]
         return evaluate_array_rule( jcr[:array_rule], rule_atom, data, mapping)
+      when jcr[:member_rule]
+        return evaluate_member_rule( jcr[:member_rule], rule_atom, data, mapping)
       else
         return Evaluation.new( true, nil )
     end
