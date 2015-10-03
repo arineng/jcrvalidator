@@ -83,38 +83,40 @@ module JCR
         true_v | false_v | q_string | uri_template | regex | float.as(:float) | integer.as(:integer)
       )
     }
-    rule(:value_choice) { ( str('(') >> spcCmnt? >> value_choice_item >>
-                ( spcCmnt? >> choice_combiner >> spcCmnt? >> value_choice_item ).repeat >> 
-                spcCmnt? >> str(')') ).as(:group_rule) }
-    rule(:value_choice_item) { (str(':') >> spcCmnt? >> value_def | target_rule_name).as(:value_rule) }
+
+    rule(:value_choice_item) { ( (str(':') >> spcCmnt? >> value_def) | target_rule_name).as(:value_rule) }
+    rule(:value_choice_items) { value_choice_item >> ( spcCmnt? >> choice_combiner >> spcCmnt? >> value_choice_item ).repeat }
+    rule(:value_choice) { ( str('(') >> spcCmnt? >> value_choice_items >> spcCmnt? >> str(')') ).as(:group_rule) }
 
     rule(:min_max_repetition) { ( p_integer.as(:repetition_min) >> spcCmnt? >> str('*') >> spcCmnt? >> p_integer.maybe.as(:repetition_max) ) |
             ( str('*') >> spcCmnt? >> p_integer.as(:repetition_max) ) }
+
+    rule(:object_group) { ( str('(') >> spcCmnt? >> object_items >> spcCmnt? >> str(')') ).as(:group_rule) }
+    rule(:object_item_types) { member_rule | target_rule_name | object_group }
+    rule(:object_item ) { min_max_repetition.maybe >> spcCmnt? >> object_item_types }
+    rule(:object_items) { object_item >> ( spcCmnt? >> sequence_or_choice >> spcCmnt? >> object_item ).repeat }
+    rule(:object_rule) { ( str('{') >> spcCmnt? >> object_items >> spcCmnt? >> str('}') ).as(:object_rule) }
+
+    rule(:array_group) { ( str('(') >> spcCmnt? >> array_items >> spcCmnt? >> str(')') ).as(:group_rule) }
+    rule(:array_item_types) { type_rule | array_group }
+    rule(:array_item)  { min_max_repetition.maybe >> spcCmnt? >> array_item_types }
+    rule(:array_items) { array_item >> ( spcCmnt? >> sequence_or_choice >> spcCmnt? >> array_item ).repeat }
+    rule(:array_rule) { ( str('[') >> spcCmnt? >> array_items >> spcCmnt? >> str(']') ).as(:array_rule) }
+
+    rule(:group_group) { group_rule }
+    rule(:group_item_types) { type_rule | member_rule | group_group }
+    rule(:group_item)  { min_max_repetition.maybe >> spcCmnt? >> group_item_types }
+    rule(:group_items) { group_item >> ( spcCmnt? >> sequence_or_choice >> spcCmnt? >> group_item ).repeat }
+    rule(:group_rule) { ( str('(') >> spcCmnt? >> group_items >> spcCmnt? >> str(')') ).as(:group_rule) }
 
     rule(:member_rule) {
       ( ( regex.as(:member_regex) | q_string.as(:member_name) ) >> spcCmnt? >> (type_rule | type_choice) ).as(:member_rule)
     }
 
-    rule(:object_group) { ( str('(') >> spcCmnt? >> object_parts >> spcCmnt? >> str(')') ).as(:group_rule) }
-    rule(:object_def ) { min_max_repetition.maybe >> spcCmnt? >> ( member_rule | object_group | target_rule_name ) }
-    rule(:object_parts) { object_def >> ( spcCmnt? >> sequence_or_choice >> spcCmnt? >> object_def ).repeat }
-    rule(:object_rule) { ( str('{') >> spcCmnt? >> object_parts >> spcCmnt? >> str('}') ).as(:object_rule) }
-
-    rule(:array_group) { ( str('(') >> spcCmnt? >> array_parts >> spcCmnt? >> str(')') ).as(:group_rule) }
-    rule(:array_def)  { min_max_repetition.maybe >> spcCmnt? >> ( type_rule | array_group ) }
-    rule(:array_parts) { array_def >> ( spcCmnt? >> sequence_or_choice >> spcCmnt? >> array_def ).repeat }
-    rule(:array_rule) { ( str('[') >> spcCmnt? >> array_parts >> spcCmnt? >> str(']') ).as(:array_rule) }
-
-    rule(:group_def)  { min_max_repetition.maybe >> spcCmnt? >> ( type_rule | member_rule | group_rule ) }
-    rule(:group_rule) { ( str('(') >> spcCmnt? >> group_def >> spcCmnt? >>
-      ( spcCmnt? >> sequence_or_choice >> spcCmnt? >> group_def ).repeat >>
-      spcCmnt? >> str(')') ).as(:group_rule)
-    }
-
     rule(:type_rule) { value_rule | array_rule | object_rule | target_rule_name }
 
-    rule(:type_choice) { ( str('(') >> type_choice_parts >> ( choice_combiner >> type_choice_parts ).repeat >> str(')') ).as(:group_rule) }
-    rule(:type_choice_parts) { spcCmnt? >> (type_choice | type_rule) >> spcCmnt? }
+    rule(:type_choice) { ( str('(') >> type_choice_items >> ( choice_combiner >> type_choice_items ).repeat >> str(')') ).as(:group_rule) }
+    rule(:type_choice_items) { spcCmnt? >> (type_choice | type_rule) >> spcCmnt? }
 
     rule(:rule) { spcCmnt? >> ( rule_name >> spcCmnt? >> ( type_rule | group_rule | member_rule ) ).as(:rule) >> spcCmnt? }
 
