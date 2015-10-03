@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3ebe9841-051a-4230-ba6c-8935dd0c40e4" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/jcr/evaluate_member_rules.rb" afterPath="$PROJECT_DIR$/lib/jcr/evaluate_member_rules.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spec/evaluate_member_rules_spec.rb" afterPath="$PROJECT_DIR$/spec/evaluate_member_rules_spec.rb" />
+    <list default="true" id="3ebe9841-051a-4230-ba6c-8935dd0c40e4" name="Default" comment="added support member rule evaluation">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/jcr/evaluate_object_rules.rb" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/spec/evaluate_object_rules_spec.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/jcr/evaluate_rules.rb" afterPath="$PROJECT_DIR$/lib/jcr/evaluate_rules.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="jcrvalidator.iws" />
@@ -20,8 +21,9 @@
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/jcrvalidator@check_groups_should_error_with_value_with_referenced_member_rule__jcrvalidator.coverage" NAME="check_groups should error with value with referenced member rule: jcrvalidator Coverage Results" MODIFIED="1443455584584" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="jcrvalidator" />
-    <SUITE FILE_PATH="coverage/jcrvalidator@evaluate_rules_should_pass_an_integer_variable__jcrvalidator.coverage" NAME="evaluate_rules should pass an integer variable: jcrvalidator Coverage Results" MODIFIED="1443462207073" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="jcrvalidator" />
+    <SUITE FILE_PATH="coverage/jcrvalidator@evaluate_rules_should_pass_an_integer_variable__jcrvalidator.coverage" NAME="evaluate_rules should pass an integer variable: jcrvalidator Coverage Results" MODIFIED="1443898015589" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="jcrvalidator" />
     <SUITE FILE_PATH="coverage/jcrvalidator@evaluate_rules_should_pass_a_float_variable_matching_a_constant__jcrvalidator.coverage" NAME="evaluate_rules should pass a float variable matching a constant: jcrvalidator Coverage Results" MODIFIED="1443539167226" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="jcrvalidator" />
+    <SUITE FILE_PATH="coverage/jcrvalidator@evaluate_object_rules_should_fail_an_object_with_one_string_against_an_object_rule_with_a_string_member_and_a_string_member__jcrvalidator.coverage" NAME="evaluate_object_rules should fail an object with one string against an object rule with a string member and a string member: jcrvalidator Coverage Results" MODIFIED="1443898035877" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="jcrvalidator" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -158,37 +160,27 @@
         <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_rules.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="50" column="80" selection-start-line="50" selection-start-column="80" selection-end-line="50" selection-end-column="80" />
+              <caret line="50" column="29" selection-start-line="50" selection-start-column="29" selection-end-line="50" selection-end-column="29" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="evaluate_array_rules.rb" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_array_rules.rb">
+      <file leaf-file-name="evaluate_object_rules.rb" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_object_rules.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="77" column="69" selection-start-line="77" selection-start-column="69" selection-end-line="77" selection-end-column="69" />
+              <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="evaluate_member_rules.rb" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_member_rules.rb">
+      <file leaf-file-name="evaluate_object_rules_spec.rb" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/spec/evaluate_object_rules_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6765464">
-              <caret line="42" column="21" selection-start-line="42" selection-start-column="21" selection-end-line="42" selection-end-column="21" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="evaluate_member_rules_spec.rb" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spec/evaluate_member_rules_spec.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="100" column="34" selection-start-line="100" selection-start-column="34" selection-end-line="100" selection-end-column="34" />
+            <state vertical-scroll-proportion="0.45938748">
+              <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -199,16 +191,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="26" column="9" selection-start-line="26" selection-start-column="9" selection-end-line="26" selection-end-column="9" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="evaluate_array_rules_spec.rb" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spec/evaluate_array_rules_spec.rb">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="250" column="0" selection-start-line="250" selection-start-column="0" selection-end-line="250" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -231,7 +213,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <push-targets>
-      <push-target-info repo="$PROJECT_DIR$" source="master" target-remote="github" target-branch="master" />
+      <push-target-info repo="$PROJECT_DIR$" source="master" target-remote="origin" target-branch="master" />
     </push-targets>
   </component>
   <component name="GradleLocalSettings">
@@ -269,9 +251,11 @@
         <option value="$PROJECT_DIR$/lib/jcr/check_groups.rb" />
         <option value="$PROJECT_DIR$/spec/evaluate_array_rules_spec.rb" />
         <option value="$PROJECT_DIR$/lib/jcr/evaluate_array_rules.rb" />
-        <option value="$PROJECT_DIR$/lib/jcr/evaluate_rules.rb" />
         <option value="$PROJECT_DIR$/spec/evaluate_member_rules_spec.rb" />
         <option value="$PROJECT_DIR$/lib/jcr/evaluate_member_rules.rb" />
+        <option value="$PROJECT_DIR$/lib/jcr/evaluate_rules.rb" />
+        <option value="$PROJECT_DIR$/lib/jcr/evaluate_object_rules.rb" />
+        <option value="$PROJECT_DIR$/spec/evaluate_object_rules_spec.rb" />
       </list>
     </option>
   </component>
@@ -442,7 +426,7 @@
       <recent name="$PROJECT_DIR$/lib/jcrvalidator" />
     </key>
   </component>
-  <component name="RunManager" selected="RSpec.evaluate_rules should pass a float variable matching a constant: jcrvalidator">
+  <component name="RunManager" selected="RSpec.evaluate_object_rules should fail an object with one string against an object rule with a string member and a string member: jcrvalidator">
     <configuration default="false" name="check_groups should error with value with referenced member rule: jcrvalidator" type="RSpecRunConfigurationType" factoryName="RSpec" temporary="true">
       <predefined_log_file id="RUBY_RSPEC" enabled="true" />
       <module name="jcrvalidator" />
@@ -535,6 +519,40 @@
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_RUNNER_PATH" VALUE="" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="**/*_spec.rb" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_EXAMPLE_NAME" VALUE="evaluate_rules should pass a float variable matching a constant" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="TEST_SCRIPT" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_ARGS" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="RUNNER_VERSION" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="USE_CUSTOM_SPEC_RUNNER" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="DRB" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="ZEUS" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPRING" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="FULL_BACKTRACE" VALUE="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="evaluate_object_rules should fail an object with one string against an object rule with a string member and a string member: jcrvalidator" type="RSpecRunConfigurationType" factoryName="RSpec" temporary="true">
+      <predefined_log_file id="RUBY_RSPEC" enabled="true" />
+      <module name="jcrvalidator" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="$PROJECT_DIR$" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SHOULD_USE_SDK" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
+      <envs>
+        <env name="JRUBY_OPTS" value="-X+O" />
+      </envs>
+      <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="true" />
+      <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
+      <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov">
+        <COVERAGE_PATTERN ENABLED="true">
+          <PATTERN REGEXPS="/.rvm/" INCLUDED="false" />
+        </COVERAGE_PATTERN>
+      </EXTENSION>
+      <EXTENSION ID="org.jetbrains.plugins.ruby.motion.run.MotionSimulatorRunExtension" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TESTS_FOLDER_PATH" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="$PROJECT_DIR$/spec/evaluate_object_rules_spec.rb" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_RUNNER_PATH" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="**/*_spec.rb" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_EXAMPLE_NAME" VALUE="evaluate_object_rules should fail an object with one string against an object rule with a string member and a string member" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="TEST_SCRIPT" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_ARGS" VALUE="" />
       <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="RUNNER_VERSION" VALUE="" />
@@ -904,16 +922,18 @@
     <configuration default="true" type="osgi.bnd.run" factoryName="Test Launcher (JUnit)">
       <method />
     </configuration>
-    <list size="3">
+    <list size="4">
       <item index="0" class="java.lang.String" itemvalue="RSpec.check_groups should error with value with referenced member rule: jcrvalidator" />
       <item index="1" class="java.lang.String" itemvalue="RSpec.evaluate_rules should pass an integer variable: jcrvalidator" />
       <item index="2" class="java.lang.String" itemvalue="RSpec.evaluate_rules should pass a float variable matching a constant: jcrvalidator" />
+      <item index="3" class="java.lang.String" itemvalue="RSpec.evaluate_object_rules should fail an object with one string against an object rule with a string member and a string member: jcrvalidator" />
     </list>
     <recent_temporary>
-      <list size="3">
-        <item index="0" class="java.lang.String" itemvalue="RSpec.evaluate_rules should pass a float variable matching a constant: jcrvalidator" />
+      <list size="4">
+        <item index="0" class="java.lang.String" itemvalue="RSpec.evaluate_object_rules should fail an object with one string against an object rule with a string member and a string member: jcrvalidator" />
         <item index="1" class="java.lang.String" itemvalue="RSpec.evaluate_rules should pass an integer variable: jcrvalidator" />
-        <item index="2" class="java.lang.String" itemvalue="RSpec.check_groups should error with value with referenced member rule: jcrvalidator" />
+        <item index="2" class="java.lang.String" itemvalue="RSpec.evaluate_rules should pass a float variable matching a constant: jcrvalidator" />
+        <item index="3" class="java.lang.String" itemvalue="RSpec.check_groups should error with value with referenced member rule: jcrvalidator" />
       </list>
     </recent_temporary>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
@@ -963,13 +983,7 @@
       <workItem from="1442426626656" duration="51501000" />
       <workItem from="1443107388311" duration="186000" />
       <workItem from="1443114193143" duration="37995000" />
-      <workItem from="1443716370098" duration="23584000" />
-    </task>
-    <task id="LOCAL-00038" summary="restructuring">
-      <created>1442656494374</created>
-      <option name="number" value="00038" />
-      <option name="project" value="LOCAL" />
-      <updated>1442656494374</updated>
+      <workItem from="1443716370098" duration="31606000" />
     </task>
     <task id="LOCAL-00039" summary="readme fix">
       <created>1442656556712</created>
@@ -1259,11 +1273,17 @@
       <option name="project" value="LOCAL" />
       <updated>1443874494322</updated>
     </task>
-    <option name="localTasksCounter" value="87" />
+    <task id="LOCAL-00087" summary="added support member rule evaluation">
+      <created>1443879459705</created>
+      <option name="number" value="00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1443879459705</updated>
+    </task>
+    <option name="localTasksCounter" value="88" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="196092000" />
+    <option name="totallyTimeSpent" value="204114000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -1311,7 +1331,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="added ip value rules" />
     <MESSAGE value="added fqdn and idn evaluation support" />
     <MESSAGE value="base64 was repeated twice. removed extra one" />
     <MESSAGE value="added uri and uri template stuff" />
@@ -1336,7 +1355,8 @@
     <MESSAGE value="more work on evaluating array rules" />
     <MESSAGE value="support for evaluating array rules" />
     <MESSAGE value="first pass at member rule evaluation" />
-    <option name="LAST_COMMIT_MESSAGE" value="first pass at member rule evaluation" />
+    <MESSAGE value="added support member rule evaluation" />
+    <option name="LAST_COMMIT_MESSAGE" value="added support member rule evaluation" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1345,21 +1365,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="17" column="17" selection-start-line="17" selection-start-column="17" selection-end-line="17" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -2021,17 +2026,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/jcr/parser.rb">
-      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="93" column="44" selection-start-line="93" selection-start-column="44" selection-end-line="93" selection-end-column="44" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/spec/evaluate_array_rules_spec.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -2075,14 +2069,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_rules.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="50" column="80" selection-start-line="50" selection-start-column="80" selection-end-line="50" selection-end-column="80" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/spec/evaluate_member_rules_spec.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -2103,6 +2089,41 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.6765464">
           <caret line="42" column="21" selection-start-line="42" selection-start-column="21" selection-end-line="42" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/jcr/parser.rb">
+      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="93" column="44" selection-start-line="93" selection-start-column="44" selection-end-line="93" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_rules.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="50" column="29" selection-start-line="50" selection-start-column="29" selection-end-line="50" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_object_rules.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spec/evaluate_object_rules_spec.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.45938748">
+          <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
           <folding />
         </state>
       </provider>
