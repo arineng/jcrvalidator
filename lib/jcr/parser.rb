@@ -91,23 +91,23 @@ module JCR
     rule(:min_max_repetition) { ( p_integer.as(:repetition_min) >> spcCmnt? >> str('*') >> spcCmnt? >> p_integer.maybe.as(:repetition_max) ) |
             ( str('*') >> spcCmnt? >> p_integer.as(:repetition_max) ) }
 
-    rule(:object_group) { ( str('(') >> spcCmnt? >> object_items >> spcCmnt? >> str(')') ).as(:group_rule) }
+    rule(:object_group) { ( str('(') >> spcCmnt? >> object_items.maybe >> spcCmnt? >> str(')') ).as(:group_rule) }
     rule(:object_item_types) { member_rule | target_rule_name | object_group }
     rule(:object_item ) { min_max_repetition.maybe >> spcCmnt? >> object_item_types }
     rule(:object_items) { object_item >> ( spcCmnt? >> sequence_or_choice >> spcCmnt? >> object_item ).repeat }
-    rule(:object_rule) { ( str('{') >> spcCmnt? >> object_items >> spcCmnt? >> str('}') ).as(:object_rule) }
+    rule(:object_rule) { ( str('{') >> spcCmnt? >> object_items.maybe >> spcCmnt? >> str('}') ).as(:object_rule) }
 
-    rule(:array_group) { ( str('(') >> spcCmnt? >> array_items >> spcCmnt? >> str(')') ).as(:group_rule) }
+    rule(:array_group) { ( str('(') >> spcCmnt? >> array_items.maybe >> spcCmnt? >> str(')') ).as(:group_rule) }
     rule(:array_item_types) { type_rule | array_group }
     rule(:array_item)  { min_max_repetition.maybe >> spcCmnt? >> array_item_types }
     rule(:array_items) { array_item >> ( spcCmnt? >> sequence_or_choice >> spcCmnt? >> array_item ).repeat }
-    rule(:array_rule) { ( str('[') >> spcCmnt? >> array_items >> spcCmnt? >> str(']') ).as(:array_rule) }
+    rule(:array_rule) { ( str('[') >> spcCmnt? >> array_items.maybe >> spcCmnt? >> str(']') ).as(:array_rule) }
 
     rule(:group_group) { group_rule }
     rule(:group_item_types) { type_rule | member_rule | group_group }
     rule(:group_item)  { min_max_repetition.maybe >> spcCmnt? >> group_item_types }
     rule(:group_items) { group_item >> ( spcCmnt? >> sequence_or_choice >> spcCmnt? >> group_item ).repeat }
-    rule(:group_rule) { ( str('(') >> spcCmnt? >> group_items >> spcCmnt? >> str(')') ).as(:group_rule) }
+    rule(:group_rule) { ( str('(') >> spcCmnt? >> group_items.maybe >> spcCmnt? >> str(')') ).as(:group_rule) }
 
     rule(:member_rule) {
       ( ( regex.as(:member_regex) | q_string.as(:member_name) ) >> spcCmnt? >> (type_rule | type_choice) ).as(:member_rule)
