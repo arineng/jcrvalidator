@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3ebe9841-051a-4230-ba6c-8935dd0c40e4" name="Default" comment="added support member rule evaluation">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/jcr/evaluate_object_rules.rb" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/spec/evaluate_object_rules_spec.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/jcr/evaluate_rules.rb" afterPath="$PROJECT_DIR$/lib/jcr/evaluate_rules.rb" />
+    <list default="true" id="3ebe9841-051a-4230-ba6c-8935dd0c40e4" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/jcr/evaluate_array_rules.rb" afterPath="$PROJECT_DIR$/lib/jcr/evaluate_array_rules.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spec/evaluate_array_rules_spec.rb" afterPath="$PROJECT_DIR$/spec/evaluate_array_rules_spec.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/jcr/evaluate_object_rules.rb" afterPath="$PROJECT_DIR$/lib/jcr/evaluate_object_rules.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spec/evaluate_object_rules_spec.rb" afterPath="$PROJECT_DIR$/spec/evaluate_object_rules_spec.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="jcrvalidator.iws" />
@@ -140,7 +141,7 @@
         <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="268" column="27" selection-start-line="268" selection-start-column="27" selection-end-line="268" selection-end-column="27" />
+              <caret line="409" column="44" selection-start-line="409" selection-start-column="44" selection-end-line="409" selection-end-column="44" />
               <folding />
             </state>
           </provider>
@@ -166,21 +167,41 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="evaluate_object_rules.rb" pinned="false" current-in-tab="false">
+      <file leaf-file-name="evaluate_object_rules.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_object_rules.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.58055925">
+              <caret line="71" column="45" selection-start-line="71" selection-start-column="45" selection-end-line="71" selection-end-column="45" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="evaluate_object_rules_spec.rb" pinned="false" current-in-tab="true">
+      <file leaf-file-name="evaluate_object_rules_spec.rb" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/spec/evaluate_object_rules_spec.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.45938748">
-              <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="168" column="4" selection-start-line="168" selection-start-column="4" selection-end-line="168" selection-end-column="4" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="evaluate_array_rules.rb" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_array_rules.rb">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="91" column="26" selection-start-line="91" selection-start-column="26" selection-end-line="91" selection-end-column="26" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="evaluate_array_rules_spec.rb" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/spec/evaluate_array_rules_spec.rb">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="211" column="32" selection-start-line="211" selection-start-column="32" selection-end-line="211" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -213,7 +234,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <push-targets>
-      <push-target-info repo="$PROJECT_DIR$" source="master" target-remote="origin" target-branch="master" />
+      <push-target-info repo="$PROJECT_DIR$" source="master" target-remote="github" target-branch="master" />
     </push-targets>
   </component>
   <component name="GradleLocalSettings">
@@ -249,13 +270,13 @@
         <option value="$PROJECT_DIR$/spec/parser_spec.rb" />
         <option value="$PROJECT_DIR$/spec/check_groups_spec.rb" />
         <option value="$PROJECT_DIR$/lib/jcr/check_groups.rb" />
-        <option value="$PROJECT_DIR$/spec/evaluate_array_rules_spec.rb" />
-        <option value="$PROJECT_DIR$/lib/jcr/evaluate_array_rules.rb" />
         <option value="$PROJECT_DIR$/spec/evaluate_member_rules_spec.rb" />
         <option value="$PROJECT_DIR$/lib/jcr/evaluate_member_rules.rb" />
         <option value="$PROJECT_DIR$/lib/jcr/evaluate_rules.rb" />
-        <option value="$PROJECT_DIR$/lib/jcr/evaluate_object_rules.rb" />
+        <option value="$PROJECT_DIR$/lib/jcr/evaluate_array_rules.rb" />
+        <option value="$PROJECT_DIR$/spec/evaluate_array_rules_spec.rb" />
         <option value="$PROJECT_DIR$/spec/evaluate_object_rules_spec.rb" />
+        <option value="$PROJECT_DIR$/lib/jcr/evaluate_object_rules.rb" />
       </list>
     </option>
   </component>
@@ -983,13 +1004,7 @@
       <workItem from="1442426626656" duration="51501000" />
       <workItem from="1443107388311" duration="186000" />
       <workItem from="1443114193143" duration="37995000" />
-      <workItem from="1443716370098" duration="31606000" />
-    </task>
-    <task id="LOCAL-00039" summary="readme fix">
-      <created>1442656556712</created>
-      <option name="number" value="00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1442656556712</updated>
+      <workItem from="1443716370098" duration="34984000" />
     </task>
     <task id="LOCAL-00040" summary="added stub files checking groups">
       <created>1442658154235</created>
@@ -1279,11 +1294,17 @@
       <option name="project" value="LOCAL" />
       <updated>1443879459705</updated>
     </task>
-    <option name="localTasksCounter" value="88" />
+    <task id="LOCAL-00088" summary="added support object rule evaluation">
+      <created>1443898492194</created>
+      <option name="number" value="00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1443898492194</updated>
+    </task>
+    <option name="localTasksCounter" value="89" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="204114000" />
+    <option name="totallyTimeSpent" value="207492000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -1331,7 +1352,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="added fqdn and idn evaluation support" />
     <MESSAGE value="base64 was repeated twice. removed extra one" />
     <MESSAGE value="added uri and uri template stuff" />
     <MESSAGE value="added support for email" />
@@ -1356,7 +1376,8 @@
     <MESSAGE value="support for evaluating array rules" />
     <MESSAGE value="first pass at member rule evaluation" />
     <MESSAGE value="added support member rule evaluation" />
-    <option name="LAST_COMMIT_MESSAGE" value="added support member rule evaluation" />
+    <MESSAGE value="added support object rule evaluation" />
+    <option name="LAST_COMMIT_MESSAGE" value="added support object rule evaluation" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2026,37 +2047,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/spec/evaluate_array_rules_spec.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="250" column="0" selection-start-line="250" selection-start-column="0" selection-end-line="250" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_array_rules.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="77" column="69" selection-start-line="77" selection-start-column="69" selection-end-line="77" selection-end-column="69" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/jcr/map_rule_names.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.24613403">
           <caret line="38" column="24" selection-start-line="38" selection-start-column="24" selection-end-line="38" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
-      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="268" column="27" selection-start-line="268" selection-start-column="27" selection-end-line="268" selection-end-column="27" />
           <folding />
         </state>
       </provider>
@@ -2112,18 +2106,45 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_object_rules.rb">
+    <entry file="file://$PROJECT_DIR$/spec/parser_spec.rb">
+      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+          <caret line="409" column="44" selection-start-line="409" selection-start-column="44" selection-end-line="409" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_array_rules.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="91" column="26" selection-start-line="91" selection-start-column="26" selection-end-line="91" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spec/evaluate_array_rules_spec.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="211" column="32" selection-start-line="211" selection-start-column="32" selection-end-line="211" selection-end-column="32" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/spec/evaluate_object_rules_spec.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.45938748">
-          <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="168" column="4" selection-start-line="168" selection-start-column="4" selection-end-line="168" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/jcr/evaluate_object_rules.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.58055925">
+          <caret line="71" column="45" selection-start-line="71" selection-start-column="45" selection-end-line="71" selection-end-column="45" />
           <folding />
         </state>
       </provider>

@@ -55,25 +55,39 @@ module JCR
       repeat_min = 1
       repeat_max = 1
       o = rule[:repetition_min]
-      if o && o.is_a?( Parslet::Slice )
-        repeat_min = o.to_s.to_i
+      if o
+        if o.is_a?( Parslet::Slice )
+          repeat_min = o.to_s.to_i
+        else
+          repeat_min = 0
+        end
       end
       o = rule[:repetition_max]
-      if o && o.is_a?( Parslet::Slice )
-        repeat_max = o.to_s.to_i
+      if o
+        if o.is_a?( Parslet::Slice )
+          repeat_max = o.to_s.to_i
+        else
+          repeat_max = Float::INFINITY
+        end
       end
 
-      for i in 1..repeat_min do
-        if array_index == data.length
-          return Evaluation.new( false, "array is not large enough for #{jcr} from #{rule_atom}" )
-        else
-          retval = evaluate_rule( rule, rule_atom, data[ array_index ], mapping )
-          break unless retval.success
-          array_index = array_index + 1
+      min_evals = 0
+      if repeat_min == 0
+        retval = Evaluation.new( true, nil )
+      else
+        for i in 1..repeat_min do
+          if array_index == data.length
+            return Evaluation.new( false, "array is not large enough for #{jcr} from #{rule_atom}" )
+          else
+            retval = evaluate_rule( rule, rule_atom, data[ array_index ], mapping )
+            break unless retval.success
+            array_index = array_index + 1
+            min_evals = i
+          end
         end
       end
       if !retval || retval.success
-        for i in repeat_min..repeat_max-1 do
+        for i in min_evals..repeat_max-1 do
           break if array_index == data.length
           e = evaluate_rule( rule, rule_atom, data[ array_index ], mapping )
           break unless e.success

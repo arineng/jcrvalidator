@@ -161,11 +161,27 @@ describe 'evaluate_object_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should pass an empty object  against an object rule with string member default or twice' do
+    tree = JCR.parse( 'trule { *2 /m.*/:string }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {}, mapping )
+    expect( e.success ).to be_truthy
+  end
+
   it 'should pass an object with one string against an object rule with string member once or default' do
     tree = JCR.parse( 'trule { 1* /m.*/:string }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"m1"=> "thing" }, mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass an object with two strings against an object rule with string member once or default' do
+    tree = JCR.parse( 'trule { 1* /m.*/:string }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"m1"=> "thing", "m2"=>"thing2" }, mapping )
     expect( e.success ).to be_truthy
   end
 

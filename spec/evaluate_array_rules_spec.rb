@@ -161,6 +161,14 @@ describe 'evaluate_array_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should pass an empty array against an array rule with string default or twice' do
+    tree = JCR.parse( 'trule [ *2 :string ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ ], mapping )
+    expect( e.success ).to be_truthy
+  end
+
   it 'should pass an array with one string against an array rule with string once or default' do
     tree = JCR.parse( 'trule [ 1* :string ]' )
     mapping = JCR.map_rule_names( tree )
@@ -169,11 +177,59 @@ describe 'evaluate_array_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should pass an array with two strings against an array rule with string once or default' do
+    tree = JCR.parse( 'trule [ 1* :string ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2" ], mapping )
+    expect( e.success ).to be_truthy
+  end
+
   it 'should fail an array with a string and integer against an array rule with string once or twice' do
     tree = JCR.parse( 'trule [ 1*2 :string ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", 2 ], mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail an array with three strings against an array rule with string once or twice' do
+    tree = JCR.parse( 'trule [ 1*2 :string ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing1", "thing2" ], mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail an array with three strings against an array rule with string zero or twice' do
+    tree = JCR.parse( 'trule [ 0*2 :string ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing1", "thing2" ], mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail an array with five strings against an array rule with string zero or twice' do
+    tree = JCR.parse( 'trule [ 0*2 :string ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing1", "thing2", "thing3", "thing4" ], mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail an array with three strings against an array rule with string twice' do
+    tree = JCR.parse( 'trule [ 2*2 :string ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing1", "thing2" ], mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail an array with two strings and integer against an array rule with string twice' do
+    tree = JCR.parse( 'trule [ 2*2 :string ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing1", 2 ], mapping )
     expect( e.success ).to be_falsey
   end
 
