@@ -265,4 +265,12 @@ describe 'evaluate_object_rules' do
     expect( e.success ).to be_falsey
   end
 
+  it 'should pass an object with two strings and two integers against an object rule with string 1*2 and any 1*2' do
+    tree = JCR.parse( 'trule { 1*2 /s.*/:string, 1*2 /.*/:integer }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=> "thing2","1"=> 1,"2"=> 2 }, mapping )
+    expect( e.success ).to be_truthy
+  end
+
 end

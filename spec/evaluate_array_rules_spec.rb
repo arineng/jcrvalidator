@@ -305,4 +305,20 @@ describe 'evaluate_array_rules' do
     expect( e.success ).to be_falsey
   end
 
+  it 'should pass an array with two strings and two integers against an array rule with string 1*2 and any 1*2' do
+    tree = JCR.parse( 'trule [ 1*2 :string, 1*2 :any ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", 1, 2 ], mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass an array with two strings and two arrays against an array rule with string 1*2 and any 1*2' do
+    tree = JCR.parse( 'trule [ 1*2 :string, 1*2 :any ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", [ 1, 2 ], [ 2, 3 ] ], mapping )
+    expect( e.success ).to be_truthy
+  end
+
 end
