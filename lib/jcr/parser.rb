@@ -24,10 +24,10 @@ module JCR
     rule(:comment)   { str(';') >> ( str('\;') | match('[^\r\n;]') ).repeat.maybe >> match('[\r\n;]') }
     rule(:spcCmnt?)   { spaces? >> comment.maybe >> spaces? }
 
-	rule(:name)      { match('[a-zA-Z]') >> match('[a-zA-Z0-9\-_]').repeat }
+    rule(:name)      { match('[a-zA-Z]') >> match('[a-zA-Z0-9\-_]').repeat }
     rule(:rule_name) { name.as(:rule_name) }
-	rule(:namespace_alias) { name.as(:namespace_alias) }
-	rule(:target_rule_name) { ((namespace_alias >> str('.')).maybe >> rule_name).as(:target_rule_name) }
+    rule(:namespace_alias) { name.as(:namespace_alias) }
+    rule(:target_rule_name) { ((namespace_alias >> str('.')).maybe >> rule_name).as(:target_rule_name) }
     rule(:integer)   { ( str('-').maybe >> match('[0-9]').repeat ) }
     rule(:p_integer)   { ( match('[0-9]').repeat ) }
     rule(:float)     { str('-').maybe >> match('[0-9]').repeat(1) >> str('.' ) >> match('[0-9]').repeat(1) }
@@ -82,31 +82,36 @@ module JCR
     }
     rule(:value_rule) { ( str(':') >> spcCmnt? >> ( group_rule | value_def ) ).as(:value_rule) }
 
-    rule(:min_max_repetition) { ( p_integer.as(:repetition_min) >> spcCmnt? >> str('*') >> spcCmnt? >> p_integer.maybe.as(:repetition_max) ) |
-            ( str('*') >> spcCmnt? >> p_integer.as(:repetition_max) ) }
+    rule(:repetition) { optional | one_or_more | min_max_repetition | specific_repetition }
+    rule(:optional) { str('?').as(:optional) }
+    rule(:one_or_more) { str('+').as(:one_or_more) }
+    rule(:min_max_repetition) {      # This includes zero_or_more, min_only and max_only cases
+            p_integer.maybe.as(:repetition_min) >> spcCmnt? >> str('*') >> spcCmnt? >> p_integer.maybe.as(:repetition_max) }
+    rule(:specific_repetition) { p_integer.as(:specific_repetition) }
+
     rule(:member_rule) {
       ( ( regex.as(:member_regex) | q_string.as(:member_name) ) >> spcCmnt? >> type_rule ).as(:member_rule)
     }
 
-    rule(:object_def ) { min_max_repetition.maybe >> spcCmnt? >> ( group_rule | member_rule | target_rule_name ) }
+    rule(:object_def ) { repetition.maybe >> spcCmnt? >> ( group_rule | member_rule | target_rule_name ) }
     rule(:object_rule) { ( str('{') >> spcCmnt? >>
       object_def >> ( spcCmnt? >> sequence_or_choice >>
       spcCmnt? >> object_def ).repeat  >> spcCmnt? >> str('}')
       ).as(:object_rule)
     }
 
-    rule(:array_def)  { min_max_repetition.maybe >> spcCmnt? >> type_rule }
+    rule(:array_def)  { repetition.maybe >> spcCmnt? >> type_rule }
     rule(:array_rule) { ( str('[') >> spcCmnt? >> array_def >>
       ( spcCmnt? >> sequence_or_choice >> spcCmnt? >> array_def ).repeat >> spcCmnt? >> str(']') ).as(:array_rule)
     }
 
-    rule(:group_def)  { min_max_repetition.maybe >> spcCmnt? >> ( type_rule | member_rule ) }
+    rule(:group_def)  { repetition.maybe >> spcCmnt? >> ( type_rule | member_rule ) }
     rule(:group_rule) { ( str('(') >> spcCmnt? >> group_def >> spcCmnt? >>
       ( spcCmnt? >> sequence_or_choice >> spcCmnt? >> group_def ).repeat >>
       spcCmnt? >> str(')') ).as(:group_rule)
     }
 
-	rule(:type_rule) { value_rule | group_rule | array_rule | object_rule | target_rule_name }
+    rule(:type_rule) { value_rule | group_rule | array_rule | object_rule | target_rule_name }
     rule(:rule) { spcCmnt? >> ( rule_name >> spcCmnt? >>
       ( type_rule | member_rule ) ).as(:rule) >> spcCmnt? }
 
