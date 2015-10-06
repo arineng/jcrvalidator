@@ -2,10 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3ebe9841-051a-4230-ba6c-8935dd0c40e4" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/jcr/check_groups.rb" afterPath="$PROJECT_DIR$/lib/jcr/check_groups.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spec/check_groups_spec.rb" afterPath="$PROJECT_DIR$/spec/check_groups_spec.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/jcr/parser.rb" afterPath="$PROJECT_DIR$/lib/jcr/parser.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spec/parser_spec.rb" afterPath="$PROJECT_DIR$/spec/parser_spec.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="jcrvalidator.iws" />
@@ -1039,13 +1035,7 @@
       <workItem from="1443716370098" duration="35417000" />
       <workItem from="1444081981569" duration="44000" />
       <workItem from="1444083382566" duration="1085000" />
-      <workItem from="1444125602189" duration="5622000" />
-    </task>
-    <task id="LOCAL-00044" summary="work on the syntax for groups">
-      <created>1442698733716</created>
-      <option name="number" value="00044" />
-      <option name="project" value="LOCAL" />
-      <updated>1442698733716</updated>
+      <workItem from="1444125602189" duration="5805000" />
     </task>
     <task id="LOCAL-00045" summary="initial pass at checking groups in members">
       <created>1442753932808</created>
@@ -1335,11 +1325,17 @@
       <option name="project" value="LOCAL" />
       <updated>1444134458879</updated>
     </task>
-    <option name="localTasksCounter" value="93" />
+    <task id="LOCAL-00093" summary="parse fail tests moved to expect parse failures.&#10;Small fix to parser.spec to allow groups in values">
+      <created>1444149294535</created>
+      <option name="number" value="00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1444149294535</updated>
+    </task>
+    <option name="localTasksCounter" value="94" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="214676000" />
+    <option name="totallyTimeSpent" value="214859000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -1387,7 +1383,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="more string checking" />
     <MESSAGE value="even more string checking" />
     <MESSAGE value="added base64 value evaluation" />
     <MESSAGE value="added date and time value evaluation support" />
@@ -1412,7 +1407,8 @@
     <MESSAGE value="aded any rule tests" />
     <MESSAGE value="Merge branch 'separated_grouping' of https://github.com/codalogic/jcrvalidator into separated_grouping&#10;&#10;# Conflicts:&#10;#&#9;lib/jcr/parser.rb&#10;" />
     <MESSAGE value="fixed parsers tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed parsers tests" />
+    <MESSAGE value="parse fail tests moved to expect parse failures.&#10;Small fix to parser.spec to allow groups in values" />
+    <option name="LAST_COMMIT_MESSAGE" value="parse fail tests moved to expect parse failures.&#10;Small fix to parser.spec to allow groups in values" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
