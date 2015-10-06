@@ -19,6 +19,34 @@ require_relative '../lib/JCR/evaluate_value_rules'
 describe 'evaluate_value_rules' do
 
   #
+  # any values (which match more than values)
+  #
+
+  it 'should pass when any rule matches a string constant' do
+    tree = JCR.parse( 'trule : any' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass when any rule matches an object' do
+    tree = JCR.parse( 'trule : any' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"foo"=>"bar"}, mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass when any rule matches an array' do
+    tree = JCR.parse( 'trule : any' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 3 ], mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  #
   # string value tests
   #
 

@@ -95,14 +95,14 @@ module JCR
 
     rule(:object_def ) { repetition.maybe >> spcCmnt? >> ( group_rule | member_rule | target_rule_name ) }
     rule(:object_rule) { ( str('{') >> spcCmnt? >>
-      object_def >> ( spcCmnt? >> sequence_or_choice >>
-      spcCmnt? >> object_def ).repeat  >> spcCmnt? >> str('}')
+      ( object_def >> ( spcCmnt? >> sequence_or_choice >>
+      spcCmnt? >> object_def ).repeat ).maybe  >> spcCmnt? >> str('}')
       ).as(:object_rule)
     }
 
     rule(:array_def)  { repetition.maybe >> spcCmnt? >> type_rule }
-    rule(:array_rule) { ( str('[') >> spcCmnt? >> array_def >>
-      ( spcCmnt? >> sequence_or_choice >> spcCmnt? >> array_def ).repeat >> spcCmnt? >> str(']') ).as(:array_rule)
+    rule(:array_rule) { ( str('[') >> spcCmnt? >> ( array_def >>
+      ( spcCmnt? >> sequence_or_choice >> spcCmnt? >> array_def ).repeat ).maybe >> spcCmnt? >> str(']') ).as(:array_rule)
     }
 
     rule(:group_def)  { repetition.maybe >> spcCmnt? >> ( type_rule | member_rule ) }

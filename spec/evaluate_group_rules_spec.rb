@@ -25,4 +25,28 @@ describe 'evaluate_group_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should pass a group with an integer or a string' do
+    tree = JCR.parse( 'trule : ( :integer | :string )' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass a group with a string or an integer' do
+    tree = JCR.parse( 'trule : ( :string | :integer )' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a group with an ip4 or an integer' do
+    tree = JCR.parse( 'trule : ( :ip4 | :integer )' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", mapping )
+    expect( e.success ).to be_falsey
+  end
+
 end
