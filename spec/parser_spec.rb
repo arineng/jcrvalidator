@@ -271,27 +271,16 @@ describe 'parser' do
     expect(tree[0][:rule][:member_rule][:group_rule][1][:target_rule_name][:rule_name]).to eq("an_object")
   end
 
-  it 'should parse a member rule with a and rule' do
-    tree = JCR.parse( 'trule "thing" ( an_array , an_object )' )
-    expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("thing")
-    expect(tree[0][:rule][:member_rule][:group_rule][0][:target_rule_name][:rule_name]).to eq("an_array")
-    expect(tree[0][:rule][:member_rule][:group_rule][1][:target_rule_name][:rule_name]).to eq("an_object")
+  it 'should fail a member rule with a and rule' do
+    expect{ JCR.parse( 'trule "thing" ( an_array , an_object )' ) }.to raise_error Parslet::ParseFailed
   end
 
-  it 'should parse a member rule with choice and and rule' do
-    tree = JCR.parse( 'trule "thing" ( an_array | a_string , an_object )' )
-    expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("thing")
-    expect(tree[0][:rule][:member_rule][:group_rule][0][:target_rule_name][:rule_name]).to eq("an_array")
-    expect(tree[0][:rule][:member_rule][:group_rule][1][:target_rule_name][:rule_name]).to eq("a_string")
-    expect(tree[0][:rule][:member_rule][:group_rule][2][:target_rule_name][:rule_name]).to eq("an_object")
+  it 'should fail a member rule with choice and and rule' do
+    expect{ JCR.parse( 'trule "thing" ( an_array | a_string , an_object )' ) }.to raise_error Parslet::ParseFailed
   end
 
   it 'should parse a member rule with group of three ands' do
-    tree = JCR.parse( 'trule "thing" ( an_array , a_string , an_object )' )
-    expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("thing")
-    expect(tree[0][:rule][:member_rule][:group_rule][0][:target_rule_name][:rule_name]).to eq("an_array")
-    expect(tree[0][:rule][:member_rule][:group_rule][1][:target_rule_name][:rule_name]).to eq("a_string")
-    expect(tree[0][:rule][:member_rule][:group_rule][2][:target_rule_name][:rule_name]).to eq("an_object")
+    expect{ JCR.parse( 'trule "thing" ( an_array , a_string , an_object )' ) }.to raise_error Parslet::ParseFailed
   end
 
   it 'should parse a member rule with group of three ors' do
