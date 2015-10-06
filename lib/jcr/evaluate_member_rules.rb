@@ -26,23 +26,33 @@ require 'jcr/evaluate_rules'
 
 module JCR
 
-  def self.evaluate_group_rule jcr, rule_atom, data, mapping
+  def self.evaluate_member_rule jcr, rule_atom, data, mapping
 
-    retval = nil
+    # unlike the other evaluate functions, here data is not just the json data.
+    # it is an array, the first element being the member name or regex and the
+    # second being the json data to be furthered on to other evaluation functions
 
-    if jcr.is_a? Hash
-      jcr = [ jcr ]
-    end
-    jcr.each do |rule|
-      if rule[:choice_combiner] && retval && retval.success
-        return retval # short circuit
-      elsif rule[:sequence_combiner] && retval && !retval.success
-        return retval # short circuit
+    member_match = false
+
+    if jcr[:member_name]
+      match_spec = jcr[:member_name][:q_string].to_s
+      if match_spec == data[ 0 ]
+        member_match = true
       end
-      retval = evaluate_rule( rule, rule_atom, data, mapping )
+    else # must be regex
+      match_spec = Regexp.new( jcr[:member_regex][:regex].to_s )
+      if match_spec =~ data[ 0 ]
+        member_match = true
+      end
     end
 
-    return retval
+    if member_match
+      e = evaluate_rule( jcr, rule_atom, data[ 1 ], mapping )
+      return e
+    end
+
+    return Evaluation.new( false, "#{match_spec} does not match #{data[0]} for #{jcr} from #{rule_atom}" )
+
   end
 
 end
