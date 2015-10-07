@@ -29,8 +29,8 @@ module JCR
     rule(:rule_name) { name.as(:rule_name) }
     rule(:namespace_alias) { name.as(:namespace_alias) }
     rule(:target_rule_name) { ((namespace_alias >> str('.')).maybe >> rule_name).as(:target_rule_name) }
-    rule(:integer)   { ( str('-').maybe >> match('[0-9]').repeat ) }
-    rule(:p_integer)   { ( match('[0-9]').repeat ) }
+    rule(:integer)   { ( str('-').maybe >> match('[0-9]').repeat(1) ) }
+    rule(:p_integer)   { ( match('[0-9]').repeat(1) ) }
     rule(:float)     { str('-').maybe >> match('[0-9]').repeat(1) >> str('.' ) >> match('[0-9]').repeat(1) }
     rule(:uri) { match('[a-zA-Z]').repeat(1) >> str(':') >> match('[\S]').repeat(1) }
     rule(:uri_template) { ( match('[a-zA-Z{}]').repeat(1) >> str(':') >> match('[\S]').repeat(1) ).as(:uri_template) }
@@ -63,13 +63,11 @@ module JCR
     rule(:uri_v)     { str('uri').as(:uri) }
     rule(:integer_v) { str('integer').as(:integer_v) }
     rule(:integer_r) {
-      integer.maybe.as(:integer_min) >> str('..') >> integer.maybe.as(:integer_max) | ( str('..') >> integer.as(:integer_max) )
+        integer.as(:integer_min) >> str('..') >> integer.maybe.as(:integer_max) | ( str('..') >> integer.as(:integer_max) )
     }
     rule(:float_v)   { str('float').as(:float_v) }
     rule(:float_r)   {
-        ( float.as(:float_min) >> str('..') >> float.as(:float_max) ) |
-        ( str('..') >> float.as(:float_max) ) |
-        float.as(:float_min) >> str('..')
+        float.as(:float_min) >> str('..') >> float.maybe.as(:float_max) | str('..') >> float.as(:float_max)
     }
 
     rule(:sequence_combiner)   { str(',').as(:sequence_combiner) }
