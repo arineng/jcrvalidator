@@ -54,6 +54,20 @@ module JCR
 
       repeat_min = 1
       repeat_max = 1
+      if rule.has_key?(:optional)
+        repeat_min = 0
+        repeat_max = 1
+      end
+      if rule.has_key?(:one_or_more)
+        repeat_min = 1
+        repeat_max = Float::INFINITY
+      end
+      if rule.has_key?(:repetition_min)
+        repeat_min = 0
+      end
+      if rule.has_key?(:repetition_max)
+        repeat_max = Float::INFINITY
+      end
       o = rule[:repetition_min]
       if o
         if o.is_a?( Parslet::Slice )
