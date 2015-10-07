@@ -93,7 +93,7 @@ module JCR
     rule(:optional) { str('?').as(:optional) }
     rule(:one_or_more) { str('+').as(:one_or_more) }
     rule(:min_max_repetition) {      # This includes zero_or_more, min_only and max_only cases
-            p_integer.maybe.as(:repetition_min) >> spcCmnt? >> str('*') >> spcCmnt? >> p_integer.maybe.as(:repetition_max) }
+            p_integer.maybe.as(:repetition_min) >> spcCmnt? >> str('*').as(:repetition_interval) >> spcCmnt? >> p_integer.maybe.as(:repetition_max) }
     rule(:specific_repetition) { p_integer.as(:specific_repetition) }
 
     rule(:object_group) { ( str('(') >> spcCmnt? >> object_items.maybe >> spcCmnt? >> str(')') ).as(:group_rule) }

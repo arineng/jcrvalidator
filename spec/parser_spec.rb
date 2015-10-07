@@ -400,6 +400,30 @@ describe 'parser' do
     expect(tree[0][:rule][:object_rule][1][:optional]).to eq('?')
   end
 
+  it 'should parse an object rule with rule names with zero or many repetition' do
+    tree = JCR.parse( 'trule { my_rule1, * my_rule2 }' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:object_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
+    expect(tree[0][:rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
+    expect(tree[0][:rule][:object_rule][1][:repetition_interval]).to eq('*')
+  end
+
+  it 'should parse an object rule with rule names with zero or many repetition' do
+    tree = JCR.parse( 'trule { my_rule1, + my_rule2 }' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:object_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
+    expect(tree[0][:rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
+    expect(tree[0][:rule][:object_rule][1][:one_or_more]).to eq('+')
+  end
+
+  it 'should parse an object rule with rule names with 2 repetition' do
+    tree = JCR.parse( 'trule { my_rule1, 2 my_rule2 }' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:object_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
+    expect(tree[0][:rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
+    expect(tree[0][:rule][:object_rule][1][:specific_repetition]).to eq('2')
+  end
+
   it 'should parse an object rule with rule names with optionality 2' do
     tree = JCR.parse( 'trule { *1my_rule1, *1 my_rule2 }' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
