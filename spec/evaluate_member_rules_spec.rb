@@ -15,7 +15,7 @@ require 'rspec'
 require 'pp'
 require_relative '../lib/JCR/evaluate_member_rules'
 
-describe 'evaluate_member_rules' do
+describe 'evaluate_rules' do
 
   #
   # qstring tests

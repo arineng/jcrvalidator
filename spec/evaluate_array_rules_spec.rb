@@ -15,7 +15,7 @@ require 'rspec'
 require 'pp'
 require_relative '../lib/JCR/evaluate_array_rules'
 
-describe 'evaluate_array_rules' do
+describe 'evaluate_rules' do
 
   it 'should fail something that is not an array' do
     tree = JCR.parse( 'trule [ ]' )

@@ -15,7 +15,7 @@ require 'rspec'
 require 'pp'
 require_relative '../lib/JCR/evaluate_group_rules'
 
-describe 'evaluate_group_rules' do
+describe 'evaluate_rules' do
 
   it 'should pass a group with string variable' do
     tree = JCR.parse( 'trule : ( :string )' )
