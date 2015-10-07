@@ -820,7 +820,7 @@ EX4
   it 'should parse multiple commented rules with multiple directives' do
     ex5 = <<EX5
 # jcr-version 4.0
-# ruleset-id http://arin.net/JCRexamples
+# ruleset-id net.arin.eng
 # import http://arin.net/otherexamples as otherrules
 trule [ ;comment 1
   1*2 my_rule1, ;comment 2
@@ -836,7 +836,7 @@ EX5
   it 'should parse jcr-version directive major and minor numbers' do
     ex5a = <<EX5a
 # jcr-version 4.0
-# ruleset-id http://arin.net/JCRexamples
+# ruleset-id my_awesome_rules
 # import http://arin.net/otherexamples as otherrules
 EX5a
     tree = JCR.parse( ex5a )

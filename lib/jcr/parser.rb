@@ -124,7 +124,8 @@ module JCR
     rule(:rule) { ( rule_name >> spcCmnt? >> ( type_rule | group_rule | member_rule ) ).as(:rule) }
 
     rule(:jcr_version_d) { (str('jcr-version') >> spaces >> integer.as(:major_version) >> str('.') >> integer.as(:minor_version)).as(:jcr_version_d) }
-    rule(:ruleset_id_d) { str('ruleset-id') >> spaces >> uri.as(:uri) }
+    rule(:ruleset_id) { match('[a-zA-Z]') >> match('[\S]').repeat }
+    rule(:ruleset_id_d) { str('ruleset-id') >> spaces >> ruleset_id.as(:ruleset_id) }
     rule(:import_d) { str('import') >> spaces >> uri.as(:uri) >> ( spaces >> str('as') >> spaces >> namespace_alias ).maybe }
     rule(:directive_def) { jcr_version_d | ruleset_id_d | import_d }
     rule(:directive) { ( str('#') >> spaces? >> directive_def >> match('[^\r\n]').repeat >> match('[\r\n]') ).as(:directive) }
