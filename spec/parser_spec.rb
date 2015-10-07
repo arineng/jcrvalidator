@@ -1101,4 +1101,9 @@ EX12
   it 'should error with value with group of two ANDED values' do
     expect{ JCR.parse( 'rule : ( :integer , :float ) ' ) }.to raise_error Parslet::ParseFailed
   end
+
+  it 'should error with integer or float with no range' do
+    expect{ JCR.parse( 'my_int : ..' ) }.to raise_error Parslet::ParseFailed
+  end
+
 end
