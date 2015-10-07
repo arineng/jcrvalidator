@@ -124,11 +124,10 @@ module JCR
     rule(:rule) { ( rule_name >> spcCmnt? >> ( type_rule | group_rule | member_rule ) ).as(:rule) }
 
     rule(:pedantic) { str('pedantic').as(:pedantic) }
-    rule(:language_compatible_members) { str('language-compatible-members').as(:language_compatible_members) }
     rule(:jcr_version_d) { (str('jcr-version') >> spaces >> integer.as(:major_version) >> str('.') >> integer.as(:minor_version)).as(:jcr_version_d) }
     rule(:ruleset_id_d) { str('ruleset-id') >> spaces >> uri.as(:uri) }
     rule(:import_d) { str('import') >> spaces >> uri.as(:uri) >> ( spaces >> str('as') >> spaces >> namespace_alias ).maybe }
-    rule(:directive_def) { pedantic | language_compatible_members | jcr_version_d | ruleset_id_d | import_d }
+    rule(:directive_def) { pedantic | jcr_version_d | ruleset_id_d | import_d }
     rule(:directive) { ( str('#') >> spaces? >> directive_def >> match('[^\r\n]').repeat >> match('[\r\n]') ).as(:directive) }
     rule(:top) { ( spcCmnt | rule | directive ).repeat }
 
