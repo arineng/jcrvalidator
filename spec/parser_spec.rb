@@ -822,7 +822,6 @@ EX4
 # jcr-version 4.0
 # ruleset-id http://arin.net/JCRexamples
 # import http://arin.net/otherexamples as otherrules
-# pedantic
 trule [ ;comment 1
   1*2 my_rule1, ;comment 2
   ( my_rule2, my_rule3 ) ;comment 3
@@ -830,8 +829,8 @@ trule [ ;comment 1
 trule2( my_rule1 , [ : integer, { my_rule2 } ], ( my_rule3, my_rule4 ) )
 EX5
     tree = JCR.parse( ex5 )
-    expect(tree[4][:rule][:rule_name]).to eq("trule")
-    expect(tree[5][:rule][:rule_name]).to eq("trule2")
+    expect(tree[3][:rule][:rule_name]).to eq("trule")
+    expect(tree[4][:rule][:rule_name]).to eq("trule2")
   end
 
   it 'should parse jcr-version directive major and minor numbers' do
@@ -839,7 +838,6 @@ EX5
 # jcr-version 4.0
 # ruleset-id http://arin.net/JCRexamples
 # import http://arin.net/otherexamples as otherrules
-# pedantic
 EX5a
     tree = JCR.parse( ex5a )
     expect(tree[0][:directive][:jcr_version_d][:major_version]).to eq("4")
