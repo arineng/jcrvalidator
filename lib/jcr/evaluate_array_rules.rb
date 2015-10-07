@@ -51,24 +51,7 @@ module JCR
         return retval # short circuit
       end
 
-      repeat_min = 1
-      repeat_max = 1
-      o = rule[:repetition_min]
-      if o
-        if o.is_a?( Parslet::Slice )
-          repeat_min = o.to_s.to_i
-        else
-          repeat_min = 0
-        end
-      end
-      o = rule[:repetition_max]
-      if o
-        if o.is_a?( Parslet::Slice )
-          repeat_max = o.to_s.to_i
-        else
-          repeat_max = Float::INFINITY
-        end
-      end
+      repeat_min, repeat_max = get_repetitions( rule )
 
       min_evals = 0
       if repeat_min == 0

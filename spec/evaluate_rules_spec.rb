@@ -66,4 +66,13 @@ describe 'evaluate_rules' do
     expect( max ).to eq(22)
   end
 
+  it 'should see nothing as min 1 max 1' do
+    tree = JCR.parse( 'trule [ :string ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    min, max = JCR.get_repetitions( tree[0][:rule][:array_rule] )
+    expect( min ).to eq(1)
+    expect( max ).to eq(1)
+  end
+
 end

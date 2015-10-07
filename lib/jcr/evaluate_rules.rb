@@ -70,7 +70,7 @@ module JCR
     elsif rule[:one_or_more]
       repeat_min = 1
       repeat_max = Float::INFINITY
-    elsif rule[:specific_repetition]
+    elsif rule[:specific_repetition] && rule[:specific_repetition].is_a?( Parslet::Slice )
       repeat_min = repeat_max = rule[:specific_repetition].to_s.to_i
     else
       o = rule[:repetition_interval]
