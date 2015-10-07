@@ -21,7 +21,7 @@ module JCR
 
     rule(:spaces) { match('\s').repeat(1) }
     rule(:spaces?) { spaces.maybe }
-    rule(:comment)   { str(';') >> ( str('\;') | match('[^\r\n;]') ).repeat.maybe >> match('[\r\n;]') }
+    rule(:comment)   { str(';') >> ( str('\;') | match('[^\r\n;]') ).repeat >> match('[\r\n;]') }
     rule(:spcCmnt)   { spaces | comment }
     rule(:spcCmnt?)   { spcCmnt.repeat }
 
@@ -129,7 +129,7 @@ module JCR
     rule(:ruleset_id_d) { str('ruleset-id') >> spaces >> uri.as(:uri) }
     rule(:import_d) { str('import') >> spaces >> uri.as(:uri) >> ( spaces >> str('as') >> spaces >> namespace_alias ).maybe }
     rule(:directive_def) { pedantic | language_compatible_members | jcr_version_d | ruleset_id_d | import_d }
-    rule(:directive) { ( str('#') >> spaces? >> directive_def >> match('[^\r\n]').repeat.maybe >> match('[\r\n]') ).as(:directive) }
+    rule(:directive) { ( str('#') >> spaces? >> directive_def >> match('[^\r\n]').repeat >> match('[\r\n]') ).as(:directive) }
     rule(:top) { ( spcCmnt | rule | directive ).repeat }
 
     root(:top)
