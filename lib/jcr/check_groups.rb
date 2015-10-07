@@ -55,13 +55,15 @@ module JCR
         disallowed_group_in_value?( groupee[:group_rule], mapping )
       elsif groupee[:target_rule_name]
         trule = get_name_mapping( groupee[:target_rule_name][:rule_name], mapping )
-        disallowed_group_in_value?( trule[:group_rule], mapping )
+        disallowed_group_in_value?( trule[:rule], mapping )
       elsif groupee[:member_rule]
         raise_group_error( "groups in value rules cannot have member rules", groupee[:member_rule] )
       elsif groupee[:object_rule]
         raise_group_error( "groups in value rules cannot have object rules", groupee[:member_rule] )
       elsif groupee[:array_rule]
         raise_group_error( "groups in value rules cannot have array rules", groupee[:member_rule] )
+      elsif groupee[:value_rule]
+        disallowed_group_in_value?( groupee[:value_rule], mapping )
       end
     end
   end

@@ -271,27 +271,16 @@ describe 'parser' do
     expect(tree[0][:rule][:member_rule][:group_rule][1][:target_rule_name][:rule_name]).to eq("an_object")
   end
 
-  it 'should parse a member rule with a and rule' do
-    tree = JCR.parse( 'trule "thing" ( an_array , an_object )' )
-    expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("thing")
-    expect(tree[0][:rule][:member_rule][:group_rule][0][:target_rule_name][:rule_name]).to eq("an_array")
-    expect(tree[0][:rule][:member_rule][:group_rule][1][:target_rule_name][:rule_name]).to eq("an_object")
+  it 'should fail a member rule with a and rule' do
+    expect{ JCR.parse( 'trule "thing" ( an_array , an_object )' ) }.to raise_error Parslet::ParseFailed
   end
 
-  it 'should parse a member rule with choice and and rule' do
-    tree = JCR.parse( 'trule "thing" ( an_array | a_string , an_object )' )
-    expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("thing")
-    expect(tree[0][:rule][:member_rule][:group_rule][0][:target_rule_name][:rule_name]).to eq("an_array")
-    expect(tree[0][:rule][:member_rule][:group_rule][1][:target_rule_name][:rule_name]).to eq("a_string")
-    expect(tree[0][:rule][:member_rule][:group_rule][2][:target_rule_name][:rule_name]).to eq("an_object")
+  it 'should fail a member rule with choice and and rule' do
+    expect{ JCR.parse( 'trule "thing" ( an_array | a_string , an_object )' ) }.to raise_error Parslet::ParseFailed
   end
 
   it 'should parse a member rule with group of three ands' do
-    tree = JCR.parse( 'trule "thing" ( an_array , a_string , an_object )' )
-    expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("thing")
-    expect(tree[0][:rule][:member_rule][:group_rule][0][:target_rule_name][:rule_name]).to eq("an_array")
-    expect(tree[0][:rule][:member_rule][:group_rule][1][:target_rule_name][:rule_name]).to eq("a_string")
-    expect(tree[0][:rule][:member_rule][:group_rule][2][:target_rule_name][:rule_name]).to eq("an_object")
+    expect{ JCR.parse( 'trule "thing" ( an_array , a_string , an_object )' ) }.to raise_error Parslet::ParseFailed
   end
 
   it 'should parse a member rule with group of three ors' do
@@ -957,4 +946,95 @@ EX12
     expect(tree[0][:rule][:rule_name]).to eq("encodings")
   end
 
+  it 'should error with member with group of two ANDED values' do
+    expect{ JCR.parse( 'mrule "thing" ( :integer , :float ) ' ) }.to raise_error Parslet::ParseFailed
+  end
+
+  it 'should error with member with group of ORed and ANDED values' do
+    expect{ JCR.parse( 'mrule "thing" ( :integer | :string , :float ) ' ) }.to raise_error Parslet::ParseFailed
+  end
+
+  it 'should error with 1 member with group of OR values and member with group of AND values' do
+    expect{ JCR.parse( 'mrule "thing" ( :integer | :float ) ;; mrule2 "thing2" ( :ip4 , :ip6 )' ) }.to raise_error Parslet::ParseFailed
+  end
+
+  it 'should error with member with group of value OR group' do
+    expect{ JCR.parse( 'mrule "thing" ( :integer | ( :ip4 , :ip6 ) ) ' ) }.to raise_error Parslet::ParseFailed
+  end
+
+  it 'should error with object with group of value OR value' do
+    expect{ JCR.parse( 'arule { ( "m2" :integer | :integer ) }' ) }.to raise_error Parslet::ParseFailed
+  end
+
+  it 'should error with object with group of value OR array' do
+    expect{ JCR.parse( 'arule { ( "m2" :integer | [ :integer ] ) }' ) }.to raise_error Parslet::ParseFailed
+  end
+
+  it 'should error with object with group of value OR object' do
+    expect{ JCR.parse( 'arule { ( "m2" :integer | { "m1" :integer } ) }' ) }.to raise_error Parslet::ParseFailed
+  end
+
+  it 'should error with object with two groups of members and values 2' do
+    expect{ JCR.parse( 'rule { ( "m1" :integer | :float ), ( "m3" :string, "m4" :string ) }' ) }.to raise_error Parslet::ParseFailed
+  end
+
+  it 'should error with object with two groups of members and values 1' do
+    expect{ JCR.parse( 'rule { ( "m1" :integer | "m2" :float ), ( "m3" :string, :string ) }' ) }.to raise_error Parslet::ParseFailed
+  end
+
+  it 'should error with object with group with member and value' do
+    expect{ JCR.parse( 'rule { ( "thing" :integer | :integer ) }' ) }.to raise_error Parslet::ParseFailed
+  end
+
+  it 'should error with object with group with member and value' do
+    expect{ JCR.parse( 'rule { ( "thing" :integer | :integer ) }' ) }.to raise_error Parslet::ParseFailed
+  end
+
+  it 'should error with array with group of value OR with group with member' do
+    expect{ JCR.parse( 'trule : any ;; rule [ ( :integer | ( :ip4 | "thing" trule ) ) ]' ) }.to raise_error Parslet::ParseFailed
+  end
+
+  it 'should error with array with group of OR values and array with group of values and member' do
+    expect{ JCR.parse( 'trule : any ;; rule [ ( :integer | :float ) ] ;; rule2 [ ( :ip4 , "thing" trule ) ]' ) }.to raise_error Parslet::ParseFailed
+  end
+
+  it 'should error with array with value and group of one value and one member' do
+    expect{ JCR.parse( 'trule : any ;; rule [ :string, ( :integer, "thing" trule ) ]' ) }.to raise_error Parslet::ParseFailed
+  end
+
+  it 'should error with array with group of one value and one member' do
+    expect{ JCR.parse( 'trule : any ;; rule [ ( :integer, "thing" trule ) ]' ) }.to raise_error Parslet::ParseFailed
+  end
+
+  it 'should error with array with group of one member' do
+    expect{ JCR.parse( 'trule : any ;; rule [ ( "thing" trule ) ]' ) }.to raise_error Parslet::ParseFailed
+  end
+
+  it 'should error with value with group of value OR group with object' do
+    expect{ JCR.parse( 'rule : ( :integer | ( :ip4 | { "thing" : integer } ) ) ' ) }.to raise_error Parslet::ParseFailed
+  end
+
+  it 'should error with value with group of value OR group with array' do
+    expect{ JCR.parse( 'rule : ( :integer | ( :ip4 | [ :integer ] ) ) ' ) }.to raise_error Parslet::ParseFailed
+  end
+
+  it 'should error with value with group of value OR group with member' do
+    expect{ JCR.parse( 'trule :any ;; rule : ( :integer | ( :ip4 | "thing" trule ) ) ' ) }.to raise_error Parslet::ParseFailed
+  end
+
+  it 'should error with value with group of value OR group' do
+    expect{ JCR.parse( 'rule : ( :integer | ( :ip4 , :ip6 ) ) ' ) }.to raise_error Parslet::ParseFailed
+  end
+
+  it 'should error with 1 value with group of OR values and value with group of AND values' do
+    expect{ JCR.parse( 'rule : ( :integer | :float ) ;; rule2 : ( :ip4 , :ip6 )' ) }.to raise_error Parslet::ParseFailed
+  end
+
+  it 'should error with value with group of ORed and ANDED values' do
+    expect{ JCR.parse( 'rule : ( :integer | :string , :float ) ' ) }.to raise_error Parslet::ParseFailed
+  end
+
+  it 'should error with value with group of two ANDED values' do
+    expect{ JCR.parse( 'rule : ( :integer , :float ) ' ) }.to raise_error Parslet::ParseFailed
+  end
 end
