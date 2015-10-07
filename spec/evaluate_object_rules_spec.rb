@@ -185,6 +185,14 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should pass an object with two strings against an object rule with string member one or more' do
+    tree = JCR.parse( 'trule { + /m.*/:string }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"m1"=> "thing", "m2"=>"thing2" }, mapping )
+    expect( e.success ).to be_truthy
+  end
+
   it 'should fail an object with a string and integer against an object rule with string member once or twice' do
     tree = JCR.parse( 'trule { 1*2 /m.*/:string }' )
     mapping = JCR.map_rule_names( tree )
@@ -270,6 +278,38 @@ describe 'evaluate_rules' do
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=> "thing2","1"=> 1,"2"=> 2 }, mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass an object with two strings and two integers against an object rule with string 2 and any 2' do
+    tree = JCR.parse( 'trule { 2 /s.*/:string, 2 /.*/:integer }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=> "thing2","1"=> 1,"2"=> 2 }, mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass an object with two strings and two integers against an object rule with string + and any +' do
+    tree = JCR.parse( 'trule { + /s.*/:string, + /.*/:integer }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=> "thing2","1"=> 1,"2"=> 2 }, mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail an object with two strings and two integers against an object rule with string ? and any ?' do
+    tree = JCR.parse( 'trule { ? /s.*/:string, ? /.*/:integer }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=> "thing2","1"=> 1,"2"=> 2 }, mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass an object with one strings and one integers against an object rule with string ? and any ?' do
+    tree = JCR.parse( 'trule { ? /s.*/:string, ? /.*/:integer }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","1"=> 1 }, mapping )
     expect( e.success ).to be_truthy
   end
 
