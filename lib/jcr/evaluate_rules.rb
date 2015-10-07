@@ -60,4 +60,39 @@ module JCR
     end
   end
 
+  def self.get_repetitions rule
+
+    repeat_min = 1
+    repeat_max = 1
+    if rule[:optional]
+      repeat_min = 0
+      repeat_max = 1
+    elsif rule[:one_or_more]
+      repeat_min = 1
+      repeat_max = Float::INFINITY
+    elsif rule[:specific_repetition]
+      repeat_min = repeat_max = rule[:specific_repetition].to_s.to_i
+    else
+      o = rule[:repetition_interval]
+      if o
+        repeat_min = 0
+        repeat_max = Float::INFINITY
+      end
+      o = rule[:repetition_min]
+      if o
+        if o.is_a?( Parslet::Slice )
+          repeat_min = o.to_s.to_i
+        end
+      end
+      o = rule[:repetition_max]
+      if o
+        if o.is_a?( Parslet::Slice )
+          repeat_max = o.to_s.to_i
+        end
+      end
+    end
+
+    return repeat_min, repeat_max
+  end
+
 end
