@@ -22,7 +22,8 @@ module JCR
     rule(:spaces) { match('\s').repeat(1) }
     rule(:spaces?) { spaces.maybe }
     rule(:comment)   { str(';') >> ( str('\;') | match('[^\r\n;]') ).repeat.maybe >> match('[\r\n;]') }
-    rule(:spcCmnt?)   { spaces? >> comment.maybe >> spaces? }
+    rule(:spcCmnt)   { spaces | comment }
+    rule(:spcCmnt?)   { spcCmnt.repeat }
 
     rule(:name)      { match('[a-zA-Z]') >> match('[a-zA-Z0-9\-_]').repeat }
     rule(:rule_name) { name.as(:rule_name) }
@@ -118,7 +119,7 @@ module JCR
     rule(:type_choice) { ( str('(') >> type_choice_items >> ( choice_combiner >> type_choice_items ).repeat >> str(')') ).as(:group_rule) }
     rule(:type_choice_items) { spcCmnt? >> (type_choice | type_rule) >> spcCmnt? }
 
-    rule(:rule) { spcCmnt? >> ( rule_name >> spcCmnt? >> ( type_rule | group_rule | member_rule ) ).as(:rule) >> spcCmnt? }
+    rule(:rule) { ( rule_name >> spcCmnt? >> ( type_rule | group_rule | member_rule ) ).as(:rule) }
 
     rule(:pedantic) { str('pedantic').as(:pedantic) }
     rule(:language_compatible_members) { str('language-compatible-members').as(:language_compatible_members) }
@@ -127,7 +128,7 @@ module JCR
     rule(:import_d) { str('import') >> spaces >> uri.as(:uri) >> ( spaces >> str('as') >> spaces >> namespace_alias ).maybe }
     rule(:directive_def) { pedantic | language_compatible_members | jcr_version_d | ruleset_id_d | import_d }
     rule(:directive) { ( str('#') >> spaces? >> directive_def >> match('[^\r\n]').repeat.maybe >> match('[\r\n]') ).as(:directive) }
-    rule(:top) { ( rule | directive ).repeat }
+    rule(:top) { ( spcCmnt | rule | directive ).repeat }
 
     root(:top)
   end

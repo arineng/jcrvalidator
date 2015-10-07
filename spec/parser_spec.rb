@@ -632,6 +632,46 @@ describe 'parser' do
     expect(tree[1][:rule][:rule_name]).to eq("trule2")
   end
 
+  it 'should parse multiple comments before any directives' do
+    ex = <<EX
+;comment 1
+;comment 2
+;comment 3
+;comment 4
+#jcr-version 4.0
+trule2 /.*/ target_rule
+EX
+    tree = JCR.parse( ex )
+    expect(tree[1][:rule][:rule_name]).to eq("trule2")
+  end
+
+  it 'should parse two rules separated by multiple comment' do
+    ex = <<EX
+trule1 : /.*/
+;comment 1
+;comment 2
+;comment 3
+;comment 4
+trule2 /.*/ target_rule
+EX
+    tree = JCR.parse( ex )
+    expect(tree[0][:rule][:rule_name]).to eq("trule1")
+    expect(tree[1][:rule][:rule_name]).to eq("trule2")
+  end
+
+  it 'should parse rules containing multiple comment' do
+    ex = <<EX
+trule1
+	;comment 1
+	;comment 2
+: /.*/
+trule2 /.*/ target_rule
+EX
+    tree = JCR.parse( ex )
+    expect(tree[0][:rule][:rule_name]).to eq("trule1")
+    expect(tree[1][:rule][:rule_name]).to eq("trule2")
+  end
+
   it 'should parse an array rule with rule names and repitition and a group rule with newlines' do
     ex1 = <<EX1
 trule [
