@@ -695,9 +695,9 @@ describe 'parser' do
     tree = JCR.parse( ': /.*/' )
   end
 
-  it 'should parse a bottom member rule' do
-    tree = JCR.parse( '// :any' )
-  end
+  #it 'should parse a bottom member rule' do
+  #  tree = JCR.parse( '// :any' )
+  #end
 
   it 'should parse a bottom array rule' do
     tree = JCR.parse( '[ * :any ]' )
@@ -711,13 +711,13 @@ describe 'parser' do
     tree = JCR.parse( '{ "foo" :any }' )
   end
 
-  it 'should parse a bottom group rule' do
-    tree = JCR.parse( '( "foo" :any, "bar" :integer )' )
-  end
+  #it 'should parse a bottom group rule' do
+  #  tree = JCR.parse( '( "foo" :any, "bar" :integer )' )
+  #end
 
-  it 'should parse a bottom value rule and another rules separated by a comment' do
-    tree = JCR.parse( 'trule : /.*/ ;; /.*/ target_rule' )
-  end
+  #it 'should parse a bottom value rule and another rules separated by a comment' do
+  #  tree = JCR.parse( 'trule : /.*/ ;; /.*/ target_rule' )
+  #end
 
   it 'should parse multiple comments before any directives' do
     ex = <<EX
@@ -762,11 +762,11 @@ EX
   it 'should parse rules, directives, comments and bottom rules' do
     ex = <<EX
 trule1 : /.*/
+[ :integer ]
 ;comment 1
 ;comment 2
 ;comment 3
 ;comment 4
-/.*/ target_rule
 ;comment 5
 #jcr-version 4.0
 EX
