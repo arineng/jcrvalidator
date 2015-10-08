@@ -1140,4 +1140,12 @@ EX12
     tree = JCR.parse( 'my_rule @( reject ) ( *:integer )' )
   end
 
+  it 'should parse array rule with reject directive on value rule' do
+    tree = JCR.parse( 'my_rule [ * @(reject) :integer ]' )
+  end
+
+  it 'should parse array rule with reject directive on target rule' do
+    expect{ JCR.parse( 'my_rule [ @(reject) target_rule ]' ) }.to raise_error Parslet::ParseFailed
+  end
+
 end
