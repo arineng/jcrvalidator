@@ -27,8 +27,8 @@ module JCR
 
     rule(:name)      { match('[a-zA-Z]') >> match('[a-zA-Z0-9\-_]').repeat }
     rule(:rule_name) { name.as(:rule_name) }
-    rule(:namespace_alias) { name.as(:namespace_alias) }
-    rule(:target_rule_name) { ((namespace_alias >> str('.')).maybe >> rule_name).as(:target_rule_name) }
+    rule(:ruleset_id_alias) { name.as(:ruleset_id_alias) }
+    rule(:target_rule_name) { ((ruleset_id_alias >> str('.')).maybe >> rule_name).as(:target_rule_name) }
     rule(:integer)   { ( str('-').maybe >> match('[0-9]').repeat(1) ) }
     rule(:p_integer)   { ( match('[0-9]').repeat(1) ) }
     rule(:float)     { str('-').maybe >> match('[0-9]').repeat(1) >> str('.' ) >> match('[0-9]').repeat(1) }
@@ -126,7 +126,7 @@ module JCR
     rule(:jcr_version_d) { (str('jcr-version') >> spaces >> integer.as(:major_version) >> str('.') >> integer.as(:minor_version)).as(:jcr_version_d) }
     rule(:ruleset_id) { match('[a-zA-Z]') >> match('[\S]').repeat }
     rule(:ruleset_id_d) { str('ruleset-id') >> spaces >> ruleset_id.as(:ruleset_id) }
-    rule(:import_d) { str('import') >> spaces >> uri.as(:uri) >> ( spaces >> str('as') >> spaces >> namespace_alias ).maybe }
+    rule(:import_d) { str('import') >> spaces >> ruleset_id.as(:ruleset_id) >> ( spaces >> str('as') >> spaces >> ruleset_id_alias ).maybe }
     rule(:directive_def) { jcr_version_d | ruleset_id_d | import_d }
     rule(:directive) { ( str('#') >> spaces? >> directive_def >> match('[^\r\n]').repeat >> match('[\r\n]') ).as(:directive) }
     rule(:top) { ( spcCmnt | rule | directive ).repeat }
