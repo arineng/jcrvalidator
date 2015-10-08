@@ -140,7 +140,7 @@ module JCR
     rule(:import_d) { str('import') >> spaces >> ruleset_id.as(:ruleset_id) >> ( spaces >> str('as') >> spaces >> ruleset_id_alias ).maybe }
     rule(:directive_def) { jcr_version_d | ruleset_id_d | import_d }
     rule(:directive) { ( str('#') >> spaces? >> directive_def >> match('[^\r\n]').repeat >> match('[\r\n]') ).as(:directive) }
-    rule(:top) { ( spcCmnt | directive | rule ).repeat >> root_rule.maybe >> ( spcCmnt | directive ).repeat }
+    rule(:top) { ( spcCmnt | directive ).repeat >> root_rule.maybe >> ( spcCmnt | directive | rule ).repeat }
     # rule(:top) { ( spcCmnt | directive | root_rule | rule ).repeat }
 
     root(:top)

@@ -761,8 +761,8 @@ EX
 
   it 'should parse rules, directives, comments and bottom rules' do
     ex = <<EX
+[ trule1 ]
 trule1 : /.*/
-[ :integer ]
 ;comment 1
 ;comment 2
 ;comment 3
