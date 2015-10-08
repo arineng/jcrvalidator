@@ -703,6 +703,10 @@ describe 'parser' do
     tree = JCR.parse( '[ * :any ]' )
   end
 
+  it 'should not parse two bottom array rules' do
+    expect{ JCR.parse( '[ * :any ] [ 2 :integer ]' ) }.to raise_error Parslet::ParseFailed
+  end
+
   it 'should parse a bottom object rule' do
     tree = JCR.parse( '{ "foo" :any }' )
   end
