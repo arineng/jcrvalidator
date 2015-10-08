@@ -34,6 +34,7 @@ module JCR
     return Evaluation.new( false, "Non-empty object at #{jcr} from #{rule_atom}" ) if jcr.is_a?( Parslet::Slice ) && data.length != 0
 
     retval = nil
+    checked = {}
 
     jcr.each do |rule|
 
@@ -47,8 +48,11 @@ module JCR
       repeat_min, repeat_max = get_repetitions( rule )
 
       results = data.select do |k,v|
-        e = evaluate_rule( rule, rule_atom, [k,v], mapping)
-        e.success
+        unless checked[ k ]
+          e = evaluate_rule( rule, rule_atom, [k,v], mapping)
+          checked[ k ] = e.success
+          e.success
+        end
       end
 
       if results.length == 0 && repeat_min > 0

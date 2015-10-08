@@ -313,4 +313,12 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should fail an object with two members against an object rule with overlapping rules' do
+    tree = JCR.parse( 'trule { 2 /.*/:any, 1 /.*/:any }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","1"=> 1 }, mapping )
+    expect( e.success ).to be_falsey
+  end
+
 end
