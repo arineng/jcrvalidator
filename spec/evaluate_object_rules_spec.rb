@@ -193,28 +193,28 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_truthy
   end
 
-  it 'should fail an object with a string and integer against an object rule with string member once or twice' do
+  it 'should pass an object with a string and integer against an object rule with string member once or twice (ignore extras)' do
     tree = JCR.parse( 'trule { 1*2 /m.*/:string }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"m1"=> "thing","m2"=> 2 }, mapping )
-    expect( e.success ).to be_falsey
+    expect( e.success ).to be_truthy
   end
 
-  it 'should fail an object with a string and integer against an object rule with string member default or twice' do
+  it 'should pass an object with a string and integer against an object rule with string member default or twice (ignore extras)' do
     tree = JCR.parse( 'trule { *2 /m.*/:string }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"m1"=> "thing", "m2"=>2 }, mapping )
-    expect( e.success ).to be_falsey
+    expect( e.success ).to be_truthy
   end
 
-  it 'should fail an object with a string and integer and string against an object rule with string and integer' do
+  it 'should pass an object with a string and integer and string against an object rule with string and integer (ignore extra)' do
     tree = JCR.parse( 'trule { "foo":string, "bar":integer }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"foo"=>"thing","bar"=>2,"foo2"=>"thing2" }, mapping )
-    expect( e.success ).to be_falsey
+    expect( e.success ).to be_truthy
   end
 
   it 'should fail an object with a string against an object rule with string twice' do

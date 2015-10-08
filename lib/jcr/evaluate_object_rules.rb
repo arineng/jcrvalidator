@@ -34,7 +34,6 @@ module JCR
     return Evaluation.new( false, "Non-empty object at #{jcr} from #{rule_atom}" ) if jcr.is_a?( Parslet::Slice ) && data.length != 0
 
     retval = nil
-    matching_members = 0
 
     jcr.each do |rule|
 
@@ -62,12 +61,6 @@ module JCR
         retval = Evaluation.new( true, nil)
       end
 
-      matching_members = matching_members + results.length
-
-    end
-
-    if data.length > matching_members
-      retval = Evaluation.new( false, "More members in object than specified for #{jcr} from #{rule_atom}" )
     end
 
     return retval
