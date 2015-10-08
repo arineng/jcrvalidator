@@ -130,7 +130,8 @@ module JCR
     rule(:type_choice) { ( str('(') >> type_choice_items >> ( choice_combiner >> type_choice_items ).repeat >> str(')') ).as(:group_rule) }
     rule(:type_choice_items) { spcCmnt? >> (type_choice | type_rule) >> spcCmnt? }
 
-    rule(:rule) { ( rule_name >> spcCmnt? >> ( type_rule | group_rule | member_rule ) ).as(:rule) }
+    rule(:rule_def) { ( type_rule | group_rule | member_rule ) }
+    rule(:rule) { ( rule_name >> spcCmnt? >> rule_def ).as(:rule) }
 
     rule(:jcr_version_d) { (str('jcr-version') >> spaces >> integer.as(:major_version) >> str('.') >> integer.as(:minor_version)).as(:jcr_version_d) }
     rule(:ruleset_id) { match('[a-zA-Z]') >> match('[\S]').repeat }
@@ -138,7 +139,7 @@ module JCR
     rule(:import_d) { str('import') >> spaces >> ruleset_id.as(:ruleset_id) >> ( spaces >> str('as') >> spaces >> ruleset_id_alias ).maybe }
     rule(:directive_def) { jcr_version_d | ruleset_id_d | import_d }
     rule(:directive) { ( str('#') >> spaces? >> directive_def >> match('[^\r\n]').repeat >> match('[\r\n]') ).as(:directive) }
-    rule(:top) { ( spcCmnt | rule | directive ).repeat }
+    rule(:top) { ( spcCmnt | rule | directive ).repeat >> rule_def.maybe >> ( spcCmnt | directive ).repeat }
 
     root(:top)
   end
