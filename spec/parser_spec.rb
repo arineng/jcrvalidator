@@ -983,7 +983,7 @@ all_encodings ( rfcXXXX.encodings | more_encodings )
 EX12
     tree = JCR.parse( ex12 )
     expect(tree[3][:rule][:rule_name]).to eq("all_encodings")
-    expect(tree[3][:rule][:group_rule][0][:target_rule_name][:namespace_alias]).to eq("rfcXXXX")
+    expect(tree[3][:rule][:group_rule][0][:target_rule_name][:ruleset_id_alias]).to eq("rfcXXXX")
     expect(tree[3][:rule][:group_rule][0][:target_rule_name][:rule_name]).to eq("encodings")
   end
 
