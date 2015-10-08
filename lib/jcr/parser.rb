@@ -132,7 +132,7 @@ module JCR
 
     rule(:rule_def) { ( type_rule | group_rule | member_rule ) }
     rule(:rule) { ( rule_name >> spcCmnt? >> rule_def ).as(:rule) }
-    rule(:root_rule) { value_rule | array_rule | object_rule }
+    rule(:root_rule) { value_rule | array_rule | object_rule | member_rule | group_rule } # N.B. Not target_rule_name
 
     rule(:jcr_version_d) { (str('jcr-version') >> spaces >> integer.as(:major_version) >> str('.') >> integer.as(:minor_version)).as(:jcr_version_d) }
     rule(:ruleset_id) { match('[a-zA-Z]') >> match('[\S]').repeat }
