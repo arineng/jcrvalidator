@@ -76,14 +76,12 @@ module JCR
 
     rule(:rule_dir_start) { spcCmnt? >> str('@(') >> spcCmnt? }
     rule(:rule_dir_end)   { spcCmnt? >> str(')') >> spcCmnt? }
-    rule(:reject_directive_item) { str('reject').as(:reject_directive) }
-    rule(:reject_directive) { rule_dir_start >> reject_directive_item >> rule_dir_end }
-    rule(:unordered_directive_item) { str('unordered').as(:unordered_directive)}
-    rule(:unordered_directive) { rule_dir_start >> unordered_directive_item >> rule_dir_end }
-    rule(:common_directives) { reject_directive.maybe }
-    rule(:array_directives) { ( unordered_directive.maybe >> reject_directive.maybe ) | ( reject_directive.maybe >> unordered_directive.maybe ) }
+    rule(:reject_directive) { rule_dir_start >> str('reject').as(:reject_directive) >> rule_dir_end }
+    rule(:unordered_directive) { rule_dir_start >> str('unordered').as(:unordered_directive) >> rule_dir_end }
+    rule(:root_directive) { rule_dir_start >> str('root').as(:root_directive) >> rule_dir_end }
+    rule(:rule_directives) { ( reject_directive | unordered_directive | root_directive ).repeat }
 
-    rule(:value_rule) { ( common_directives >> str(':') >> spcCmnt? >> ( value_choice | value_def ) ).as(:value_rule) }
+    rule(:value_rule) { ( rule_directives >> str(':') >> spcCmnt? >> ( value_choice | value_def ) ).as(:value_rule) }
     rule(:value_def) {
       (
         any | ip4 | ip6 | fqdn | idn | phone | email | full_time | full_date | date_time |
@@ -107,21 +105,21 @@ module JCR
     rule(:object_item_types) { member_rule | target_rule_name | object_group }
     rule(:object_item ) { repetition.maybe >> spcCmnt? >> object_item_types }
     rule(:object_items) { object_item >> ( spcCmnt? >> sequence_or_choice >> spcCmnt? >> object_item ).repeat }
-    rule(:object_rule) { ( common_directives >> str('{') >> spcCmnt? >> object_items.maybe >> spcCmnt? >> str('}') ).as(:object_rule) }
+    rule(:object_rule) { ( rule_directives >> str('{') >> spcCmnt? >> object_items.maybe >> spcCmnt? >> str('}') ).as(:object_rule) }
 
     rule(:array_group) { ( str('(') >> spcCmnt? >> array_items.maybe >> spcCmnt? >> str(')') ).as(:group_rule) }
     rule(:array_item_types) { type_rule | array_group }
     rule(:array_item)  { repetition.maybe >> spcCmnt? >> array_item_types }
     rule(:array_items) { array_item >> ( spcCmnt? >> sequence_or_choice >> spcCmnt? >> array_item ).repeat }
-    rule(:array_rule) { ( array_directives >> str('[') >> spcCmnt? >> array_items.maybe >> spcCmnt? >> str(']') ).as(:array_rule) }
+    rule(:array_rule) { ( rule_directives >> str('[') >> spcCmnt? >> array_items.maybe >> spcCmnt? >> str(']') ).as(:array_rule) }
 
     rule(:group_group) { group_rule }
     rule(:group_item_types) { type_rule | member_rule | group_group }
     rule(:group_item)  { repetition.maybe >> spcCmnt? >> group_item_types }
     rule(:group_items) { group_item >> ( spcCmnt? >> sequence_or_choice >> spcCmnt? >> group_item ).repeat }
-    rule(:group_rule) { ( common_directives >> str('(') >> spcCmnt? >> group_items.maybe >> spcCmnt? >> str(')') ).as(:group_rule) }
+    rule(:group_rule) { ( rule_directives >> str('(') >> spcCmnt? >> group_items.maybe >> spcCmnt? >> str(')') ).as(:group_rule) }
 
-    rule(:member_rule) { common_directives >>
+    rule(:member_rule) { rule_directives >>
       ( ( regex.as(:member_regex) | q_string.as(:member_name) ) >> spcCmnt? >> (type_rule | type_choice) ).as(:member_rule)
     }
 

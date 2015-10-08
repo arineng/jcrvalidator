@@ -1116,6 +1116,10 @@ EX12
     tree = JCR.parse( 'my_rule @(reject) { "count" :integer }' )
   end
 
+  it 'should parse object rule with reject directive' do
+    tree = JCR.parse( 'my_rule @(root) @(reject) { "count" :integer }' )
+  end
+
   it 'should parse array rule with reject directive' do
     tree = JCR.parse( 'my_rule @(reject) [ *:integer ]' )
   end
@@ -1124,9 +1128,12 @@ EX12
     tree = JCR.parse( 'my_rule @(unordered) [ *:integer ]' )
   end
 
-  # GRRR!!! the swapped order of this doesn't work
   it 'should parse array rule with unordered directive' do
     tree = JCR.parse( 'my_rule @(unordered) @(reject) [ *:integer ]' )
+  end
+
+  it 'should parse array rule with unordered directive' do
+    tree = JCR.parse( 'my_rule @(reject) @(unordered) [ *:integer ]' )
   end
 
   it 'should parse group rule with reject directive' do
