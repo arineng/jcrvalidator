@@ -40,6 +40,34 @@ module JCR
     # if the array is not empty and there are zero sub-rules (it is suppose to be empty)
     return Evaluation.new( false, "Non-empty array at #{jcr} from #{rule_atom}" ) if jcr.is_a?( Parslet::Slice ) && data.length != 0
 
+    ordered = true
+    deletes = []
+    i = 0
+    jcr.each do |sub|
+      case
+        when sub[:unordered_annotation]
+          ordered = false
+          deletes << i
+        when sub[:reject_annotation]
+          deletes << i
+        when sub[:root_annotation]
+          deletes << i
+        when sub[:value_rule],sub[:object_rule],sub[:group_rule],sub[:array_rule],sub[:target_rule_name]
+          break
+      end
+    end
+    deletes.each do |d|
+      jcr.delete_at( d )
+    end
+
+    if ordered
+      return evaluate_array_rule_ordered( jcr, rule_atom, data, mapping )
+    else
+      return evaluate_array_rule_unordered( jcr, rule_atom, data, mapping )
+    end
+  end
+
+  def self.evaluate_array_rule_ordered jcr, rule_atom, data, mapping
     retval = nil
     array_index = 0
 
@@ -82,6 +110,49 @@ module JCR
 
     if data.length > array_index
       retval = Evaluation.new( false, "More itmes in array than specified for #{jcr} from #{rule_atom}" )
+    end
+
+    return retval
+  end
+
+  def self.evaluate_array_rule_unordered jcr, rule_atom, data, mapping
+
+    retval = nil
+    checked = []
+
+    jcr.each do |rule|
+
+      # short circuit logic
+      if rule[:choice_combiner] && retval && retval.success
+        return retval # short circuit
+      elsif rule[:sequence_combiner] && retval && !retval.success
+        return retval # short circuit
+      end
+
+      repeat_min, repeat_max = get_repetitions( rule )
+
+      i = 0
+      results = data.select do |v|
+        success = false
+        unless checked[ i ]
+          e = evaluate_rule( rule, rule_atom, v, mapping)
+          checked[ i ] = e.success
+          success = e.success
+        end
+        i = i + 1
+        success
+      end
+
+      if results.length == 0 && repeat_min > 0
+        retval = Evaluation.new( false, "array does not contain #{rule} for #{jcr} from #{rule_atom}")
+      elsif results.length < repeat_min
+        retval = Evaluation.new( false, "array does not have enough #{rule} for #{jcr} from #{rule_atom}")
+      elsif results.length > repeat_max
+        retval = Evaluation.new( false, "array has too many #{rule} for #{jcr} from #{rule_atom}")
+      else
+        retval = Evaluation.new( true, nil)
+      end
+
     end
 
     return retval
