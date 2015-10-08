@@ -74,12 +74,12 @@ module JCR
     rule(:choice_combiner)    { str('|').as(:choice_combiner) }
     rule(:sequence_or_choice) { sequence_combiner | choice_combiner }
 
-    rule(:rule_dir_start) { spcCmnt? >> str('@(') >> spcCmnt? }
-    rule(:rule_dir_end)   { spcCmnt? >> str(')') >> spcCmnt? }
-    rule(:reject_directive) { rule_dir_start >> str('reject').as(:reject_directive) >> rule_dir_end }
-    rule(:unordered_directive) { rule_dir_start >> str('unordered').as(:unordered_directive) >> rule_dir_end }
-    rule(:root_directive) { rule_dir_start >> str('root').as(:root_directive) >> rule_dir_end }
-    rule(:rule_directives) { ( reject_directive | unordered_directive | root_directive ).repeat }
+    rule(:reject_directive) { str('reject').as(:reject_directive) }
+    rule(:unordered_directive) { str('unordered').as(:unordered_directive) }
+    rule(:root_directive) { str('root').as(:root_directive) }
+    rule(:tbd_directive) { name.as(:directive_name) >> ( spaces >> match('[^)]').as(:directive_parameters) ).maybe }
+    rule(:rule_directive_set) { reject_directive | unordered_directive | root_directive | tbd_directive }
+    rule(:rule_directives) { spcCmnt? >> ( str('@(') >> spcCmnt? >> rule_directive_set >> spcCmnt? >> str(')') >> spcCmnt? ).repeat }
 
     rule(:value_rule) { ( rule_directives >> str(':') >> spcCmnt? >> ( value_choice | value_def ) ).as(:value_rule) }
     rule(:value_def) {

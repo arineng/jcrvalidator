@@ -1137,7 +1137,7 @@ EX12
   end
 
   it 'should parse group rule with reject directive' do
-    tree = JCR.parse( 'my_rule @(reject) ( *:integer )' )
+    tree = JCR.parse( 'my_rule @( reject ) ( *:integer )' )
   end
 
 end
