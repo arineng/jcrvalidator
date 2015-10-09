@@ -25,6 +25,14 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_falsey
   end
 
+  it 'should pass something that is not an object with reject' do
+    tree = JCR.parse( 'trule @(reject) { }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
+    expect( e.success ).to be_truthy
+  end
+
   it 'should pass an empty object against an empty object rule' do
     tree = JCR.parse( 'trule { }' )
     mapping = JCR.map_rule_names( tree )
@@ -33,12 +41,28 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should fail an empty object against an empty reject object rule' do
+    tree = JCR.parse( 'trule @(reject) { }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], { }, mapping )
+    expect( e.success ).to be_falsey
+  end
+
   it 'should fail a non-empty object against an empty object rule' do
     tree = JCR.parse( 'trule { }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], { "foo"=>"bar"}, mapping )
     expect( e.success ).to be_falsey
+  end
+
+  it 'should pass a non-empty object against an empty reject object rule' do
+    tree = JCR.parse( 'trule @(reject) { }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], { "foo"=>"bar"}, mapping )
+    expect( e.success ).to be_truthy
   end
 
   it 'should fail an empty object against an object rule with a string member' do
@@ -79,6 +103,14 @@ describe 'evaluate_rules' do
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], { "foo"=>"thing" }, mapping )
     expect( e.success ).to be_truthy
+  end
+
+  it 'should fail an object with one string against an reject object rule with a string member or a string member' do
+    tree = JCR.parse( 'trule @(reject) { "foo":string | "bar":string }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], { "foo"=>"thing" }, mapping )
+    expect( e.success ).to be_falsey
   end
 
   it 'should fail an object with one string against an object rule with a string member and an integer member' do

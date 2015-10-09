@@ -109,14 +109,16 @@ module JCR
         case
           when sub[:unordered_annotation]
             annotations << sub
+            i = i + 1
           when sub[:reject_annotation]
             annotations << sub
+            i = i + 1
           when sub[:root_annotation]
             annotations << sub
+            i = i + 1
           when sub[:value_rule],sub[:object_rule],sub[:group_rule],sub[:array_rule],sub[:target_rule_name]
             break
         end
-        i = i + 1
       end
       rules = jcr[i,jcr.length]
     end

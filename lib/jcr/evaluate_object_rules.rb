@@ -21,28 +21,30 @@ module JCR
 
   def self.evaluate_object_rule jcr, rule_atom, data, mapping
 
-    # if the data is not an object (Hash)
-    return Evaluation.new( false, "#{data} is not an object at #{jcr} from #{rule_atom}") unless data.is_a? Hash
+    rules, annotations = get_rules_and_annotations( jcr )
 
-    if jcr.is_a? Hash
-      jcr = [ jcr ]
-    end
+    # if the data is not an object (Hash)
+    return evaluate_reject( annotations,
+      Evaluation.new( false, "#{data} is not an object at #{jcr} from #{rule_atom}") ) unless data.is_a? Hash
 
     # if the object has no members and there are zero sub-rules (it is suppose to be empty)
-    return Evaluation.new( true, nil ) if jcr.is_a?( Parslet::Slice ) && data.length == 0
+    return evaluate_reject( annotations,
+      Evaluation.new( true, nil ) ) if rules.empty? && data.length == 0
+
     # if the object has members and there are zero sub-rules (it is suppose to be empty)
-    return Evaluation.new( false, "Non-empty object at #{jcr} from #{rule_atom}" ) if jcr.is_a?( Parslet::Slice ) && data.length != 0
+    return evaluate_reject( annotations,
+      Evaluation.new( false, "Non-empty object at #{jcr} from #{rule_atom}" ) ) if rules.empty? && data.length != 0
 
     retval = nil
     checked = {}
 
-    jcr.each do |rule|
+    rules.each do |rule|
 
       # short circuit logic
       if rule[:choice_combiner] && retval && retval.success
-        return retval # short circuit
+        return evaluate_reject( annotations, retval )# short circuit
       elsif rule[:sequence_combiner] && retval && !retval.success
-        return retval # short circuit
+        return evaluate_reject( annotations, retval ) # short circuit
       end
 
       repeat_min, repeat_max = get_repetitions( rule )
@@ -67,7 +69,7 @@ module JCR
 
     end
 
-    return retval
+    return evaluate_reject( annotations, retval )
   end
 
 end
