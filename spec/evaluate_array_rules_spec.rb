@@ -25,6 +25,14 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_falsey
   end
 
+  it 'should pass something that is not an array with reject' do
+    tree = JCR.parse( 'trule @(reject) [ ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
+    expect( e.success ).to be_truthy
+  end
+
   it 'should pass an empty array against an empty array rule' do
     tree = JCR.parse( 'trule [ ]' )
     mapping = JCR.map_rule_names( tree )
@@ -33,12 +41,28 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should fail an empty reject array against an empty array rule' do
+    tree = JCR.parse( 'trule @(reject) [ ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [], mapping )
+    expect( e.success ).to be_falsey
+  end
+
   it 'should fail a non-empty array against an empty array rule' do
     tree = JCR.parse( 'trule [ ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "thing" ], mapping )
     expect( e.success ).to be_falsey
+  end
+
+  it 'should pass a non-empty array against an empty reject array rule' do
+    tree = JCR.parse( 'trule @(reject) [ ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing" ], mapping )
+    expect( e.success ).to be_truthy
   end
 
   it 'should fail an empty array against an array rule with a string' do
@@ -79,6 +103,14 @@ describe 'evaluate_rules' do
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "thing" ], mapping )
     expect( e.success ).to be_truthy
+  end
+
+  it 'should fail an array with one string against an reject array rule with a string or a string' do
+    tree = JCR.parse( 'trule @(reject) [ :string | :string ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing" ], mapping )
+    expect( e.success ).to be_falsey
   end
 
   it 'should fail an array with one string against an array rule with a string and an integer' do
@@ -353,6 +385,14 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_falsey
   end
 
+  it 'should pass an array with one string and one arrays against an reject array rule with string 2 and any 2' do
+    tree = JCR.parse( 'trule @(reject) [ 2 :string, 2 :any ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", [ 1, 2 ] ], mapping )
+    expect( e.success ).to be_truthy
+  end
+
   it 'should pass an array with two strings and two arrays against an unordered array rule with string 2 and any 2' do
     tree = JCR.parse( 'trule @(unordered) [ 2 :string, 2 :any ]' )
     mapping = JCR.map_rule_names( tree )
@@ -367,6 +407,14 @@ describe 'evaluate_rules' do
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, "thing", "thing2"  ], mapping )
     expect( e.success ).to be_truthy
+  end
+
+  it 'should fail an array with two strings and two arrays against an reject, unordered array rule with string 2 and any 2' do
+    tree = JCR.parse( 'trule @(reject) @(unordered) [ 2 :string, 2 :integer ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, "thing", "thing2"  ], mapping )
+    expect( e.success ).to be_falsey
   end
 
 end

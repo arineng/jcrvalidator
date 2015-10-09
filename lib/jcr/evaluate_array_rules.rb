@@ -28,42 +28,32 @@ module JCR
 
   def self.evaluate_array_rule jcr, rule_atom, data, mapping
 
-    # if the data is not an array
-    return Evaluation.new( false, "#{data} is not an array at #{jcr} from #{rule_atom}") unless data.is_a? Array
-
-    if jcr.is_a? Hash
-      jcr = [ jcr ]
-    end
-
-    # if the array is zero length and there are zero sub-rules (it is suppose to be empty)
-    return Evaluation.new( true, nil ) if jcr.is_a?( Parslet::Slice ) && data.length == 0
-    # if the array is not empty and there are zero sub-rules (it is suppose to be empty)
-    return Evaluation.new( false, "Non-empty array at #{jcr} from #{rule_atom}" ) if jcr.is_a?( Parslet::Slice ) && data.length != 0
+    rules, annotations = get_rules_and_annotations( jcr )
 
     ordered = true
-    deletes = []
-    i = 0
-    jcr.each do |sub|
-      case
-        when sub[:unordered_annotation]
-          ordered = false
-          deletes << i
-        when sub[:reject_annotation]
-          deletes << i
-        when sub[:root_annotation]
-          deletes << i
-        when sub[:value_rule],sub[:object_rule],sub[:group_rule],sub[:array_rule],sub[:target_rule_name]
-          break
+    annotations.each do |a|
+      if a[:unordered_annotation]
+        ordered = false
+        break
       end
     end
-    deletes.each do |d|
-      jcr.delete_at( d )
-    end
+
+    # if the data is not an array
+    return evaluate_reject( annotations,
+      Evaluation.new( false, "#{data} is not an array at #{jcr} from #{rule_atom}") ) unless data.is_a? Array
+
+    # if the array is zero length and there are zero sub-rules (it is suppose to be empty)
+    return evaluate_reject( annotations,
+      Evaluation.new( true, nil ) ) if rules.empty? && data.empty?
+
+    # if the array is not empty and there are zero sub-rules (it is suppose to be empty)
+    return evaluate_reject( annotations,
+      Evaluation.new( false, "Non-empty array at #{jcr} from #{rule_atom}" ) ) if rules.empty? && data.length != 0
 
     if ordered
-      return evaluate_array_rule_ordered( jcr, rule_atom, data, mapping )
+      return evaluate_reject( annotations, evaluate_array_rule_ordered( rules, rule_atom, data, mapping ) )
     else
-      return evaluate_array_rule_unordered( jcr, rule_atom, data, mapping )
+      return evaluate_reject( annotations, evaluate_array_rule_unordered( rules, rule_atom, data, mapping ) )
     end
   end
 

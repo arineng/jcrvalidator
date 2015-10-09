@@ -95,4 +95,48 @@ module JCR
     return repeat_min, repeat_max
   end
 
+  def self.get_rules_and_annotations jcr
+    rules = []
+    annotations = []
+
+    if jcr.is_a?( Hash )
+      jcr = [ jcr ]
+    end
+
+    if jcr.is_a? Array
+      i = 0
+      jcr.each do |sub|
+        case
+          when sub[:unordered_annotation]
+            annotations << sub
+          when sub[:reject_annotation]
+            annotations << sub
+          when sub[:root_annotation]
+            annotations << sub
+          when sub[:value_rule],sub[:object_rule],sub[:group_rule],sub[:array_rule],sub[:target_rule_name]
+            break
+        end
+        i = i + 1
+      end
+      rules = jcr[i,jcr.length]
+    end
+
+    return rules, annotations
+  end
+
+  def self.evaluate_reject annotations, evaluation
+
+    reject = false
+    annotations.each do |a|
+      if a[:reject_annotation]
+        reject = true
+        break
+      end
+    end
+
+    if reject
+      evaluation.success = !evaluation.success
+    end
+    return evaluation
+  end
 end
