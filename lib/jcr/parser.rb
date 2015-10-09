@@ -119,8 +119,8 @@ module JCR
     rule(:group_items) { group_item >> ( spcCmnt? >> sequence_or_choice >> spcCmnt? >> group_item ).repeat }
     rule(:group_rule) { ( annotations >> str('(') >> spcCmnt? >> group_items.maybe >> spcCmnt? >> str(')') ).as(:group_rule) }
 
-    rule(:member_rule) { annotations >>
-      ( ( regex.as(:member_regex) | q_string.as(:member_name) ) >> spcCmnt? >> (type_rule | type_choice) ).as(:member_rule)
+    rule(:member_rule) {
+      ( annotations >> ( regex.as(:member_regex) | q_string.as(:member_name) ) >> spcCmnt? >> (type_rule | type_choice) ).as(:member_rule)
     }
 
     rule(:type_rule) { value_rule | array_rule | object_rule | target_rule_name }

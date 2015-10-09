@@ -353,4 +353,22 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_falsey
   end
 
+  it 'should ignore extra members in an object' do
+    tree = JCR.parse( 'trule { 2 /s.*/:string, 1 "foo":integer }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=>"thing2","foo"=>2,"bar"=>"baz" }, mapping )
+    expect( e.success ).to be_truthy
+  end
+
+=begin
+  it 'should not ignore extra members in an object' do
+    tree = JCR.parse( 'trule { 2 /s.*/:string, 1 "foo":integer, ? /.*/:any }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=>"thing2","foo"=>2,"bar"=>"baz" }, mapping )
+    expect( e.success ).to be_falsey
+  end
+=end
+
 end

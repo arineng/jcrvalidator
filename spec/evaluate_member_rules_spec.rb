@@ -13,7 +13,7 @@
 # IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 require 'rspec'
 require 'pp'
-require_relative '../lib/JCR/evaluate_member_rules'
+require_relative '../lib/JCR/evaluate_rules'
 
 describe 'evaluate_rules' do
 
@@ -27,6 +27,14 @@ describe 'evaluate_rules' do
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "mname", "anything" ], mapping )
     expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a member with string and any value with reject' do
+    tree = JCR.parse( 'mrule @(reject) "mname" :any' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "mname", "anything" ], mapping )
+    expect( e.success ).to be_falsey
   end
 
   it 'should pass a member with string and an integer' do
@@ -43,6 +51,14 @@ describe 'evaluate_rules' do
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "blah", 2 ], mapping )
     expect( e.success ).to be_falsey
+  end
+
+  it 'should pass a member with mismatch string and an integer with reject' do
+    tree = JCR.parse( 'mrule @(reject) "mname" :integer' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "blah", 2 ], mapping )
+    expect( e.success ).to be_truthy
   end
 
   it 'should fail a member with string and an integer against member with string' do
@@ -73,6 +89,14 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should fail a member with regex and any value with reject' do
+    tree = JCR.parse( 'mrule @(reject) /ab.*/ :any' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "abc", "anything" ], mapping )
+    expect( e.success ).to be_falsey
+  end
+
   it 'should pass a member with regex and an integer' do
     tree = JCR.parse( 'mrule /ab*/ :integer' )
     mapping = JCR.map_rule_names( tree )
@@ -87,6 +111,14 @@ describe 'evaluate_rules' do
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "blah", 2 ], mapping )
     expect( e.success ).to be_falsey
+  end
+
+  it 'should pass a member with mismatch regex and an integer with reject' do
+    tree = JCR.parse( 'mrule @(reject) /ab.*/ :integer' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "blah", 2 ], mapping )
+    expect( e.success ).to be_truthy
   end
 
   it 'should fail a member with regex and an integer against member with string' do

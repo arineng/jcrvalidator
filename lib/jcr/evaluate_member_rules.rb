@@ -31,26 +31,30 @@ module JCR
     # it is an array, the first element being the member name or regex and the
     # second being the json data to be furthered on to other evaluation functions
 
+    rules, annotations = get_rules_and_annotations( jcr )
+    rule = rules[0]
+
     member_match = false
 
-    if jcr[:member_name]
-      match_spec = jcr[:member_name][:q_string].to_s
+    if rule[:member_name]
+      match_spec = rule[:member_name][:q_string].to_s
       if match_spec == data[ 0 ]
         member_match = true
       end
     else # must be regex
-      match_spec = Regexp.new( jcr[:member_regex][:regex].to_s )
+      match_spec = Regexp.new( rule[:member_regex][:regex].to_s )
       if match_spec =~ data[ 0 ]
         member_match = true
       end
     end
 
     if member_match
-      e = evaluate_rule( jcr, rule_atom, data[ 1 ], mapping )
-      return e
+      e = evaluate_rule( rule, rule_atom, data[ 1 ], mapping )
+      return evaluate_reject( annotations, e )
     end
 
-    return Evaluation.new( false, "#{match_spec} does not match #{data[0]} for #{jcr} from #{rule_atom}" )
+    return evaluate_reject( annotations,
+       Evaluation.new( false, "#{match_spec} does not match #{data[0]} for #{jcr} from #{rule_atom}" ) )
 
   end
 

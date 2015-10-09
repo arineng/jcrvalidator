@@ -417,4 +417,12 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_falsey
   end
 
+  it 'should ignore extra elements in an array' do
+    tree = JCR.parse( 'trule [ 2 :string, 2 :integer, *:any ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, "thing", "thing2", 23.0, 99.2  ], mapping )
+    expect( e.success ).to be_falsey
+  end
+
 end
