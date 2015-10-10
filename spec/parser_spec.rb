@@ -1195,6 +1195,10 @@ EX12
     tree = JCR.parse( 'my_rule @(unordered) [ *:integer ]' )
   end
 
+  it 'should parse array rule with root directive' do
+    tree = JCR.parse( 'my_rule @(root) [ *:integer ]' )
+  end
+
   it 'should parse array rule with unordered directive' do
     tree = JCR.parse( 'my_rule @(unordered) @(reject) [ *:integer ]' )
   end
