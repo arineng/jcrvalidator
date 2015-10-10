@@ -27,21 +27,20 @@ module JCR
 
   def self.evaluate_group_rule jcr, rule_atom, data, mapping
 
+    rules, annotations = get_rules_and_annotations( jcr )
+
     retval = nil
 
-    if jcr.is_a? Hash
-      jcr = [ jcr ]
-    end
-    jcr.each do |rule|
+    rules.each do |rule|
       if rule[:choice_combiner] && retval && retval.success
-        return retval # short circuit
+        return evaluate_reject( annotations, retval ) # short circuit
       elsif rule[:sequence_combiner] && retval && !retval.success
-        return retval # short circuit
+        return evaluate_reject( annotations, retval ) # short circuit
       end
       retval = evaluate_rule( rule, rule_atom, data, mapping )
     end
 
-    return retval
+    return evaluate_reject( annotations, retval )
   end
 
 end

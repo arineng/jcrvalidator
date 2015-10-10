@@ -92,7 +92,7 @@ module JCR
 
     rule(:value_choice_item) { ( (str(':') >> spcCmnt? >> value_def) | value_choice | target_rule_name).as(:value_rule) }
     rule(:value_choice_items) { value_choice_item >> ( spcCmnt? >> choice_combiner >> spcCmnt? >> value_choice_item ).repeat }
-    rule(:value_choice) { ( str('(') >> spcCmnt? >> value_choice_items >> spcCmnt? >> str(')') ).as(:group_rule) }
+    rule(:value_choice) { ( annotations >> str('(') >> spcCmnt? >> value_choice_items >> spcCmnt? >> str(')') ).as(:group_rule) }
 
     rule(:repetition) { optional | one_or_more | min_max_repetition | specific_repetition }
     rule(:optional) { str('?').as(:optional) }

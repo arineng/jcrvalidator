@@ -1215,4 +1215,9 @@ EX12
     expect{ JCR.parse( 'my_rule [ @(reject) target_rule ]' ) }.to raise_error Parslet::ParseFailed
   end
 
+  it 'should parse a group rule with a rulename only with reject' do
+    tree = JCR.parse( 'trule @(reject) ( my_rule1 )' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+  end
+
 end
