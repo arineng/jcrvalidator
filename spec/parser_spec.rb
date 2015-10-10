@@ -134,10 +134,27 @@ describe 'parser' do
     expect(tree[0][:rule][:value_rule][:integer]).to eq("2")
   end
 
+  it 'should parse a negative integer constant' do
+    tree = JCR.parse( 'trule : -2' )
+    expect(tree[0][:rule][:value_rule][:integer]).to eq("-2")
+  end
+
   it 'should parse an integer full range' do
     tree = JCR.parse( 'trule : 0..100' )
     expect(tree[0][:rule][:value_rule][:integer_min]).to eq("0")
     expect(tree[0][:rule][:value_rule][:integer_max]).to eq("100")
+  end
+
+  it 'should parse a negative integer range to positive integer' do
+    tree = JCR.parse( 'trule : -1..100' )
+    expect(tree[0][:rule][:value_rule][:integer_min]).to eq("-1")
+    expect(tree[0][:rule][:value_rule][:integer_max]).to eq("100")
+  end
+
+  it 'should parse a negative integer full range' do
+    tree = JCR.parse( 'trule : -100..-1' )
+    expect(tree[0][:rule][:value_rule][:integer_min]).to eq("-100")
+    expect(tree[0][:rule][:value_rule][:integer_max]).to eq("-1")
   end
 
   it 'should parse an integer range with a min range' do
@@ -150,6 +167,11 @@ describe 'parser' do
     expect(tree[0][:rule][:value_rule][:integer_max]).to eq("100")
   end
 
+  it 'should parse a negative integer range with a max range' do
+    tree = JCR.parse( 'trule : ..-100' )
+    expect(tree[0][:rule][:value_rule][:integer_max]).to eq("-100")
+  end
+
   it 'should parse a float value' do
     tree = JCR.parse( 'trule : float' )
     expect(tree[0][:rule][:value_rule][:float_v]).to eq("float")
@@ -160,10 +182,21 @@ describe 'parser' do
     expect(tree[0][:rule][:value_rule][:float]).to eq("2.0")
   end
 
+  it 'should parse a negative float constant' do
+    tree = JCR.parse( 'trule : -2.0' )
+    expect(tree[0][:rule][:value_rule][:float]).to eq("-2.0")
+  end
+
   it 'should parse a float range with a full range' do
     tree = JCR.parse( 'trule : 0.0..100.0' )
     expect(tree[0][:rule][:value_rule][:float_min]).to eq("0.0")
     expect(tree[0][:rule][:value_rule][:float_max]).to eq("100.0")
+  end
+
+  it 'should parse a negative float range with a full range' do
+    tree = JCR.parse( 'trule : -100.0..-1.0' )
+    expect(tree[0][:rule][:value_rule][:float_min]).to eq("-100.0")
+    expect(tree[0][:rule][:value_rule][:float_max]).to eq("-1.0")
   end
 
   it 'should parse a float range with a min range' do
