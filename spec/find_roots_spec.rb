@@ -109,7 +109,6 @@ ids @(root) [ *:integer ]
 EX7
     tree = JCR.parse( ex7 )
     roots = JCR.find_roots( tree )
-    pp roots
     expect( roots.length ).to eq( 3 )
   end
 
