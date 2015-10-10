@@ -46,6 +46,14 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should fail when any rule matches an array with reject' do
+    tree = JCR.parse( 'trule @(reject) : any' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 3 ], mapping )
+    expect( e.success ).to be_falsey
+  end
+
   #
   # string value tests
   #
@@ -56,6 +64,14 @@ describe 'evaluate_rules' do
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", mapping )
     expect( e.success ).to be_truthy
+  end
+
+  it 'should fail when a string matches a string constant with reject' do
+    tree = JCR.parse( 'trule @(reject) : "a string constant"' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", mapping )
+    expect( e.success ).to be_falsey
   end
 
   it 'should fail when a string does not match a string constant' do
@@ -280,6 +296,14 @@ describe 'evaluate_rules' do
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], nil, mapping )
     expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a null with reject' do
+    tree = JCR.parse( 'trule @(reject) : null' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], nil, mapping )
+    expect( e.success ).to be_falsey
   end
 
   #

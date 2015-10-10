@@ -26,6 +26,12 @@ require 'jcr/check_groups'
 module JCR
 
   def self.evaluate_value_rule jcr, rule_atom, data, mapping
+    rules, annotations = get_rules_and_annotations( jcr )
+
+    return evaluate_reject( annotations, evaluate_values( rules[0], rule_atom, data, mapping ) )
+  end
+
+  def self.evaluate_values jcr, rule_atom, data, mapping
     case
 
       #
