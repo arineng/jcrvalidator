@@ -36,6 +36,25 @@ Failure: ....
 
 $ bin/jcr -v -r example.jcr example.json
 Success!
+
+$ bin/jcr -h
+HELP
+----
+
+Usage: jcr [OPTIONS] [JSON_FILE]
+
+Evaluates JSON against JSON Content Rules (JCR).
+
+If JSON_FILE is not specified, standard input (STDIN) is used.
+
+Use -v to see results, otherwise check the exit code.
+
+Options
+    -r FILE                          file containing ruleset
+    -R STRING                        string containing ruleset. Should probably be quoted
+    -o FILE                          file containing overide ruleset (option can be repeated)
+    -v                               verbose
+    -h                               display help
 ```
 
 This code was written and tested on Ruby 2.0. At present it can only run its unit
