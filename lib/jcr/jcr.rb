@@ -14,11 +14,28 @@
 
 require 'jcr/parser'
 require 'jcr/evaluate_rules'
+require 'jcr/check_groups'
+require 'jcr/find_roots'
+require 'jcr/map_rule_names'
+require 'jcr/process_directives'
 
 module JCR
 
   class Context
-    attr_accessor :mapping, :id, :tree
+    attr_accessor :mapping, :id, :tree, :roots
+  end
+
+  def self.ingest_ruleset( ruleset, ruleset_alias=nil )
+    tree = JCR.parse( ruleset )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    roots = JCR.find_roots( tree )
+    ctx = Context.new
+    ctx.tree = tree
+    ctx.mapping = mapping
+    ctx.roots = roots
+    JCR.process_directives( ctx )
+    return ctx
   end
 
 end

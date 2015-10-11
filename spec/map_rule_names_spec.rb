@@ -86,5 +86,52 @@ EX7
     expect{ JCR.map_rule_names( tree ) }.to raise_error RuntimeError
   end
 
+  it 'should  allow rules with the same name' do
+    tree = JCR.parse( 'vrule : integer ;; vrule : string' )
+    mapping = JCR.map_rule_names( tree, true )
+    JCR.check_rule_target_names( tree, mapping )
+  end
+
+  it 'should map rule names with prefix' do
+    ex7 = <<EX7
+# ruleset-id http://blah.com
+width "width" : 0..1280
+height "height" : 0..1024
+
+root {
+    "Image" {
+        width, height, "Title" :string,
+        "thumbnail" { width, height, "Url" :uri },
+        "IDs" [ *:integer ]
+    }
+}
+EX7
+    tree = JCR.parse( ex7 )
+    mapping = JCR.map_rule_names( tree, false, "rfc4267" )
+    expect( mapping["rfc4267.width"][:rule_name].to_str ).to eq( "width" )
+    expect( mapping["rfc4267.height"][:rule_name].to_str ).to eq( "height" )
+    expect( mapping["rfc4267.root"][:rule_name].to_str ).to eq( "root" )
+  end
+
+  it 'should map rule names with prefix that ends in .' do
+    ex7 = <<EX7
+# ruleset-id http://blah.com
+width "width" : 0..1280
+height "height" : 0..1024
+
+root {
+    "Image" {
+        width, height, "Title" :string,
+        "thumbnail" { width, height, "Url" :uri },
+        "IDs" [ *:integer ]
+    }
+}
+EX7
+    tree = JCR.parse( ex7 )
+    mapping = JCR.map_rule_names( tree, false, "rfc4267." )
+    expect( mapping["rfc4267.width"][:rule_name].to_str ).to eq( "width" )
+    expect( mapping["rfc4267.height"][:rule_name].to_str ).to eq( "height" )
+    expect( mapping["rfc4267.root"][:rule_name].to_str ).to eq( "root" )
+  end
 
 end

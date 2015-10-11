@@ -16,12 +16,19 @@ require 'jcr/parser'
 
 module JCR
 
-  def self.map_rule_names( tree )
+  def self.map_rule_names( tree, override = false, ruleset_alias = nil )
+    prefix = ""
+    if ruleset_alias
+      prefix = ruleset_alias
+      unless prefix.end_with?( "." )
+        prefix = prefix + "."
+      end
+    end
     rule_name_maping = Hash.new
     tree.each do |node|
       if node[:rule]
-        rn = node[:rule][:rule_name].to_str
-        if rule_name_maping[ rn ]
+        rn = prefix + node[:rule][:rule_name].to_str
+        if rule_name_maping[ rn ] && !override
           raise "Rule #{rn} already exists and is defined more than once"
         else
           rule_name_maping[ rn ] = node[:rule]
