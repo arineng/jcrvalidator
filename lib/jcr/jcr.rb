@@ -12,6 +12,10 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 # IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+require 'optparse'
+require 'rubygems'
+require 'json'
+
 require 'jcr/parser'
 require 'jcr/evaluate_rules'
 require 'jcr/check_groups'
@@ -96,6 +100,89 @@ module JCR
     raise "No root rule defined. Specify a root rule name" unless root_rule
 
     return JCR.evaluate_rule( root_rule, root_rule, data, ctx.mapping )
+  end
+
+  def self.main
+
+    options = {}
+
+    opt_parser = OptionParser.new do |opt|
+      opt.banner = "Usage: jcr [OPTIONS] [JSON_FILE]"
+      opt.separator  ""
+      opt.separator  "Evaluates JSON against JSON Content Rules (JCR)."
+      opt.separator  ""
+      opt.separator  "If JSON_FILE is not specified, standard input (STDIN) is used."
+      opt.separator  ""
+      opt.separator  "Use -v to see results, otherwise check the exit code."
+      opt.separator  ""
+      opt.separator  "Options"
+
+      opt.on("-r FILE","file containing ruleset") do |ruleset|
+        if options[:ruleset]
+          puts "A ruleset has already been specified. Use -h for help.", ""
+          return 2
+        end
+        options[:ruleset] = File.open( ruleset )
+      end
+
+      opt.on("-R STRING","string containing ruleset. Should probably be quoted") do |ruleset|
+        if options[:ruleset]
+          puts "A ruleset has already been specified. Use -h for help.", ""
+          return 2
+        end
+        options[:ruleset] = ruleset
+      end
+
+      opt.on("-o FILE","file containing overide ruleset (option can be repeated)") do |ruleset|
+        unless options[:overrides]
+          options[:overrides] = Array.new
+        end
+        options[:overrides] << File.open( ruleset )
+      end
+
+      opt.on("-v","verbose") do |verbose|
+        options[:verbose] = true
+      end
+
+      opt.on("-h","display help") do |help|
+        options[:help] = true
+      end
+    end
+
+    opt_parser.parse!
+
+    if options[:help]
+      puts "HELP","----",""
+      puts opt_parser
+      return 2
+    elsif !options[:ruleset]
+      puts "No ruleset passed! Use -R or -r options.", ""
+      puts opt_parser
+      return 2
+    else
+
+      ctx = Context.new( options[:ruleset] )
+      if options[:overrides]
+        options[:overrides].each do |ov|
+          ctx.override( ov )
+        end
+      end
+      data = JSON.parse( ARGF.read )
+      e = ctx.evaluate( data )
+      if e.success
+        if options[:verbose]
+          puts "Success!"
+        end
+        return 0
+      else
+        if options[:verbose]
+          puts "Failure: #{e.reason}"
+        end
+        return 1
+      end
+
+    end
+
   end
 
 end

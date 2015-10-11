@@ -1,1 +1,1 @@
-require 'jcr/parser'
+require 'jcr/jcr'

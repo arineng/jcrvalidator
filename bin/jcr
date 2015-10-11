@@ -22,8 +22,5 @@ rescue LoadError
   require 'jcr'
 end
 
-rules = File.read( ARGV[0] )
-
-tree = JCR.parse( rules )
-JCR.print_tree( tree )
+JCR.main
 

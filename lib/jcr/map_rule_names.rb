@@ -25,6 +25,9 @@ module JCR
       end
     end
     rule_name_maping = Hash.new
+    if tree.is_a? Hash
+      tree = [ tree ]
+    end
     tree.each do |node|
       if node[:rule]
         rn = prefix + node[:rule][:rule_name].to_str

@@ -92,6 +92,12 @@ EX7
     JCR.check_rule_target_names( tree, mapping )
   end
 
+  it 'should map just a default rule' do
+    tree = JCR.parse( '[ *:integer ]' )
+    mapping = JCR.map_rule_names( tree, true )
+    JCR.check_rule_target_names( tree, mapping )
+  end
+
   it 'should map rule names with prefix' do
     ex7 = <<EX7
 # ruleset-id http://blah.com
