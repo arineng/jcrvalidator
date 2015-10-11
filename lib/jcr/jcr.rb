@@ -47,6 +47,26 @@ module JCR
       #else
       return alias_uri
     end
+
+    def evaluate( data, root_name = nil )
+      JCR.evaluate_ruleset( data, self, root_name )
+    end
+
+    def initialize( ruleset = nil )
+      if ruleset
+        ingested = JCR.ingest_ruleset( ruleset, false, nil )
+        @mapping = ingested.mapping
+        @id = ingested.id
+        @tree = ingested.tree
+        @roots = ingested.roots
+      end
+    end
+
+    def override( ruleset )
+      overridden = JCR.ingest_ruleset( ruleset, true, nil )
+      @mapping.merge!( overridden.mapping )
+      @roots.concat( overridden.roots )
+    end
   end
 
   def self.ingest_ruleset( ruleset, override = false, ruleset_alias=nil )

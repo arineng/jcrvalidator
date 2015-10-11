@@ -18,15 +18,16 @@ require 'jcr/evaluate_rules'
 module JCR
 
   class Root
-    attr_accessor :nameless, :name, :rule
+    attr_accessor :nameless, :name, :rule, :default
 
-    def initialize rule, name = nil, nameless = true
+    def initialize rule, name = nil, nameless = true, default = false
       @rule = rule
       @name = name
       @nameless = nameless
       if name
         @nameless = false
       end
+      @default = default
     end
   end
 
@@ -39,7 +40,7 @@ module JCR
       if node[:rule]
         roots.concat( find_roots_in_named( node ) )
       elsif (top_rule = get_rule_by_type( node ))
-        roots << Root.new( node )
+        roots << Root.new( node, nil, true, true )
         roots.concat( find_roots_in_unnamed( top_rule ) )
       end
     end

@@ -75,4 +75,101 @@ EX
     expect( e.success ).to be_truthy
   end
 
+  it 'should initialize a context and evaluate JSON' do
+    ex = <<EX
+# ruleset-id rfcXXXX
+# jcr-version 0.5
+
+[ 2 my_integers, 2 my_strings ]
+my_integers :0..2
+my_strings ( :"foo" | :"bar" )
+
+EX
+    data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
+    ctx = JCR::Context.new( ex )
+    e = ctx.evaluate( data )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should initialize a context and evaluate two JSONs' do
+    ex = <<EX
+# ruleset-id rfcXXXX
+# jcr-version 0.5
+
+[ 2 my_integers, 2 my_strings ]
+my_integers :0..2
+my_strings ( :"foo" | :"bar" )
+
+EX
+    data1 = JSON.parse( '[ 1, 2, "foo", "bar" ]')
+    data2 = JSON.parse( '[ 2, 1, "bar", "foo" ]')
+    ctx = JCR::Context.new( ex )
+    e = ctx.evaluate( data1 )
+    expect( e.success ).to be_truthy
+    e = ctx.evaluate( data2 )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should initialize a context and evaluate two JSONs and fail a third' do
+    ex = <<EX
+# ruleset-id rfcXXXX
+# jcr-version 0.5
+
+[ 2 my_integers, 2 my_strings ]
+my_integers :0..2
+my_strings ( :"foo" | :"bar" )
+
+EX
+    data1 = JSON.parse( '[ 1, 2, "foo", "bar" ]')
+    data2 = JSON.parse( '[ 2, 1, "bar", "foo" ]')
+    data3 = JSON.parse( '[ 1, 20000, "foo", "bar" ]')
+    ctx = JCR::Context.new( ex )
+    e = ctx.evaluate( data1 )
+    expect( e.success ).to be_truthy
+    e = ctx.evaluate( data2 )
+    expect( e.success ).to be_truthy
+    e = ctx.evaluate( data3 )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass defualt rule referencing two rules with JSON and override' do
+    ex = <<EX
+# ruleset-id rfcXXXX
+# jcr-version 0.5
+
+[ 2 my_integers, 2 my_strings ]
+my_integers :integer
+my_strings ( :"foo" | :"bar" )
+
+EX
+    ov = <<OV
+my_integers :0..2
+OV
+    data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
+    ctx = JCR::Context.new( ex )
+    ctx.override( ov )
+    e = ctx.evaluate( data )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail defualt rule referencing two rules with JSON and override' do
+    ex = <<EX
+# ruleset-id rfcXXXX
+# jcr-version 0.5
+
+[ 2 my_integers, 2 my_strings ]
+my_integers :integer
+my_strings ( :"foo" | :"bar" )
+
+EX
+    ov = <<OV
+my_integers :0..1
+OV
+    data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
+    ctx = JCR::Context.new( ex )
+    ctx.override( ov )
+    e = ctx.evaluate( data )
+    expect( e.success ).to be_falsey
+  end
+
 end
