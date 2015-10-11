@@ -39,7 +39,7 @@ module JCR
       if node[:rule]
         roots.concat( find_roots_in_named( node ) )
       elsif (top_rule = get_rule_by_type( node ))
-        roots << Root.new( top_rule )
+        roots << Root.new( node )
         roots.concat( find_roots_in_unnamed( top_rule ) )
       end
     end
