@@ -22,7 +22,6 @@ describe 'process_directives' do
     ex = <<EX
 # ruleset-id rfcXXXX
 ; a comment
-# import http://example.com as rfcYYYY
 ; another comment
 # jcr-version 0.5
 ; yet another comment
@@ -37,7 +36,6 @@ EX
     ex = <<EX
 # ruleset-id rfcXXXX
 ; a comment
-# import http://example.com as rfcYYYY
 ; another comment
 # jcr-version 0.5
 ; yet another comment
@@ -50,7 +48,6 @@ EX
   it 'should fail to process jcr-version 0.5' do
     ex = <<EX
 # ruleset-id rfcXXXX
-# import http://example.com as rfcYYYY
 # jcr-version 0.4
 EX
     ctx = JCR::Context.new

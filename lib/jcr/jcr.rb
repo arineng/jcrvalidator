@@ -22,12 +22,36 @@ require 'jcr/process_directives'
 module JCR
 
   class Context
-    attr_accessor :mapping, :id, :tree, :roots
+    attr_accessor :mapping, :id, :tree, :roots, :catalog
+
+    def add_ruleset_alias( ruleset_alias, alias_uri )
+      unless @catalog
+        @catalog = Hash.new
+      end
+      @catalog[ ruleset_alias ] = alias_uri
+    end
+
+    def remove_ruleset_alias( ruleset_alias )
+      if @catalog
+        @catalog.delete( ruleset_alias )
+      end
+    end
+
+    def map_ruleset_alias( ruleset_alias, alias_uri )
+      if @catalog
+        a = @catalog[ ruleset_alias ]
+        if a
+          return a
+        end
+      end
+      #else
+      return alias_uri
+    end
   end
 
-  def self.ingest_ruleset( ruleset, ruleset_alias=nil )
+  def self.ingest_ruleset( ruleset, override = false, ruleset_alias=nil )
     tree = JCR.parse( ruleset )
-    mapping = JCR.map_rule_names( tree )
+    mapping = JCR.map_rule_names( tree, override, ruleset_alias )
     JCR.check_rule_target_names( tree, mapping )
     roots = JCR.find_roots( tree )
     ctx = Context.new

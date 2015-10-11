@@ -12,6 +12,9 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 # IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+require 'net/http'
+require 'uri'
+
 require 'jcr/parser'
 require 'jcr/evaluate_rules'
 require 'jcr/map_rule_names'
@@ -33,6 +36,7 @@ module JCR
           when d[:ruleset_id_d]
             process_ruleset_id( d[:ruleset_id_d], ctx )
           when d[:import_d]
+            process_import( d[:import_d], ctx )
           when d[:jcr_version_d]
             process_jcrversion( d[:jcr_version_d], ctx )
         end
@@ -53,6 +57,27 @@ module JCR
     if minor != 5
       raise "jcr version #{major}.#{minor} is incompatible with 0.5"
     end
+  end
+
+  def self.process_import( directive, ctx )
+
+    ruleset_id    = directive[:ruleset_id].to_str
+    ruleset_alias = directive[:ruleset_id_alias].to_str
+    u = ctx.map_ruleset_alias( ruleset_alias, ruleset_id )
+    uri = URI.parse( u )
+    ruleset = nil
+    case uri.scheme
+      when "http","https"
+        response = Net::HTTP.get_response uri
+        ruleset = response.body
+      else
+        ruleset = File.open( uri.path )
+    end
+
+    import_ctx = JCR.ingest_ruleset( ruleset, false, ruleset_alias )
+    ctx.mapping.merge!( import_ctx.mapping )
+    ctx.roots.concat( import_ctx.roots )
+
   end
 
 end
