@@ -86,8 +86,7 @@ my_strings ( :"foo" | :"bar" )
 
 EX
     data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
-    ctx = JCR::Context.new( ex )
-    e = ctx.evaluate( data )
+    e = JCR::Context.new( ex ).evaluate( data )
     expect( e.success ).to be_truthy
   end
 
