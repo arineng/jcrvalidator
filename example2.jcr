@@ -1,5 +1,4 @@
 # ruleset-id file://blahbalh ; a collection of rules
-# pedantic
 
 rule1 : integer
 rule2 : float

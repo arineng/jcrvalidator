@@ -122,7 +122,7 @@ module JCR
           puts "A ruleset has already been specified. Use -h for help.", ""
           return 2
         end
-        options[:ruleset] = File.open( ruleset )
+        options[:ruleset] = File.open( ruleset ).read
       end
 
       opt.on("-R STRING","string containing ruleset. Should probably be quoted") do |ruleset|

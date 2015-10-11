@@ -1,19 +1,8 @@
-# import file://blahbalh ; a collection of rules
-# pedantic
-trule [ ;comment 1
-  1*2 my_rule1, ;comment 2
-  ( my_rule2, my_rule3 ) ;comment 3
-] ;comment 4
+# jcr-version 0.5
+# ruleset-id example1
 
-trule2( my_rule1 , [ : integer, { my_rule2 } ], ( my_rule3, my_rule4 ) )
+[ 2 my_integers, 2 my_strings ]
 
-width "width" : 0..1280
-height "height" : 0..1024
+my_integers : 0..5
+my_strings ( :"foo" | :"bar" )
 
-root {
-    "Image" {
-        width, height, "Title" :string,
-        "thumbnail" { width, height, "Url" :uri },
-        "IDs" [ *:integer ]
-    }
-}
