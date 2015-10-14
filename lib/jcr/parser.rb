@@ -77,7 +77,7 @@ module JCR
     rule(:reject_annotation) { str('reject').as(:reject_annotation) }
     rule(:unordered_annotation) { str('unordered').as(:unordered_annotation) }
     rule(:root_annotation) { str('root').as(:root_annotation) }
-    rule(:tbd_annotation) { name.as(:directive_name) >> ( spaces >> match('[^)]').as(:directive_parameters) ).maybe }
+    rule(:tbd_annotation) { name.as(:annotation_name) >> ( spaces >> match('[^)]').as(:annotation_parameters) ).maybe }
     rule(:annotation_set) { reject_annotation | unordered_annotation | root_annotation | tbd_annotation }
     rule(:annotations) { spcCmnt? >> ( str('@(') >> spcCmnt? >> annotation_set >> spcCmnt? >> str(')') >> spcCmnt? ).repeat }
 
@@ -136,8 +136,9 @@ module JCR
     rule(:ruleset_id) { match('[a-zA-Z]') >> match('[\S]').repeat }
     rule(:ruleset_id_d) { (str('ruleset-id') >> spaces >> ruleset_id.as(:ruleset_id)).as(:ruleset_id_d) }
     rule(:import_d) { (str('import') >> spaces >> ruleset_id.as(:ruleset_id) >> ( spaces >> str('as') >> spaces >> ruleset_id_alias ).maybe).as(:import_d) }
-    rule(:directive_def) { jcr_version_d | ruleset_id_d | import_d }
-    rule(:directive) { ( str('#') >> spaces? >> directive_def >> match('[^\r\n]').repeat >> match('[\r\n]') ).as(:directive) }
+    rule(:tbd_directive_d) { name.as(:directive_name) >> ( spaces >> match('[^\r\n]').repeat.as(:directive_parameters) ).maybe }
+    rule(:directive_def) { jcr_version_d | ruleset_id_d | import_d | tbd_directive_d }
+    rule(:directive) { ( str('#') >> spaces? >> directive_def >> match('[\r\n]') ).as(:directive) }
     rule(:top) { ( spcCmnt | directive ).repeat >> root_rule.maybe >> ( spcCmnt | directive | rule ).repeat }
 
     root(:top)
