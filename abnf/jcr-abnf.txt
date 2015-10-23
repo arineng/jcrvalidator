@@ -1,0 +1,214 @@
+jcr              = *( sp-cmt / directive ) [ root-rule ]
+                   *( sp-cmt / directive / rule )
+
+sp-cmt           = spaces / comment
+spaces           = 1*( WSP / CR / LF )
+comment          = ";" *( "\;" / comment-char ) comment-end-char
+comment-char     = HTAB / %x20-3A / %x3C-10FFFF
+                   ; Any char other than ";" / CR / LF
+comment-end-char = CR / LF / ";"
+
+directive        = "#" [ spaces ] directive-def eol
+directive-def    = jcr-version-d / ruleset-id-d / import-d /
+                   tbd-directive-d
+jcr-version-d    = jcr-version-kw spaces major-version "." minor-version
+major-version    = integer
+minor-version    = integer
+ruleset-id-d     = ruleset-id-kw spaces ruleset-id
+import-d         = import-kw spaces ruleset-id
+                   [ spaces as-kw ruleset-id-alias ]
+ruleset-id       = ALPHA *not-space
+not-space        = %x21-10FFFF
+ruleset-id-alias = name
+tbd-directive-d  = directive-name [ spaces directive-parameters ]
+directive-name   = name
+directive-parameters = not-eol
+not-eol          = HTAB / %x20-10FFFF
+eol              = CR / LF
+
+root-rule        = value-rule / array-rule / object-rule /
+                   member-rule / group-rule
+
+rule             = rule-name *sp-cmt rule-def
+
+rule-name        = name
+target-rule-name = [ ruleset-id-alias "." ] rule-name
+name             = ALPHA *( ALPHA / DIGIT / "-" / "-" )
+
+rule-def         = type-rule / member-rule / group-rule
+type-rule        = value-rule / array-rule / object-rule /
+                   target-rule-name
+member-rule      = annotations
+                   member-name-spec *sp-cmt (type-rule / type-choice)
+member-name-spec = regex / q-string
+type-choice      = "(" type-choice-items 
+                   *( choice-combiner type-choice-items ) ")"
+type-choice-items = *sp-cmt ( type-choice / type-rule ) *sp-cmt
+
+annotations      = *( "@(" *sp-cmt annotation-set *sp-cmt ")" *sp-cmt )
+annotation-set   = reject-annotation / unordered-annotation /
+                   root-annotation / tbd-annotation
+reject-annotation = reject-kw
+unordered-annotation = unordered-kw
+root-annotation  = root-kw
+tbd-annotation   = annotation-name [ spaces annotation-parameters ]
+annotation-name  = name
+annotation-parameters = *( spaces / %x21-28 / %x2A-10FFFF )
+                   ; Not close bracket - ")"
+
+value-rule       = annotations ":" *sp-cmt ( value-choice / value-def )
+value-choice     = annotations 
+                   "(" *sp-cmt value-choice-items *sp-cmt ")"
+value-choice-items = value-choice-item
+                   *( choice-combiner value-choice-item )
+value-choice-item = ":" *sp-cmt
+                   value-def / value-choice / target-rule-name
+
+value-def        = null-type / boolean-type / true-value / false-value /
+                   string-type / string-range / string-value / 
+                   float-type / float-range / float-value /
+                   integer-type / integer-range / integer-value / 
+                   ip4-type / ip6-type / fqdn-type / idn-type /
+                   uri-type / uri-range / phone-type / email-type / 
+                   full-date-type / full-time-type / date-time-type /
+                   base64-type / any
+null-type        = null-kw
+boolean-type     = boolean-kw
+true-value       = true-kw
+false-value      = false-kw
+string-type      = string-kw
+string-value     = q-string
+string-range     = regex
+float-type       = float-kw
+float-range      = float-min ".." [ float-max ] / ".." float-max
+float-min        = float
+float-max        = float
+float-value      = float
+integer-type     = integer-kw
+integer-range    = integer-min ".." [ integer-max ] / ".." integer-max
+integer-min      = integer
+integer-max      = integer
+integer-value    = integer
+ip4-type         = ip4-kw
+ip6-type         = ip6-kw
+fqdn-type        = fqdn-kw
+idn-type         = idn-kw
+uri-type         = uri-kw
+uri-range        = uri-template
+phone-type       = phone-kw
+email-type       = email-kw
+full-date-type   = full-date-kw
+full-time-type   = full-time-kw
+date-time-type   = date-time-kw
+base64-type      = base64-kw
+any              = any-kw
+
+object-rule      = annotations "{" *sp-cmt [ object-items *sp-cmt ] "}"
+object-items     = object-item *( sequence-or-choice object-item )
+object-item      = [ repetition *sp-cmt ] object-item-types
+object-item-types = member-rule / target-rule-name / object-group
+object-group     = "(" *sp-cmt [ object-items *sp-cmt ] ")"
+
+array-rule       = annotations "[" *sp-cmt [ array-items *sp-cmt ] "]"
+array-items      = array-item *( sequence-or-choice array-item )
+array-item       = [ repetition ] *sp-cmt array-item-types
+array-item-types = type-rule / array-group
+array-group      = "(" *sp-cmt [ array-items *sp-cmt ] ")"
+
+group-rule       = annotations "(" *sp-cmt [ group-items *sp-cmt ] ")"
+group-items      = group-item *( sequence-or-choice group-item )
+group-item       = [ repetition ] *sp-cmt group-item-types
+group-item-types = type-rule / member-rule / group-group
+group-group      = group-rule
+
+sequence-or-choice = sequence-combiner / choice-combiner
+sequence-combiner = *sp-cmt "," *sp-cmt
+choice-combiner  = *sp-cmt "|" *sp-cmt
+
+repetition       = optional / one-or-more / min-max-repetition /
+                   min-repetition / max-repetition /
+                   zero-or-more / specific-repetition
+optional         = "?"
+one-or-more      = "+"
+zero-or-more     = "*"
+min-max-repetition = min-repeat *sp-cmt "*" *sp-cmt max-repeat
+min-repetition   = min-repeat *sp-cmt "*"
+max-repetition   = "*" *sp-cmt max-repeat
+min-repeat       = p-integer
+max-repeat       = p-integer
+specific-repetition = p-integer
+
+integer          = ["-"] 1*DIGIT
+p-integer        = 1*DIGIT
+
+float            = [ minus ] int frac [ exp ]
+                   ; From RFC 7159 except 'frac' required
+minus            = %x2D                          ; -
+plus             = %x2B                          ; +
+int              = zero / ( digit1-9 *DIGIT )
+digit1-9         = %x31-39                       ; 1-9
+frac             = decimal-point 1*DIGIT
+decimal-point    = %x2E                          ; .
+exp              = e [ minus / plus ] 1*DIGIT
+e                = %x65 / %x45                   ; e E
+zero             = %x30                          ; 0
+
+q-string         = quotation-mark *char quotation-mark 
+                   ; From RFC 7159
+char             = unescaped /
+                   escape (
+                   %x22 /          ; "    quotation mark  U+0022
+                   %x5C /          ; \    reverse solidus U+005C
+                   %x2F /          ; /    solidus         U+002F
+                   %x62 /          ; b    backspace       U+0008
+                   %x66 /          ; f    form feed       U+000C
+                   %x6E /          ; n    line feed       U+000A
+                   %x72 /          ; r    carriage return U+000D
+                   %x74 /          ; t    tab             U+0009
+                   %x75 4HEXDIG )  ; uXXXX                U+XXXX
+escape           = %x5C              ; \
+quotation-mark   = %x22      ; "
+unescaped        = %x20-21 / %x23-5B / %x5D-10FFFF
+
+regex            = "/" *( escape "/" / not-slash ) "/"
+not-slash        = HTAB / CR / LF / %x20-2E / %x30-10FFFF
+                   ; Any char except ";"
+uri-template     = 1*ALPHA ":" not-space
+
+;; Keywords
+any-kw           = %x61.6E.79                      ; "any"
+as-kw            = %x61.73                         ; "as"
+base64-kw        = %x62.61.73.65.36.34             ; "base64"
+boolean-kw       = %x62.6F.6F.6C.65.61.6E          ; "boolean"
+date-time-kw     = %x64.61.74.65.2D.74.69.6D.65    ; "date-time"
+email-kw         = %x65.6D.61.69.6C                ; "email"
+false-kw         = %x66.61.6C.73.65                ; "false"
+float-kw         = %x66.6C.6F.61.74                ; "float"
+fqdn-kw          = %x66.71.64.6E                   ; "fqdn"
+full-date-kw     = %x66.75.6C.6C.2D.64.61.74.65    ; "full-date"
+full-time-kw     = %x66.75.6C.6C.2D.74.69.6D.65    ; "full-time"
+idn-kw           = %x69.64.6E                      ; "idn"
+import-kw        = %x69.6D.70.6F.72.74             ; "import"
+integer-kw       = %x69.6E.74.65.67.65.72          ; "integer"
+ip4-kw           = %x69.70.34                      ; "ip4"
+ip6-kw           = %x69.70.36                      ; "ip6"
+jcr-version-kw   = %x6A.63.72.2D.76.65.72.73.69.6F.6E ; "jcr-version"
+null-kw          = %x6E.75.6C.6C                   ; "null"
+phone-kw         = %x70.68.6F.6E.65                ; "phone"
+reject-kw        = %x72.65.6A.65.63.74             ; "reject"
+root-kw          = %x72.6F.6F.74                   ; "root"
+ruleset-id-kw    = %x72.75.6C.65.73.65.74.2D.69.64 ; "ruleset-id"
+string-kw        = %x73.74.72.69.6E.67             ; "string"
+true-kw          = %x74.72.75.65                   ; "true"
+unordered-kw     = %x75.6E.6F.72.64.65.72.65.64    ; "unordered"
+uri-kw           = %x75.72.69                      ; "uri"
+
+;; Referenced RFC 5234 Core Rules
+ALPHA            = %x41-5A / %x61-7A   ; A-Z / a-z
+CR               = %x0D         ; carriage return
+DIGIT            = %x30-39      ; 0-9
+HEXDIG           = DIGIT / "A" / "B" / "C" / "D" / "E" / "F"
+HTAB             = %x09         ; horizontal tab
+LF               = %x0A         ; linefeed
+SP               = %x20         ; space
+WSP              = SP / HTAB    ; white space
