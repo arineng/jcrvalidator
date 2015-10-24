@@ -26,7 +26,7 @@ directive-parameters = not-eol
 not-eol          = HTAB / %x20-10FFFF
 eol              = CR / LF
 
-root-rule        = value-rule / array-rule / object-rule /
+root-rule        = primitive-rule / array-rule / object-rule /
                    member-rule / group-rule
 
 rule             = rule-name *sp-cmt rule-def
@@ -36,8 +36,8 @@ target-rule-name = [ ruleset-id-alias "." ] rule-name
 name             = ALPHA *( ALPHA / DIGIT / "-" / "-" )
 
 rule-def         = type-rule / member-rule / group-rule
-type-rule        = value-rule / array-rule / object-rule /
-                   target-rule-name
+type-rule        = value-rule / target-rule-name
+value-rule       = primitive-rule / array-rule / object-rule
 member-rule      = annotations
                    member-name-spec *sp-cmt (type-rule / type-choice)
 member-name-spec = regex / q-string
@@ -56,15 +56,16 @@ annotation-name  = name
 annotation-parameters = *( spaces / %x21-28 / %x2A-10FFFF )
                    ; Not close bracket - ")"
 
-value-rule       = annotations ":" *sp-cmt ( value-choice / value-def )
-value-choice     = annotations 
-                   "(" *sp-cmt value-choice-items *sp-cmt ")"
-value-choice-items = value-choice-item
-                   *( choice-combiner value-choice-item )
-value-choice-item = ":" *sp-cmt
-                   value-def / value-choice / target-rule-name
+primitive-rule   = annotations ":" *sp-cmt
+                   ( primimitive-choice / primimitive-def )
+primimitive-choice = annotations 
+                   "(" *sp-cmt prim-choice-items *sp-cmt ")"
+prim-choice-items = prim-choice-item
+                   *( choice-combiner prim-choice-item )
+prim-choice-item = ":" *sp-cmt primimitive-def /
+                   primimitive-choice / target-rule-name
 
-value-def        = null-type / boolean-type / true-value / false-value /
+primimitive-def  = null-type / boolean-type / true-value / false-value /
                    string-type / string-range / string-value / 
                    float-type / float-range / float-value /
                    integer-type / integer-range / integer-value / 
@@ -103,13 +104,13 @@ date-time-type   = date-time-kw
 base64-type      = base64-kw
 any              = any-kw
 
-object-rule      = annotations "{" *sp-cmt [ object-items *sp-cmt ] "}"
+object-rule      = annotations [ ":" *sp-cmt ] "{" *sp-cmt [ object-items *sp-cmt ] "}"
 object-items     = object-item *( sequence-or-choice object-item )
 object-item      = [ repetition *sp-cmt ] object-item-types
 object-item-types = member-rule / target-rule-name / object-group
 object-group     = "(" *sp-cmt [ object-items *sp-cmt ] ")"
 
-array-rule       = annotations "[" *sp-cmt [ array-items *sp-cmt ] "]"
+array-rule       = annotations [ ":" *sp-cmt ] "[" *sp-cmt [ array-items *sp-cmt ] "]"
 array-items      = array-item *( sequence-or-choice array-item )
 array-item       = [ repetition ] *sp-cmt array-item-types
 array-item-types = type-rule / array-group
@@ -172,7 +173,7 @@ unescaped        = %x20-21 / %x23-5B / %x5D-10FFFF
 
 regex            = "/" *( escape "/" / not-slash ) "/"
 not-slash        = HTAB / CR / LF / %x20-2E / %x30-10FFFF
-                   ; Any char except ";"
+                   ; Any char except "/"
 uri-template     = 1*ALPHA ":" not-space
 
 ;; Keywords

@@ -24,7 +24,7 @@ describe 'parser' do
     begin
       tree = JCR.parse( 'trule : ip4' )
         expect(tree[0][:rule][:rule_name]).to eq("trule")
-        expect(tree[0][:rule][:value_rule][:ip4]).to eq("ip4")
+        expect(tree[0][:rule][:primitive_rule][:ip4]).to eq("ip4")
       rescue Parslet::ParseFailed => failure
 
         puts failure.cause.ascii_tree
@@ -35,178 +35,178 @@ describe 'parser' do
   it 'should parse an ip4 value defintion 1' do
     tree = JCR.parse( 'trule : ip4' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
-    expect(tree[0][:rule][:value_rule][:ip4]).to eq("ip4")
+    expect(tree[0][:rule][:primitive_rule][:ip4]).to eq("ip4")
   end
 
   it 'should parse an ip4 value defintion 2' do
     tree = JCR.parse( 'trule :ip4' )
-    expect(tree[0][:rule][:value_rule][:ip4]).to eq("ip4")
+    expect(tree[0][:rule][:primitive_rule][:ip4]).to eq("ip4")
   end
 
   it 'should parse an ip4 value defintion 3' do
     tree = JCR.parse( 'trule : ip4 ' )
-    expect(tree[0][:rule][:value_rule][:ip4]).to eq("ip4")
+    expect(tree[0][:rule][:primitive_rule][:ip4]).to eq("ip4")
   end
 
   it 'should parse an ip6 value defintion 1' do
     tree = JCR.parse( 'trule : ip6' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
-    expect(tree[0][:rule][:value_rule][:ip6]).to eq("ip6")
+    expect(tree[0][:rule][:primitive_rule][:ip6]).to eq("ip6")
   end
   it 'should parse an ip6 value defintion 2' do
     tree = JCR.parse( 'trule :ip6' )
-    expect(tree[0][:rule][:value_rule][:ip6]).to eq("ip6")
+    expect(tree[0][:rule][:primitive_rule][:ip6]).to eq("ip6")
   end
   it 'should parse an ip6 value defintion 3' do
     tree = JCR.parse( 'trule : ip6 ' )
-    expect(tree[0][:rule][:value_rule][:ip6]).to eq("ip6")
+    expect(tree[0][:rule][:primitive_rule][:ip6]).to eq("ip6")
   end
 
   it 'should parse a string constant' do
     tree = JCR.parse( 'trule : "a string constant"' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
-    expect(tree[0][:rule][:value_rule][:q_string]).to eq("a string constant")
+    expect(tree[0][:rule][:primitive_rule][:q_string]).to eq("a string constant")
   end
 
   it 'should parse a string' do
     tree = JCR.parse( 'trule : string' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
-    expect(tree[0][:rule][:value_rule][:string]).to eq("string")
+    expect(tree[0][:rule][:primitive_rule][:string]).to eq("string")
   end
 
   it 'should parse a regex 1' do
     tree = JCR.parse( 'trule : /a.regex.goes.here.*/' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
-    expect(tree[0][:rule][:value_rule][:regex]).to eq("a.regex.goes.here.*")
+    expect(tree[0][:rule][:primitive_rule][:regex]).to eq("a.regex.goes.here.*")
   end
   it 'should parse a regex 2' do
     tree = JCR.parse( 'trule : /a.regex\\.goes.here.*/' )
-    expect(tree[0][:rule][:value_rule][:regex]).to eq("a.regex\\.goes.here.*")
+    expect(tree[0][:rule][:primitive_rule][:regex]).to eq("a.regex\\.goes.here.*")
   end
 
   it 'should parse a uri' do
     tree = JCR.parse( 'trule : uri' )
-    expect(tree[0][:rule][:value_rule][:uri]).to eq("uri")
+    expect(tree[0][:rule][:primitive_rule][:uri]).to eq("uri")
   end
 
   it 'should parse a uri template' do
     tree = JCR.parse( 'trule : {scheme}://example.com/{path}' )
-    expect(tree[0][:rule][:value_rule][:uri_template]).to eq("{scheme}://example.com/{path}")
+    expect(tree[0][:rule][:primitive_rule][:uri_template]).to eq("{scheme}://example.com/{path}")
   end
 
   it 'should parse a uri template 2' do
     tree = JCR.parse( 'trule : http://example.com/{path}' )
-    expect(tree[0][:rule][:value_rule][:uri_template]).to eq("http://example.com/{path}")
+    expect(tree[0][:rule][:primitive_rule][:uri_template]).to eq("http://example.com/{path}")
   end
 
   it 'should parse an any' do
     tree = JCR.parse( 'trule : any' )
-    expect(tree[0][:rule][:value_rule][:any]).to eq("any")
+    expect(tree[0][:rule][:primitive_rule][:any]).to eq("any")
   end
 
   it 'should parse true' do
     tree = JCR.parse( 'trule : true' )
-    expect(tree[0][:rule][:value_rule][:true_v]).to eq("true")
+    expect(tree[0][:rule][:primitive_rule][:true_v]).to eq("true")
   end
 
   it 'should parse false' do
     tree = JCR.parse( 'trule : false' )
-    expect(tree[0][:rule][:value_rule][:false_v]).to eq("false")
+    expect(tree[0][:rule][:primitive_rule][:false_v]).to eq("false")
   end
 
   it 'should parse boolean' do
     tree = JCR.parse( 'trule : boolean' )
-    expect(tree[0][:rule][:value_rule][:boolean_v]).to eq("boolean")
+    expect(tree[0][:rule][:primitive_rule][:boolean_v]).to eq("boolean")
   end
 
   it 'should parse null' do
     tree = JCR.parse( 'trule : null' )
-    expect(tree[0][:rule][:value_rule][:null]).to eq("null")
+    expect(tree[0][:rule][:primitive_rule][:null]).to eq("null")
   end
 
   it 'should parse a integer value without a range' do
     tree = JCR.parse( 'trule : integer' )
-    expect(tree[0][:rule][:value_rule][:integer_v]).to eq("integer")
+    expect(tree[0][:rule][:primitive_rule][:integer_v]).to eq("integer")
   end
 
   it 'should parse a integer constant' do
     tree = JCR.parse( 'trule : 2' )
-    expect(tree[0][:rule][:value_rule][:integer]).to eq("2")
+    expect(tree[0][:rule][:primitive_rule][:integer]).to eq("2")
   end
 
   it 'should parse a negative integer constant' do
     tree = JCR.parse( 'trule : -2' )
-    expect(tree[0][:rule][:value_rule][:integer]).to eq("-2")
+    expect(tree[0][:rule][:primitive_rule][:integer]).to eq("-2")
   end
 
   it 'should parse an integer full range' do
     tree = JCR.parse( 'trule : 0..100' )
-    expect(tree[0][:rule][:value_rule][:integer_min]).to eq("0")
-    expect(tree[0][:rule][:value_rule][:integer_max]).to eq("100")
+    expect(tree[0][:rule][:primitive_rule][:integer_min]).to eq("0")
+    expect(tree[0][:rule][:primitive_rule][:integer_max]).to eq("100")
   end
 
   it 'should parse a negative integer range to positive integer' do
     tree = JCR.parse( 'trule : -1..100' )
-    expect(tree[0][:rule][:value_rule][:integer_min]).to eq("-1")
-    expect(tree[0][:rule][:value_rule][:integer_max]).to eq("100")
+    expect(tree[0][:rule][:primitive_rule][:integer_min]).to eq("-1")
+    expect(tree[0][:rule][:primitive_rule][:integer_max]).to eq("100")
   end
 
   it 'should parse a negative integer full range' do
     tree = JCR.parse( 'trule : -100..-1' )
-    expect(tree[0][:rule][:value_rule][:integer_min]).to eq("-100")
-    expect(tree[0][:rule][:value_rule][:integer_max]).to eq("-1")
+    expect(tree[0][:rule][:primitive_rule][:integer_min]).to eq("-100")
+    expect(tree[0][:rule][:primitive_rule][:integer_max]).to eq("-1")
   end
 
   it 'should parse an integer range with a min range' do
     tree = JCR.parse( 'trule : 0..' )
-    expect(tree[0][:rule][:value_rule][:integer_min]).to eq("0")
+    expect(tree[0][:rule][:primitive_rule][:integer_min]).to eq("0")
   end
 
   it 'should parse an integer rangge with a max range' do
     tree = JCR.parse( 'trule : ..100' )
-    expect(tree[0][:rule][:value_rule][:integer_max]).to eq("100")
+    expect(tree[0][:rule][:primitive_rule][:integer_max]).to eq("100")
   end
 
   it 'should parse a negative integer range with a max range' do
     tree = JCR.parse( 'trule : ..-100' )
-    expect(tree[0][:rule][:value_rule][:integer_max]).to eq("-100")
+    expect(tree[0][:rule][:primitive_rule][:integer_max]).to eq("-100")
   end
 
   it 'should parse a float value' do
     tree = JCR.parse( 'trule : float' )
-    expect(tree[0][:rule][:value_rule][:float_v]).to eq("float")
+    expect(tree[0][:rule][:primitive_rule][:float_v]).to eq("float")
   end
 
   it 'should parse a float constant' do
     tree = JCR.parse( 'trule : 2.0' )
-    expect(tree[0][:rule][:value_rule][:float]).to eq("2.0")
+    expect(tree[0][:rule][:primitive_rule][:float]).to eq("2.0")
   end
 
   it 'should parse a negative float constant' do
     tree = JCR.parse( 'trule : -2.0' )
-    expect(tree[0][:rule][:value_rule][:float]).to eq("-2.0")
+    expect(tree[0][:rule][:primitive_rule][:float]).to eq("-2.0")
   end
 
   it 'should parse a float range with a full range' do
     tree = JCR.parse( 'trule : 0.0..100.0' )
-    expect(tree[0][:rule][:value_rule][:float_min]).to eq("0.0")
-    expect(tree[0][:rule][:value_rule][:float_max]).to eq("100.0")
+    expect(tree[0][:rule][:primitive_rule][:float_min]).to eq("0.0")
+    expect(tree[0][:rule][:primitive_rule][:float_max]).to eq("100.0")
   end
 
   it 'should parse a negative float range with a full range' do
     tree = JCR.parse( 'trule : -100.0..-1.0' )
-    expect(tree[0][:rule][:value_rule][:float_min]).to eq("-100.0")
-    expect(tree[0][:rule][:value_rule][:float_max]).to eq("-1.0")
+    expect(tree[0][:rule][:primitive_rule][:float_min]).to eq("-100.0")
+    expect(tree[0][:rule][:primitive_rule][:float_max]).to eq("-1.0")
   end
 
   it 'should parse a float range with a min range' do
     tree = JCR.parse( 'trule : 0.3939..' )
-    expect(tree[0][:rule][:value_rule][:float_min]).to eq("0.3939")
+    expect(tree[0][:rule][:primitive_rule][:float_min]).to eq("0.3939")
   end
 
   it 'should parse a float range with a max range' do
     tree = JCR.parse( 'trule : ..100.003' )
-    expect(tree[0][:rule][:value_rule][:float_max]).to eq("100.003")
+    expect(tree[0][:rule][:primitive_rule][:float_max]).to eq("100.003")
   end
 
   it 'should parse an value with group 1' do
@@ -215,34 +215,34 @@ describe 'parser' do
     rescue Parslet::ParseFailed => failure
       puts failure.cause.ascii_tree
     end
-    expect(tree[0][:rule][:value_rule][:group_rule][0][:value_rule][:float]).to eq("1.0")
-    expect(tree[0][:rule][:value_rule][:group_rule][1][:value_rule][:integer]).to eq("2")
-    expect(tree[0][:rule][:value_rule][:group_rule][2][:value_rule][:true_v]).to eq("true")
-    expect(tree[0][:rule][:value_rule][:group_rule][3][:value_rule][:q_string]).to eq("yes")
-    expect(tree[0][:rule][:value_rule][:group_rule][4][:value_rule][:q_string]).to eq("Y")
+    expect(tree[0][:rule][:primitive_rule][:group_rule][0][:primitive_rule][:float]).to eq("1.0")
+    expect(tree[0][:rule][:primitive_rule][:group_rule][1][:primitive_rule][:integer]).to eq("2")
+    expect(tree[0][:rule][:primitive_rule][:group_rule][2][:primitive_rule][:true_v]).to eq("true")
+    expect(tree[0][:rule][:primitive_rule][:group_rule][3][:primitive_rule][:q_string]).to eq("yes")
+    expect(tree[0][:rule][:primitive_rule][:group_rule][4][:primitive_rule][:q_string]).to eq("Y")
   end
 
   it 'should parse a value with group 2' do
     tree = JCR.parse( 'trule : ( :"no" | :false | :1.0 | :2 | :true | :"yes" | :"Y" )' )
-    expect(tree[0][:rule][:value_rule][:group_rule][0][:value_rule][:q_string]).to eq("no")
-    expect(tree[0][:rule][:value_rule][:group_rule][1][:value_rule][:false_v]).to eq("false")
-    expect(tree[0][:rule][:value_rule][:group_rule][2][:value_rule][:float]).to eq("1.0")
-    expect(tree[0][:rule][:value_rule][:group_rule][3][:value_rule][:integer]).to eq("2")
-    expect(tree[0][:rule][:value_rule][:group_rule][4][:value_rule][:true_v]).to eq("true")
-    expect(tree[0][:rule][:value_rule][:group_rule][5][:value_rule][:q_string]).to eq("yes")
-    expect(tree[0][:rule][:value_rule][:group_rule][6][:value_rule][:q_string]).to eq("Y")
+    expect(tree[0][:rule][:primitive_rule][:group_rule][0][:primitive_rule][:q_string]).to eq("no")
+    expect(tree[0][:rule][:primitive_rule][:group_rule][1][:primitive_rule][:false_v]).to eq("false")
+    expect(tree[0][:rule][:primitive_rule][:group_rule][2][:primitive_rule][:float]).to eq("1.0")
+    expect(tree[0][:rule][:primitive_rule][:group_rule][3][:primitive_rule][:integer]).to eq("2")
+    expect(tree[0][:rule][:primitive_rule][:group_rule][4][:primitive_rule][:true_v]).to eq("true")
+    expect(tree[0][:rule][:primitive_rule][:group_rule][5][:primitive_rule][:q_string]).to eq("yes")
+    expect(tree[0][:rule][:primitive_rule][:group_rule][6][:primitive_rule][:q_string]).to eq("Y")
   end
 
   it 'should parse a value with group 3' do
     tree = JCR.parse( 'trule : ( :null | :"no" | :false | :1.0 | :2 | :true | :"yes" | :"Y" )' )
-    expect(tree[0][:rule][:value_rule][:group_rule][0][:value_rule][:null]).to eq("null")
-    expect(tree[0][:rule][:value_rule][:group_rule][1][:value_rule][:q_string]).to eq("no")
-    expect(tree[0][:rule][:value_rule][:group_rule][2][:value_rule][:false_v]).to eq("false")
-    expect(tree[0][:rule][:value_rule][:group_rule][3][:value_rule][:float]).to eq("1.0")
-    expect(tree[0][:rule][:value_rule][:group_rule][4][:value_rule][:integer]).to eq("2")
-    expect(tree[0][:rule][:value_rule][:group_rule][5][:value_rule][:true_v]).to eq("true")
-    expect(tree[0][:rule][:value_rule][:group_rule][6][:value_rule][:q_string]).to eq("yes")
-    expect(tree[0][:rule][:value_rule][:group_rule][7][:value_rule][:q_string]).to eq("Y")
+    expect(tree[0][:rule][:primitive_rule][:group_rule][0][:primitive_rule][:null]).to eq("null")
+    expect(tree[0][:rule][:primitive_rule][:group_rule][1][:primitive_rule][:q_string]).to eq("no")
+    expect(tree[0][:rule][:primitive_rule][:group_rule][2][:primitive_rule][:false_v]).to eq("false")
+    expect(tree[0][:rule][:primitive_rule][:group_rule][3][:primitive_rule][:float]).to eq("1.0")
+    expect(tree[0][:rule][:primitive_rule][:group_rule][4][:primitive_rule][:integer]).to eq("2")
+    expect(tree[0][:rule][:primitive_rule][:group_rule][5][:primitive_rule][:true_v]).to eq("true")
+    expect(tree[0][:rule][:primitive_rule][:group_rule][6][:primitive_rule][:q_string]).to eq("yes")
+    expect(tree[0][:rule][:primitive_rule][:group_rule][7][:primitive_rule][:q_string]).to eq("Y")
   end
 
   it 'should parse two rules' do
@@ -254,13 +254,13 @@ describe 'parser' do
   it 'should parse a member rule with float range with a max range 3' do
     tree = JCR.parse( 'trule "thing" : ..100.003' )
     expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("thing")
-    expect(tree[0][:rule][:member_rule][:value_rule][:float_max]).to eq("100.003")
+    expect(tree[0][:rule][:member_rule][:primitive_rule][:float_max]).to eq("100.003")
   end
 
   it 'should parse a member rule with integer value' do
     tree = JCR.parse( 'trule "thing" : integer' )
     expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("thing")
-    expect(tree[0][:rule][:member_rule][:value_rule][:integer_v]).to eq("integer")
+    expect(tree[0][:rule][:member_rule][:primitive_rule][:integer_v]).to eq("integer")
   end
 
   it 'should not parse a repetition member string rule with integer value' do
@@ -270,25 +270,31 @@ describe 'parser' do
   it 'should parse an any member rule with integer value' do
     tree = JCR.parse( 'trule /.*/ : integer' )
     expect(tree[0][:rule][:member_rule][:member_regex][:regex]).to eq(".*")
-    expect(tree[0][:rule][:member_rule][:value_rule][:integer_v]).to eq("integer")
+    expect(tree[0][:rule][:member_rule][:primitive_rule][:integer_v]).to eq("integer")
+  end
+
+  it 'should parse an any member rule of //' do
+    tree = JCR.parse( 'trule // : integer' )
+    expect(tree[0][:rule][:member_rule][:member_regex][:regex]).to eq([])
+    expect(tree[0][:rule][:member_rule][:primitive_rule][:integer_v]).to eq("integer")
   end
 
   it 'should parse an regex member rule with string value' do
     tree = JCR.parse( 'trule /a.regex\\.goes.here.*/ : string' )
     expect(tree[0][:rule][:member_rule][:member_regex][:regex]).to eq("a.regex\\.goes.here.*")
-    expect(tree[0][:rule][:member_rule][:value_rule][:string]).to eq("string")
+    expect(tree[0][:rule][:member_rule][:primitive_rule][:string]).to eq("string")
   end
 
   it 'should parse a member rule with an email value 2' do
     tree = JCR.parse( 'trule "thing" : email' )
     expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("thing")
-    expect(tree[0][:rule][:member_rule][:value_rule][:email]).to eq("email")
+    expect(tree[0][:rule][:member_rule][:primitive_rule][:email]).to eq("email")
   end
 
   it 'should parse a member rule with integer range with a max range 1' do
     tree = JCR.parse( 'trule "thing" : ..100' )
     expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("thing")
-    expect(tree[0][:rule][:member_rule][:value_rule][:integer_max]).to eq("100")
+    expect(tree[0][:rule][:member_rule][:primitive_rule][:integer_max]).to eq("100")
   end
 
   it 'should parse a member rule with a rule name' do
@@ -350,6 +356,13 @@ describe 'parser' do
     expect(tree[0][:rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
   end
 
+  it 'should parse an object rule with preceding colon' do
+    tree = JCR.parse( 'trule : { my_rule1, my_rule2 }' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:object_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
+    expect(tree[0][:rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
+  end
+
   it 'should parse an object rule with rule names or`ed' do
     tree = JCR.parse( 'trule { my_rule1 | my_rule2 }' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
@@ -377,7 +390,7 @@ describe 'parser' do
     tree = JCR.parse( 'trule { "thing" : ..100.003, my_rule2 }' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:object_rule][0][:member_rule][:member_name][:q_string]).to eq("thing")
-    expect(tree[0][:rule][:object_rule][0][:member_rule][:value_rule][:float_max]).to eq("100.003")
+    expect(tree[0][:rule][:object_rule][0][:member_rule][:primitive_rule][:float_max]).to eq("100.003")
     expect(tree[0][:rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
   end
 
@@ -386,7 +399,7 @@ describe 'parser' do
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:object_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
     expect(tree[0][:rule][:object_rule][1][:member_rule][:member_name][:q_string]).to eq("thing")
-    expect(tree[0][:rule][:object_rule][1][:member_rule][:value_rule][:float_max]).to eq("100.003")
+    expect(tree[0][:rule][:object_rule][1][:member_rule][:primitive_rule][:float_max]).to eq("100.003")
     expect(tree[0][:rule][:object_rule][2][:target_rule_name][:rule_name]).to eq("my_rule2")
   end
 
@@ -396,15 +409,23 @@ describe 'parser' do
     expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("mem_rule")
     expect(tree[0][:rule][:member_rule][:object_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
     expect(tree[0][:rule][:member_rule][:object_rule][1][:member_rule][:member_name][:q_string]).to eq("thing")
-    expect(tree[0][:rule][:member_rule][:object_rule][1][:member_rule][:value_rule][:float_max]).to eq("100.003")
+    expect(tree[0][:rule][:member_rule][:object_rule][1][:member_rule][:primitive_rule][:float_max]).to eq("100.003")
     expect(tree[0][:rule][:member_rule][:object_rule][2][:target_rule_name][:rule_name]).to eq("my_rule2")
+  end
+
+  it 'should parse an object rule with preceding colon' do
+    tree = JCR.parse( 'trule "mem_rule" : { my_rule1, my_rule2 }' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("mem_rule")
+    expect(tree[0][:rule][:member_rule][:object_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
+    expect(tree[0][:rule][:member_rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
   end
 
   it 'should parse an object rule with embeded member rules with value rule ored' do
     tree = JCR.parse( 'trule { "thing" : ..100.003| my_rule2 }' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:object_rule][0][:member_rule][:member_name][:q_string]).to eq("thing")
-    expect(tree[0][:rule][:object_rule][0][:member_rule][:value_rule][:float_max]).to eq("100.003")
+    expect(tree[0][:rule][:object_rule][0][:member_rule][:primitive_rule][:float_max]).to eq("100.003")
     expect(tree[0][:rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
   end
 
@@ -412,7 +433,7 @@ describe 'parser' do
     tree = JCR.parse( 'trule { "thing" : ..100.003, my_rule2 }' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:object_rule][0][:member_rule][:member_name][:q_string]).to eq("thing")
-    expect(tree[0][:rule][:object_rule][0][:member_rule][:value_rule][:float_max]).to eq("100.003")
+    expect(tree[0][:rule][:object_rule][0][:member_rule][:primitive_rule][:float_max]).to eq("100.003")
     expect(tree[0][:rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
   end
 
@@ -485,7 +506,7 @@ describe 'parser' do
     expect(tree[0][:rule][:object_rule][0][:member_rule][:member_name][:q_string]).to eq("thing")
     expect(tree[0][:rule][:object_rule][0][:repetition_min]).to eq("0")
     expect(tree[0][:rule][:object_rule][0][:repetition_max]).to eq("1")
-    expect(tree[0][:rule][:object_rule][0][:member_rule][:value_rule][:float_max]).to eq("100.003")
+    expect(tree[0][:rule][:object_rule][0][:member_rule][:primitive_rule][:float_max]).to eq("100.003")
     expect(tree[0][:rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
   end
 
@@ -503,6 +524,13 @@ describe 'parser' do
 
   it 'should parse an array rule with rule names 1' do
     tree = JCR.parse( 'trule [ my_rule1, my_rule2 ]' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:array_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
+    expect(tree[0][:rule][:array_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
+  end
+
+  it 'should parse an array rule with preceding colon' do
+    tree = JCR.parse( 'trule : [ my_rule1, my_rule2 ]' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:array_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
     expect(tree[0][:rule][:array_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
