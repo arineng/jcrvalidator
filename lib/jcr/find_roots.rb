@@ -95,8 +95,8 @@ module JCR
         retval = rule[:object_rule]
       when rule[:member_rule]
         retval = rule[:member_rule]
-      when rule[:value_rule]
-        retval = rule[:value_rule]
+      when rule[:primitive_rule]
+        retval = rule[:primitive_rule]
       when rule[:group_rule]
         retval = rule[:group_rule]
     end

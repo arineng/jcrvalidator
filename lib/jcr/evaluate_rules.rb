@@ -45,8 +45,8 @@ module JCR
         target = mapping[ jcr[:target_rule_name][:rule_name].to_s ]
         raise "Target rule not in mapping. This should have been checked earlier." unless target
         return evaluate_rule( target, target, data, mapping )
-      when jcr[:value_rule]
-        return evaluate_value_rule( jcr[:value_rule], rule_atom, data, mapping)
+      when jcr[:primitive_rule]
+        return evaluate_value_rule( jcr[:primitive_rule], rule_atom, data, mapping)
       when jcr[:group_rule]
         return evaluate_group_rule( jcr[:group_rule], rule_atom, data, mapping)
       when jcr[:array_rule]
@@ -116,7 +116,7 @@ module JCR
           when sub[:root_annotation]
             annotations << sub
             i = i + 1
-          when sub[:value_rule],sub[:object_rule],sub[:group_rule],sub[:array_rule],sub[:target_rule_name]
+          when sub[:primitive_rule],sub[:object_rule],sub[:group_rule],sub[:array_rule],sub[:target_rule_name]
             break
         end
       end

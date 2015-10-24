@@ -25,8 +25,8 @@ module JCR
     else # is a hash
       if tree[:rule]
         check_groups( tree[:rule], mapping )
-      elsif tree[:value_rule]
-        check_value_for_group( tree[:value_rule], mapping )
+      elsif tree[:primitive_rule]
+        check_value_for_group( tree[:primitive_rule], mapping )
       elsif tree[:member_rule]
         check_member_for_group( tree[:member_rule], mapping )
       elsif tree[:array_rule]
@@ -62,8 +62,8 @@ module JCR
         raise_group_error( "groups in value rules cannot have object rules", groupee[:member_rule] )
       elsif groupee[:array_rule]
         raise_group_error( "groups in value rules cannot have array rules", groupee[:member_rule] )
-      elsif groupee[:value_rule]
-        disallowed_group_in_value?( groupee[:value_rule], mapping )
+      elsif groupee[:primitive_rule]
+        disallowed_group_in_value?( groupee[:primitive_rule], mapping )
       end
     end
   end
@@ -172,7 +172,7 @@ module JCR
         raise_group_error( "groups in object rules cannot have array rules", groupee[:member_rule] )
       elsif groupee[:object_rule]
         raise_group_error( "groups in object rules cannot have other object rules", groupee[:member_rule] )
-      elsif groupee[:value_rule]
+      elsif groupee[:primitive_rule]
         raise_group_error( "groups in object rules cannot have value rules", groupee[:member_rule] )
       else
         check_groups( groupee, mapping )

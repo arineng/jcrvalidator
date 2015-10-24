@@ -73,8 +73,8 @@ module JCR
         #! eol = CR / LF
         #!
 
-    rule(:root_rule) { value_rule | array_rule | object_rule | member_rule | group_rule } # N.B. Not target_rule_name
-        #! root_rule = value_rule / array_rule / object_rule /
+    rule(:root_rule) { primitive_rule | array_rule | object_rule | member_rule | group_rule } # N.B. Not target_rule_name
+        #! root_rule = primitive_rule / array_rule / object_rule /
         #!             member_rule / group_rule
         #!
 
@@ -92,9 +92,10 @@ module JCR
 
     rule(:rule_def)          { type_rule | member_rule | group_rule }
         #! rule_def = type_rule / member_rule / group_rule
-    rule(:type_rule)         { value_rule | array_rule | object_rule | target_rule_name }
-        #! type_rule = value_rule / array_rule / object_rule /
-        #!             target_rule_name
+    rule(:type_rule)         { value_rule | target_rule_name }
+        #! type_rule = value_rule / target_rule_name
+    rule(:value_rule)         { primitive_rule | array_rule | object_rule }
+        #! value_rule = primitive_rule / array_rule / object_rule
     rule(:member_rule)       { ( annotations >> member_name_spec >> spcCmnt? >> (type_rule | type_choice) ).as(:member_rule) }
         #! member_rule = annotations
         #!               member_name_spec spcCmnt? (type_rule / type_choice)
@@ -128,20 +129,21 @@ module JCR
         #!                       ; Not close bracket - ")"
         #!
 
-    rule(:value_rule)        { ( annotations >> str(':') >> spcCmnt? >> ( value_choice | value_def ) ).as(:value_rule) }
-        #! value_rule = annotations ":" spcCmnt? ( value_choice / value_def )
-    rule(:value_choice)      { ( annotations >> str('(') >> spcCmnt? >> value_choice_items >> spcCmnt? >> str(')') ).as(:group_rule) }
-        #! value_choice = annotations 
-        #!                "(" spcCmnt? value_choice_items spcCmnt? ")"
-    rule(:value_choice_items) { value_choice_item >> ( spcCmnt? >> choice_combiner >> spcCmnt? >> value_choice_item ).repeat }
-        #! value_choice_items = value_choice_item
-        #!                      *( choice_combiner value_choice_item )
-    rule(:value_choice_item) { ( (str(':') >> spcCmnt? >> value_def) | value_choice | target_rule_name).as(:value_rule) }
-        #! value_choice_item = ":" spcCmnt?
-        #!                     value_def / value_choice / target_rule_name
+    rule(:primitive_rule)        { ( annotations >> str(':') >> spcCmnt? >> ( primimitive_choice | primimitive_def ) ).as(:primitive_rule) }
+        #! primitive_rule = annotations ":" spcCmnt?
+        #!                  ( primimitive_choice / primimitive_def )
+    rule(:primimitive_choice)      { ( annotations >> str('(') >> spcCmnt? >> prim_choice_items >> spcCmnt? >> str(')') ).as(:group_rule) }
+        #! primimitive_choice = annotations 
+        #!                "(" spcCmnt? prim_choice_items spcCmnt? ")"
+    rule(:prim_choice_items) { prim_choice_item >> ( spcCmnt? >> choice_combiner >> spcCmnt? >> prim_choice_item ).repeat }
+        #! prim_choice_items = prim_choice_item
+        #!                      *( choice_combiner prim_choice_item )
+    rule(:prim_choice_item) { ( (str(':') >> spcCmnt? >> primimitive_def) | primimitive_choice | target_rule_name).as(:primitive_rule) }
+        #! prim_choice_item = ":" spcCmnt? primimitive_def /
+        #!                    primimitive_choice / target_rule_name
         #!
 
-    rule(:value_def) {
+    rule(:primimitive_def) {
         null_type | boolean_type | true_value | false_value |
         string_type | string_range | string_value | 
         float_type | float_range | float_value |
@@ -151,7 +153,7 @@ module JCR
         full_date_type | full_time_type | date_time_type |
         base64_type | any
     }
-        #! value_def = null_type / boolean_type / true_value / false_value /
+        #! primimitive_def = null_type / boolean_type / true_value / false_value /
         #!             string_type / string_range / string_value / 
         #!             float_type / float_range / float_value /
         #!             integer_type / integer_range / integer_value / 
@@ -360,8 +362,8 @@ module JCR
 
   class Transformer < Parslet::Transform
 
-    rule(:rule_def=>simple(:value_def)) { puts "found rule definition" }
-    rule(:value_def => simple(:x)) { puts "value sought is " + x }
+    rule(:rule_def=>simple(:primimitive_def)) { puts "found rule definition" }
+    rule(:primimitive_def => simple(:x)) { puts "value sought is " + x }
 
   end
 
