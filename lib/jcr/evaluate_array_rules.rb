@@ -124,7 +124,7 @@ module JCR
       repeat_min, repeat_max = get_repetitions( rule )
 
       i = 0
-      results = data.select do |v|
+      repeat_results = data.select do |v|
         success = false
         check_idx = i + checked_offset
         unless checked[ check_idx ]
@@ -136,11 +136,11 @@ module JCR
         success
       end
 
-      if results.length == 0 && repeat_min > 0
+      if repeat_results.length == 0 && repeat_min > 0
         retval = Evaluation.new( false, "array does not contain #{rule} for #{jcr} from #{rule_atom}")
-      elsif results.length < repeat_min
+      elsif repeat_results.length < repeat_min
         retval = Evaluation.new( false, "array does not have enough #{rule} for #{jcr} from #{rule_atom}")
-      elsif results.length > repeat_max
+      elsif repeat_results.length > repeat_max
         retval = Evaluation.new( false, "array has too many #{rule} for #{jcr} from #{rule_atom}")
       else
         retval = Evaluation.new( true, nil)

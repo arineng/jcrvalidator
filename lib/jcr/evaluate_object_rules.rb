@@ -49,7 +49,7 @@ module JCR
 
       repeat_min, repeat_max = get_repetitions( rule )
 
-      results = data.select do |k,v|
+      repeat_results = data.select do |k,v|
         unless checked[ k ]
           e = evaluate_rule( rule, rule_atom, [k,v], mapping)
           checked[ k ] = e.success
@@ -57,11 +57,11 @@ module JCR
         end
       end
 
-      if results.length == 0 && repeat_min > 0
+      if repeat_results.length == 0 && repeat_min > 0
         retval = Evaluation.new( false, "object does not contain #{rule} for #{jcr} from #{rule_atom}")
-      elsif results.length < repeat_min
+      elsif repeat_results.length < repeat_min
         retval = Evaluation.new( false, "object does not have enough #{rule} for #{jcr} from #{rule_atom}")
-      elsif results.length > repeat_max
+      elsif repeat_results.length > repeat_max
         retval = Evaluation.new( false, "object has too many #{rule} for #{jcr} from #{rule_atom}")
       else
         retval = Evaluation.new( true, nil)
