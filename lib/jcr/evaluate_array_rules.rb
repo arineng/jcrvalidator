@@ -108,7 +108,8 @@ module JCR
   def self.evaluate_array_rule_unordered jcr, rule_atom, data, mapping
 
     retval = nil
-    checked = []
+    checked = {}
+    checked_offset = 0
 
     jcr.each do |rule|
 
@@ -124,9 +125,10 @@ module JCR
       i = 0
       results = data.select do |v|
         success = false
-        unless checked[ i ]
+        check_idx = i + checked_offset
+        unless checked[ check_idx ]
           e = evaluate_rule( rule, rule_atom, v, mapping)
-          checked[ i ] = e.success
+          checked[ check_idx ] = e.success
           success = e.success
         end
         i = i + 1
