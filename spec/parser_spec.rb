@@ -273,6 +273,12 @@ describe 'parser' do
     expect(tree[0][:rule][:member_rule][:value_rule][:integer_v]).to eq("integer")
   end
 
+  it 'should parse an any member rule of //' do
+    tree = JCR.parse( 'trule // : integer' )
+    expect(tree[0][:rule][:member_rule][:member_regex][:regex]).to eq([])
+    expect(tree[0][:rule][:member_rule][:value_rule][:integer_v]).to eq("integer")
+  end
+
   it 'should parse an regex member rule with string value' do
     tree = JCR.parse( 'trule /a.regex\\.goes.here.*/ : string' )
     expect(tree[0][:rule][:member_rule][:member_regex][:regex]).to eq("a.regex\\.goes.here.*")
