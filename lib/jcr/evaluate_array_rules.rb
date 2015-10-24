@@ -72,7 +72,8 @@ module JCR
 
       repeat_min, repeat_max = get_repetitions( rule )
 
-      min_evals = 0
+      checked = {}
+      checked_offset = 0
       if repeat_min == 0
         retval = Evaluation.new( true, nil )
       else
@@ -83,12 +84,12 @@ module JCR
             retval = evaluate_rule( rule, rule_atom, data[ array_index ], mapping )
             break unless retval.success
             array_index = array_index + 1
-            min_evals = i
+            checked[ i + checked_offset ] = retval.success
           end
         end
       end
       if !retval || retval.success
-        for i in min_evals..repeat_max-1 do
+        for i in checked.length..repeat_max-1 do
           break if array_index == data.length
           e = evaluate_rule( rule, rule_atom, data[ array_index ], mapping )
           break unless e.success
