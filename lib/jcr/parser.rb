@@ -240,8 +240,9 @@ module JCR
         #> any-kw = "any"
         #!
 
-    rule(:object_rule)  { ( annotations >> str('{') >> spcCmnt? >> object_items.maybe >> spcCmnt? >> str('}') ).as(:object_rule) }
-        #! object_rule = annotations "{" spcCmnt? [ object_items spcCmnt? ] "}"
+    rule(:object_rule)  { ( annotations >> (str(':') >> spcCmnt?).maybe >>
+                        str('{') >> spcCmnt? >> object_items.maybe >> spcCmnt? >> str('}') ).as(:object_rule) }
+        #! object_rule = annotations [ ":" spcCmnt? ] "{" spcCmnt? [ object_items spcCmnt? ] "}"
     rule(:object_items) { object_item >> ( spcCmnt? >> sequence_or_choice >> spcCmnt? >> object_item ).repeat }
         #! object_items = object_item *( sequence_or_choice object_item )
     rule(:object_item ) { repetition.maybe >> spcCmnt? >> object_item_types }
@@ -252,8 +253,9 @@ module JCR
         #! object_group = "(" spcCmnt? [ object_items spcCmnt? ] ")"
         #!
 
-    rule(:array_rule)   { ( annotations >> str('[') >> spcCmnt? >> array_items.maybe >> spcCmnt? >> str(']') ).as(:array_rule) }
-        #! array_rule = annotations "[" spcCmnt? [ array_items spcCmnt? ] "]"
+    rule(:array_rule)   { ( annotations >> (str(':') >> spcCmnt?).maybe >> 
+                        str('[') >> spcCmnt? >> array_items.maybe >> spcCmnt? >> str(']') ).as(:array_rule) }
+        #! array_rule = annotations [ ":" spcCmnt? ] "[" spcCmnt? [ array_items spcCmnt? ] "]"
     rule(:array_items)  { array_item >> ( spcCmnt? >> sequence_or_choice >> spcCmnt? >> array_item ).repeat }
         #! array_items = array_item *( sequence_or_choice array_item )
     rule(:array_item)   { repetition.maybe >> spcCmnt? >> array_item_types }

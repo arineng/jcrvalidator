@@ -350,6 +350,13 @@ describe 'parser' do
     expect(tree[0][:rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
   end
 
+  it 'should parse an object rule with preceding colon' do
+    tree = JCR.parse( 'trule : { my_rule1, my_rule2 }' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:object_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
+    expect(tree[0][:rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
+  end
+
   it 'should parse an object rule with rule names or`ed' do
     tree = JCR.parse( 'trule { my_rule1 | my_rule2 }' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
@@ -398,6 +405,14 @@ describe 'parser' do
     expect(tree[0][:rule][:member_rule][:object_rule][1][:member_rule][:member_name][:q_string]).to eq("thing")
     expect(tree[0][:rule][:member_rule][:object_rule][1][:member_rule][:value_rule][:float_max]).to eq("100.003")
     expect(tree[0][:rule][:member_rule][:object_rule][2][:target_rule_name][:rule_name]).to eq("my_rule2")
+  end
+
+  it 'should parse an object rule with preceding colon' do
+    tree = JCR.parse( 'trule "mem_rule" : { my_rule1, my_rule2 }' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("mem_rule")
+    expect(tree[0][:rule][:member_rule][:object_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
+    expect(tree[0][:rule][:member_rule][:object_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
   end
 
   it 'should parse an object rule with embeded member rules with value rule ored' do
@@ -503,6 +518,13 @@ describe 'parser' do
 
   it 'should parse an array rule with rule names 1' do
     tree = JCR.parse( 'trule [ my_rule1, my_rule2 ]' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:array_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
+    expect(tree[0][:rule][:array_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
+  end
+
+  it 'should parse an array rule with preceding colon' do
+    tree = JCR.parse( 'trule : [ my_rule1, my_rule2 ]' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:array_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
     expect(tree[0][:rule][:array_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
