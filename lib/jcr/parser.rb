@@ -149,7 +149,7 @@ module JCR
         float_type | float_range | float_value |
         integer_type | integer_range | integer_value | 
         ip4_type | ip6_type | fqdn_type | idn_type |
-        uri_type | uri_range | phone_type | email_type | 
+        uri_range | uri_type | phone_type | email_type |
         full_date_type | full_time_type | date_time_type |
         base64_type | any
     }
@@ -158,7 +158,7 @@ module JCR
         #!             float_type / float_range / float_value /
         #!             integer_type / integer_range / integer_value / 
         #!             ip4_type / ip6_type / fqdn_type / idn_type /
-        #!             uri_type / uri_range / phone_type / email_type / 
+        #!             uri_range / uri_type / phone_type / email_type /
         #!             full_date_type / full_time_type / date_time_type /
         #!             base64_type / any
     rule(:null_type)      { str('null').as(:null) }
@@ -214,11 +214,11 @@ module JCR
     rule(:idn_type)       { str('idn').as(:idn) }
         #! idn_type = idn-kw
         #> idn-kw = "idn"
+    rule(:uri_range)       { str('uri..') >> uri_template }
+        #! uri_range = "uri.." uri_template
+        #> uri-kw = "uri"
     rule(:uri_type)       { str('uri').as(:uri) }
         #! uri_type = uri-kw
-        #> uri-kw = "uri"
-    rule(:uri_range)       { uri_template }
-        #! uri_range = uri_template
     rule(:phone_type)     { str('phone').as(:phone) }
         #! phone_type = phone-kw
         #> phone-kw = "phone"

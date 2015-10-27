@@ -531,7 +531,7 @@ describe 'evaluate_rules' do
   end
 
   it 'should pass a URI template' do
-    tree = JCR.parse( 'trule : http://example.com/{?query*}' )
+    tree = JCR.parse( 'trule : uri..http://example.com/{?query*}' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "http://example.com/?foo=bar", mapping )
@@ -539,7 +539,7 @@ describe 'evaluate_rules' do
   end
 
   it 'should fail a non-matching URI template' do
-    tree = JCR.parse( 'trule : http://example.com/{?query*}' )
+    tree = JCR.parse( 'trule : uri..http://example.com/{?query*}' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "http://example.com", mapping )
@@ -547,7 +547,7 @@ describe 'evaluate_rules' do
   end
 
   it 'should fail a non-string against URI template' do
-    tree = JCR.parse( 'trule : http://example.com/{?query*}' )
+    tree = JCR.parse( 'trule : uri..http://example.com/{?query*}' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {}, mapping )
