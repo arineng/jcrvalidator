@@ -7,7 +7,7 @@ to better describe JSON structures in RDAP.
 
 At present, this software is ahead of the specification.
 The current version of the JCR specification can be found here:
-http://tools.ietf.org/html/draft-newton-json-content-rules-04
+http://tools.ietf.org/html/draft-newton-json-content-rules-05
 
 ## Usage
 
