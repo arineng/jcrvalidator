@@ -25,7 +25,7 @@ require 'jcr/check_groups'
 
 module JCR
 
-  def self.evaluate_group_rule jcr, rule_atom, data, mapping
+  def self.evaluate_group_rule jcr, rule_atom, data, mapping, behavior = nil
 
     rules, annotations = get_rules_and_annotations( jcr )
 
@@ -37,7 +37,7 @@ module JCR
       elsif rule[:sequence_combiner] && retval && !retval.success
         return evaluate_reject( annotations, retval ) # short circuit
       end
-      retval = evaluate_rule( rule, rule_atom, data, mapping )
+      retval = evaluate_rule( rule, rule_atom, data, mapping, behavior )
     end
 
     return evaluate_reject( annotations, retval )

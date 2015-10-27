@@ -37,22 +37,22 @@ module JCR
     end
   end
 
-  def self.evaluate_rule jcr, rule_atom, data, mapping
+  def self.evaluate_rule jcr, rule_atom, data, mapping, behavior = nil
     case
       when jcr[:rule]
-        return evaluate_rule( jcr[:rule], rule_atom, data, mapping)
+        return evaluate_rule( jcr[:rule], rule_atom, data, mapping, behavior)
       when jcr[:target_rule_name]
         target = mapping[ jcr[:target_rule_name][:rule_name].to_s ]
         raise "Target rule not in mapping. This should have been checked earlier." unless target
-        return evaluate_rule( target, target, data, mapping )
+        return evaluate_rule( target, target, data, mapping, behavior )
       when jcr[:primitive_rule]
         return evaluate_value_rule( jcr[:primitive_rule], rule_atom, data, mapping)
       when jcr[:group_rule]
-        return evaluate_group_rule( jcr[:group_rule], rule_atom, data, mapping)
+        return evaluate_group_rule( jcr[:group_rule], rule_atom, data, mapping, behavior)
       when jcr[:array_rule]
         return evaluate_array_rule( jcr[:array_rule], rule_atom, data, mapping)
       when jcr[:object_rule]
-        return evaluate_object_rule( jcr[:object_rule], rule_atom, data, mapping)
+        return evaluate_object_rule( jcr[:object_rule], rule_atom, data, mapping, behavior)
       when jcr[:member_rule]
         return evaluate_member_rule( jcr[:member_rule], rule_atom, data, mapping)
       else

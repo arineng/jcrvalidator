@@ -377,4 +377,76 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should pass object with string member and object member' do
+    tree = JCR.parse( 'trule { "s1":string, "o1"{ "ss1":string } }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","o1"=>{"ss1"=>"thing2"} }, mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass object with a string member and group member containing a string member' do
+    tree = JCR.parse( 'trule { "s1":string, ( "s2":string ) }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=>"thing2" }, mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass object with 2 ORed groups of ANDs 1' do
+    tree = JCR.parse( 'trule { ("s1":string, "s2":string ) | ( "s3":string , "s4":string ) }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=>"thing2" }, mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass object with 2 ORed groups of ANDs 2' do
+    tree = JCR.parse( 'trule { ("s1":string, "s2":string ) | ( "s3":string , "s4":string ) }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s3"=> "thing","s4"=>"thing2" }, mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail object with 2 ORed groups of ANDs 2' do
+    tree = JCR.parse( 'trule { ("s1":string, "s2":string ) | ( "s3":string , "s4":string ) }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s5"=> "thing","s6"=>"thing2" }, mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass object with simple nested groups' do
+    tree = JCR.parse( 'trule { ( ("s1":string, "s2":string ) ) }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=>"thing2" }, mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass object with complex nested groups 1' do
+    tree = JCR.parse( 'trule { ( ( "s1":string, "s2":string ) | ( "s3":string ) ) , "s4":string }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=>"foo", "s2"=> "thing","s4"=>"thing2" }, mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass object with complex nested groups 2' do
+    tree = JCR.parse( 'trule { ( ( "s1":string, "s2":string ) | ( "s3":string ) ) , "s4":string }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s3"=>"fuzz", "s4"=>"thing2" }, mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail object with complex nested groups 1' do
+    tree = JCR.parse( 'trule { ( ( "s1":string, "s2":string ) | ( "s3":string ) ) , "s4":string }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s0"=>"fizz", "s4"=>"thing2" }, mapping )
+    expect( e.success ).to be_falsey
+  end
+
 end

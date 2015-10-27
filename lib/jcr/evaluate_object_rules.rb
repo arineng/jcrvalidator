@@ -19,7 +19,15 @@ require 'jcr/evaluate_rules'
 
 module JCR
 
-  def self.evaluate_object_rule jcr, rule_atom, data, mapping
+  class ObjectBehavior
+    attr_accessor :checked_hash
+
+    def initialize
+      @checked_hash = {}
+    end
+  end
+
+  def self.evaluate_object_rule jcr, rule_atom, data, mapping, behavior = nil
 
     rules, annotations = get_rules_and_annotations( jcr )
 
@@ -36,7 +44,7 @@ module JCR
       Evaluation.new( false, "Non-empty object at #{jcr} from #{rule_atom}" ) ) if rules.empty? && data.length != 0
 
     retval = nil
-    checked = {}
+    behavior = ObjectBehavior.new unless behavior
 
     rules.each do |rule|
 
@@ -49,22 +57,47 @@ module JCR
 
       repeat_min, repeat_max = get_repetitions( rule )
 
-      repeat_results = data.select do |k,v|
-        unless checked[ k ]
-          e = evaluate_rule( rule, rule_atom, [k,v], mapping)
-          checked[ k ] = e.success
-          e.success
-        end
-      end
+      if rule[:group_rule]
 
-      if repeat_results.length == 0 && repeat_min > 0
-        retval = Evaluation.new( false, "object does not contain #{rule} for #{jcr} from #{rule_atom}")
-      elsif repeat_results.length < repeat_min
-        retval = Evaluation.new( false, "object does not have enough #{rule} for #{jcr} from #{rule_atom}")
-      elsif repeat_results.length > repeat_max
-        retval = Evaluation.new( false, "object has too many #{rule} for #{jcr} from #{rule_atom}")
+        successes = 0
+        for i in 0..repeat_max
+          group_behavior = ObjectBehavior.new
+          e = evaluate_object_rule( rule[:group_rule], rule_atom, data, mapping, group_behavior )
+          if e.success
+            behavior.checked_hash.merge!( group_behavior.checked_hash )
+            successes = successes + 1
+          else
+            break;
+          end
+        end
+
+        if successes == 0 && repeat_min > 0
+          retval = Evaluation.new( false, "object does not contain group #{rule} for #{jcr} from #{rule_atom}")
+        elsif successes < repeat_min
+          retval = Evaluation.new( false, "object does not have contain necessary number of group #{rule} for #{jcr} from #{rule_atom}")
+        else
+          retval = Evaluation.new( true, nil )
+        end
+
       else
-        retval = Evaluation.new( true, nil)
+
+        repeat_results = data.select do |k,v|
+          unless behavior.checked_hash[k]
+            e = evaluate_rule(rule, rule_atom, [k, v], mapping, nil)
+            behavior.checked_hash[k] = e.success
+            e.success
+          end
+        end
+
+        if repeat_results.length == 0 && repeat_min > 0
+          retval = Evaluation.new( false, "object does not contain #{rule} for #{jcr} from #{rule_atom}")
+        elsif repeat_results.length < repeat_min
+          retval = Evaluation.new( false, "object does not have enough #{rule} for #{jcr} from #{rule_atom}")
+        elsif repeat_results.length > repeat_max
+          retval = Evaluation.new( false, "object has too many #{rule} for #{jcr} from #{rule_atom}")
+        else
+          retval = Evaluation.new( true, nil)
+        end
       end
 
     end
