@@ -127,7 +127,6 @@ module JCR
   end
 
   def self.evaluate_reject annotations, evaluation
-
     reject = false
     annotations.each do |a|
       if a[:reject_annotation]
@@ -140,5 +139,17 @@ module JCR
       evaluation.success = !evaluation.success
     end
     return evaluation
+  end
+
+  def self.get_group rule, mapping
+    return rule[:group_rule] if rule[:group_rule]
+    #else
+    if rule[:target_rule_name]
+      target = mapping[ rule[:target_rule_name][:rule_name].to_s ]
+      raise "Target rule not in mapping. This should have been checked earlier." unless target
+      return get_group( target, mapping )
+    end
+    #else
+    return false
   end
 end

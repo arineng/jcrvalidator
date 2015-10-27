@@ -57,12 +57,12 @@ module JCR
 
       repeat_min, repeat_max = get_repetitions( rule )
 
-      if rule[:group_rule]
+      if (grule = get_group(rule, mapping))
 
         successes = 0
         for i in 0..repeat_max
           group_behavior = ObjectBehavior.new
-          e = evaluate_object_rule( rule[:group_rule], rule_atom, data, mapping, group_behavior )
+          e = evaluate_object_rule( grule, rule_atom, data, mapping, group_behavior )
           if e.success
             behavior.checked_hash.merge!( group_behavior.checked_hash )
             successes = successes + 1
