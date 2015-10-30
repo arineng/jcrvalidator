@@ -70,7 +70,7 @@ primimitive-def  = null-type / boolean-type / true-value / false-value /
                    float-type / float-range / float-value /
                    integer-type / integer-range / integer-value / 
                    ip4-type / ip6-type / fqdn-type / idn-type /
-                   uri-type / uri-range / phone-type / email-type / 
+                   uri-range / uri-type / phone-type / email-type /
                    full-date-type / full-time-type / date-time-type /
                    base64-type / any
 null-type        = null-kw
@@ -94,8 +94,8 @@ ip4-type         = ip4-kw
 ip6-type         = ip6-kw
 fqdn-type        = fqdn-kw
 idn-type         = idn-kw
+uri-range        = "uri.." uri-template
 uri-type         = uri-kw
-uri-range        = uri-template
 phone-type       = phone-kw
 email-type       = email-kw
 full-date-type   = full-date-kw
@@ -171,9 +171,10 @@ escape           = %x5C              ; \
 quotation-mark   = %x22      ; "
 unescaped        = %x20-21 / %x23-5B / %x5D-10FFFF
 
-regex            = "/" *( escape "/" / not-slash ) "/"
+regex            = "/" *( escape "/" / not-slash ) "/" [ regex-modifiers ]
 not-slash        = HTAB / CR / LF / %x20-2E / %x30-10FFFF
                    ; Any char except "/"
+regex-modifiers  = *( "i" / "s" / "x" )
 uri-template     = 1*ALPHA ":" not-space
 
 ;; Keywords
