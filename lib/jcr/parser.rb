@@ -351,10 +351,12 @@ module JCR
         #! unescaped = %x20-21 / %x23-5B / %x5D-10FFFF
         #!
 
-    rule(:regex)     { str('/') >> (str('\\/') | match('[^/]+')).repeat.as(:regex) >> str('/') }
-        #! regex = "/" *( escape "/" / not-slash ) "/"
+    rule(:regex)     { str('/') >> (str('\\/') | match('[^/]+')).repeat.as(:regex) >> str('/') >> regex_modifiers.maybe }
+        #! regex = "/" *( escape "/" / not-slash ) "/" [ regex_modifiers ]
         #! not-slash = HTAB / CR / LF / %x20-2E / %x30-10FFFF
         #!             ; Any char except "/"
+    rule(:regex_modifiers) { match('[isx]').repeat.as(:regex_modifiers) }
+        #! regex_modifiers = *( "i" / "s" / "x" )
     rule(:uri_template) { ( match('[a-zA-Z{}]').repeat(1) >> str(':') >> match('[\S]').repeat(1) ).as(:uri_template) }
         #! uri_template = 1*ALPHA ":" not-space
 

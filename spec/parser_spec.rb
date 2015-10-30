@@ -79,9 +79,38 @@ describe 'parser' do
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:primitive_rule][:regex]).to eq("a.regex.goes.here.*")
   end
+
   it 'should parse a regex 2' do
     tree = JCR.parse( 'trule : /a.regex\\.goes.here.*/' )
     expect(tree[0][:rule][:primitive_rule][:regex]).to eq("a.regex\\.goes.here.*")
+  end
+
+  it 'should parse a regex with a modifier' do
+    tree = JCR.parse( 'trule : /a.regex\\.goes.here.*/i' )
+    expect(tree[0][:rule][:primitive_rule][:regex]).to eq("a.regex\\.goes.here.*")
+    expect(tree[0][:rule][:primitive_rule][:regex_modifiers]).to eq("i")
+  end
+
+  it 'should parse a regex with a multiple modifiers' do
+    tree = JCR.parse( 'trule : /a.regex\\.goes.here.*/ixs' )
+    expect(tree[0][:rule][:primitive_rule][:regex]).to eq("a.regex\\.goes.here.*")
+    expect(tree[0][:rule][:primitive_rule][:regex_modifiers]).to eq("ixs")
+  end
+
+  it 'should parse a regex followed by a rule' do
+    tree = JCR.parse( 'trule : /a.regex.goes.here.*/context : integer' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:primitive_rule][:regex]).to eq("a.regex.goes.here.*")
+    expect(tree[0][:rule][:primitive_rule][:regex_modifiers]).to eq([])
+    expect(tree[1][:rule][:rule_name]).to eq("context")
+  end
+
+  it 'should parse a regex with modifiers followed by a rule' do
+    tree = JCR.parse( 'trule : /a.regex.goes.here.*/sides : integer' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:primitive_rule][:regex]).to eq("a.regex.goes.here.*")
+    expect(tree[0][:rule][:primitive_rule][:regex_modifiers]).to eq("si")
+    expect(tree[1][:rule][:rule_name]).to eq("des")
   end
 
   it 'should parse a uri' do
