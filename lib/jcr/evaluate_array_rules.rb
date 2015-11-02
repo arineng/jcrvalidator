@@ -85,7 +85,6 @@ module JCR
     retval = nil
 
     behavior = ArrayBehavior.new unless behavior
-    checked_offset = behavior.last_index
     array_index = behavior.last_index
 
 
@@ -152,7 +151,7 @@ module JCR
               retval = evaluate_rule( rule, rule_atom, data[ array_index ], mapping, nil )
               break unless retval.success
               array_index = array_index + 1
-              behavior.checked_hash[ i + checked_offset ] = retval.success
+              behavior.checked_hash[ i + behavior.last_index ] = retval.success
             end
           end
         end
