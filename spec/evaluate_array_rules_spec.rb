@@ -15,7 +15,7 @@ require 'rspec'
 require 'pp'
 require_relative '../lib/JCR/evaluate_array_rules'
 
-describe 'evaluate_rules' do
+describe 'evaluate_array_rules' do
 
   it 'should fail something that is not an array' do
     tree = JCR.parse( 'trule [ ]' )
@@ -401,7 +401,7 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_truthy
   end
 
-  it 'should pass an array with two strings and two arrays against an unordered array rule with string 2 and any 2' do
+  it 'should pass an array with two strings and two integers against an unordered array rule with string 2 and any 2' do
     tree = JCR.parse( 'trule @(unordered) [ 2 :string, 2 :integer ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
@@ -417,12 +417,44 @@ describe 'evaluate_rules' do
     expect( e.success ).to be_falsey
   end
 
-  it 'should ignore extra elements in an array' do
+  it 'should fail even with extra elements in an array' do
     tree = JCR.parse( 'trule [ 2 :string, 2 :integer, *:any ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, "thing", "thing2", 23.0, 99.2  ], mapping )
     expect( e.success ).to be_falsey
+  end
+
+  it 'should pass even with extra elements in an array' do
+    tree = JCR.parse( 'trule [ 2 :string, 2 :integer, *:any ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", 1, 2, 23.0, 99.2  ], mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass with 2 string and a group of two integers' do
+    tree = JCR.parse( 'trule [ 2 :string, 2 grule ] ;; grule ( :integer) ' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", 1, 2 ], mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail with 2 string and a group of two integers and extra integer' do
+    tree = JCR.parse( 'trule [ 2 :string, 2 grule ] ;; grule ( :integer) ' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", 1, 2, 3 ], mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass with 2 string and a group of integer and string' do
+    tree = JCR.parse( 'trule [ 2 :string, grule ] ;; grule ( :integer, :string ) ' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", 1, "thing3" ], mapping )
+    expect( e.success ).to be_truthy
   end
 
 end

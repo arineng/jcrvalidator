@@ -16,7 +16,7 @@ require 'pp'
 require_relative '../lib/JCR/evaluate_rules'
 require_relative '../lib/JCR/evaluate_value_rules'
 
-describe 'evaluate_rules' do
+describe 'evaluate_value_rules' do
 
   #
   # any values (which match more than values)

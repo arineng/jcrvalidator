@@ -15,7 +15,7 @@ require 'rspec'
 require 'pp'
 require_relative '../lib/JCR/evaluate_object_rules'
 
-describe 'evaluate_rules' do
+describe 'evaluate_object_rules' do
 
   it 'should fail something that is not an object' do
     tree = JCR.parse( 'trule { }' )

@@ -57,6 +57,13 @@ module JCR
 
       repeat_min, repeat_max = get_repetitions( rule )
 
+      # Pay attention here:
+      # Group rules need to be treated differently than other rules
+      # Groups must be evaluated as if they are rules evaluated in
+      # isolation until they evaluate as true.
+      # Also, groups must be handed the entire object, not key/values
+      # as member rules use.
+
       if (grule = get_group(rule, mapping))
 
         successes = 0
@@ -79,7 +86,7 @@ module JCR
           retval = Evaluation.new( true, nil )
         end
 
-      else
+      else # if not grule
 
         repeat_results = data.select do |k,v|
           unless behavior.checked_hash[k]
@@ -100,7 +107,7 @@ module JCR
         end
       end
 
-    end
+    end # end if grule else
 
     return evaluate_reject( annotations, retval )
   end
