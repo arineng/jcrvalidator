@@ -129,7 +129,7 @@ module JCR
             break if array_index == data.length
             group_behavior = ArrayBehavior.new( behavior )
             group_behavior.last_index = array_index
-            e = evaluate_array_rule( grule, rule_atom, data, group_behavior )
+            e = evaluate_array_rule( grule, rule_atom, data, mapping, group_behavior )
             if e.success
               behavior.checked_hash.merge!( group_behavior.checked_hash )
               array_index = group_behavior.last_index
@@ -181,7 +181,10 @@ module JCR
   def self.evaluate_array_rule_unordered jcr, rule_atom, data, mapping, behavior = nil
 
     retval = nil
-    behavior = ArrayBehavior.new unless behavior
+    unless behavior
+      behavior = ArrayBehavior.new
+      behavior.ordered = false
+    end
     highest_index = 0
 
     jcr.each do |rule|
@@ -202,11 +205,11 @@ module JCR
       if (grule = get_group(rule, mapping))
 
         successes = 0
-        for i in 0..repeat_max
+        for i in 0..repeat_max-1
           group_behavior = ArrayBehavior.new( behavior )
           group_behavior.last_index = highest_index
           group_behavior.ordered = false
-          e = evaluate_array_rule( grule, rule_atom, data, group_behavior )
+          e = evaluate_array_rule( grule, rule_atom, data, mapping, group_behavior )
           if e.success
             highest_index = group_behavior.last_index
             behavior.checked_hash.merge!( group_behavior.checked_hash )
@@ -227,24 +230,25 @@ module JCR
         end
 
       else # else not group rule
-        i = 0
-        repeat_results = data.select do |v|
-          success = false
-          unless behavior.checked_hash[ behavior.last_index + i ]
-            e = evaluate_rule( rule, rule_atom, v, mapping, nil )
-            behavior.checked_hash[ i ] = e.success
-            highest_index = i if i > highest_index
-            success = e.success
+
+        successes = 0
+        for i in behavior.last_index..data.length
+          break if successes == repeat_max
+          unless behavior.checked_hash[ i ]
+            e = evaluate_rule( rule, rule_atom, data[ i ], mapping, nil )
+            if e.success
+              behavior.checked_hash[ i ] = e.success
+              highest_index = i if i > highest_index
+              successes = successes + 1
+            end
           end
-          i = i + 1
-          success
         end
 
-        if repeat_results.length == 0 && repeat_min > 0
+        if successes == 0 && repeat_min > 0
           retval = Evaluation.new( false, "array does not contain #{rule} for #{jcr} from #{rule_atom}")
-        elsif repeat_results.length < repeat_min
+        elsif successes < repeat_min
           retval = Evaluation.new( false, "array does not have enough #{rule} for #{jcr} from #{rule_atom}")
-        elsif repeat_results.length > repeat_max
+        elsif successes > repeat_max
           retval = Evaluation.new( false, "array has too many #{rule} for #{jcr} from #{rule_atom}")
         else
           retval = Evaluation.new( true, nil)
@@ -253,7 +257,12 @@ module JCR
       end # if grule else
 
     end
+
     behavior.last_index = highest_index
+
+    if data.length > behavior.checked_hash.length && behavior.extra_prohibited
+      retval = Evaluation.new( false, "More itmes in array than specified for #{jcr} from #{rule_atom}" )
+    end
 
     return retval
   end

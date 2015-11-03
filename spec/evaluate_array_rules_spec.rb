@@ -401,6 +401,38 @@ describe 'evaluate_array_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should pass an array with two strings and two arrays against an unordered array rule with string 2 and group any' do
+    tree = JCR.parse( 'trule @(unordered) [ 2 :string, (:any,:any) ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", [ 1, 2 ], [ 2, 3 ] ], mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass an array with two strings and two arrays against an unordered array rule with string 2 and named group any' do
+    tree = JCR.parse( 'trule @(unordered) [ 2 :string, grule ] ;; grule (:any,:any)' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", [ 1, 2 ], [ 2, 3 ] ], mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass an array with two strings and two arrays against an unordered array rule with string 2 and 2 named group any' do
+    tree = JCR.parse( 'trule @(unordered) [ 2 :string, 2 grule ] ;; grule (:any)' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", [ 1, 2 ], [ 2, 3 ] ], mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail an array with two strings and three arrays against an unordered array rule with string 2 and 2 named group any' do
+    tree = JCR.parse( 'trule @(unordered) [ 2 :string, 2 grule ] ;; grule (:any)' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", [ 1, 2 ], [ 2, 3 ], [ 4, 5 ] ], mapping )
+    expect( e.success ).to be_falsey
+  end
+
   it 'should pass an array with two strings and two integers against an unordered array rule with string 2 and any 2' do
     tree = JCR.parse( 'trule @(unordered) [ 2 :string, 2 :integer ]' )
     mapping = JCR.map_rule_names( tree )

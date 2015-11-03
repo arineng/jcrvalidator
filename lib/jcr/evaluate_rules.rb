@@ -50,7 +50,7 @@ module JCR
       when jcr[:group_rule]
         return evaluate_group_rule( jcr[:group_rule], rule_atom, data, mapping, behavior)
       when jcr[:array_rule]
-        return evaluate_array_rule( jcr[:array_rule], rule_atom, data, mapping)
+        return evaluate_array_rule( jcr[:array_rule], rule_atom, data, mapping, behavior)
       when jcr[:object_rule]
         return evaluate_object_rule( jcr[:object_rule], rule_atom, data, mapping, behavior)
       when jcr[:member_rule]
