@@ -521,4 +521,52 @@ describe 'evaluate_array_rules' do
     expect( e.success ).to be_falsey
   end
 
+  it 'should pass with three ANDs and an OR 1' do
+    tree = JCR.parse( 'arule [ :1, :2, :3 | :4 ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 3 ], mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass with three ANDs and an OR 2' do
+    tree = JCR.parse( 'arule [ :1, :2, :3 | :4 ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 4 ], mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail with three ANDs and an OR' do
+    tree = JCR.parse( 'arule [ :1, :2, :3 | :4 ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ 4 ], mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass with three ANDs in a group and an OR 1' do
+    tree = JCR.parse( 'arule [ ( :1, :2, :3 ) | :4 ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 3 ], mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass with three ANDs  in a group and an OR 2' do
+    tree = JCR.parse( 'arule [ ( :1, :2, :3 ) | :4 ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ 4 ], mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail with three ANDs in a group and an OR' do
+    tree = JCR.parse( 'arule [ ( :1, :2, :3 ) | :4 ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 4 ], mapping )
+    expect( e.success ).to be_falsey
+  end
+
 end
