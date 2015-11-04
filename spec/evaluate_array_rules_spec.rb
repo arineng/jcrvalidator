@@ -489,4 +489,36 @@ describe 'evaluate_array_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should pass with ORed group each with string and repeated integer 1' do
+    tree = JCR.parse( 'arule [ ( :"a", [ 2 : integer ] ) | ( :"b", [ 4 : integer ] ) ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "a", [ 1, 2 ] ], mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail with ORed group each with string and repeated integer 1' do
+    tree = JCR.parse( 'arule [ ( :"a", [ 2 : integer ] ) | ( :"b", [ 4 : integer ] ) ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "a", [ 1, 2, 3, 4 ] ], mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass with ORed group each with string and repeated integer 2' do
+    tree = JCR.parse( 'arule [ ( :"a", [ 2 : integer ] ) | ( :"b", [ 4 : integer ] ) ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "b", [ 1, 2, 3, 4 ] ], mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail with ORed group each with string and repeated integer 2' do
+    tree = JCR.parse( 'arule [ ( :"a", [ 2 : integer ] ) | ( :"b", [ 4 : integer ] ) ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "b", [ 1, 2 ] ], mapping )
+    expect( e.success ).to be_falsey
+  end
+
 end
