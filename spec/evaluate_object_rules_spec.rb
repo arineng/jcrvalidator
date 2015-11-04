@@ -457,4 +457,76 @@ describe 'evaluate_object_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should pass object with ORed groups of overlapping member rules 1' do
+    tree = JCR.parse( 'orule { ( a, b ) | ( a, c ) | ( b, c ) }'\
+                      'a "a":string b "b":string c "c":string')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"a"=>"a", "b"=> "b" }, mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass object with ORed groups of overlapping member rules 2' do
+    tree = JCR.parse( 'orule { ( a, b ) | ( a, c ) | ( b, c ) }'\
+                      'a "a":string b "b":string c "c":string')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"a"=>"a", "c"=> "c" }, mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass object with ORed groups of overlapping member rules 3' do
+    tree = JCR.parse( 'orule { ( a, b ) | ( a, c ) | ( b, c ) }'\
+                      'a "a":string b "b":string c "c":string')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"b"=>"b", "c"=> "c" }, mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail object with ORed groups of overlapping member rules 3' do
+    tree = JCR.parse( 'orule { ( a, b ) | ( a, c ) | ( b, c ) }'\
+                      'a "a":string b "b":string c "c":string')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"b"=>"b", "d"=> "d" }, mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass object with ORed groups with manditory member but optional if another exists 1' do
+    tree = JCR.parse( 'orule { ( a, b ) | ( a, ?b, c ) }'\
+                      'a "a":string b "b":string c "c":string')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"a"=>"a", "b"=> "b" }, mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail object with ORed groups with manditory member but optional if another exists 1' do
+    tree = JCR.parse( 'orule { ( a, b ) | ( a, ?b, c ) }'\
+                      'a "a":string b "b":string c "c":string')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"a"=>"a" }, mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass object with ORed groups with manditory member but optional if another exists 2' do
+    tree = JCR.parse( 'orule { ( a, b ) | ( a, ?b, c ) }'\
+                      'a "a":string b "b":string c "c":string')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"a"=>"a", "c"=> "c" }, mapping )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass object with ORed groups with manditory member but optional if another exists 3' do
+    tree = JCR.parse( 'orule { ( a, b ) | ( a, ?b, c ) }'\
+                      'a "a":string b "b":string c "c":string')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"a"=>"a", "b"=>"b", "c"=> "c" }, mapping )
+    expect( e.success ).to be_truthy
+  end
+
 end
