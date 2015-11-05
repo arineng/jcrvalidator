@@ -597,8 +597,8 @@ describe 'evaluate_array_rules' do
     tree = JCR.parse( 'arule [ :1, :2, :3 | :4, :5 ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect( JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 3 ], mapping ).success ).to be_truthy
-    expect( JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 3, 5 ], mapping ).success ).to be_falsey
+    expect( JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 3 ], mapping ).success ).to be_falsey
+    expect( JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 3, 5 ], mapping ).success ).to be_truthy
     expect( JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 4, 5 ], mapping ).success ).to be_truthy
   end
 
@@ -616,17 +616,18 @@ describe 'evaluate_array_rules' do
     tree = JCR.parse( 'arule [ :1, :2, :3 | :4 , :5 | :6 ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect( JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 3, 5 ], mapping ).success ).to be_falsey
+    expect( JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 3, 5 ], mapping ).success ).to be_truthy
     expect( JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 4, 6 ], mapping ).success ).to be_truthy
     expect( JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 4, 5 ], mapping ).success ).to be_truthy
+    expect( JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 3, 6 ], mapping ).success ).to be_truthy
   end
 
   it 'should demonstrate OR and AND logic 4' do
     tree = JCR.parse( 'arule [ :1, :2, :3 | :4 , :5, :6  | :7 ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    expect( JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 3, 5, 6 ], mapping ).success ).to be_falsey
-    expect( JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 3, 5, 7 ], mapping ).success ).to be_falsey
+    expect( JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 3, 5, 6 ], mapping ).success ).to be_truthy
+    expect( JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 3, 5, 7 ], mapping ).success ).to be_truthy
     expect( JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 4, 5, 6 ], mapping ).success ).to be_truthy
     expect( JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 4, 5, 7 ], mapping ).success ).to be_truthy
   end
