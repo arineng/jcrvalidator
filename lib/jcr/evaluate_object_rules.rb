@@ -50,7 +50,7 @@ module JCR
 
       # short circuit logic
       if rule[:choice_combiner] && retval && retval.success
-        return evaluate_reject( annotations, retval )# short circuit
+        next
       elsif rule[:sequence_combiner] && retval && !retval.success
         return evaluate_reject( annotations, retval ) # short circuit
       end

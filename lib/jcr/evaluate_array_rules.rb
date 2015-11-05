@@ -191,7 +191,7 @@ module JCR
 
       # short circuit logic
       if rule[:choice_combiner] && retval && retval.success
-        break
+        next
       elsif rule[:sequence_combiner] && retval && !retval.success
         break
       end
