@@ -632,4 +632,14 @@ describe 'evaluate_array_rules' do
     expect( JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 4, 5, 7 ], mapping ).success ).to be_truthy
   end
 
+  it 'should demonstrate OR and AND logic 5' do
+    tree = JCR.parse( 'arule [ :1 | :2 , :3 | :4 ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    expect( JCR.evaluate_rule( tree[0], tree[0], [ 1, 3 ], mapping ).success ).to be_truthy
+    expect( JCR.evaluate_rule( tree[0], tree[0], [ 2, 4 ], mapping ).success ).to be_truthy
+    expect( JCR.evaluate_rule( tree[0], tree[0], [ 1, 4 ], mapping ).success ).to be_truthy
+    expect( JCR.evaluate_rule( tree[0], tree[0], [ 2, 3 ], mapping ).success ).to be_truthy
+  end
+
 end
