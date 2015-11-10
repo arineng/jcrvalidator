@@ -616,7 +616,7 @@ describe 'parser' do
     expect(tree[0][:rule][:array_rule][3][:specific_repetition]).to eq("4")
   end
 
-  it 'should parse an array rule with rule names ored for one and short repetition' do
+  it 'should not parse an array rule with rule names ored for one and short repetition' do
     expect{ JCR.parse( 'trule [ *my_rule1, +my_rule2| ?my_rule3,4my_rule4 ]' ) }.to raise_error Parslet::ParseFailed
   end
 
