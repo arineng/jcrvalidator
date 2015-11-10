@@ -138,7 +138,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with string and integer against an object rule with a string member and an integer member or string member' do
-    tree = JCR.parse( 'trule { "bar":string, "foo":integer | "foo":string }' )
+    tree = JCR.parse( 'trule { "bar":string, ( "foo":integer | "foo":string ) }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], { "bar"=>"thing", "foo"=>2 }, mapping )
@@ -146,7 +146,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with string and string against an object rule with a string member and an integer member or string member' do
-    tree = JCR.parse( 'trule { "bar":string, "foo":integer | "foo":string }' )
+    tree = JCR.parse( 'trule { "bar":string, ( "foo":integer | "foo":string ) }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"bar"=>"thing","foo"=>"thing2" }, mapping )

@@ -585,17 +585,8 @@ describe 'parser' do
     expect(tree[0][:rule][:array_rule][2][:repetition_max]).to eq("3")
   end
 
-  it 'should parse an array rule with rule names ored for one and repetition' do
-    tree = JCR.parse( 'trule [ 1*2 my_rule1, 1* my_rule2| *3 my_rule3 ]' )
-    expect(tree[0][:rule][:rule_name]).to eq("trule")
-    expect(tree[0][:rule][:array_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
-    expect(tree[0][:rule][:array_rule][0][:repetition_min]).to eq("1")
-    expect(tree[0][:rule][:array_rule][0][:repetition_max]).to eq("2")
-    expect(tree[0][:rule][:array_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
-    expect(tree[0][:rule][:array_rule][1][:repetition_min]).to eq("1")
-    expect(tree[0][:rule][:array_rule][1][:repetition_max]).to eq(nil)
-    expect(tree[0][:rule][:array_rule][2][:target_rule_name][:rule_name]).to eq("my_rule3")
-    expect(tree[0][:rule][:array_rule][2][:repetition_max]).to eq("3")
+  it 'should not parse an array rule with rule names ored for one and repetition' do
+    expect{ JCR.parse( 'trule [ 1*2 my_rule1, 1* my_rule2| *3 my_rule3 ]' ) }.to raise_error Parslet::ParseFailed
   end
 
   it 'should parse an array rule with rule names ored and repetition' do
@@ -626,16 +617,7 @@ describe 'parser' do
   end
 
   it 'should parse an array rule with rule names ored for one and short repetition' do
-    tree = JCR.parse( 'trule [ *my_rule1, +my_rule2| ?my_rule3,4my_rule4 ]' )
-    expect(tree[0][:rule][:array_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
-    expect(tree[0][:rule][:array_rule][0][:repetition_min]).to eq(nil)
-    expect(tree[0][:rule][:array_rule][0][:repetition_max]).to eq(nil)
-    expect(tree[0][:rule][:array_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
-    expect(tree[0][:rule][:array_rule][1][:one_or_more]).to eq("+")
-    expect(tree[0][:rule][:array_rule][2][:target_rule_name][:rule_name]).to eq("my_rule3")
-    expect(tree[0][:rule][:array_rule][2][:optional]).to eq("?")
-    expect(tree[0][:rule][:array_rule][3][:target_rule_name][:rule_name]).to eq("my_rule4")
-    expect(tree[0][:rule][:array_rule][3][:specific_repetition]).to eq("4")
+    expect{ JCR.parse( 'trule [ *my_rule1, +my_rule2| ?my_rule3,4my_rule4 ]' ) }.to raise_error Parslet::ParseFailed
   end
 
   it 'should parse an array rule with an object rule' do
@@ -904,9 +886,9 @@ EX2A
   it 'should parse group rules and value union that are ored' do
     ex2b = <<EX2B
 trule [ ;comment 1
-  1*2 my_rule1, ;comment 2
+  1*2 my_rule1| ;comment 2
   : ( string | integer ) |
-  ( my_rule2 | my_rule3 ) ;comment 3
+  ( my_rule2 , my_rule3 ) ;comment 3
 ] ;comment 4
 EX2B
     tree = JCR.parse( ex2b )
