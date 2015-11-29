@@ -151,6 +151,14 @@ module JCR
         options[:ruleset] = ruleset
       end
 
+      opt.on("-s STRING","name of root rule. All roots will be tried if none is specified") do |root_name|
+        if options[:root_name]
+          puts "A root has already been specified. Use -h for help.", ""
+          return 2
+        end
+        options[:root_name] = root_name
+      end
+
       opt.on("-o FILE","file containing overide ruleset (option can be repeated)") do |ruleset|
         unless options[:overrides]
           options[:overrides] = Array.new
@@ -186,7 +194,7 @@ module JCR
         end
       end
       data = JSON.parse( ARGF.read )
-      e = ctx.evaluate( data )
+      e = ctx.evaluate( data, options[:root_name] )
       if e.success
         if options[:verbose]
           puts "Success!"
