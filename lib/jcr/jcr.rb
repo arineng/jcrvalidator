@@ -163,7 +163,7 @@ module JCR
         unless options[:overrides]
           options[:overrides] = Array.new
         end
-        options[:overrides] << File.open( ruleset )
+        options[:overrides] << File.open( ruleset ).read
       end
 
       opt.on("-v","verbose") do |verbose|
@@ -190,7 +190,7 @@ module JCR
       ctx = Context.new( options[:ruleset] )
       if options[:overrides]
         options[:overrides].each do |ov|
-          ctx.override( ov )
+          ctx.override!( ov )
         end
       end
       data = JSON.parse( ARGF.read )
