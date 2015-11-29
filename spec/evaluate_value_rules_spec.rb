@@ -110,6 +110,14 @@ describe 'evaluate_value_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should fail an integer variable when passed a string' do
+    tree = JCR.parse( 'trule : integer' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "foo", mapping )
+    expect( e.success ).to be_falsey
+  end
+
   it 'should pass an integer variable matching a constant' do
     tree = JCR.parse( 'trule : 3' )
     mapping = JCR.map_rule_names( tree )
@@ -123,6 +131,14 @@ describe 'evaluate_value_rules' do
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail an integer variable when passed a string' do
+    tree = JCR.parse( 'trule : 3' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "foo", mapping )
     expect( e.success ).to be_falsey
   end
 
@@ -166,6 +182,14 @@ describe 'evaluate_value_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should fail an integer range when passed a string' do
+    tree = JCR.parse( 'trule : 1..3' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "foo", mapping )
+    expect( e.success ).to be_falsey
+  end
+
   #
   # float value tests
   #
@@ -176,6 +200,14 @@ describe 'evaluate_value_rules' do
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 2.1, mapping )
     expect( e.success ).to be_truthy
+  end
+
+  it 'should fail an float variable when passed a string' do
+    tree = JCR.parse( 'trule : float' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "foo", mapping )
+    expect( e.success ).to be_falsey
   end
 
   it 'should pass a float variable matching a constant' do
@@ -191,6 +223,14 @@ describe 'evaluate_value_rules' do
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 2.1, mapping )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail an float exact when passed a string' do
+    tree = JCR.parse( 'trule : 3.1' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "foo", mapping )
     expect( e.success ).to be_falsey
   end
 
@@ -232,6 +272,14 @@ describe 'evaluate_value_rules' do
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 3.1, mapping )
     expect( e.success ).to be_truthy
+  end
+
+  it 'should fail an float range when passed a string' do
+    tree = JCR.parse( 'trule : 1.1..3.1' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "foo", mapping )
+    expect( e.success ).to be_falsey
   end
 
   #

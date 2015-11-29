@@ -98,19 +98,26 @@ module JCR
   end
 
   def self.evaluate_ruleset( data, ctx, root_name = nil )
-    root_rule = nil
+    root_rules = []
     if root_name
       root_rule = ctx.mapping[root_name]
       raise "No rule by the name of #{root_name} for a root rule has been found" unless root_rule
-    elsif ctx.roots.length > 1
-      raise "With #{ctx.roots.length} roots defined, a root rule name must be specified"
+      root_rules << root_rule
     else
-      root_rule = ctx.roots[ 0 ].rule
+      ctx.roots.each do |r|
+        root_rules << r.rule
+      end
     end
 
-    raise "No root rule defined. Specify a root rule name" unless root_rule
+    raise "No root rule defined. Specify a root rule name" if root_rules.empty?
 
-    return JCR.evaluate_rule( root_rule, root_rule, data, ctx.mapping )
+    retval = nil
+    root_rules.each do |r|
+      retval = JCR.evaluate_rule( r, r, data, ctx.mapping )
+      break if retval.success
+    end
+
+    return retval
   end
 
   def self.main

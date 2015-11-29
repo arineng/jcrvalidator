@@ -54,6 +54,7 @@ module JCR
         i = jcr[:integer].to_s.to_i
         return bad_value( jcr, rule_atom, i, data ) unless data == i
       when jcr[:integer_min],jcr[:integer_max]
+        return bad_value( jcr, rule_atom, "integer", data ) unless data.is_a?( Fixnum )
         min = jcr[:integer_min].to_s.to_i
         return bad_value( jcr, rule_atom, min, data ) unless data >= min
         max = jcr[:integer_max].to_s.to_i
@@ -72,6 +73,7 @@ module JCR
         f = jcr[:float].to_s.to_f
         return bad_value( jcr, rule_atom, f, data ) unless data == f
       when jcr[:float_min],jcr[:float_max]
+        return bad_value( jcr, rule_atom, "float", data ) unless data.is_a?( Float )
         min = jcr[:float_min].to_s.to_f
         return bad_value( jcr, rule_atom, min, data ) unless data >= min
         max = jcr[:float_max].to_s.to_f

@@ -188,11 +188,32 @@ OV
     ctx = JCR::Context.new( ex )
     new_ctx = ctx.override( ov )
     e = ctx.evaluate( data )
-    pp ctx.mapping
     expect( e.success ).to be_truthy
     e = new_ctx.evaluate( data )
-    pp new_ctx.mapping
     expect( e.success ).to be_falsey
+  end
+
+  it 'should evaluate JSON against multiple roots' do
+    ex = <<EX
+# ruleset-id rfcXXXX
+# jcr-version 0.5
+
+[ 2 my_integers, 2 my_strings ]
+oroot @(root) [ 2 my_strings, 2 my_integers ]
+my_integers :0..2
+my_strings ( :"foo" | :"bar" )
+
+EX
+    data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
+    e = JCR::Context.new( ex ).evaluate( data )
+    expect( e.success ).to be_truthy
+    e = JCR::Context.new( ex ).evaluate( data, "oroot" )
+    expect( e.success ).to be_falsey
+    data = JSON.parse( '[ "foo", "bar", 1, 2 ]')
+    e = JCR::Context.new( ex ).evaluate( data )
+    expect( e.success ).to be_truthy
+    e = JCR::Context.new( ex ).evaluate( data, "oroot" )
+    expect( e.success ).to be_truthy
   end
 
 end
