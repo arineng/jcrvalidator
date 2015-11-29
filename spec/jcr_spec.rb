@@ -146,12 +146,12 @@ my_integers :0..2
 OV
     data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
     ctx = JCR::Context.new( ex )
-    ctx.override( ov )
+    ctx.override!( ov )
     e = ctx.evaluate( data )
     expect( e.success ).to be_truthy
   end
 
-  it 'should fail defualt rule referencing two rules with JSON and override' do
+  it 'should fail defualt rule referencing two rules with JSON and override!' do
     ex = <<EX
 # ruleset-id rfcXXXX
 # jcr-version 0.5
@@ -166,8 +166,32 @@ my_integers :0..1
 OV
     data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
     ctx = JCR::Context.new( ex )
-    ctx.override( ov )
+    ctx.override!( ov )
     e = ctx.evaluate( data )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail defualt rule referencing two rules with JSON and override!' do
+    ex = <<EX
+# ruleset-id rfcXXXX
+# jcr-version 0.5
+
+[ 2 my_integers, 2 my_strings ]
+my_integers :integer
+my_strings ( :"foo" | :"bar" )
+
+EX
+    ov = <<OV
+my_integers :0..1
+OV
+    data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
+    ctx = JCR::Context.new( ex )
+    new_ctx = ctx.override( ov )
+    e = ctx.evaluate( data )
+    pp ctx.mapping
+    expect( e.success ).to be_truthy
+    e = new_ctx.evaluate( data )
+    pp new_ctx.mapping
     expect( e.success ).to be_falsey
   end
 

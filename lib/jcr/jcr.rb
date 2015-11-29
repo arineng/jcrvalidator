@@ -68,9 +68,20 @@ module JCR
 
     def override( ruleset )
       overridden = JCR.ingest_ruleset( ruleset, true, nil )
+      mapping = {}
+      mapping.merge!( @mapping )
+      mapping.merge!( overridden.mapping )
+      overridden.mapping=mapping
+      overridden.roots.concat( @roots )
+      return overridden
+    end
+
+    def override!( ruleset )
+      overridden = JCR.ingest_ruleset( ruleset, true, nil )
       @mapping.merge!( overridden.mapping )
       @roots.concat( overridden.roots )
     end
+
   end
 
   def self.ingest_ruleset( ruleset, override = false, ruleset_alias=nil )
