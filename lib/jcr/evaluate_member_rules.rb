@@ -25,7 +25,7 @@ require 'jcr/check_groups'
 
 module JCR
 
-  def self.evaluate_member_rule jcr, rule_atom, data, mapping
+  def self.evaluate_member_rule jcr, rule_atom, data, econs
 
     # unlike the other evaluate functions, here data is not just the json data.
     # it is an array, the first element being the member name or regex and the
@@ -49,7 +49,7 @@ module JCR
     end
 
     if member_match
-      e = evaluate_rule( rule, rule_atom, data[ 1 ], mapping )
+      e = evaluate_rule( rule, rule_atom, data[ 1 ], econs )
       return evaluate_reject( annotations, e )
     end
 

@@ -45,7 +45,7 @@ module JCR
     end
   end
 
-  def self.evaluate_array_rule jcr, rule_atom, data, mapping, behavior = nil
+  def self.evaluate_array_rule jcr, rule_atom, data, econs, behavior = nil
 
     rules, annotations = get_rules_and_annotations( jcr )
 
@@ -75,13 +75,13 @@ module JCR
       Evaluation.new( false, "Non-empty array at #{jcr} from #{rule_atom}" ) ) if rules.empty? && data.length != 0
 
     if ordered
-      return evaluate_reject( annotations, evaluate_array_rule_ordered( rules, rule_atom, data, mapping, behavior ) )
+      return evaluate_reject( annotations, evaluate_array_rule_ordered( rules, rule_atom, data, econs, behavior ) )
     else
-      return evaluate_reject( annotations, evaluate_array_rule_unordered( rules, rule_atom, data, mapping, behavior ) )
+      return evaluate_reject( annotations, evaluate_array_rule_unordered( rules, rule_atom, data, econs, behavior ) )
     end
   end
 
-  def self.evaluate_array_rule_ordered jcr, rule_atom, data, mapping, behavior = nil
+  def self.evaluate_array_rule_ordered jcr, rule_atom, data, econs, behavior = nil
     retval = nil
 
     behavior = ArrayBehavior.new unless behavior
@@ -103,7 +103,7 @@ module JCR
       # groups require the effects of the evaluation to be discarded if they are false
       # groups must also be given the entire array
 
-      if (grule = get_group(rule, mapping))
+      if (grule = get_group(rule, econs))
 
         if repeat_min == 0
           retval = Evaluation.new( true, nil )
@@ -114,7 +114,7 @@ module JCR
             else
               group_behavior = ArrayBehavior.new( behavior )
               group_behavior.last_index = array_index
-              retval = evaluate_array_rule( grule, rule_atom, data, mapping, group_behavior )
+              retval = evaluate_array_rule( grule, rule_atom, data, econs, group_behavior )
               if retval.success
                 behavior.checked_hash.merge!( group_behavior.checked_hash )
                 array_index = group_behavior.last_index
@@ -129,7 +129,7 @@ module JCR
             break if array_index == data.length
             group_behavior = ArrayBehavior.new( behavior )
             group_behavior.last_index = array_index
-            e = evaluate_array_rule( grule, rule_atom, data, mapping, group_behavior )
+            e = evaluate_array_rule( grule, rule_atom, data, econs, group_behavior )
             if e.success
               behavior.checked_hash.merge!( group_behavior.checked_hash )
               array_index = group_behavior.last_index
@@ -148,7 +148,7 @@ module JCR
             if array_index == data.length
               return Evaluation.new( false, "array is not large enough for #{jcr} from #{rule_atom}" )
             else
-              retval = evaluate_rule( rule, rule_atom, data[ array_index ], mapping, nil )
+              retval = evaluate_rule( rule, rule_atom, data[ array_index ], econs, nil )
               break unless retval.success
               array_index = array_index + 1
               behavior.checked_hash[ i + behavior.last_index ] = retval.success
@@ -158,7 +158,7 @@ module JCR
         if !retval || retval.success
           for i in behavior.checked_hash.length..repeat_max-1 do
             break if array_index == data.length
-            e = evaluate_rule( rule, rule_atom, data[ array_index ], mapping, nil )
+            e = evaluate_rule( rule, rule_atom, data[ array_index ], econs, nil )
             break unless e.success
             array_index = array_index + 1
           end
@@ -178,7 +178,7 @@ module JCR
 
   end
 
-  def self.evaluate_array_rule_unordered jcr, rule_atom, data, mapping, behavior = nil
+  def self.evaluate_array_rule_unordered jcr, rule_atom, data, econs, behavior = nil
 
     retval = nil
     unless behavior
@@ -202,14 +202,14 @@ module JCR
       # groups require the effects of the evaluation to be discarded if they are false
       # groups must also be given the entire array
 
-      if (grule = get_group(rule, mapping))
+      if (grule = get_group(rule, econs))
 
         successes = 0
         for i in 0..repeat_max-1
           group_behavior = ArrayBehavior.new( behavior )
           group_behavior.last_index = highest_index
           group_behavior.ordered = false
-          e = evaluate_array_rule( grule, rule_atom, data, mapping, group_behavior )
+          e = evaluate_array_rule( grule, rule_atom, data, econs, group_behavior )
           if e.success
             highest_index = group_behavior.last_index
             behavior.checked_hash.merge!( group_behavior.checked_hash )
@@ -235,7 +235,7 @@ module JCR
         for i in behavior.last_index..data.length
           break if successes == repeat_max
           unless behavior.checked_hash[ i ]
-            e = evaluate_rule( rule, rule_atom, data[ i ], mapping, nil )
+            e = evaluate_rule( rule, rule_atom, data[ i ], econs, nil )
             if e.success
               behavior.checked_hash[ i ] = e.success
               highest_index = i if i > highest_index

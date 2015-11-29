@@ -27,7 +27,7 @@ module JCR
     end
   end
 
-  def self.evaluate_object_rule jcr, rule_atom, data, mapping, behavior = nil
+  def self.evaluate_object_rule jcr, rule_atom, data, econs, behavior = nil
 
     rules, annotations = get_rules_and_annotations( jcr )
 
@@ -64,12 +64,12 @@ module JCR
       # Also, groups must be handed the entire object, not key/values
       # as member rules use.
 
-      if (grule = get_group(rule, mapping))
+      if (grule = get_group(rule, econs))
 
         successes = 0
         for i in 0..repeat_max
           group_behavior = ObjectBehavior.new
-          e = evaluate_object_rule( grule, rule_atom, data, mapping, group_behavior )
+          e = evaluate_object_rule( grule, rule_atom, data, econs, group_behavior )
           if e.success
             behavior.checked_hash.merge!( group_behavior.checked_hash )
             successes = successes + 1
@@ -90,7 +90,7 @@ module JCR
 
         repeat_results = data.select do |k,v|
           unless behavior.checked_hash[k]
-            e = evaluate_rule(rule, rule_atom, [k, v], mapping, nil)
+            e = evaluate_rule(rule, rule_atom, [k, v], econs, nil)
             behavior.checked_hash[k] = e.success
             e.success
           end

@@ -21,7 +21,7 @@ describe 'evaluate_group_rules' do
     tree = JCR.parse( 'trule : ( :string )' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -29,7 +29,7 @@ describe 'evaluate_group_rules' do
     tree = JCR.parse( 'trule : @(reject) ( :string )' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -37,7 +37,7 @@ describe 'evaluate_group_rules' do
     tree = JCR.parse( 'trule : ( :integer | :string )' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -45,7 +45,7 @@ describe 'evaluate_group_rules' do
     tree = JCR.parse( 'trule : ( :string | :integer )' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -53,7 +53,7 @@ describe 'evaluate_group_rules' do
     tree = JCR.parse( 'trule : ( :ip4 | :integer )' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -61,7 +61,7 @@ describe 'evaluate_group_rules' do
     tree = JCR.parse( 'trule : @(reject) ( :ip4 | :integer )' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 

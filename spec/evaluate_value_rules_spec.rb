@@ -26,7 +26,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : any' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -34,7 +34,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : any' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], {"foo"=>"bar"}, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"foo"=>"bar"}, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -42,7 +42,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : any' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 3 ], mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 3 ], JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -50,7 +50,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule @(reject) : any' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 3 ], mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 3 ], JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -62,7 +62,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : "a string constant"' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -70,7 +70,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule @(reject) : "a string constant"' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -78,7 +78,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : "a string constant"' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "another string constant", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "another string constant", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -86,7 +86,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : string' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -94,7 +94,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : "a string constant"' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "another string constant", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "another string constant", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -106,7 +106,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : integer' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -114,7 +114,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : integer' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "foo", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "foo", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -122,7 +122,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : 3' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 3, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 3, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -130,7 +130,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : 3' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -138,7 +138,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : 3' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "foo", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "foo", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -146,7 +146,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : 1..3' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -154,7 +154,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : 1..3' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 0, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 0, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -162,7 +162,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : 1..3' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 4, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 4, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -170,7 +170,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : 1..3' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 1, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 1, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -178,7 +178,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : 1..3' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 3, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 3, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -186,7 +186,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : 1..3' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "foo", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "foo", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -198,7 +198,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : float' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 2.1, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2.1, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -206,7 +206,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : float' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "foo", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "foo", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -214,7 +214,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : 3.1' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 3.1, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 3.1, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -222,7 +222,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : 3.1' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 2.1, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2.1, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -230,7 +230,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : 3.1' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "foo", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "foo", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -238,7 +238,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : 1.1..3.1' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 2.1, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2.1, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -246,7 +246,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : 1.1..3.1' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 0.1, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 0.1, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -254,7 +254,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : 1.1..3.1' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 4.1, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 4.1, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -262,7 +262,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : 1.1..3.1' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 1.1, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 1.1, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -270,7 +270,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : 1.1..3.1' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 3.1, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 3.1, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -278,7 +278,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : 1.1..3.1' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "foo", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "foo", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -290,7 +290,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : boolean' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], false, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], false, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -298,7 +298,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : boolean' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], true, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], true, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -306,7 +306,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : true' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], true, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], true, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -314,7 +314,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : false' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], false, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], false, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -322,7 +322,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : true' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], false, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], false, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -330,7 +330,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : false' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], true, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], true, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -342,7 +342,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : null' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], nil, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], nil, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -350,7 +350,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule @(reject) : null' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], nil, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], nil, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -362,7 +362,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : /[a-z]*/' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "aaa", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "aaa", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -370,7 +370,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : /[a-z]*/' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "AAA", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "AAA", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -378,7 +378,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : /[a-z]*/' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -390,7 +390,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : ip4' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "192.1.1.1", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "192.1.1.1", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -398,7 +398,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : ip4' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "192.1.1.1.1.1.1", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "192.1.1.1.1.1.1", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -406,7 +406,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : ip4' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -414,7 +414,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : ip6' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "192.1.1.1", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "192.1.1.1", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -422,7 +422,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : ip6' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "2001:0000::1", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "2001:0000::1", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -430,7 +430,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : ip6' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "2001:0000:0000:0000:0000:0000:0000:0001", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "2001:0000:0000:0000:0000:0000:0000:0001", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -438,7 +438,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : ip6' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "2001:0000::1....", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "2001:0000::1....", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -446,7 +446,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : ip6' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], [], mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [], JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -454,7 +454,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : ip4' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "2001:0000::1", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "2001:0000::1", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -466,7 +466,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : fqdn' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "www.example.com", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "www.example.com", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -474,7 +474,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : fqdn' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 22, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 22, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -482,7 +482,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : fqdn' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "www.-example.com", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "www.-example.com", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -490,7 +490,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : fqdn' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "www.example-.com", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "www.example-.com", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -498,7 +498,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : fqdn' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "www.example_fail.com", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "www.example_fail.com", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -506,7 +506,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : idn' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "www.e\u0092xample.com", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "www.e\u0092xample.com", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -514,7 +514,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : fqdn' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "www.e\u0092xample.com", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "www.e\u0092xample.com", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -522,7 +522,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : idn' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "www.example.com", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "www.example.com", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -530,7 +530,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : idn' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "www.-e\u0092xample.com", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "www.-e\u0092xample.com", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -538,7 +538,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : idn' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -546,7 +546,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : idn' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "www.e\u0092xample-.com", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "www.e\u0092xample-.com", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -554,7 +554,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : idn' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "www.e\u0092xample_fail.com", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "www.e\u0092xample_fail.com", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -566,7 +566,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : uri' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "http://example.com", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "http://example.com", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -574,7 +574,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : uri' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -582,7 +582,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : uri..http://example.com/{?query*}' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "http://example.com/?foo=bar", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "http://example.com/?foo=bar", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -590,7 +590,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : uri..http://example.com/{?query*}' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "http://example.com", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "http://example.com", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -598,7 +598,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : uri..http://example.com/{?query*}' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], {}, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {}, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -610,7 +610,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : email' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "example@example.com", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "example@example.com", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -618,7 +618,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : email' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "example@example@example.com", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "example@example@example.com", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -626,7 +626,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : email' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -638,7 +638,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : phone' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "+34634976090", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "+34634976090", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -646,7 +646,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : phone' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "123", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "123", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -654,7 +654,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : phone' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -666,7 +666,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : base64' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzdA==", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzdA==", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -674,7 +674,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : base64' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -682,7 +682,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : base64' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzdA%==", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzdA%==", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -690,7 +690,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : base64' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzdA==aaa", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzdA==aaa", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -702,7 +702,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : date-time' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "1985-04-12T23:20:50.52Z", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "1985-04-12T23:20:50.52Z", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -710,7 +710,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : date-time' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -718,7 +718,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : date-time' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "1985-04-12T23.20.50.52Z", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "1985-04-12T23.20.50.52Z", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -726,7 +726,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : full-date' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "1985-04-12", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "1985-04-12", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -734,7 +734,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : full-date' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -742,7 +742,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : full-date' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "1985-14-12", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "1985-14-12", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -750,7 +750,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : full-time' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "23:20:50.52", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "23:20:50.52", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -758,7 +758,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : full-time' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], 2, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -766,7 +766,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : full-time' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "23.20.50.52Z", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "23.20.50.52Z", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -774,7 +774,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( 'trule : full-time' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "24.20.50.52", mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "24.20.50.52", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 

@@ -37,24 +37,36 @@ module JCR
     end
   end
 
-  def self.evaluate_rule jcr, rule_atom, data, mapping, behavior = nil
+  class EvalConditions
+    attr_accessor :mapping, :callbacks
+    def initialize mapping, callbacks
+      @mapping = mapping
+      if callbacks
+        @callbacks = callbacks
+      else
+        @callbacks = {}
+      end
+    end
+  end
+
+  def self.evaluate_rule jcr, rule_atom, data, econs, behavior = nil
     case
       when jcr[:rule]
-        return evaluate_rule( jcr[:rule], rule_atom, data, mapping, behavior)
+        return evaluate_rule( jcr[:rule], rule_atom, data, econs, behavior)
       when jcr[:target_rule_name]
-        target = mapping[ jcr[:target_rule_name][:rule_name].to_s ]
+        target = econs.mapping[ jcr[:target_rule_name][:rule_name].to_s ]
         raise "Target rule not in mapping. This should have been checked earlier." unless target
-        return evaluate_rule( target, target, data, mapping, behavior )
+        return evaluate_rule( target, target, data, econs, behavior )
       when jcr[:primitive_rule]
-        return evaluate_value_rule( jcr[:primitive_rule], rule_atom, data, mapping)
+        return evaluate_value_rule( jcr[:primitive_rule], rule_atom, data, econs)
       when jcr[:group_rule]
-        return evaluate_group_rule( jcr[:group_rule], rule_atom, data, mapping, behavior)
+        return evaluate_group_rule( jcr[:group_rule], rule_atom, data, econs, behavior)
       when jcr[:array_rule]
-        return evaluate_array_rule( jcr[:array_rule], rule_atom, data, mapping, behavior)
+        return evaluate_array_rule( jcr[:array_rule], rule_atom, data, econs, behavior)
       when jcr[:object_rule]
-        return evaluate_object_rule( jcr[:object_rule], rule_atom, data, mapping, behavior)
+        return evaluate_object_rule( jcr[:object_rule], rule_atom, data, econs, behavior)
       when jcr[:member_rule]
-        return evaluate_member_rule( jcr[:member_rule], rule_atom, data, mapping)
+        return evaluate_member_rule( jcr[:member_rule], rule_atom, data, econs)
       else
         return Evaluation.new( true, nil )
     end
@@ -141,13 +153,13 @@ module JCR
     return evaluation
   end
 
-  def self.get_group rule, mapping
+  def self.get_group rule, econs
     return rule[:group_rule] if rule[:group_rule]
     #else
     if rule[:target_rule_name]
-      target = mapping[ rule[:target_rule_name][:rule_name].to_s ]
+      target = econs.mapping[ rule[:target_rule_name][:rule_name].to_s ]
       raise "Target rule not in mapping. This should have been checked earlier." unless target
-      return get_group( target, mapping )
+      return get_group( target, econs )
     end
     #else
     return false

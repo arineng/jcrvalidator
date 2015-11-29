@@ -113,7 +113,7 @@ module JCR
 
     retval = nil
     root_rules.each do |r|
-      retval = JCR.evaluate_rule( r, r, data, ctx.mapping )
+      retval = JCR.evaluate_rule( r, r, data, EvalConditions.new( ctx.mapping, nil ) )
       break if retval.success
     end
 

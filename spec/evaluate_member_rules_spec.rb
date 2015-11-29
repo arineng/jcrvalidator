@@ -25,7 +25,7 @@ describe 'evaluate_member_rules' do
     tree = JCR.parse( 'mrule "mname" :any' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], [ "mname", "anything" ], mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "mname", "anything" ], JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -33,7 +33,7 @@ describe 'evaluate_member_rules' do
     tree = JCR.parse( 'mrule @(reject) "mname" :any' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], [ "mname", "anything" ], mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "mname", "anything" ], JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -41,7 +41,7 @@ describe 'evaluate_member_rules' do
     tree = JCR.parse( 'mrule "mname" :integer' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], [ "mname", 2 ], mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "mname", 2 ], JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -49,7 +49,7 @@ describe 'evaluate_member_rules' do
     tree = JCR.parse( 'mrule "mname" :integer' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], [ "blah", 2 ], mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "blah", 2 ], JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -57,7 +57,7 @@ describe 'evaluate_member_rules' do
     tree = JCR.parse( 'mrule @(reject) "mname" :integer' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], [ "blah", 2 ], mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "blah", 2 ], JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -65,7 +65,7 @@ describe 'evaluate_member_rules' do
     tree = JCR.parse( 'mrule "mname" :integer' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], [ "mname", "a string" ], mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "mname", "a string" ], JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -73,7 +73,7 @@ describe 'evaluate_member_rules' do
     tree = JCR.parse( 'mrule "mname" :integer' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], [ "blah", "a string" ], mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "blah", "a string" ], JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -85,7 +85,7 @@ describe 'evaluate_member_rules' do
     tree = JCR.parse( 'mrule /ab.*/ :any' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], [ "abc", "anything" ], mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "abc", "anything" ], JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -93,7 +93,7 @@ describe 'evaluate_member_rules' do
     tree = JCR.parse( 'mrule @(reject) /ab.*/ :any' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], [ "abc", "anything" ], mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "abc", "anything" ], JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -101,7 +101,7 @@ describe 'evaluate_member_rules' do
     tree = JCR.parse( 'mrule /ab*/ :integer' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], [ "abc", 2 ], mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "abc", 2 ], JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -109,7 +109,7 @@ describe 'evaluate_member_rules' do
     tree = JCR.parse( 'mrule /ab.*/ :integer' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], [ "blah", 2 ], mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "blah", 2 ], JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -117,7 +117,7 @@ describe 'evaluate_member_rules' do
     tree = JCR.parse( 'mrule @(reject) /ab.*/ :integer' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], [ "blah", 2 ], mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "blah", 2 ], JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -125,7 +125,7 @@ describe 'evaluate_member_rules' do
     tree = JCR.parse( 'mrule /ab.*/ :integer' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], [ "abc", "a string" ], mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "abc", "a string" ], JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -133,7 +133,7 @@ describe 'evaluate_member_rules' do
     tree = JCR.parse( 'mrule /ab.*/ :integer' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], [ "blah", "a string" ], mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "blah", "a string" ], JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
