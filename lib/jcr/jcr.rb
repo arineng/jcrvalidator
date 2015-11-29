@@ -166,6 +166,13 @@ module JCR
         options[:overrides] << File.open( ruleset ).read
       end
 
+      opt.on("-O STRING","string containing overide rule (option can be repeated)") do |rule|
+        unless options[:overrides]
+          options[:overrides] = Array.new
+        end
+        options[:overrides] << rule
+      end
+
       opt.on("-v","verbose") do |verbose|
         options[:verbose] = true
       end
