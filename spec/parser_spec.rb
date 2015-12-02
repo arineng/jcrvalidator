@@ -244,34 +244,34 @@ describe 'parser' do
     rescue Parslet::ParseFailed => failure
       puts failure.cause.ascii_tree
     end
-    expect(tree[0][:rule][:primitive_rule][:group_rule][0][:primitive_rule][:float]).to eq("1.0")
-    expect(tree[0][:rule][:primitive_rule][:group_rule][1][:primitive_rule][:integer]).to eq("2")
-    expect(tree[0][:rule][:primitive_rule][:group_rule][2][:primitive_rule][:true_v]).to eq("true")
-    expect(tree[0][:rule][:primitive_rule][:group_rule][3][:primitive_rule][:q_string]).to eq("yes")
-    expect(tree[0][:rule][:primitive_rule][:group_rule][4][:primitive_rule][:q_string]).to eq("Y")
+    expect(tree[0][:rule][:group_rule][0][:primitive_rule][:float]).to eq("1.0")
+    expect(tree[0][:rule][:group_rule][1][:primitive_rule][:integer]).to eq("2")
+    expect(tree[0][:rule][:group_rule][2][:primitive_rule][:true_v]).to eq("true")
+    expect(tree[0][:rule][:group_rule][3][:primitive_rule][:q_string]).to eq("yes")
+    expect(tree[0][:rule][:group_rule][4][:primitive_rule][:q_string]).to eq("Y")
   end
 
   it 'should parse a value with group 2' do
     tree = JCR.parse( 'trule : ( :"no" | :false | :1.0 | :2 | :true | :"yes" | :"Y" )' )
-    expect(tree[0][:rule][:primitive_rule][:group_rule][0][:primitive_rule][:q_string]).to eq("no")
-    expect(tree[0][:rule][:primitive_rule][:group_rule][1][:primitive_rule][:false_v]).to eq("false")
-    expect(tree[0][:rule][:primitive_rule][:group_rule][2][:primitive_rule][:float]).to eq("1.0")
-    expect(tree[0][:rule][:primitive_rule][:group_rule][3][:primitive_rule][:integer]).to eq("2")
-    expect(tree[0][:rule][:primitive_rule][:group_rule][4][:primitive_rule][:true_v]).to eq("true")
-    expect(tree[0][:rule][:primitive_rule][:group_rule][5][:primitive_rule][:q_string]).to eq("yes")
-    expect(tree[0][:rule][:primitive_rule][:group_rule][6][:primitive_rule][:q_string]).to eq("Y")
+    expect(tree[0][:rule][:group_rule][0][:primitive_rule][:q_string]).to eq("no")
+    expect(tree[0][:rule][:group_rule][1][:primitive_rule][:false_v]).to eq("false")
+    expect(tree[0][:rule][:group_rule][2][:primitive_rule][:float]).to eq("1.0")
+    expect(tree[0][:rule][:group_rule][3][:primitive_rule][:integer]).to eq("2")
+    expect(tree[0][:rule][:group_rule][4][:primitive_rule][:true_v]).to eq("true")
+    expect(tree[0][:rule][:group_rule][5][:primitive_rule][:q_string]).to eq("yes")
+    expect(tree[0][:rule][:group_rule][6][:primitive_rule][:q_string]).to eq("Y")
   end
 
   it 'should parse a value with group 3' do
     tree = JCR.parse( 'trule : ( :null | :"no" | :false | :1.0 | :2 | :true | :"yes" | :"Y" )' )
-    expect(tree[0][:rule][:primitive_rule][:group_rule][0][:primitive_rule][:null]).to eq("null")
-    expect(tree[0][:rule][:primitive_rule][:group_rule][1][:primitive_rule][:q_string]).to eq("no")
-    expect(tree[0][:rule][:primitive_rule][:group_rule][2][:primitive_rule][:false_v]).to eq("false")
-    expect(tree[0][:rule][:primitive_rule][:group_rule][3][:primitive_rule][:float]).to eq("1.0")
-    expect(tree[0][:rule][:primitive_rule][:group_rule][4][:primitive_rule][:integer]).to eq("2")
-    expect(tree[0][:rule][:primitive_rule][:group_rule][5][:primitive_rule][:true_v]).to eq("true")
-    expect(tree[0][:rule][:primitive_rule][:group_rule][6][:primitive_rule][:q_string]).to eq("yes")
-    expect(tree[0][:rule][:primitive_rule][:group_rule][7][:primitive_rule][:q_string]).to eq("Y")
+    expect(tree[0][:rule][:group_rule][0][:primitive_rule][:null]).to eq("null")
+    expect(tree[0][:rule][:group_rule][1][:primitive_rule][:q_string]).to eq("no")
+    expect(tree[0][:rule][:group_rule][2][:primitive_rule][:false_v]).to eq("false")
+    expect(tree[0][:rule][:group_rule][3][:primitive_rule][:float]).to eq("1.0")
+    expect(tree[0][:rule][:group_rule][4][:primitive_rule][:integer]).to eq("2")
+    expect(tree[0][:rule][:group_rule][5][:primitive_rule][:true_v]).to eq("true")
+    expect(tree[0][:rule][:group_rule][6][:primitive_rule][:q_string]).to eq("yes")
+    expect(tree[0][:rule][:group_rule][7][:primitive_rule][:q_string]).to eq("Y")
   end
 
   it 'should parse two rules' do
@@ -333,26 +333,26 @@ describe 'parser' do
   end
 
   it 'should parse a member rule with a choice rule' do
-    tree = JCR.parse( 'trule "thing" ( an_array | an_object )' )
+    tree = JCR.parse( 'trule "thing" : ( an_array | an_object )' )
     expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("thing")
     expect(tree[0][:rule][:member_rule][:group_rule][0][:target_rule_name][:rule_name]).to eq("an_array")
     expect(tree[0][:rule][:member_rule][:group_rule][1][:target_rule_name][:rule_name]).to eq("an_object")
   end
 
   it 'should fail a member rule with a and rule' do
-    expect{ JCR.parse( 'trule "thing" ( an_array , an_object )' ) }.to raise_error Parslet::ParseFailed
+    expect{ JCR.parse( 'trule "thing" : ( an_array , an_object )' ) }.to raise_error Parslet::ParseFailed
   end
 
   it 'should fail a member rule with choice and and rule' do
-    expect{ JCR.parse( 'trule "thing" ( an_array | a_string , an_object )' ) }.to raise_error Parslet::ParseFailed
+    expect{ JCR.parse( 'trule "thing" : ( an_array | a_string , an_object )' ) }.to raise_error Parslet::ParseFailed
   end
 
   it 'should parse a member rule with group of three ands' do
-    expect{ JCR.parse( 'trule "thing" ( an_array , a_string , an_object )' ) }.to raise_error Parslet::ParseFailed
+    expect{ JCR.parse( 'trule "thing" : ( an_array , a_string , an_object )' ) }.to raise_error Parslet::ParseFailed
   end
 
   it 'should parse a member rule with group of three ors' do
-    tree = JCR.parse( 'trule "thing" ( an_array | a_string | an_object )' )
+    tree = JCR.parse( 'trule "thing" : ( an_array | a_string | an_object )' )
     expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("thing")
     expect(tree[0][:rule][:member_rule][:group_rule][0][:target_rule_name][:rule_name]).to eq("an_array")
     expect(tree[0][:rule][:member_rule][:group_rule][1][:target_rule_name][:rule_name]).to eq("a_string")
