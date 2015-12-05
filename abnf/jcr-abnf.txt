@@ -26,8 +26,7 @@ directive-parameters = not-eol
 not-eol          = HTAB / %x20-10FFFF
 eol              = CR / LF
 
-root-rule        = primitive-rule / array-rule / object-rule /
-                   member-rule / group-rule
+root-rule        = value-rule / member-rule / group-rule
 
 rule             = rule-name *sp-cmt rule-def
 
@@ -36,15 +35,15 @@ target-rule-name = [ ruleset-id-alias "." ] rule-name
 name             = ALPHA *( ALPHA / DIGIT / "-" / "-" )
 
 rule-def         = type-rule / member-rule / group-rule
-type-rule        = value-rule / type-choice-rule / target-rule-name
+type-rule        = value-rule / value-choice-rule / target-rule-name
 value-rule       = primitive-rule / array-rule / object-rule
 member-rule      = annotations
                    member-name-spec *sp-cmt type-rule
 member-name-spec = regex / q-string
-type-choice-rule = ":" *sp-cmt type-choice
-type-choice      = "(" type-choice-items 
-                   *( choice-combiner type-choice-items ) ")"
-type-choice-items = *sp-cmt ( type-choice / type-rule ) *sp-cmt
+value-choice-rule = ":" *sp-cmt value-choice
+value-choice     = "(" value-choice-items 
+                   *( choice-combiner value-choice-items ) ")"
+value-choice-items = *sp-cmt ( value-choice / type-rule ) *sp-cmt
 
 annotations      = *( "@(" *sp-cmt annotation-set *sp-cmt ")" *sp-cmt )
 annotation-set   = reject-annotation / unordered-annotation /
