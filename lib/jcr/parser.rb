@@ -92,8 +92,8 @@ module JCR
 
     rule(:rule_def)          { type_rule | member_rule | group_rule }
         #! rule_def = type_rule / member_rule / group_rule
-    rule(:type_rule)         { value_rule | type_choice_rule | target_rule_name }
-        #! type_rule = value_rule / type_choice_rule / target_rule_name
+    rule(:type_rule)         { value_rule | value_choice_rule | target_rule_name }
+        #! type_rule = value_rule / value_choice_rule / target_rule_name
     rule(:value_rule)         { primitive_rule | array_rule | object_rule }
         #! value_rule = primitive_rule / array_rule / object_rule
     rule(:member_rule)       { ( annotations >> member_name_spec >> spcCmnt? >> type_rule ).as(:member_rule) }
@@ -101,13 +101,13 @@ module JCR
         #!               member_name_spec spcCmnt? type_rule
     rule(:member_name_spec)  { regex.as(:member_regex) | q_string.as(:member_name) }
         #! member_name_spec = regex / q_string
-    rule(:type_choice_rule)  { str(":") >> spcCmnt? >> type_choice }
-        #! type_choice_rule = ":" spcCmnt? type_choice
-    rule(:type_choice)       { ( annotations >> str('(') >> type_choice_items >> ( choice_combiner >> type_choice_items ).repeat >> str(')') ).as(:group_rule) }
-        #! type_choice = "(" type_choice_items 
-        #!               *( choice_combiner type_choice_items ) ")"
-    rule(:type_choice_items) { spcCmnt? >> (type_choice | type_rule) >> spcCmnt? }
-        #! type_choice_items = spcCmnt? ( type_choice / type_rule ) spcCmnt?
+    rule(:value_choice_rule) { str(":") >> spcCmnt? >> value_choice }
+        #! value_choice_rule = ":" spcCmnt? value_choice
+    rule(:value_choice)      { ( annotations >> str('(') >> value_choice_items >> ( choice_combiner >> value_choice_items ).repeat >> str(')') ).as(:group_rule) }
+        #! value_choice = "(" value_choice_items 
+        #!               *( choice_combiner value_choice_items ) ")"
+    rule(:value_choice_items){ spcCmnt? >> (value_choice | type_rule) >> spcCmnt? }
+        #! value_choice_items = spcCmnt? ( value_choice / type_rule ) spcCmnt?
         #!
 
     rule(:annotations)       { ( str('@(') >> spcCmnt? >> annotation_set >> spcCmnt? >> str(')') >> spcCmnt? ).repeat }
