@@ -73,9 +73,8 @@ module JCR
         #! eol = CR / LF
         #!
 
-    rule(:root_rule) { primitive_rule | array_rule | object_rule | member_rule | group_rule } # N.B. Not target_rule_name
-        #! root_rule = primitive_rule / array_rule / object_rule /
-        #!             member_rule / group_rule
+    rule(:root_rule) { value_rule | member_rule | group_rule } # N.B. Not target_rule_name
+        #! root_rule = value_rule / member_rule / group_rule
         #!
 
     rule(:rule) { ( rule_name >> spcCmnt? >> rule_def ).as(:rule) }
