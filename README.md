@@ -1,5 +1,7 @@
 # JSON Content Rules Validator
 
+[![Build Status](https://travis-ci.org/arineng/jcrvalidator.svg)](https://travis-ci.org/arineng/jcrvalidator)
+
 ## Background
 
 JSON Content Rules (JCR) is a JSON-specific schema language. JCR was created by ARIN in an effort
