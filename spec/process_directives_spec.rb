@@ -13,8 +13,8 @@
 # IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 require 'rspec'
 require 'pp'
-require_relative '../lib/JCR/parser'
-require_relative '../lib/JCR/process_directives'
+require_relative '../lib/jcr/parser'
+require_relative '../lib/jcr/process_directives'
 
 describe 'process_directives' do
 

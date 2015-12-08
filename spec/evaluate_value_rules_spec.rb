@@ -13,8 +13,8 @@
 # IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 require 'rspec'
 require 'pp'
-require_relative '../lib/JCR/evaluate_rules'
-require_relative '../lib/JCR/evaluate_value_rules'
+require_relative '../lib/jcr/evaluate_rules'
+require_relative '../lib/jcr/evaluate_value_rules'
 
 describe 'evaluate_value_rules' do
 

@@ -13,7 +13,7 @@
 # IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 require 'rspec'
 require 'pp'
-require_relative '../lib/JCR/check_groups'
+require_relative '../lib/jcr/check_groups'
 
 describe 'check_groups' do
 
