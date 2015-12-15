@@ -15,7 +15,7 @@ require 'rspec'
 require 'pp'
 require 'rubygems'
 require 'json'
-require_relative '../lib/JCR/jcr'
+require_relative '../lib/jcr/jcr'
 
 describe 'jcr' do
 

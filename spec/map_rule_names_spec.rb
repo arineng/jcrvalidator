@@ -13,8 +13,8 @@
 # IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 require 'rspec'
 require 'pp'
-require_relative '../lib/JCR/parser'
-require_relative '../lib/JCR/map_rule_names'
+require_relative '../lib/jcr/parser'
+require_relative '../lib/jcr/map_rule_names'
 
 describe 'check_names' do
 
