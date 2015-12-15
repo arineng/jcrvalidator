@@ -16,7 +16,7 @@ major-version    = integer
 minor-version    = integer
 ruleset-id-d     = ruleset-id-kw spaces ruleset-id
 import-d         = import-kw spaces ruleset-id
-                   [ spaces as-kw ruleset-id-alias ]
+                   [ spaces as-kw spaces ruleset-id-alias ]
 ruleset-id       = ALPHA *not-space
 not-space        = %x21-10FFFF
 ruleset-id-alias = name
@@ -86,7 +86,7 @@ ip4-type         = ip4-kw
 ip6-type         = ip6-kw
 fqdn-type        = fqdn-kw
 idn-type         = idn-kw
-uri-range        = "uri.." uri-template
+uri-range        = uri-dotdot-kw uri-template
 uri-type         = uri-kw
 phone-type       = phone-kw
 email-type       = email-kw
@@ -169,6 +169,7 @@ regex            = "/" *( escape "/" / not-slash ) "/" [ regex-modifiers ]
 not-slash        = HTAB / CR / LF / %x20-2E / %x30-10FFFF
                    ; Any char except "/"
 regex-modifiers  = *( "i" / "s" / "x" )
+
 uri-template     = 1*ALPHA ":" not-space
 
 ;; Keywords
@@ -197,6 +198,7 @@ ruleset-id-kw    = %x72.75.6C.65.73.65.74.2D.69.64 ; "ruleset-id"
 string-kw        = %x73.74.72.69.6E.67             ; "string"
 true-kw          = %x74.72.75.65                   ; "true"
 unordered-kw     = %x75.6E.6F.72.64.65.72.65.64    ; "unordered"
+uri-dotdot-kw    = %x75.72.69.2E.2E                ; "uri.."
 uri-kw           = %x75.72.69                      ; "uri"
 
 ;; Referenced RFC 5234 Core Rules

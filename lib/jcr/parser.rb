@@ -57,7 +57,7 @@ module JCR
         #> ruleset-id-kw = "ruleset-id"
     rule(:import_d)      { (str('import') >> spaces >> ruleset_id.as(:ruleset_id) >> ( spaces >> str('as') >> spaces >> ruleset_id_alias ).maybe).as(:import_d) }
         #! import_d = import-kw spaces ruleset_id
-        #!            [ spaces as_kw ruleset_id_alias ]
+        #!            [ spaces as_kw spaces ruleset_id_alias ]
         #> import-kw = "import"
         #> as-kw = "as"
     rule(:ruleset_id)        { match('[a-zA-Z]') >> match('[\S]').repeat }
@@ -205,10 +205,11 @@ module JCR
         #! idn_type = idn-kw
         #> idn-kw = "idn"
     rule(:uri_range)       { str('uri..') >> uri_template }
-        #! uri_range = "uri.." uri_template
-        #> uri-kw = "uri"
+        #! uri_range = uri-dotdot-kw uri_template
+        #> uri-dotdot-kw = "uri.."
     rule(:uri_type)       { str('uri').as(:uri) }
         #! uri_type = uri-kw
+        #> uri-kw = "uri"
     rule(:phone_type)     { str('phone').as(:phone) }
         #! phone_type = phone-kw
         #> phone-kw = "phone"
@@ -351,6 +352,8 @@ module JCR
         #!             ; Any char except "/"
     rule(:regex_modifiers) { match('[isx]').repeat.as(:regex_modifiers) }
         #! regex_modifiers = *( "i" / "s" / "x" )
+        #!
+
     rule(:uri_template) { ( match('[a-zA-Z{}]').repeat(1) >> str(':') >> match('[\S]').repeat(1) ).as(:uri_template) }
         #! uri_template = 1*ALPHA ":" not-space
 
