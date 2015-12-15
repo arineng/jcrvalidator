@@ -16,7 +16,7 @@ major-version    = integer
 minor-version    = integer
 ruleset-id-d     = ruleset-id-kw spaces ruleset-id
 import-d         = import-kw spaces ruleset-id
-                   [ spaces as-kw ruleset-id-alias ]
+                   [ spaces as-kw spaces ruleset-id-alias ]
 ruleset-id       = ALPHA *not-space
 not-space        = %x21-10FFFF
 ruleset-id-alias = name
@@ -94,7 +94,7 @@ ip4-type         = ip4-kw
 ip6-type         = ip6-kw
 fqdn-type        = fqdn-kw
 idn-type         = idn-kw
-uri-range        = "uri.." uri-template
+uri-range        = uri-dotdot-kw uri-template
 uri-type         = uri-kw
 phone-type       = phone-kw
 email-type       = email-kw
@@ -105,24 +105,26 @@ base64-type      = base64-kw
 any              = any-kw
 
 object-rule      = annotations [ ":" *sp-cmt ] "{" *sp-cmt [ object-items *sp-cmt ] "}"
-object-items     = object-item *( sequence-or-choice object-item )
+object-items     = object-item (*( sequence-combiner object-item ) /
+                   *( choice-combiner object-item ) )
 object-item      = [ repetition *sp-cmt ] object-item-types
 object-item-types = member-rule / target-rule-name / object-group
 object-group     = "(" *sp-cmt [ object-items *sp-cmt ] ")"
 
 array-rule       = annotations [ ":" *sp-cmt ] "[" *sp-cmt [ array-items *sp-cmt ] "]"
-array-items      = array-item *( sequence-or-choice array-item )
+array-items      = array-item (*( sequence-combiner array-item ) /
+                   *( choice-combiner array-item ) )
 array-item       = [ repetition ] *sp-cmt array-item-types
 array-item-types = type-rule / array-group
 array-group      = "(" *sp-cmt [ array-items *sp-cmt ] ")"
 
 group-rule       = annotations "(" *sp-cmt [ group-items *sp-cmt ] ")"
-group-items      = group-item *( sequence-or-choice group-item )
+group-items      = group-item (*( sequence-combiner group-item ) /
+                   *( choice-combiner group-item ) )
 group-item       = [ repetition ] *sp-cmt group-item-types
 group-item-types = type-rule / member-rule / group-group
 group-group      = group-rule
 
-sequence-or-choice = sequence-combiner / choice-combiner
 sequence-combiner = *sp-cmt "," *sp-cmt
 choice-combiner  = *sp-cmt "|" *sp-cmt
 
@@ -175,6 +177,7 @@ regex            = "/" *( escape "/" / not-slash ) "/" [ regex-modifiers ]
 not-slash        = HTAB / CR / LF / %x20-2E / %x30-10FFFF
                    ; Any char except "/"
 regex-modifiers  = *( "i" / "s" / "x" )
+
 uri-template     = 1*ALPHA ":" not-space
 
 ;; Keywords
@@ -203,6 +206,7 @@ ruleset-id-kw    = %x72.75.6C.65.73.65.74.2D.69.64 ; "ruleset-id"
 string-kw        = %x73.74.72.69.6E.67             ; "string"
 true-kw          = %x74.72.75.65                   ; "true"
 unordered-kw     = %x75.6E.6F.72.64.65.72.65.64    ; "unordered"
+uri-dotdot-kw    = %x75.72.69.2E.2E                ; "uri.."
 uri-kw           = %x75.72.69                      ; "uri"
 
 ;; Referenced RFC 5234 Core Rules
