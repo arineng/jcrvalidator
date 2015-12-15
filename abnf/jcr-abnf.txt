@@ -41,7 +41,7 @@ member-rule      = annotations
                    member-name-spec *sp-cmt type-rule
 member-name-spec = regex / q-string
 type-choice-rule = ":" *sp-cmt type-choice
-type-choice      = "(" type-choice-items 
+type-choice      = annotations "(" type-choice-items
                    *( choice-combiner type-choice-items ) ")"
 type-choice-items = *sp-cmt ( type-choice / type-rule ) *sp-cmt
 
