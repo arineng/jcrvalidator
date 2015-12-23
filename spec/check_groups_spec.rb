@@ -130,6 +130,20 @@ describe 'check_groups' do
     expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
+  it 'should error with value with group of value OR group with object' do
+    tree = JCR.parse( 'rule : ( :integer | ( :ip4 | { "thing" : integer } ) ) ' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
+  end
+
+  it 'should error with value with group of value OR group with array' do
+    tree = JCR.parse( 'rule : ( :integer | ( :ip4 | [ :integer ] ) ) ' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
+  end
+
   #
   # array rule tests
   #

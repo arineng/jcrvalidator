@@ -1178,14 +1178,6 @@ EX12
     expect{ JCR.parse( 'trule : any ;; rule [ ( "thing" trule ) ]' ) }.to raise_error Parslet::ParseFailed
   end
 
-  it 'should error with value with group of value OR group with object' do
-    expect{ JCR.parse( 'rule : ( :integer | ( :ip4 | { "thing" : integer } ) ) ' ) }.to raise_error Parslet::ParseFailed
-  end
-
-  it 'should error with value with group of value OR group with array' do
-    expect{ JCR.parse( 'rule : ( :integer | ( :ip4 | [ :integer ] ) ) ' ) }.to raise_error Parslet::ParseFailed
-  end
-
   it 'should error with value with group of value OR group with member' do
     expect{ JCR.parse( 'trule :any ;; rule : ( :integer | ( :ip4 | "thing" trule ) ) ' ) }.to raise_error Parslet::ParseFailed
   end
