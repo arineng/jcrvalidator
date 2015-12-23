@@ -100,7 +100,7 @@ module JCR
         #!               member_name_spec spcCmnt? type_rule
     rule(:member_name_spec)  { regex.as(:member_regex) | q_string.as(:member_name) }
         #! member_name_spec = regex / q_string
-    rule(:type_choice_rule)  { str(':') >> spcCmnt? >> type_choice }
+    rule(:type_choice_rule)  { str(':').as(:type_choice_signifier) >> spcCmnt? >> type_choice }
         #! type_choice_rule = ":" spcCmnt? type_choice
     rule(:type_choice)       { ( annotations >> str('(') >> type_choice_items >> ( choice_combiner >> type_choice_items ).repeat >> str(')') ).as(:group_rule) }
         #! type_choice = annotations "(" type_choice_items
