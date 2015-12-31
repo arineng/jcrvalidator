@@ -26,7 +26,7 @@ require 'jcr/process_directives'
 module JCR
 
   class Context
-    attr_accessor :mapping, :id, :tree, :roots, :catalog
+    attr_accessor :mapping, :callbacks, :id, :tree, :roots, :catalog
 
     def add_ruleset_alias( ruleset_alias, alias_uri )
       unless @catalog
@@ -60,6 +60,7 @@ module JCR
       if ruleset
         ingested = JCR.ingest_ruleset( ruleset, false, nil )
         @mapping = ingested.mapping
+        @callbacks = ingested.callbacks
         @id = ingested.id
         @tree = ingested.tree
         @roots = ingested.roots
@@ -72,6 +73,10 @@ module JCR
       mapping.merge!( @mapping )
       mapping.merge!( overridden.mapping )
       overridden.mapping=mapping
+      callbacks = {}
+      callbacks.merge!( @callbacks )
+      callbacks.merge!( overridden.callbacks )
+      overridden.callbacks = callbacks
       overridden.roots.concat( @roots )
       return overridden
     end
@@ -79,6 +84,7 @@ module JCR
     def override!( ruleset )
       overridden = JCR.ingest_ruleset( ruleset, true, nil )
       @mapping.merge!( overridden.mapping )
+      @callbacks.merge!( overridden.callbacks )
       @roots.concat( overridden.roots )
     end
 
@@ -92,6 +98,7 @@ module JCR
     ctx = Context.new
     ctx.tree = tree
     ctx.mapping = mapping
+    ctx.callbacks = {}
     ctx.roots = roots
     JCR.process_directives( ctx )
     return ctx
@@ -113,7 +120,7 @@ module JCR
 
     retval = nil
     root_rules.each do |r|
-      retval = JCR.evaluate_rule( r, r, data, EvalConditions.new( ctx.mapping, nil ) )
+      retval = JCR.evaluate_rule( r, r, data, EvalConditions.new( ctx.mapping, ctx.callbacks ) )
       break if retval.success
     end
 

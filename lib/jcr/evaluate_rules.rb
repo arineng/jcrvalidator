@@ -23,9 +23,23 @@ require 'jcr/parser'
 require 'jcr/map_rule_names'
 require 'jcr/check_groups'
 require 'jcr/evaluate_array_rules'
+require 'jcr/evaluate_object_rules'
 require 'jcr/evaluate_group_rules'
 require 'jcr/evaluate_member_rules'
 require 'jcr/evaluate_value_rules'
+
+
+# Adapted from Matt Sears
+class Proc
+  def jcr_callback(callable, *args)
+    self === Class.new do
+      method_name = callable.to_sym
+      define_method(method_name) { |&block| block.nil? ? true : block.call(*args) }
+      define_method("#{method_name}?") { true }
+      def method_missing(method_name, *args, &block) false; end
+    end.new
+  end
+end
 
 module JCR
 
@@ -56,7 +70,14 @@ module JCR
       when behavior.is_a?( ObjectBehavior )
         return evaluate_object_rule( jcr, rule_atom, data, econs, behavior)
       when jcr[:rule]
-        return evaluate_rule( jcr[:rule], rule_atom, data, econs, behavior)
+        rn = jcr[:rule][:rule_name]
+        rn = rn.to_s if rn
+        if rn && econs.callbacks[ rn ]
+          e = evaluate_rule( jcr[:rule], rule_atom, data, econs, behavior)
+          return evaluate_callback( jcr, data, econs, rn, e )
+        else
+          return evaluate_rule( jcr[:rule], rule_atom, data, econs, behavior)
+        end
       when jcr[:target_rule_name]
         target = econs.mapping[ jcr[:target_rule_name][:rule_name].to_s ]
         raise "Target rule not in mapping. This should have been checked earlier." unless target
@@ -74,6 +95,24 @@ module JCR
       else
         return Evaluation.new( true, nil )
     end
+  end
+
+  def self.evaluate_callback jcr, data, econs, callback, e
+    retval = e
+    c = econs.callbacks[ callback ]
+    if e.success
+      retval = c.jcr_callback :rule_eval_true, jcr, data
+    else
+      retval = c.jcr_callback :rule_eval_fale, jcr, data, e
+    end
+    if retval.is_a? TrueClass
+      retval = Evaluation.new( true, nil )
+    elsif retval.is_a? FalseClass
+      retval = Evaluation.new( false, nil )
+    elsif retval.is_a? String
+      retval = Evaluation.new( false, retval )
+    end
+    return retval
   end
 
   def self.get_repetitions rule

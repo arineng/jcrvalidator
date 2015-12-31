@@ -216,4 +216,30 @@ EX
     expect( e.success ).to be_truthy
   end
 
+  xit 'should callback eval_true' do
+    ex = <<EX
+# ruleset-id rfcXXXX
+# jcr-version 0.5
+
+[ 2 my_integers, 2 my_strings ]
+my_integers :0..2
+my_strings ( :"foo" | :"bar" )
+
+EX
+    my_eval = false
+    c = Proc.new do |on|
+      on.rule_eval_true do |jcr,data|
+        my_eval = true
+        puts "eval true"
+        return true
+      end
+    end
+    data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
+    ctx = JCR::Context.new( ex )
+    ctx.callbacks[ "my_integers" ] = p
+    e = ctx.evaluate( data )
+    expect( e.success ).to be_truthy
+    expect( my_eval ).to be_truthy
+  end
+
 end
