@@ -53,6 +53,8 @@ module JCR
     case
       when behavior.is_a?( ArrayBehavior )
         return evaluate_array_rule( jcr, rule_atom, data, econs, behavior)
+      when behavior.is_a?( ObjectBehavior )
+        return evaluate_object_rule( jcr, rule_atom, data, econs, behavior)
       when jcr[:rule]
         return evaluate_rule( jcr[:rule], rule_atom, data, econs, behavior)
       when jcr[:target_rule_name]
