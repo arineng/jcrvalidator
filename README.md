@@ -59,6 +59,6 @@ Options
     -h                               display help
 ```
 
-This code was written and tested on Ruby 2.0. At present it can only run its unit
-tests. Feel free to fiddle with it. To run the unit tests, simply run the `rspec` command.
+This code was written and tested on Ruby 2.0. 
+Feel free to fiddle with it. To run the unit tests, simply run the `rspec` command.
 
