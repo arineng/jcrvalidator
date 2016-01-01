@@ -29,7 +29,7 @@ echo "[ 1, 2]" | jcr -v -R "[ *:string ]"
 if [ $? != 1 ]; then
   echo "** Unexpected return value"
 else
-  echo "Failed to validate"
+  echo "Failed to validate - this is expected"
 fi
 
 # Pass JSON into the JCR validator from a file with a ruleset specified in a file
@@ -48,8 +48,12 @@ if [ $? != 0 ]; then
   echo "** Unexpected return value"
 fi
 
-# This isn't possible because the globbing concatentates the files, which is not JSON legal
-# jcr -v -r example1.jcr example1*.json
+# Pass multiple JSON files into the JCR validator using a ruleset specified in a file
+echo
+jcr -v -r example1.jcr example1*.json
+if [ $? != 0 ]; then
+  echo "** Unexpected return value"
+fi
 
 # Override a rule from the command line
 # Should succeed
@@ -66,7 +70,7 @@ jcr -v -r example1.jcr -O "my_integers :0..2" example1b.json
 if [ $? != 1 ]; then
   echo "** Unexpected return value"
 else
-  echo "Failed to validate"
+  echo "Failed to validate - this is expected"
 fi
 
 # Override a rule from a file
@@ -84,6 +88,6 @@ jcr -v -r example1.jcr -o example1_override.jcr example1b.json
 if [ $? != 1 ]; then
   echo "** Unexpected return value"
 else
-  echo "Failed to validate"
+  echo "Failed to validate - this is expected"
 fi
 

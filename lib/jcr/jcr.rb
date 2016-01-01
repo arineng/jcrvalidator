@@ -207,18 +207,40 @@ module JCR
           ctx.override!( ov )
         end
       end
-      data = JSON.parse( ARGF.read )
-      e = ctx.evaluate( data, options[:root_name] )
-      if e.success
-        if options[:verbose]
-          puts "Success!"
+
+      if $stdin.tty?
+        ec = 2
+        ARGV.each do |fn|
+          data = JSON.parse( File.open( fn ).read )
+          e = ctx.evaluate( data, options[:root_name] )
+          if e.success
+            if options[:verbose]
+              puts "Success!"
+            end
+            ec = 0
+          else
+            if options[:verbose]
+              puts "Failure: #{e.reason}"
+            end
+            ec = 1
+          end
         end
-        return 0
+        return ec
       else
-        if options[:verbose]
-          puts "Failure: #{e.reason}"
+        data = JSON.parse( ARGF.read )
+        e = ctx.evaluate( data, options[:root_name] )
+        if e.success
+          if options[:verbose]
+            puts "Success!"
+          end
+          return 0
+        else
+          if options[:verbose]
+            puts "Failure: #{e.reason}"
+          end
+          return 1
         end
-        return 1
+
       end
 
     end
