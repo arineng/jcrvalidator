@@ -36,16 +36,19 @@ ctx = JCR::Context.new( ruleset )
 # Evaluate the JSON without the override
 data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
 e = ctx.evaluate( data )
+# Should be true
 puts "Ruleset evaluation of JSON = " + e.success.to_s
 
 # Create a new context with overriden rules
 new_ctx = ctx.override( override )
 e = new_ctx.evaluate( data )
+# Should be false
 puts "New Context Ruleset evaluation of JSON = " + e.success.to_s
 
 # The first context can be modified as well
 ctx.override!( override )
 e = ctx.evaluate( data )
+# Should be false
 puts "Overriden Ruleset evaluation of JSON = " + e.success.to_s
 
 

@@ -34,9 +34,11 @@ ctx = JCR::Context.new( ruleset )
 # Evaluate the first JSON
 data1 = JSON.parse( '[ 1, 2, "foo", "bar" ]')
 e = ctx.evaluate( data1 )
+# Should be true
 puts "Ruleset evaluation of JSON = " + e.success.to_s
 
 data2 = JSON.parse( '[ 2, 1, "bar", "foo" ]')
 e = ctx.evaluate( data2 )
+# Should be true
 puts "Ruleset evaluation of JSON = " + e.success.to_s
 
