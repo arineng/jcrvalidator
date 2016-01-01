@@ -132,11 +132,11 @@ module JCR
     options = {}
 
     opt_parser = OptionParser.new do |opt|
-      opt.banner = "Usage: jcr [OPTIONS] [JSON_FILE]"
+      opt.banner = "Usage: jcr [OPTIONS] [JSON_FILES]"
       opt.separator  ""
       opt.separator  "Evaluates JSON against JSON Content Rules (JCR)."
       opt.separator  ""
-      opt.separator  "If JSON_FILE is not specified, standard input (STDIN) is used."
+      opt.separator  "If JSON_FILES is not specified, standard input (STDIN) is used."
       opt.separator  ""
       opt.separator  "Use -v to see results, otherwise check the exit code."
       opt.separator  ""
