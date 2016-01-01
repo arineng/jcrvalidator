@@ -24,4 +24,27 @@ echo "[ 1, 2]" | jcr -v -R "[ *:string ]"
 
 # Pass JSON into the JCR validator from a file with a ruleset specified in a file
 # This one should succeed
-jcr -v -r example.jcr example.json
+jcr -v -r example1.jcr example1a.json
+
+# Pass JSON into the JCR validator from a file with a ruleset specified in a file
+# This one should succeed
+jcr -v -r example1.jcr example1b.json
+
+# This isn't possible because the globbing concatentates the files, which is not JSON legal
+# jcr -v -r example1.jcr example1*.json
+
+# Override a rule from the command line
+# Should succeed
+jcr -v -r example1.jcr -O "my_integers :0..2" example1a.json
+
+# Override a rule from the command line
+# Should fail
+jcr -v -r example1.jcr -O "my_integers :0..2" example1b.json
+
+# Override a rule from a file
+# Should succeed
+jcr -v -r example1.jcr -o example1_override.jcr example1a.json
+
+# Override a rule from a file
+# Should fail
+jcr -v -r example1.jcr -o example1_override.jcr example1b.json
