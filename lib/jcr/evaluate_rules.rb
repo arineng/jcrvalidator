@@ -64,37 +64,38 @@ module JCR
   end
 
   def self.evaluate_rule jcr, rule_atom, data, econs, behavior = nil
+    retval = Evaluation.new( false, "failed to evaluate rule properly" )
     case
       when behavior.is_a?( ArrayBehavior )
-        return evaluate_array_rule( jcr, rule_atom, data, econs, behavior)
+        retval = evaluate_array_rule( jcr, rule_atom, data, econs, behavior)
       when behavior.is_a?( ObjectBehavior )
-        return evaluate_object_rule( jcr, rule_atom, data, econs, behavior)
+        retval = evaluate_object_rule( jcr, rule_atom, data, econs, behavior)
       when jcr[:rule]
-        rn = jcr[:rule][:rule_name]
-        rn = rn.to_s if rn
-        if rn && econs.callbacks[ rn ]
-          e = evaluate_rule( jcr[:rule], rule_atom, data, econs, behavior)
-          return evaluate_callback( jcr, data, econs, rn, e )
-        else
-          return evaluate_rule( jcr[:rule], rule_atom, data, econs, behavior)
-        end
+        retval = evaluate_rule( jcr[:rule], rule_atom, data, econs, behavior)
       when jcr[:target_rule_name]
         target = econs.mapping[ jcr[:target_rule_name][:rule_name].to_s ]
         raise "Target rule not in mapping. This should have been checked earlier." unless target
-        return evaluate_rule( target, target, data, econs, behavior )
+        retval = evaluate_rule( target, target, data, econs, behavior )
       when jcr[:primitive_rule]
-        return evaluate_value_rule( jcr[:primitive_rule], rule_atom, data, econs)
+        retval = evaluate_value_rule( jcr[:primitive_rule], rule_atom, data, econs)
       when jcr[:group_rule]
-        return evaluate_group_rule( jcr[:group_rule], rule_atom, data, econs, behavior)
+        retval = evaluate_group_rule( jcr[:group_rule], rule_atom, data, econs, behavior)
       when jcr[:array_rule]
-        return evaluate_array_rule( jcr[:array_rule], rule_atom, data, econs, behavior)
+        retval = evaluate_array_rule( jcr[:array_rule], rule_atom, data, econs, behavior)
       when jcr[:object_rule]
-        return evaluate_object_rule( jcr[:object_rule], rule_atom, data, econs, behavior)
+        retval = evaluate_object_rule( jcr[:object_rule], rule_atom, data, econs, behavior)
       when jcr[:member_rule]
-        return evaluate_member_rule( jcr[:member_rule], rule_atom, data, econs)
+        retval = evaluate_member_rule( jcr[:member_rule], rule_atom, data, econs)
       else
-        return Evaluation.new( true, nil )
+        retval = Evaluation.new( true, nil )
     end
+    if jcr.is_a?( Hash ) && jcr[:rule_name]
+      rn = jcr[:rule_name].to_s
+      if econs.callbacks[ rn ]
+        retval = evaluate_callback( jcr, data, econs, rn, retval )
+      end
+    end
+    return retval
   end
 
   def self.evaluate_callback jcr, data, econs, callback, e
@@ -103,7 +104,7 @@ module JCR
     if e.success
       retval = c.jcr_callback :rule_eval_true, jcr, data
     else
-      retval = c.jcr_callback :rule_eval_fale, jcr, data, e
+      retval = c.jcr_callback :rule_eval_false, jcr, data, e
     end
     if retval.is_a? TrueClass
       retval = Evaluation.new( true, nil )

@@ -216,7 +216,32 @@ EX
     expect( e.success ).to be_truthy
   end
 
-  xit 'should callback eval_true' do
+  it 'should callback eval_true once' do
+    ex = <<EX
+# ruleset-id rfcXXXX
+# jcr-version 0.5
+
+[ 1*2 my_integers, 2 my_strings ]
+my_integers :0..2
+my_strings ( :"foo" | :"bar" )
+
+EX
+    my_eval_count = 0
+    c = Proc.new do |on|
+      on.rule_eval_true do |jcr,data|
+        my_eval_count = my_eval_count + 1
+        true
+      end
+    end
+    data = JSON.parse( '[ 1, "foo", "bar" ]')
+    ctx = JCR::Context.new( ex )
+    ctx.callbacks[ "my_integers" ] = c
+    e = ctx.evaluate( data )
+    expect( e.success ).to be_truthy
+    expect( my_eval_count ).to eq( 1 )
+  end
+
+  it 'should callback eval_true twice' do
     ex = <<EX
 # ruleset-id rfcXXXX
 # jcr-version 0.5
@@ -226,20 +251,69 @@ my_integers :0..2
 my_strings ( :"foo" | :"bar" )
 
 EX
-    my_eval = false
+    my_eval_count = 0
     c = Proc.new do |on|
       on.rule_eval_true do |jcr,data|
-        my_eval = true
-        puts "eval true"
-        return true
+        my_eval_count = my_eval_count + 1
+        true
       end
     end
     data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
     ctx = JCR::Context.new( ex )
-    ctx.callbacks[ "my_integers" ] = p
+    ctx.callbacks[ "my_integers" ] = c
     e = ctx.evaluate( data )
     expect( e.success ).to be_truthy
-    expect( my_eval ).to be_truthy
+    expect( my_eval_count ).to eq( 2 )
+  end
+
+  it 'should callback eval_false once' do
+    ex = <<EX
+# ruleset-id rfcXXXX
+# jcr-version 0.5
+
+[ 2 my_integers, 2 my_strings ]
+my_integers :0..2
+my_strings ( :"foo" | :"bar" )
+
+EX
+    my_eval_count = 0
+    c = Proc.new do |on|
+      on.rule_eval_false do |jcr,data,e|
+        my_eval_count = my_eval_count + 1
+        e
+      end
+    end
+    data = JSON.parse( '[ 3, 4, "foo", "bar" ]')
+    ctx = JCR::Context.new( ex )
+    ctx.callbacks[ "my_integers" ] = c
+    e = ctx.evaluate( data )
+    expect( e.success ).to be_falsey
+    expect( my_eval_count ).to eq( 1 )
+  end
+
+  it 'should callback eval_false twice by changing return value' do
+    ex = <<EX
+# ruleset-id rfcXXXX
+# jcr-version 0.5
+
+[ 2 my_integers, 2 my_strings ]
+my_integers :0..2
+my_strings ( :"foo" | :"bar" )
+
+EX
+    my_eval_count = 0
+    c = Proc.new do |on|
+      on.rule_eval_false do |jcr,data,e|
+        my_eval_count = my_eval_count + 1
+        true
+      end
+    end
+    data = JSON.parse( '[ 3, 4, "foo", "bar" ]')
+    ctx = JCR::Context.new( ex )
+    ctx.callbacks[ "my_integers" ] = c
+    e = ctx.evaluate( data )
+    expect( e.success ).to be_truthy
+    expect( my_eval_count ).to eq( 2 )
   end
 
 end
