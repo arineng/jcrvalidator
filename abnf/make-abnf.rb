@@ -30,6 +30,37 @@ def main
 end
 
 def read_parslet_def
+    IO.foreach( $parslet_src_file ) { |line|
+        conditionally_grab_mapping( line )
+        conditionally_grab_abnf( line )
+        conditionally_grab_keywords( line )
+    }
+end
+
+def conditionally_grab_mapping( line )
+    # Example haystack:  #/ spcCmnt -> sp-cmt
+    if m = %r|^\s*#/\s*([\w?]+)\s*->\s*(.*)|.match( line )
+        key, value = m.captures
+        $mappings[key] = value
+    end
+end
+
+def conditionally_grab_abnf( line )
+    # Example haystack:  #! spcCmnt = spaces / comment
+    if m = /^\s*#!\s*(.*)/.match( line )
+        $lines << m[1]
+    end
+end
+
+def conditionally_grab_keywords( line )
+    # Example haystack:  #> jcr-version-kw = "jcr-version"
+    if m = /^\s*#>\s*([\w_\-]+kw)(\s*=\s*)"([^"]+)"/.match( line )
+        name, equals, keyword = m.captures
+        ascii_codes = keyword.chars.map{ |c| sprintf( "%02X", c.ord ) }.join( '.' )
+        comment_padding = ' ' * [($keyword_indent - 3*keyword.length), 0].max
+        line = name + equals + '%x' + ascii_codes + comment_padding + ' ; "' + keyword + '"'
+        $keywords[name] = line
+    end
 end
 
 def write_abnf
