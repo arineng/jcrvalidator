@@ -69,7 +69,7 @@ module JCR
         successes = 0
         for i in 0..repeat_max
           group_behavior = ObjectBehavior.new
-          e = evaluate_object_rule( grule, rule_atom, data, econs, group_behavior )
+          e = evaluate_rule( grule, rule_atom, data, econs, group_behavior )
           if e.success
             behavior.checked_hash.merge!( group_behavior.checked_hash )
             successes = successes + 1

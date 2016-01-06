@@ -216,4 +216,165 @@ EX
     expect( e.success ).to be_truthy
   end
 
+  it 'should callback eval_true once' do
+    ex = <<EX
+# ruleset-id rfcXXXX
+# jcr-version 0.5
+
+[ 1*2 my_integers, 2 my_strings ]
+my_integers :0..2
+my_strings ( :"foo" | :"bar" )
+
+EX
+    my_eval_count = 0
+    c = Proc.new do |on|
+      on.rule_eval_true do |jcr,data|
+        my_eval_count = my_eval_count + 1
+        true
+      end
+    end
+    data = JSON.parse( '[ 1, "foo", "bar" ]')
+    ctx = JCR::Context.new( ex )
+    ctx.callbacks[ "my_integers" ] = c
+    e = ctx.evaluate( data )
+    expect( e.success ).to be_truthy
+    expect( my_eval_count ).to eq( 1 )
+  end
+
+  it 'should callback eval_true twice' do
+    ex = <<EX
+# ruleset-id rfcXXXX
+# jcr-version 0.5
+
+[ 2 my_integers, 2 my_strings ]
+my_integers :0..2
+my_strings ( :"foo" | :"bar" )
+
+EX
+    my_eval_count = 0
+    c = Proc.new do |on|
+      on.rule_eval_true do |jcr,data|
+        my_eval_count = my_eval_count + 1
+        true
+      end
+    end
+    data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
+    ctx = JCR::Context.new( ex )
+    ctx.callbacks[ "my_integers" ] = c
+    e = ctx.evaluate( data )
+    expect( e.success ).to be_truthy
+    expect( my_eval_count ).to eq( 2 )
+  end
+
+  it 'should callback eval_false once' do
+    ex = <<EX
+# ruleset-id rfcXXXX
+# jcr-version 0.5
+
+[ 2 my_integers, 2 my_strings ]
+my_integers :0..2
+my_strings ( :"foo" | :"bar" )
+
+EX
+    my_eval_count = 0
+    c = Proc.new do |on|
+      on.rule_eval_false do |jcr,data,e|
+        my_eval_count = my_eval_count + 1
+        e
+      end
+    end
+    data = JSON.parse( '[ 3, 4, "foo", "bar" ]')
+    ctx = JCR::Context.new( ex )
+    ctx.callbacks[ "my_integers" ] = c
+    e = ctx.evaluate( data )
+    expect( e.success ).to be_falsey
+    expect( my_eval_count ).to eq( 1 )
+  end
+
+  it 'should callback eval_false twice by changing return value' do
+    ex = <<EX
+# ruleset-id rfcXXXX
+# jcr-version 0.5
+
+[ 2 my_integers, 2 my_strings ]
+my_integers :0..2
+my_strings ( :"foo" | :"bar" )
+
+EX
+    my_eval_count = 0
+    c = Proc.new do |on|
+      on.rule_eval_false do |jcr,data,e|
+        my_eval_count = my_eval_count + 1
+        true
+      end
+    end
+    data = JSON.parse( '[ 3, 4, "foo", "bar" ]')
+    ctx = JCR::Context.new( ex )
+    ctx.callbacks[ "my_integers" ] = c
+    e = ctx.evaluate( data )
+    expect( e.success ).to be_truthy
+    expect( my_eval_count ).to eq( 2 )
+  end
+
+  it 'should use callback to evaluate even numbers' do
+    ruleset = <<RULESET
+# ruleset-id rfcXXXX
+# jcr-version 0.5
+
+[ 2 my_integers, 2 my_strings ]
+
+; this will be the rule we custom validate
+my_integers :0..4
+
+my_strings ( :"foo" | :"bar" )
+
+RULESET
+
+    # Create a JCR context.
+    ctx = JCR::Context.new( ruleset )
+
+    # A local variable used in the callback closure
+    my_eval_count = 0
+
+    # The callback is created using a Proc object
+    c = Proc.new do |on|
+      validate = false
+
+      # called if the rule evaluates to true
+      # jcr is the rule
+      # data is the data being evaluated against the rule
+      on.rule_eval_true do |jcr,data|
+        my_eval_count = my_eval_count + 1
+        # return true if even number
+        validate = data.to_i % 2 == 0
+      end
+
+      # called if the rule evaluates to false
+      # jcr is the rule
+      # data is the data being evaluated against the rule
+      # e is the evaluation of the rule
+      on.rule_eval_false do |jcr,data,e|
+        my_eval_count = my_eval_count + 1
+        # return true if even number
+        validate = data.to_i % 2 == 0
+      end
+
+      # return the validation value
+      validate
+    end
+
+    # register the callback to be called for the "my_integers" rule
+    ctx.callbacks[ "my_integers" ] = c
+
+    data1 = JSON.parse( '[ 2, 4, "foo", "bar" ]')
+    e = ctx.evaluate( data1 )
+    expect(e.success).to be_truthy
+    expect(my_eval_count).to eq( 2 )
+
+    data2 = JSON.parse( '[ 3, 4, "foo", "bar" ]')
+    e = ctx.evaluate( data2 )
+    expect(e.success).to be_falsey
+    expect(my_eval_count).to eq( 3 )
+  end
+
 end

@@ -114,7 +114,7 @@ module JCR
             else
               group_behavior = ArrayBehavior.new( behavior )
               group_behavior.last_index = array_index
-              retval = evaluate_array_rule( grule, rule_atom, data, econs, group_behavior )
+              retval = evaluate_rule( grule, rule_atom, data, econs, group_behavior )
               if retval.success
                 behavior.checked_hash.merge!( group_behavior.checked_hash )
                 array_index = group_behavior.last_index
@@ -129,7 +129,7 @@ module JCR
             break if array_index == data.length
             group_behavior = ArrayBehavior.new( behavior )
             group_behavior.last_index = array_index
-            e = evaluate_array_rule( grule, rule_atom, data, econs, group_behavior )
+            e = evaluate_rule( grule, rule_atom, data, econs, group_behavior )
             if e.success
               behavior.checked_hash.merge!( group_behavior.checked_hash )
               array_index = group_behavior.last_index
@@ -209,7 +209,7 @@ module JCR
           group_behavior = ArrayBehavior.new( behavior )
           group_behavior.last_index = highest_index
           group_behavior.ordered = false
-          e = evaluate_array_rule( grule, rule_atom, data, econs, group_behavior )
+          e = evaluate_rule( grule, rule_atom, data, econs, group_behavior )
           if e.success
             highest_index = group_behavior.last_index
             behavior.checked_hash.merge!( group_behavior.checked_hash )

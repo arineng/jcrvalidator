@@ -22,5 +22,5 @@ rescue LoadError
   require 'jcr'
 end
 
-JCR.main
+exit JCR.main
 
