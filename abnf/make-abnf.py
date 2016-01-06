@@ -14,6 +14,9 @@
 
 import re
 
+# Configuration
+parslet_src_file = '../lib/jcr/parser.rb'
+abnf_output_file = 'jcr-abnf.txt'
 margin = 0
 indent = 19
 keyword_indent = 30
@@ -21,6 +24,19 @@ keyword_indent = 30
 mappings = {}
 lines = []
 keywords = {}
+
+def main() :
+    read_parslet_def()
+    write_abnf()
+
+def read_parslet_def() :
+    "Read the Parslet Ruby definition into mappings and lines"
+    fin = open( parslet_src_file, 'r' )
+    for line in fin :
+        conditionally_grab_mapping( line )
+        conditionally_grab_abnf( line )
+        conditionally_grab_keywords( line )
+    fin.close()
 
 def conditionally_grab_mapping( line ) :
     "If a line is a mapping line, put mapping in mappings"
@@ -49,48 +65,23 @@ def conditionally_grab_keywords( line ) :
         line = name + equals + '%x' + codes + comment_padding + ' ; "' + label + '"'
         keywords[name] = line
 
-def read_ruby_def() :
-    "Read the Parslet Ruby definition into mappings and lines"
-    fin = open( '../lib/jcr/parser.rb', 'r' )
-    for line in fin :
-        conditionally_grab_mapping( line )
-        conditionally_grab_abnf( line )
-        conditionally_grab_keywords( line )
-    fin.close()
-    
+def write_abnf() :
+    fout = open( abnf_output_file, 'w' )
+    print_captured_abnf( fout )
+    print_keywords( fout )
+    print_referenced_rfc5234_rules( fout )
+    fout.close()
+
+def print_captured_abnf( file ) :
+    for line in lines :
+        line = do_name_mappings( line )
+        pretty_print( line, file )
+
 def do_name_mappings( line ) :
     for mapping_from in sorted( mappings.keys(), key=len, reverse=True ) :  # Make sure longest src mapping done first
         line = line.replace( mapping_from, mappings[mapping_from] )
     line = line.replace( '_', '-' )
     return line
-
-def pretty_print( line, file ) :
-    if re.search( '^\s*$', line ) :    # A blank line
-        print( '', file=file )
-        return
-    print( ' ' * margin, file=file, end='' )
-    if re.search( '^\s*;;', line ) :    # Block comment
-        print( line, file=file )
-        return
-    res = re.search( '^\s*(;.*)', line )    # Local comment
-    if res :
-        print( ' ' * indent + res.group(1), file=file )
-        return
-    res = re.search( '([\w_\-]+)\s*=\s*(.*)', line )    # An expression
-    if res :
-        name = res.group(1)
-        expansion = res.group(2)
-        equals = ' = '
-        padding_needed = max( indent - (len( name ) + len( equals )), 0 )
-        padding = ' ' * padding_needed
-        print( name + padding + equals + expansion, file=file )
-    else :
-        print( ' ' * indent + line, file=file )
-
-def print_captured_abnf( file ) :
-    for line in  lines :
-        line = do_name_mappings( line )
-        pretty_print( line, file )
 
 def print_keywords( file ) :
     print( '', file=file )
@@ -116,13 +107,28 @@ def print_referenced_rfc5234_rules( file ) :
     for rule in rfc5234_core_rules :
         pretty_print( rule, file )
 
-def write_abnf() :
-    fout = open( 'jcr-abnf.txt', 'w' )
-    print_captured_abnf( fout )
-    print_keywords( fout )
-    print_referenced_rfc5234_rules( fout )
-    fout.close()
+def pretty_print( line, file ) :
+    if re.search( '^\s*$', line ) :    # A blank line
+        print( '', file=file )
+        return
+    print( ' ' * margin, file=file, end='' )
+    if re.search( '^\s*;;', line ) :    # Block comment
+        print( line, file=file )
+        return
+    res = re.search( '^\s*(;.*)', line )    # Local comment
+    if res :
+        print( ' ' * indent + res.group(1), file=file )
+        return
+    res = re.search( '([\w_\-]+)\s*=\s*(.*)', line )    # An expression
+    if res :
+        name = res.group(1)
+        expansion = res.group(2)
+        equals = ' = '
+        padding_needed = max( indent - (len( name ) + len( equals )), 0 )
+        padding = ' ' * padding_needed
+        print( name + padding + equals + expansion, file=file )
+        return
+    print( ' ' * indent + line, file=file ) # A 2nd/3rd expression line
 
-read_ruby_def()
-write_abnf()
+main()
 
