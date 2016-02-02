@@ -88,6 +88,7 @@ More information on JCR can be found at [json-content-rules.org](http://json-con
 * 0.5.2 - NOT YET RELEASED
   * Added -J command line option
   * Changed command line option -s to -S to be more consistent
+  * Will no longer allow member rules to be root rules
 The current version of the JCR specification can be found 
 [here](http://tools.ietf.org/html/draft-newton-json-content-rules-05)
   
