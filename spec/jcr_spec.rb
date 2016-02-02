@@ -377,9 +377,8 @@ RULESET
     expect(my_eval_count).to eq( 3 )
   end
 
-  xit 'should parse from the command line' do
-    allow(STDIN).to receive(:gets) { '[ 1, 2]\n' }
-    ex = JCR.main( ['-v', '-R', '[ *:integer ]'])
+  it 'should parse from the command line' do
+    ex = JCR.main( ['-R', '[ *:integer ]', '-J', '[ 1, 2 ]'] )
     expect(ex).to eq(0)
   end
 
