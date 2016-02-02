@@ -127,7 +127,9 @@ module JCR
     return retval
   end
 
-  def self.main
+  def self.main my_argv=nil
+
+    my_argv = ARGV unless my_argv
 
     options = {}
 
@@ -136,6 +138,7 @@ module JCR
       opt.separator  ""
       opt.separator  "Evaluates JSON against JSON Content Rules (JCR)."
       opt.separator  ""
+      opt.separator  "If -J is not specified, JSON_FILES is used."
       opt.separator  "If JSON_FILES is not specified, standard input (STDIN) is used."
       opt.separator  ""
       opt.separator  "Use -v to see results, otherwise check the exit code."
@@ -180,6 +183,14 @@ module JCR
         options[:overrides] << rule
       end
 
+      opt.on("-J STRING","string containing JSON to evaluate. Should probably be quoted") do |json|
+        if options[:json]
+          puts "JSON has already been specified. Use -h for help."
+          return 2
+        end
+        options[:json] = json
+      end
+
       opt.on("-v","verbose") do |verbose|
         options[:verbose] = true
       end
@@ -189,7 +200,7 @@ module JCR
       end
     end
 
-    opt_parser.parse!
+    opt_parser.parse! my_argv
 
     if options[:help]
       puts "HELP","----",""
@@ -208,43 +219,47 @@ module JCR
         end
       end
 
-      if $stdin.tty?
-        ec = 2
-        ARGV.each do |fn|
-          data = JSON.parse( File.open( fn ).read )
-          e = ctx.evaluate( data, options[:root_name] )
-          if e.success
-            if options[:verbose]
-              puts "Success!"
-            end
-            ec = 0
-          else
-            if options[:verbose]
-              puts "Failure: #{e.reason}"
-            end
-            ec = 1
+      if options[:json]
+        data = JSON.parse( options[:json] )
+        ec = cli_eval( ctx, data, options[:root_name], options[:verbose] )
+        return ec
+      elsif $stdin.tty?
+        ec = 0
+        if my_argv.empty?
+          ec = 2
+        else
+          my_argv.each do |fn|
+            data = JSON.parse( File.open( fn ).read )
+            tec = cli_eval( ctx, data, options[:root_name], options[:verbose] )
+            ec = tec if tec != 0 #record error but don't let non-error overwrite error
           end
         end
         return ec
       else
         data = JSON.parse( ARGF.read )
-        e = ctx.evaluate( data, options[:root_name] )
-        if e.success
-          if options[:verbose]
-            puts "Success!"
-          end
-          return 0
-        else
-          if options[:verbose]
-            puts "Failure: #{e.reason}"
-          end
-          return 1
-        end
-
+        ec = cli_eval( ctx, data, options[:root_name], options[:verbose] )
+        return ec
       end
 
     end
 
+  end
+
+  def self.cli_eval ctx, data, root_name, verbose
+    ec = 2
+    e = ctx.evaluate( data, root_name )
+    if e.success
+      if verbose
+        puts "Success!"
+      end
+      ec = 0
+    else
+      if verbose
+        puts "Failure: #{e.reason}"
+      end
+      ec = 1
+    end
+    return ec
   end
 
 end

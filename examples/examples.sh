@@ -15,9 +15,19 @@
 
 
 # Pass JSON into the JCR validator against a ruleset given on the command line
+# from JSON given in standard input
 # This one should succeed
 echo
 echo "[ 1, 2]" | jcr -v -R "[ *:integer ]"
+if [ $? != 0 ]; then
+  echo "** Unexpected return value"
+fi
+
+# Pass JSON into the JCR validator against a ruleset given on the command line
+# from JSON given on the command line
+# This one should succeed
+echo
+jcr -v -R "[ *:integer ]" -J "[ 1, 2]"
 if [ $? != 0 ]; then
   echo "** Unexpected return value"
 fi
