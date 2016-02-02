@@ -382,4 +382,12 @@ RULESET
     expect(ex).to eq(0)
   end
 
+  it 'should parse from the command line' do
+    expect{ JCR.main( ['-R', 'mrule "mname" : integer', '-J', '["mname",12]'] ) }.to raise_error RuntimeError
+  end
+
+  it 'should parse from the command line and fail' do
+    expect{ JCR.main( ['-R', 'mrule "mname" : integer', '-J', '["mname",12]', '-S', 'mrule'] ) }.to raise_error RuntimeError
+  end
+
 end

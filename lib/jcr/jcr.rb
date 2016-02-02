@@ -120,6 +120,7 @@ module JCR
 
     retval = nil
     root_rules.each do |r|
+      raise "Root rules cannot be member rules" if r[:member_rule]
       retval = JCR.evaluate_rule( r, r, data, EvalConditions.new( ctx.mapping, ctx.callbacks ) )
       break if retval.success
     end
