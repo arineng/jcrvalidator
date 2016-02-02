@@ -161,7 +161,7 @@ module JCR
         options[:ruleset] = ruleset
       end
 
-      opt.on("-s STRING","name of root rule. All roots will be tried if none is specified") do |root_name|
+      opt.on("-S STRING","name of root rule. All roots will be tried if none is specified") do |root_name|
         if options[:root_name]
           puts "A root has already been specified. Use -h for help.", ""
           return 2
@@ -185,7 +185,7 @@ module JCR
 
       opt.on("-J STRING","string containing JSON to evaluate. Should probably be quoted") do |json|
         if options[:json]
-          puts "JSON has already been specified. Use -h for help."
+          puts "JSON has already been specified. Use -h for help.", ""
           return 2
         end
         options[:json] = json
