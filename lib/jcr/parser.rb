@@ -47,11 +47,11 @@ module JCR
     rule(:directive_def) { jcr_version_d | ruleset_id_d | import_d | tbd_directive_d }
         #! directive_def = jcr_version_d / ruleset_id_d / import_d /
         #!                 tbd_directive_d
-    rule(:jcr_version_d) { (str('jcr-version') >> spaces >> integer.as(:major_version) >> str('.') >> integer.as(:minor_version)).as(:jcr_version_d) }
+    rule(:jcr_version_d) { (str('jcr-version') >> spaces >> p_integer.as(:major_version) >> str('.') >> p_integer.as(:minor_version)).as(:jcr_version_d) }
         #! jcr_version_d = jcr-version-kw spaces major_version "." minor_version
         #> jcr-version-kw = "jcr-version"
-        #! major_version = integer
-        #! minor_version = integer
+        #! major_version = p_integer
+        #! minor_version = p_integer
     rule(:ruleset_id_d)  { (str('ruleset-id') >> spaces >> ruleset_id.as(:ruleset_id)).as(:ruleset_id_d) }
         #! ruleset_id_d = ruleset-id-kw spaces ruleset_id
         #> ruleset-id-kw = "ruleset-id"
