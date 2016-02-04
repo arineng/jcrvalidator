@@ -68,7 +68,7 @@ module JCR
     rule(:tbd_directive_d) { name.as(:directive_name) >> ( spaces >> match('[^\r\n]').repeat.as(:directive_parameters) ).maybe }
         #! tbd_directive_d = directive_name [ spaces directive_parameters ]
         #! directive_name = name
-        #! directive_parameters = not_eol
+        #! directive_parameters = *not_eol
         #! not_eol = HTAB / %x20-10FFFF
         #! eol = CR / LF
         #!
