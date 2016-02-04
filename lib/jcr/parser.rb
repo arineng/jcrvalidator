@@ -355,7 +355,7 @@ module JCR
         #!
 
     rule(:uri_template) { ( match('[a-zA-Z{}]').repeat(1) >> str(':') >> match('[\S]').repeat(1) ).as(:uri_template) }
-        #! uri_template = 1*ALPHA ":" not-space
+        #! uri_template = 1*ALPHA ":" 1*not-space
 
   end
 
