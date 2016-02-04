@@ -85,11 +85,12 @@ More information on JCR can be found at [json-content-rules.org](http://json-con
   * Small fix to bin/jcr to capture exit codes properly
   * Small enhancement to bin/jcr to suck in multiple JSON files
   * At present, this software is ahead of the specification.
-* 0.5.2 - NOT YET RELEASED
+* 0.5.2 - Minor tweaks
   * Added -J command line option
   * Changed command line option -s to -S to be more consistent
   * Will no longer allow member rules to be root rules
-  
+  * More group rule checking (code was there, just wan't being invoked)
+
 The current version of the JCR specification can be found 
 [here](http://tools.ietf.org/html/draft-newton-json-content-rules-05)
   
