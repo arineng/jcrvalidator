@@ -94,6 +94,7 @@ module JCR
     tree = JCR.parse( ruleset )
     mapping = JCR.map_rule_names( tree, override, ruleset_alias )
     JCR.check_rule_target_names( tree, mapping )
+    JCR.check_groups( tree, mapping )
     roots = JCR.find_roots( tree )
     ctx = Context.new
     ctx.tree = tree
