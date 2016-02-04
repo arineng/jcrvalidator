@@ -43,7 +43,7 @@ module JCR
         #!
 
     rule(:directive) { ( str('#') >> spaces? >> directive_def >> match('[\r\n]') ).as(:directive) }
-        #! directive = "#" spaces? directive_def eol
+        #! directive = "#" spaces? directive_def *WSP eol
     rule(:directive_def) { jcr_version_d | ruleset_id_d | import_d | tbd_directive_d }
         #! directive_def = jcr_version_d / ruleset_id_d / import_d /
         #!                 tbd_directive_d

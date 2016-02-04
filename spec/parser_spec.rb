@@ -950,6 +950,17 @@ EX5a
     expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
   end
 
+  it 'should parse directives with spaces after them' do
+    ex5b = <<EX5b
+# jcr-version 4.0
+# ruleset-id my_awesome_rules
+# import http://arin.net/otherexamples as otherrules
+EX5b
+    tree = JCR.parse( ex5b )
+    expect(tree[0][:directive][:jcr_version_d][:major_version]).to eq("4")
+    expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
+  end
+
   it 'should parse ex1 from I-D' do
     ex6 = <<EX6
 root [
