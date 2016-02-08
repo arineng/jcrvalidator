@@ -35,6 +35,8 @@ module JCR
         #! spaces = 1*( WSP / CR / LF )
     rule(:spaces?)  { spaces.maybe }
         #/ spaces? -> [ spaces ]
+    rule(:wsp)      { match('[\t ]') }
+        # WSP is a standard ABNF production so is not expanded here
     rule(:comment)  { str(';') >> ( str('\;') | match('[^\r\n;]') ).repeat >> match('[\r\n;]') }
         #! comment = ";" *( "\;" / comment-char ) comment-end-char
         #! comment-char = HTAB / %x20-3A / %x3C-10FFFF
@@ -42,7 +44,7 @@ module JCR
         #! comment-end-char = CR / LF / ";"
         #!
 
-    rule(:directive) { ( str('#') >> spaces? >> directive_def >> match('[\r\n]') ).as(:directive) }
+    rule(:directive) { ( str('#') >> spaces? >> directive_def >> wsp.repeat >> match('[\r\n]') ).as(:directive) }
         #! directive = "#" spaces? directive_def *WSP eol
     rule(:directive_def) { jcr_version_d | ruleset_id_d | import_d | tbd_directive_d }
         #! directive_def = jcr_version_d / ruleset_id_d / import_d /

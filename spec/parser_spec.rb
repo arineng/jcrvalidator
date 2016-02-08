@@ -951,12 +951,13 @@ EX5a
   end
 
   it 'should parse directives with spaces after them' do
+  # Note: ~ characters in JCR below changed to spaces by the gsub() regular expression
     ex5b = <<EX5b
-# jcr-version 4.0
-# ruleset-id my_awesome_rules
-# import http://arin.net/otherexamples as otherrules
+# jcr-version 4.0 ~
+# ruleset-id my_awesome_rules~
+# import http://arin.net/otherexamples as otherrules ~
 EX5b
-    tree = JCR.parse( ex5b )
+    tree = JCR.parse( ex5b.gsub( /~/, ' ' ) )
     expect(tree[0][:directive][:jcr_version_d][:major_version]).to eq("4")
     expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
   end
