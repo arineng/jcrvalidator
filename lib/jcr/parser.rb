@@ -45,7 +45,7 @@ module JCR
         #!
 
     rule(:directive) { ( str('#') >> (one_line_directive | multi_line_directive) ).as(:directive) }
-        #! directive = "#" (one_line_directive / multi_line_directive) *WSP eol
+        #! directive = "#" (one_line_directive / multi_line_directive)
     rule(:one_line_directive) { ( spaces? >> ( directive_def | one_line_tbd_directive_d ) >> wsp.repeat >> match('[\r\n]') ) }
         #! one_line_directive = spaces? 
         #!                      (directive_def / one_line_tbd_directive_d) *WSP eol
