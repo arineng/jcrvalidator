@@ -135,11 +135,11 @@ module JCR
     rule(:root_annotation)   { str('root').as(:root_annotation) }
         #! root_annotation = root-kw
         #> root-kw = "root"
-    rule(:tbd_annotation)    { name.as(:annotation_name) >> ( spaces >> match('[^)]').as(:annotation_parameters) ).maybe }
+    rule(:tbd_annotation)    { name.as(:annotation_name) >> ( spaces >> annotation_parameters.as(:annotation_parameters) ).maybe }
         #! tbd_annotation = annotation_name [ spaces annotation_parameters ]
         #! annotation_name = name
-        #! annotation_parameters = *( spaces / %x21-28 / %x2A-10FFFF )
-        #!                       ; Not close bracket - ")"
+    rule(:annotation_parameters) { multi_line_parameters }
+        #! annotation_parameters = multi_line_parameters
         #!
 
     rule(:primitive_rule)        { ( annotations >> str(':') >> spcCmnt? >> primimitive_def ).as(:primitive_rule) }

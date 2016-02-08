@@ -1311,4 +1311,16 @@ EX12
     expect(tree[0][:rule][:rule_name]).to eq("trule")
   end
 
+  it 'should parse an unknown annotation' do
+    tree = JCR.parse( 'my_int @{assert $ % 3 == 0} : 2' )
+    expect(tree[0][:rule][:rule_name]).to eq("my_int")
+  end
+
+  it 'should parse an unknown annotation with comments, q_string and regexs' do
+    tree = JCR.parse( 'my_int @{assert $name == /p\d{1,5}/ && ; Must allow } and { in comments
+                          $when == "} with {"
+                          } : 2' )
+    expect(tree[0][:rule][:rule_name]).to eq("my_int")
+  end
+
 end
