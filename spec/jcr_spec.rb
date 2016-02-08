@@ -199,7 +199,7 @@ OV
 # jcr-version 0.5
 
 [ 2 my_integers, 2 my_strings ]
-oroot @(root) [ 2 my_strings, 2 my_integers ]
+oroot @{root} [ 2 my_strings, 2 my_integers ]
 my_integers :0..2
 my_strings ( :"foo" | :"bar" )
 

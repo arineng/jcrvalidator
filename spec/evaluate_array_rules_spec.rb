@@ -26,7 +26,7 @@ describe 'evaluate_array_rules' do
   end
 
   it 'should pass something that is not an array with reject' do
-    tree = JCR.parse( 'trule @(reject) [ ]' )
+    tree = JCR.parse( 'trule @{reject} [ ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
@@ -42,7 +42,7 @@ describe 'evaluate_array_rules' do
   end
 
   it 'should fail an empty reject array against an empty array rule' do
-    tree = JCR.parse( 'trule @(reject) [ ]' )
+    tree = JCR.parse( 'trule @{reject} [ ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [], JCR::EvalConditions.new( mapping, nil ) )
@@ -58,7 +58,7 @@ describe 'evaluate_array_rules' do
   end
 
   it 'should pass a non-empty array against an empty reject array rule' do
-    tree = JCR.parse( 'trule @(reject) [ ]' )
+    tree = JCR.parse( 'trule @{reject} [ ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "thing" ], JCR::EvalConditions.new( mapping, nil ) )
@@ -106,7 +106,7 @@ describe 'evaluate_array_rules' do
   end
 
   it 'should fail an array with one string against an reject array rule with a string or a string' do
-    tree = JCR.parse( 'trule @(reject) [ :string | :string ]' )
+    tree = JCR.parse( 'trule @{reject} [ :string | :string ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "thing" ], JCR::EvalConditions.new( mapping, nil ) )
@@ -386,7 +386,7 @@ describe 'evaluate_array_rules' do
   end
 
   it 'should pass an array with one string and one arrays against an reject array rule with string 2 and any 2' do
-    tree = JCR.parse( 'trule @(reject) [ 2 :string, 2 :any ]' )
+    tree = JCR.parse( 'trule @{reject} [ 2 :string, 2 :any ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", [ 1, 2 ] ], JCR::EvalConditions.new( mapping, nil ) )
@@ -394,7 +394,7 @@ describe 'evaluate_array_rules' do
   end
 
   it 'should pass an array with two strings and two arrays against an unordered array rule with string 2 and any 2' do
-    tree = JCR.parse( 'trule @(unordered) [ 2 :string, 2 :any ]' )
+    tree = JCR.parse( 'trule @{unordered} [ 2 :string, 2 :any ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", [ 1, 2 ], [ 2, 3 ] ], JCR::EvalConditions.new( mapping, nil ) )
@@ -402,7 +402,7 @@ describe 'evaluate_array_rules' do
   end
 
   it 'should pass an array with two strings and two arrays against an unordered array rule with string 2 and group any' do
-    tree = JCR.parse( 'trule @(unordered) [ 2 :string, (:any,:any) ]' )
+    tree = JCR.parse( 'trule @{unordered} [ 2 :string, (:any,:any) ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", [ 1, 2 ], [ 2, 3 ] ], JCR::EvalConditions.new( mapping, nil ) )
@@ -410,7 +410,7 @@ describe 'evaluate_array_rules' do
   end
 
   it 'should pass an array with two strings and two arrays against an unordered array rule with string 2 and named group any' do
-    tree = JCR.parse( 'trule @(unordered) [ 2 :string, grule ] ;; grule (:any,:any)' )
+    tree = JCR.parse( 'trule @{unordered} [ 2 :string, grule ] ;; grule (:any,:any)' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", [ 1, 2 ], [ 2, 3 ] ], JCR::EvalConditions.new( mapping, nil ) )
@@ -418,7 +418,7 @@ describe 'evaluate_array_rules' do
   end
 
   it 'should pass an array with two strings and two arrays against an unordered array rule with string 2 and 2 named group any' do
-    tree = JCR.parse( 'trule @(unordered) [ 2 :string, 2 grule ] ;; grule (:any)' )
+    tree = JCR.parse( 'trule @{unordered} [ 2 :string, 2 grule ] ;; grule (:any)' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", [ 1, 2 ], [ 2, 3 ] ], JCR::EvalConditions.new( mapping, nil ) )
@@ -426,7 +426,7 @@ describe 'evaluate_array_rules' do
   end
 
   it 'should fail an array with two strings and three arrays against an unordered array rule with string 2 and 2 named group any' do
-    tree = JCR.parse( 'trule @(unordered) [ 2 :string, 2 grule ] ;; grule (:any)' )
+    tree = JCR.parse( 'trule @{unordered} [ 2 :string, 2 grule ] ;; grule (:any)' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", [ 1, 2 ], [ 2, 3 ], [ 4, 5 ] ], JCR::EvalConditions.new( mapping, nil ) )
@@ -434,7 +434,7 @@ describe 'evaluate_array_rules' do
   end
 
   it 'should pass an array with two strings and two integers against an unordered array rule with string 2 and any 2' do
-    tree = JCR.parse( 'trule @(unordered) [ 2 :string, 2 :integer ]' )
+    tree = JCR.parse( 'trule @{unordered} [ 2 :string, 2 :integer ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, "thing", "thing2"  ], JCR::EvalConditions.new( mapping, nil ) )
@@ -442,7 +442,7 @@ describe 'evaluate_array_rules' do
   end
 
   it 'should fail an array with two strings and two arrays against an reject, unordered array rule with string 2 and any 2' do
-    tree = JCR.parse( 'trule @(reject) @(unordered) [ 2 :string, 2 :integer ]' )
+    tree = JCR.parse( 'trule @{reject} @{unordered} [ 2 :string, 2 :integer ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, "thing", "thing2"  ], JCR::EvalConditions.new( mapping, nil ) )
@@ -570,7 +570,7 @@ describe 'evaluate_array_rules' do
   end
 
   it 'should pass unordered with three ANDs in a group and an OR 1' do
-    tree = JCR.parse( 'arule @(unordered) [ ( :1, :2, :3 ) | :4 ]' )
+    tree = JCR.parse( 'arule @{unordered} [ ( :1, :2, :3 ) | :4 ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ 3, 2, 1 ], JCR::EvalConditions.new( mapping, nil ) )
@@ -578,7 +578,7 @@ describe 'evaluate_array_rules' do
   end
 
   it 'should pass unordered with three ANDs  in a group and an OR 2' do
-    tree = JCR.parse( 'arule @(unordered) [ ( :1, :2, :3 ) | :4 ]' )
+    tree = JCR.parse( 'arule @{unordered} [ ( :1, :2, :3 ) | :4 ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ 4 ], JCR::EvalConditions.new( mapping, nil ) )

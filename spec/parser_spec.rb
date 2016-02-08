@@ -951,14 +951,59 @@ EX5a
   end
 
   it 'should parse directives with spaces after them' do
+  # Note: ~ characters in JCR below changed to spaces by the gsub() regular expression
     ex5b = <<EX5b
-# jcr-version 4.0
-# ruleset-id my_awesome_rules
-# import http://arin.net/otherexamples as otherrules
+# jcr-version 4.0 ~
+# ruleset-id my_awesome_rules~
+# import http://arin.net/otherexamples as otherrules ~
 EX5b
-    tree = JCR.parse( ex5b )
+    tree = JCR.parse( ex5b.gsub( /~/, ' ' ) )
     expect(tree[0][:directive][:jcr_version_d][:major_version]).to eq("4")
     expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
+  end
+
+  it 'should parse multi-line jcr-version directive major and minor numbers' do
+    ex5c = <<'EX5c' # 'EX5c' to prevent #{/...} string interpolation
+#{jcr-version
+  4.0 }
+# ruleset-id my_awesome_rules
+# import http://arin.net/otherexamples as otherrules
+EX5c
+    tree = JCR.parse( ex5c )
+    expect(tree[0][:directive][:jcr_version_d][:major_version]).to eq("4")
+    expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
+  end
+
+  it 'should permit parsing multi-line unknown directives' do
+    ex5d = <<'EX5d' # 'EX5d' to prevent #{/...} string interpolation
+#{constraint foo
+  $name }
+# ruleset-id my_awesome_rules
+# import http://arin.net/otherexamples as otherrules
+EX5d
+    tree = JCR.parse( ex5d )
+  end
+
+  it 'should permit parsing multi-line unknown directives' do
+    ex5e = <<'EX5e' # 'EX5e' to prevent #{/...} string interpolation
+#{ constraint foo
+  $name } ; A comment
+# ruleset-id my_awesome_rules
+# import http://arin.net/otherexamples as otherrules
+EX5e
+    tree = JCR.parse( ex5e )
+  end
+
+  it 'should parse multi-line unknown directives with comment, q_strings and regexs' do
+    ex5f = <<'EX5f' # 'EX5f' to prevent #{/...} string interpolation
+#{constraint foo
+  $name == /p\d{1,5}/ && ; Must allow } and { in comments
+  $when == "} with {" 
+}
+# ruleset-id my_awesome_rules
+# import http://arin.net/otherexamples as otherrules
+EX5f
+    tree = JCR.parse( ex5f )
   end
 
   it 'should parse ex1 from I-D' do
@@ -1214,56 +1259,68 @@ EX12
   end
 
   it 'should parse value rule with reject directive' do
-    tree = JCR.parse( 'my_int @(reject) : 2' )
+    tree = JCR.parse( 'my_int @{reject} : 2' )
   end
 
   it 'should parse member rule with reject directive' do
-    tree = JCR.parse( 'my_mem @(reject) "count" :integer' )
+    tree = JCR.parse( 'my_mem @{reject} "count" :integer' )
   end
 
   it 'should parse object rule with reject directive' do
-    tree = JCR.parse( 'my_rule @(reject) { "count" :integer }' )
+    tree = JCR.parse( 'my_rule @{reject} { "count" :integer }' )
   end
 
   it 'should parse object rule with reject directive' do
-    tree = JCR.parse( 'my_rule @(root) @(reject) { "count" :integer }' )
+    tree = JCR.parse( 'my_rule @{root} @{reject} { "count" :integer }' )
   end
 
   it 'should parse array rule with reject directive' do
-    tree = JCR.parse( 'my_rule @(reject) [ *:integer ]' )
+    tree = JCR.parse( 'my_rule @{reject} [ *:integer ]' )
   end
 
   it 'should parse array rule with unordered directive' do
-    tree = JCR.parse( 'my_rule @(unordered) [ *:integer ]' )
+    tree = JCR.parse( 'my_rule @{unordered} [ *:integer ]' )
   end
 
   it 'should parse array rule with root directive' do
-    tree = JCR.parse( 'my_rule @(root) [ *:integer ]' )
+    tree = JCR.parse( 'my_rule @{root} [ *:integer ]' )
   end
 
   it 'should parse array rule with unordered directive' do
-    tree = JCR.parse( 'my_rule @(unordered) @(reject) [ *:integer ]' )
+    tree = JCR.parse( 'my_rule @{unordered} @{reject} [ *:integer ]' )
   end
 
   it 'should parse array rule with unordered directive' do
-    tree = JCR.parse( 'my_rule @(reject) @(unordered) [ *:integer ]' )
+    tree = JCR.parse( 'my_rule @{reject} @{unordered} [ *:integer ]' )
   end
 
   it 'should parse group rule with reject directive' do
-    tree = JCR.parse( 'my_rule @( reject ) ( *:integer )' )
+    tree = JCR.parse( 'my_rule @{ reject } ( *:integer )' )
   end
 
   it 'should parse array rule with reject directive on value rule' do
-    tree = JCR.parse( 'my_rule [ * @(reject) :integer ]' )
+    tree = JCR.parse( 'my_rule [ * @{reject} :integer ]' )
   end
 
   it 'should parse array rule with reject directive on target rule' do
-    expect{ JCR.parse( 'my_rule [ @(reject) target_rule ]' ) }.to raise_error Parslet::ParseFailed
+    expect{ JCR.parse( 'my_rule [ @{reject} target_rule ]' ) }.to raise_error Parslet::ParseFailed
   end
 
   it 'should parse a group rule with a rulename only with reject' do
-    tree = JCR.parse( 'trule @(reject) ( my_rule1 )' )
+    tree = JCR.parse( 'trule @{reject} ( my_rule1 )' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
+  end
+
+  it 'should parse an unknown annotation' do
+    tree = JCR.parse( 'my_int @{assert $ % 3 == 0} : 2' )
+    expect(tree[0][:rule][:rule_name]).to eq("my_int")
+  end
+
+  it 'should parse an unknown annotation with comments, q_string and regexs' do
+    tree = JCR.parse( 'my_int @{assert $name == /p\d{1,5}/ && ; Must allow } and { in comments
+                          $when == "} with {"
+                          } : 2' )
+    expect(tree[0][:rule][:rule_name]).to eq("my_int")
   end
 
 end
