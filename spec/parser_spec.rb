@@ -962,6 +962,50 @@ EX5b
     expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
   end
 
+  it 'should parse multi-line jcr-version directive major and minor numbers' do
+    ex5c = <<'EX5c' # 'EX5c' to prevent #{/...} string interpolation
+#{jcr-version
+  4.0 }
+# ruleset-id my_awesome_rules
+# import http://arin.net/otherexamples as otherrules
+EX5c
+    tree = JCR.parse( ex5c )
+    expect(tree[0][:directive][:jcr_version_d][:major_version]).to eq("4")
+    expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
+  end
+
+  it 'should permit parsing multi-line unknown directives' do
+    ex5d = <<'EX5d' # 'EX5d' to prevent #{/...} string interpolation
+#{constraint foo
+  $name }
+# ruleset-id my_awesome_rules
+# import http://arin.net/otherexamples as otherrules
+EX5d
+    tree = JCR.parse( ex5d )
+  end
+
+  it 'should permit parsing multi-line unknown directives' do
+    ex5e = <<'EX5e' # 'EX5e' to prevent #{/...} string interpolation
+#{ constraint foo
+  $name } ; A comment
+# ruleset-id my_awesome_rules
+# import http://arin.net/otherexamples as otherrules
+EX5e
+    tree = JCR.parse( ex5e )
+  end
+
+  it 'should parse multi-line unknown directives with comment, q_strings and regexs' do
+    ex5f = <<'EX5f' # 'EX5f' to prevent #{/...} string interpolation
+#{constraint foo
+  $name == /p\d{1,5}/ && ; Must allow } and { in comments
+  $when == "} with {" 
+}
+# ruleset-id my_awesome_rules
+# import http://arin.net/otherexamples as otherrules
+EX5f
+    tree = JCR.parse( ex5f )
+  end
+
   it 'should parse ex1 from I-D' do
     ex6 = <<EX6
 root [
