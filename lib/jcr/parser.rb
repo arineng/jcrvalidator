@@ -47,9 +47,11 @@ module JCR
     rule(:directive) { ( str('#') >> (one_line_directive | multi_line_directive) ).as(:directive) }
         #! directive = "#" (one_line_directive / multi_line_directive) *WSP eol
     rule(:one_line_directive) { ( spaces? >> ( directive_def | one_line_tbd_directive_d ) >> wsp.repeat >> match('[\r\n]') ) }
-        #! one_line_directive = spaces? (directive_def / one_line_tbd_directive_d) *WSP eol
+        #! one_line_directive = spaces? 
+        #!                      (directive_def / one_line_tbd_directive_d) *WSP eol
     rule(:multi_line_directive) { str('{') >> spcCmnt? >> (directive_def | multi_line_tbd_directive_d) >> spcCmnt? >> str('}') }
-        #! multi_line_directive = "{" spcCmnt? (directive_def / multi_line_tbd_directive_d) spcCmnt? "}"
+        #! multi_line_directive = "{" spcCmnt?
+        #!                        (directive_def / multi_line_tbd_directive_d) spcCmnt? "}"
     rule(:directive_def) { jcr_version_d | ruleset_id_d | import_d }
         #! directive_def = jcr_version_d / ruleset_id_d / import_d
     rule(:jcr_version_d) { (str('jcr-version') >> spaces >> p_integer.as(:major_version) >> str('.') >> p_integer.as(:minor_version)).as(:jcr_version_d) }
@@ -71,18 +73,21 @@ module JCR
     rule(:ruleset_id_alias)  { name.as(:ruleset_id_alias) }
         #! ruleset_id_alias = name
     rule(:one_line_tbd_directive_d) { name.as(:directive_name) >> ( wsp >> match('[^\r\n]').repeat.as(:directive_parameters) ).maybe }
-        #! tbd_directive_d = directive_name [ WSP one_line_directive_parameters ]
+        #! one_line_tbd_directive_d = directive_name [ WSP one_line_directive_parameters ]
         #! directive_name = name
         #! one_line_directive_parameters = *not_eol
         #! not_eol = HTAB / %x20-10FFFF
         #! eol = CR / LF
     rule(:multi_line_tbd_directive_d) { name.as(:directive_name) >> ( spaces >> multi_line_directive_parameters.as(:directive_parameters) ).maybe }
-        #! tbd_directive_d = directive_name [ spaces multi_line_directive_parameters ]
+        #! multi_line_tbd_directive_d = directive_name
+        #!                   [ spaces multi_line_directive_parameters ]
     rule(:multi_line_directive_parameters) { multi_line_parameters }
         #! multi_line_directive_parameters = multi_line_parameters
     rule(:multi_line_parameters) { (comment | q_string | regex | match('[^"/;}]')).repeat }
-        #! multi_line_parameters = *(comment / q_string / regex / not_multi_line_special)
-        #! not_multi_line_special = spaces / %x21 / %x23-2E / %x30-3A / %x3C-7C / %x7E-10FFFF ; not ", /, ; or }
+        #! multi_line_parameters = *(comment / q_string / regex /
+        #!                         not_multi_line_special)
+        #! not_multi_line_special = spaces / %x21 / %x23-2E / %x30-3A / %x3C-7C /
+        #!                          %x7E-10FFFF ; not ", /, ; or }
         #!
 
     rule(:root_rule) { value_rule | group_rule } # N.B. Not target_rule_name

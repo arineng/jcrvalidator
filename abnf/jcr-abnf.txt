@@ -8,25 +8,35 @@ comment-char     = HTAB / %x20-3A / %x3C-10FFFF
                    ; Any char other than ";" / CR / LF
 comment-end-char = CR / LF / ";"
 
-directive        = "#" [ spaces ] directive-def eol
-directive-def    = jcr-version-d / ruleset-id-d / import-d /
-                   tbd-directive-d
+directive        = "#" (one-line-directive / multi-line-directive) *WSP eol
+one-line-directive = [ spaces ] 
+                   (directive-def / one-line-tbd-directive-d) *WSP eol
+multi-line-directive = "{" *sp-cmt
+                   (directive-def / multi-line-tbd-directive-d) *sp-cmt "}"
+directive-def    = jcr-version-d / ruleset-id-d / import-d
 jcr-version-d    = jcr-version-kw spaces major-version "." minor-version
-major-version    = integer
-minor-version    = integer
+major-version    = p-integer
+minor-version    = p-integer
 ruleset-id-d     = ruleset-id-kw spaces ruleset-id
 import-d         = import-kw spaces ruleset-id
                    [ spaces as-kw spaces ruleset-id-alias ]
 ruleset-id       = ALPHA *not-space
 not-space        = %x21-10FFFF
 ruleset-id-alias = name
-tbd-directive-d  = directive-name [ spaces directive-parameters ]
+one-line-tbd-directive-d = directive-name [ WSP one-line-directive-parameters ]
 directive-name   = name
-directive-parameters = not-eol
+one-line-directive-parameters = *not-eol
 not-eol          = HTAB / %x20-10FFFF
 eol              = CR / LF
+multi-line-tbd-directive-d = directive-name
+                   [ spaces multi-line-directive-parameters ]
+multi-line-directive-parameters = multi-line-parameters
+multi-line-parameters = *(comment / q-string / regex /
+                   not-multi-line-special)
+not-multi-line-special = spaces / %x21 / %x23-2E / %x30-3A / %x3C-7C /
+                   %x7E-10FFFF ; not ", /, ; or }
 
-root-rule        = value-rule / member-rule / group-rule
+root-rule        = value-rule / group-rule
 
 rule             = rule-name *sp-cmt rule-def
 
@@ -45,7 +55,7 @@ type-choice      = annotations "(" type-choice-items
                    *( choice-combiner type-choice-items ) ")"
 type-choice-items = *sp-cmt ( type-choice / type-rule ) *sp-cmt
 
-annotations      = *( "@(" *sp-cmt annotation-set *sp-cmt ")" *sp-cmt )
+annotations      = *( "@{" *sp-cmt annotation-set *sp-cmt "}" *sp-cmt )
 annotation-set   = reject-annotation / unordered-annotation /
                    root-annotation / tbd-annotation
 reject-annotation = reject-kw
@@ -53,8 +63,7 @@ unordered-annotation = unordered-kw
 root-annotation  = root-kw
 tbd-annotation   = annotation-name [ spaces annotation-parameters ]
 annotation-name  = name
-annotation-parameters = *( spaces / %x21-28 / %x2A-10FFFF )
-                   ; Not close bracket - ")"
+annotation-parameters = multi-line-parameters
 
 primitive-rule   = annotations ":" *sp-cmt primimitive-def
 primimitive-def  = null-type / boolean-type / true-value / false-value /
@@ -170,7 +179,7 @@ not-slash        = HTAB / CR / LF / %x20-2E / %x30-10FFFF
                    ; Any char except "/"
 regex-modifiers  = *( "i" / "s" / "x" )
 
-uri-template     = 1*ALPHA ":" not-space
+uri-template     = 1*ALPHA ":" 1*not-space
 
 ;; Keywords
 any-kw           = %x61.6E.79                      ; "any"
