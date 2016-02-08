@@ -47,7 +47,7 @@ describe 'evaluate_value_rules' do
   end
 
   it 'should fail when any rule matches an array with reject' do
-    tree = JCR.parse( 'trule @(reject) : any' )
+    tree = JCR.parse( 'trule @{reject} : any' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 3 ], JCR::EvalConditions.new( mapping, nil ) )
@@ -67,7 +67,7 @@ describe 'evaluate_value_rules' do
   end
 
   it 'should fail when a string matches a string constant with reject' do
-    tree = JCR.parse( 'trule @(reject) : "a string constant"' )
+    tree = JCR.parse( 'trule @{reject} : "a string constant"' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", JCR::EvalConditions.new( mapping, nil ) )
@@ -347,7 +347,7 @@ describe 'evaluate_value_rules' do
   end
 
   it 'should fail a null with reject' do
-    tree = JCR.parse( 'trule @(reject) : null' )
+    tree = JCR.parse( 'trule @{reject} : null' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], nil, JCR::EvalConditions.new( mapping, nil ) )

@@ -111,8 +111,8 @@ module JCR
         #! type_choice_items = spcCmnt? ( type_choice / type_rule ) spcCmnt?
         #!
 
-    rule(:annotations)       { ( str('@(') >> spcCmnt? >> annotation_set >> spcCmnt? >> str(')') >> spcCmnt? ).repeat }
-        #! annotations = *( "@(" spcCmnt? annotation_set spcCmnt? ")" spcCmnt? )
+    rule(:annotations)       { ( str('@{') >> spcCmnt? >> annotation_set >> spcCmnt? >> str('}') >> spcCmnt? ).repeat }
+        #! annotations = *( "@{" spcCmnt? annotation_set spcCmnt? "}" spcCmnt? )
     rule(:annotation_set)    { reject_annotation | unordered_annotation | root_annotation | tbd_annotation }
         #! annotation_set = reject_annotation / unordered_annotation /
         #!                  root_annotation / tbd_annotation
