@@ -332,8 +332,21 @@ describe 'parser' do
     expect(tree[0][:rule][:member_rule][:target_rule_name][:rule_name]).to eq("my_value_rule")
   end
 
+  it 'should parse a member rule with a rule name with an annotation' do
+    tree = JCR.parse( 'trule "thing" @{id foo } my_value_rule' )
+    expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("thing")
+    expect(tree[0][:rule][:member_rule][:target_rule_name][:rule_name]).to eq("my_value_rule")
+  end
+
   it 'should parse a member rule with a choice rule' do
     tree = JCR.parse( 'trule "thing" : ( an_array | an_object )' )
+    expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("thing")
+    expect(tree[0][:rule][:member_rule][:group_rule][0][:target_rule_name][:rule_name]).to eq("an_array")
+    expect(tree[0][:rule][:member_rule][:group_rule][1][:target_rule_name][:rule_name]).to eq("an_object")
+  end
+
+  it 'should parse a member rule with a choice rule' do
+    tree = JCR.parse( 'trule "thing" : ( @{when $t == "array"} an_array | an_object )' )
     expect(tree[0][:rule][:member_rule][:member_name][:q_string]).to eq("thing")
     expect(tree[0][:rule][:member_rule][:group_rule][0][:target_rule_name][:rule_name]).to eq("an_array")
     expect(tree[0][:rule][:member_rule][:group_rule][1][:target_rule_name][:rule_name]).to eq("an_object")
@@ -1303,7 +1316,7 @@ EX12
   end
 
   it 'should parse array rule with reject directive on target rule' do
-    expect{ JCR.parse( 'my_rule [ @{reject} target_rule ]' ) }.to raise_error Parslet::ParseFailed
+    JCR.parse( 'my_rule [ @{reject} target_rule ]' )
   end
 
   it 'should parse a group rule with a rulename only with reject' do

@@ -8,7 +8,7 @@ comment-char     = HTAB / %x20-3A / %x3C-10FFFF
                    ; Any char other than ";" / CR / LF
 comment-end-char = CR / LF / ";"
 
-directive        = "#" (one-line-directive / multi-line-directive) *WSP eol
+directive        = "#" (one-line-directive / multi-line-directive)
 one-line-directive = [ spaces ] 
                    (directive-def / one-line-tbd-directive-d) *WSP eol
 multi-line-directive = "{" *sp-cmt
@@ -41,7 +41,7 @@ root-rule        = value-rule / group-rule
 rule             = rule-name *sp-cmt rule-def
 
 rule-name        = name
-target-rule-name = [ ruleset-id-alias "." ] rule-name
+target-rule-name = annotations [ ruleset-id-alias "." ] rule-name
 name             = ALPHA *( ALPHA / DIGIT / "-" / "-" )
 
 rule-def         = type-rule / member-rule / group-rule
