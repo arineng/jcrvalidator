@@ -84,7 +84,7 @@ module JCR
       when jcr[:target_rule_name]
         target = econs.mapping[ jcr[:target_rule_name][:rule_name].to_s ]
         raise "Target rule not in mapping. This should have been checked earlier." unless target
-        trace( econs, "Referencing target rule #{jcr[:target_rule_name][:rule_name].to_s}" )
+        trace( econs, "Referencing target rule #{slice_to_s( jcr[:target_rule_name][:rule_name] )}" )
         retval = evaluate_rule( target, target, data, econs, behavior )
       when jcr[:primitive_rule]
         retval = evaluate_value_rule( jcr[:primitive_rule], rule_atom, data, econs)
