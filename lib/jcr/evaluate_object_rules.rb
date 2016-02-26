@@ -33,15 +33,15 @@ module JCR
 
     # if the data is not an object (Hash)
     return evaluate_reject( annotations,
-      Evaluation.new( false, "#{data} is not an object at #{jcr} from #{rule_atom}") ) unless data.is_a? Hash
+      Evaluation.new( false, "#{data} is not an object at #{jcr} from #{rule_atom}"), econs ) unless data.is_a? Hash
 
     # if the object has no members and there are zero sub-rules (it is suppose to be empty)
     return evaluate_reject( annotations,
-      Evaluation.new( true, nil ) ) if rules.empty? && data.length == 0
+      Evaluation.new( true, nil ), econs ) if rules.empty? && data.length == 0
 
     # if the object has members and there are zero sub-rules (it is suppose to be empty)
     return evaluate_reject( annotations,
-      Evaluation.new( false, "Non-empty object at #{jcr} from #{rule_atom}" ) ) if rules.empty? && data.length != 0
+      Evaluation.new( false, "Non-empty object at #{jcr} from #{rule_atom}" ), econs ) if rules.empty? && data.length != 0
 
     retval = nil
     behavior = ObjectBehavior.new unless behavior
@@ -52,7 +52,7 @@ module JCR
       if rule[:choice_combiner] && retval && retval.success
         next
       elsif rule[:sequence_combiner] && retval && !retval.success
-        return evaluate_reject( annotations, retval ) # short circuit
+        return evaluate_reject( annotations, retval, econs ) # short circuit
       end
 
       repeat_min, repeat_max = get_repetitions( rule, econs )
@@ -109,7 +109,7 @@ module JCR
 
     end # end if grule else
 
-    return evaluate_reject( annotations, retval )
+    return evaluate_reject( annotations, retval, econs )
   end
 
 end

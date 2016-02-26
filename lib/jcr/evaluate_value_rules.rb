@@ -28,7 +28,7 @@ module JCR
   def self.evaluate_value_rule jcr, rule_atom, data, econs
     rules, annotations = get_rules_and_annotations( jcr, econs )
 
-    return evaluate_reject( annotations, evaluate_values( rules[0], rule_atom, data, econs ) )
+    return evaluate_reject( annotations, evaluate_values( rules[0], rule_atom, data, econs ), econs )
   end
 
   def self.evaluate_values jcr, rule_atom, data, econs

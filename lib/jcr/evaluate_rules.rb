@@ -189,7 +189,7 @@ module JCR
     return rules, annotations
   end
 
-  def self.evaluate_reject annotations, evaluation
+  def self.evaluate_reject annotations, evaluation, econs
     reject = false
     annotations.each do |a|
       if a[:reject_annotation]
@@ -199,6 +199,7 @@ module JCR
     end
 
     if reject
+      trace( econs, "Rejection annotation changing result from #{evaluation.success} to #{!evaluation.success}")
       evaluation.success = !evaluation.success
     end
     return evaluation
