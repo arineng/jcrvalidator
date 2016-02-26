@@ -65,7 +65,7 @@ module JCR
 
     # if the data is not an array
     return evaluate_reject( annotations,
-      Evaluation.new( false, "#{data} is not an array at #{jcr} from #{rule_atom}"), econs ) unless data.is_a? Array
+      Evaluation.new( false, "#{data} is not an array #{raised_rule(jcr,rule_atom)}"), econs ) unless data.is_a? Array
 
     # if the array is zero length and there are zero sub-rules (it is suppose to be empty)
     return evaluate_reject( annotations,
@@ -73,7 +73,7 @@ module JCR
 
     # if the array is not empty and there are zero sub-rules (it is suppose to be empty)
     return evaluate_reject( annotations,
-      Evaluation.new( false, "Non-empty array at #{jcr} from #{rule_atom}" ), econs ) if rules.empty? && data.length != 0
+      Evaluation.new( false, "Non-empty array for #{raised_rule(jcr,rule_atom)}" ), econs ) if rules.empty? && data.length != 0
 
     if ordered
       return evaluate_reject( annotations, evaluate_array_rule_ordered( rules, rule_atom, data, econs, behavior ), econs )
@@ -111,7 +111,7 @@ module JCR
         else
           for i in 1..repeat_min do
             if array_index == data.length
-              return Evaluation.new( false, "array is not large enough for #{jcr} from #{rule_atom}" )
+              return Evaluation.new( false, "array is not large enough for #{raised_rule(jcr,rule_atom)}" )
             else
               group_behavior = ArrayBehavior.new( behavior )
               group_behavior.last_index = array_index
@@ -147,7 +147,7 @@ module JCR
         else
           for i in 1..repeat_min do
             if array_index == data.length
-              return Evaluation.new( false, "array is not large enough for #{jcr} from #{rule_atom}" )
+              return Evaluation.new( false, "array is not large enough for #{raised_rule(jcr,rule_atom)}" )
             else
               retval = evaluate_rule( rule, rule_atom, data[ array_index ], econs, nil )
               break unless retval.success
@@ -172,7 +172,7 @@ module JCR
     behavior.last_index = array_index
 
     if data.length > array_index && behavior.extra_prohibited
-      retval = Evaluation.new( false, "More itmes in array than specified for #{jcr} from #{rule_atom}" )
+      retval = Evaluation.new( false, "More itmes in array than specified for #{raised_rule(jcr,rule_atom)}" )
     end
 
     return retval
@@ -221,11 +221,11 @@ module JCR
         end
 
         if successes == 0 && repeat_min > 0
-          retval = Evaluation.new( false, "array does not contain #{rule} for #{jcr} from #{rule_atom}")
+          retval = Evaluation.new( false, "array does not contain #{rule} for #{raised_rule(jcr,rule_atom)}")
         elsif successes < repeat_min
-          retval = Evaluation.new( false, "array does not have enough #{rule} for #{jcr} from #{rule_atom}")
+          retval = Evaluation.new( false, "array does not have enough #{rule} for #{raised_rule(jcr,rule_atom)}")
         elsif successes > repeat_max
-          retval = Evaluation.new( false, "array has too many #{rule} for #{jcr} from #{rule_atom}")
+          retval = Evaluation.new( false, "array has too many #{rule} for #{raised_rule(jcr,rule_atom)}")
         else
           retval = Evaluation.new( true, nil )
         end
@@ -246,11 +246,11 @@ module JCR
         end
 
         if successes == 0 && repeat_min > 0
-          retval = Evaluation.new( false, "array does not contain #{rule} for #{jcr} from #{rule_atom}")
+          retval = Evaluation.new( false, "array does not contain #{rule} for #{raised_rule(jcr,rule_atom)}")
         elsif successes < repeat_min
-          retval = Evaluation.new( false, "array does not have enough #{rule} for #{jcr} from #{rule_atom}")
+          retval = Evaluation.new( false, "array does not have enough #{rule} for #{raised_rule(jcr,rule_atom)}")
         elsif successes > repeat_max
-          retval = Evaluation.new( false, "array has too many #{rule} for #{jcr} from #{rule_atom}")
+          retval = Evaluation.new( false, "array has too many #{rule} for #{raised_rule(jcr,rule_atom)}")
         else
           retval = Evaluation.new( true, nil)
         end
@@ -262,7 +262,7 @@ module JCR
     behavior.last_index = highest_index
 
     if data.length > behavior.checked_hash.length && behavior.extra_prohibited
-      retval = Evaluation.new( false, "More itmes in array than specified for #{jcr} from #{rule_atom}" )
+      retval = Evaluation.new( false, "More itmes in array than specified for #{raised_rule(jcr,rule_atom)}" )
     end
 
     return retval

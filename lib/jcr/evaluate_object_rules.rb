@@ -34,7 +34,7 @@ module JCR
 
     # if the data is not an object (Hash)
     return evaluate_reject( annotations,
-      Evaluation.new( false, "#{data} is not an object at #{jcr} from #{rule_atom}"), econs ) unless data.is_a? Hash
+      Evaluation.new( false, "#{data} is not an object for #{raised_rule(jcr,rule_atom)}"), econs ) unless data.is_a? Hash
 
     # if the object has no members and there are zero sub-rules (it is suppose to be empty)
     return evaluate_reject( annotations,
@@ -42,7 +42,7 @@ module JCR
 
     # if the object has members and there are zero sub-rules (it is suppose to be empty)
     return evaluate_reject( annotations,
-      Evaluation.new( false, "Non-empty object at #{jcr} from #{rule_atom}" ), econs ) if rules.empty? && data.length != 0
+      Evaluation.new( false, "Non-empty object for #{raised_rule(jcr,rule_atom)}" ), econs ) if rules.empty? && data.length != 0
 
     retval = nil
     behavior = ObjectBehavior.new unless behavior
@@ -80,9 +80,9 @@ module JCR
         end
 
         if successes == 0 && repeat_min > 0
-          retval = Evaluation.new( false, "object does not contain group #{rule} for #{jcr} from #{rule_atom}")
+          retval = Evaluation.new( false, "object does not contain group #{rule} for #{raised_rule(jcr,rule_atom)}")
         elsif successes < repeat_min
-          retval = Evaluation.new( false, "object does not have contain necessary number of group #{rule} for #{jcr} from #{rule_atom}")
+          retval = Evaluation.new( false, "object does not have contain necessary number of group #{rule} for #{raised_rule(jcr,rule_atom)}")
         else
           retval = Evaluation.new( true, nil )
         end
@@ -98,11 +98,11 @@ module JCR
         end
 
         if repeat_results.length == 0 && repeat_min > 0
-          retval = Evaluation.new( false, "object does not contain #{rule} for #{jcr} from #{rule_atom}")
+          retval = Evaluation.new( false, "object does not contain #{rule} for #{raised_rule(jcr,rule_atom)}")
         elsif repeat_results.length < repeat_min
-          retval = Evaluation.new( false, "object does not have enough #{rule} for #{jcr} from #{rule_atom}")
+          retval = Evaluation.new( false, "object does not have enough #{rule} for #{raised_rule(jcr,rule_atom)}")
         elsif repeat_results.length > repeat_max
-          retval = Evaluation.new( false, "object has too many #{rule} for #{jcr} from #{rule_atom}")
+          retval = Evaluation.new( false, "object has too many #{rule} for #{raised_rule(jcr,rule_atom)}")
         else
           retval = Evaluation.new( true, nil)
         end

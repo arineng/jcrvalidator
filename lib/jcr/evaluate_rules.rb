@@ -255,4 +255,8 @@ module JCR
     end
     retval
   end
+
+  def self.raised_rule jcr, rule_atom
+    " rule at #{slice_to_s(jcr)} [ #{jcr} ] from rule at #{slice_to_s(rule_atom)}"
+  end
 end

@@ -56,7 +56,7 @@ module JCR
     end
 
     return evaluate_reject( annotations,
-       Evaluation.new( false, "#{match_spec} does not match #{data[0]} for #{jcr} from #{rule_atom}" ), econs )
+       Evaluation.new( false, "#{match_spec} does not match #{data[0]} for #{raised_rule( jcr, rule_atom)}" ), econs )
 
   end
 
