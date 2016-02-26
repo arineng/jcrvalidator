@@ -27,6 +27,7 @@ module JCR
 
   def self.evaluate_group_rule jcr, rule_atom, data, econs, behavior = nil
 
+    trace( econs, "Evaluating group rule against ", data )
     rules, annotations = get_rules_and_annotations( jcr, econs )
 
     retval = nil

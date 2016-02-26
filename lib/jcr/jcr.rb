@@ -26,7 +26,7 @@ require 'jcr/process_directives'
 module JCR
 
   class Context
-    attr_accessor :mapping, :callbacks, :id, :tree, :roots, :catalog
+    attr_accessor :mapping, :callbacks, :id, :tree, :roots, :catalog, :trace
 
     def add_ruleset_alias( ruleset_alias, alias_uri )
       unless @catalog
@@ -56,7 +56,8 @@ module JCR
       JCR.evaluate_ruleset( data, self, root_name )
     end
 
-    def initialize( ruleset = nil )
+    def initialize( ruleset = nil, trace = false )
+      @trace = trace
       if ruleset
         ingested = JCR.ingest_ruleset( ruleset, false, nil )
         @mapping = ingested.mapping
@@ -122,7 +123,7 @@ module JCR
     retval = nil
     root_rules.each do |r|
       raise "Root rules cannot be member rules" if r[:member_rule]
-      retval = JCR.evaluate_rule( r, r, data, EvalConditions.new( ctx.mapping, ctx.callbacks ) )
+      retval = JCR.evaluate_rule( r, r, data, EvalConditions.new( ctx.mapping, ctx.callbacks, ctx.trace ) )
       break if retval.success
     end
 
@@ -216,7 +217,7 @@ module JCR
 
       begin
 
-        ctx = Context.new( options[:ruleset] )
+        ctx = Context.new( options[:ruleset], options[:verbose] )
         if options[:overrides]
           options[:overrides].each do |ov|
             ctx.override!( ov )

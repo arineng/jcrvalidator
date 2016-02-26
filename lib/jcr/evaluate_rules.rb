@@ -54,8 +54,9 @@ module JCR
 
   class EvalConditions
     attr_accessor :mapping, :callbacks, :trace
-    def initialize mapping, callbacks
+    def initialize mapping, callbacks, trace = false
       @mapping = mapping
+      @trace = trace
       if callbacks
         @callbacks = callbacks
       else
@@ -65,6 +66,13 @@ module JCR
   end
 
   def self.evaluate_rule jcr, rule_atom, data, econs, behavior = nil
+    if jcr.is_a?( Hash )
+      if jcr[:rule_name]
+        rn = slice_to_s( jcr[:rule_name] )
+        trace( econs, "* Named Rule: #{rn}" )
+      end
+    end
+
     retval = Evaluation.new( false, "failed to evaluate rule properly" )
     case
       when behavior.is_a?( ArrayBehavior )
@@ -76,6 +84,7 @@ module JCR
       when jcr[:target_rule_name]
         target = econs.mapping[ jcr[:target_rule_name][:rule_name].to_s ]
         raise "Target rule not in mapping. This should have been checked earlier." unless target
+        trace( econs, "Referencing target rule #{jcr[:target_rule_name][:rule_name].to_s}" )
         retval = evaluate_rule( target, target, data, econs, behavior )
       when jcr[:primitive_rule]
         retval = evaluate_value_rule( jcr[:primitive_rule], rule_atom, data, econs)
@@ -219,7 +228,11 @@ module JCR
 
   def self.trace econs, message, data = nil
     if data
-      s = data.pretty_print_inspect
+      if data.is_a? String
+        s = '"' + data + '"'
+      else
+        s = data.pretty_print_inspect
+      end
       if s.length > 30
         s = s[0..26]
         s = s + " ..."
@@ -229,4 +242,17 @@ module JCR
     puts message if econs.trace
   end
 
+  def self.slice_to_s slice
+    if slice.is_a? Hash
+      retval = slice_to_s( slice.values[ 0 ] )
+    elsif slice.is_a? Array
+      retval = slice_to_s( slice[ 0 ] )
+    elsif slice.is_a? Parslet::Slice
+      pos = slice.line_and_column
+      retval = "'#{slice.to_s}' ( line #{pos[0]} column #{pos[1]} )"
+    else
+      retval = slice.to_s
+    end
+    retval
+  end
 end

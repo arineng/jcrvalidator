@@ -29,6 +29,7 @@ module JCR
 
   def self.evaluate_object_rule jcr, rule_atom, data, econs, behavior = nil
 
+    trace( econs, "Evaluating object rule starting at #{slice_to_s(jcr)} against ", data )
     rules, annotations = get_rules_and_annotations( jcr, econs )
 
     # if the data is not an object (Hash)

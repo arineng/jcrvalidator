@@ -47,6 +47,7 @@ module JCR
 
   def self.evaluate_array_rule jcr, rule_atom, data, econs, behavior = nil
 
+    trace( econs, "Evaluating array rule starting at #{slice_to_s(jcr)} against", data )
     rules, annotations = get_rules_and_annotations( jcr, econs )
 
     ordered = true

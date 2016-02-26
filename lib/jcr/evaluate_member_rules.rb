@@ -31,6 +31,8 @@ module JCR
     # it is an array, the first element being the member name or regex and the
     # second being the json data to be furthered on to other evaluation functions
 
+    trace( econs, "Evaluating member rule starting at #{slice_to_s(jcr)} for #{data[0]} against ", data[1])
+
     rules, annotations = get_rules_and_annotations( jcr, econs )
     rule = rules[0]
 
