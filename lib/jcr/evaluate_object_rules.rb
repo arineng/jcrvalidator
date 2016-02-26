@@ -29,7 +29,7 @@ module JCR
 
   def self.evaluate_object_rule jcr, rule_atom, data, econs, behavior = nil
 
-    rules, annotations = get_rules_and_annotations( jcr )
+    rules, annotations = get_rules_and_annotations( jcr, econs )
 
     # if the data is not an object (Hash)
     return evaluate_reject( annotations,
@@ -55,7 +55,7 @@ module JCR
         return evaluate_reject( annotations, retval ) # short circuit
       end
 
-      repeat_min, repeat_max = get_repetitions( rule )
+      repeat_min, repeat_max = get_repetitions( rule, econs )
 
       # Pay attention here:
       # Group rules need to be treated differently than other rules

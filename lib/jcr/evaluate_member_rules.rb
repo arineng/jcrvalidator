@@ -31,7 +31,7 @@ module JCR
     # it is an array, the first element being the member name or regex and the
     # second being the json data to be furthered on to other evaluation functions
 
-    rules, annotations = get_rules_and_annotations( jcr )
+    rules, annotations = get_rules_and_annotations( jcr, econs )
     rule = rules[0]
 
     member_match = false

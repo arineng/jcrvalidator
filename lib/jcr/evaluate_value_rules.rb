@@ -25,13 +25,13 @@ require 'jcr/check_groups'
 
 module JCR
 
-  def self.evaluate_value_rule jcr, rule_atom, data, mapping
-    rules, annotations = get_rules_and_annotations( jcr )
+  def self.evaluate_value_rule jcr, rule_atom, data, econs
+    rules, annotations = get_rules_and_annotations( jcr, econs )
 
-    return evaluate_reject( annotations, evaluate_values( rules[0], rule_atom, data, mapping ) )
+    return evaluate_reject( annotations, evaluate_values( rules[0], rule_atom, data, econs ) )
   end
 
-  def self.evaluate_values jcr, rule_atom, data, mapping
+  def self.evaluate_values jcr, rule_atom, data, econs
     case
 
       #
@@ -264,7 +264,7 @@ module JCR
       #
 
       when jcr[:group_rule]
-        return evaluate_group_rule jcr[:group_rule], rule_atom, data, mapping
+        return evaluate_group_rule jcr[:group_rule], rule_atom, data, econs
 
       else
         raise "unknown value rule evaluation. this shouldn't happen"

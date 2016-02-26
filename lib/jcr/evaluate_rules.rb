@@ -14,6 +14,7 @@
 
 require 'ipaddr'
 require 'time'
+require 'pp'
 require 'addressable/uri'
 require 'addressable/template'
 require 'email_address_validator'
@@ -52,7 +53,7 @@ module JCR
   end
 
   class EvalConditions
-    attr_accessor :mapping, :callbacks
+    attr_accessor :mapping, :callbacks, :trace
     def initialize mapping, callbacks
       @mapping = mapping
       if callbacks
@@ -113,10 +114,11 @@ module JCR
     elsif retval.is_a? String
       retval = Evaluation.new( false, retval )
     end
+    trace( econs, "Callback #{callback} given evaluation of #{e.success} and returned #{retval}")
     return retval
   end
 
-  def self.get_repetitions rule
+  def self.get_repetitions rule, econs
 
     repeat_min = 1
     repeat_max = 1
@@ -148,10 +150,11 @@ module JCR
       end
     end
 
+    trace( econs, "rule repetition min = #{repeat_min} max = #{repeat_max}" )
     return repeat_min, repeat_max
   end
 
-  def self.get_rules_and_annotations jcr
+  def self.get_rules_and_annotations jcr, econs
     rules = []
     annotations = []
 
@@ -166,12 +169,15 @@ module JCR
           when sub[:unordered_annotation]
             annotations << sub
             i = i + 1
+            trace( econs, "Rule has unordered annotation" )
           when sub[:reject_annotation]
             annotations << sub
             i = i + 1
+            trace( econs, "Rule has reject annotation" )
           when sub[:root_annotation]
             annotations << sub
             i = i + 1
+            trace( econs, "Rule has root annotation" )
           when sub[:primitive_rule],sub[:object_rule],sub[:group_rule],sub[:array_rule],sub[:target_rule_name]
             break
         end
@@ -179,6 +185,7 @@ module JCR
       rules = jcr[i,jcr.length]
     end
 
+    trace( econs, "Rule has #{rules.length} sub-rules" )
     return rules, annotations
   end
 
@@ -208,4 +215,17 @@ module JCR
     #else
     return false
   end
+
+  def self.trace econs, message, data = nil
+    if data
+      s = data.pretty_print_inspect
+      if s.length > 30
+        s = s[0..26]
+        s = s + " ..."
+      end
+      message = message + " data: " + s
+    end
+    puts message if econs.trace
+  end
+
 end

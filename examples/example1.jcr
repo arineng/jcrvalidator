@@ -3,7 +3,7 @@
 
 [ 2 my_integers, 2 my_strings ]
 
-other_root @(root) [ 2 my_strings, 2 my_integers ]
+other_root @{root} [ 2 my_strings, 2 my_integers ]
 
 my_integers : 0..5
 my_strings ( :"foo" | :"bar" )

@@ -47,7 +47,7 @@ module JCR
 
   def self.evaluate_array_rule jcr, rule_atom, data, econs, behavior = nil
 
-    rules, annotations = get_rules_and_annotations( jcr )
+    rules, annotations = get_rules_and_annotations( jcr, econs )
 
     ordered = true
 
@@ -97,7 +97,7 @@ module JCR
         break
       end
 
-      repeat_min, repeat_max = get_repetitions( rule )
+      repeat_min, repeat_max = get_repetitions( rule, econs )
 
       # group rules must be evaluated differently
       # groups require the effects of the evaluation to be discarded if they are false
@@ -196,7 +196,7 @@ module JCR
         break
       end
 
-      repeat_min, repeat_max = get_repetitions( rule )
+      repeat_min, repeat_max = get_repetitions( rule, econs )
 
       # group rules must be evaluated differently
       # groups require the effects of the evaluation to be discarded if they are false

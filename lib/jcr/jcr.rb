@@ -214,35 +214,40 @@ module JCR
       return 2
     else
 
-      ctx = Context.new( options[:ruleset] )
-      if options[:overrides]
-        options[:overrides].each do |ov|
-          ctx.override!( ov )
-        end
-      end
+      begin
 
-      if options[:json]
-        data = JSON.parse( options[:json] )
-        ec = cli_eval( ctx, data, options[:root_name], options[:verbose] )
-        return ec
-      elsif $stdin.tty?
-        ec = 0
-        if my_argv.empty?
-          ec = 2
-        else
-          my_argv.each do |fn|
-            data = JSON.parse( File.open( fn ).read )
-            tec = cli_eval( ctx, data, options[:root_name], options[:verbose] )
-            ec = tec if tec != 0 #record error but don't let non-error overwrite error
+        ctx = Context.new( options[:ruleset] )
+        if options[:overrides]
+          options[:overrides].each do |ov|
+            ctx.override!( ov )
           end
         end
-        return ec
-      else
-        data = JSON.parse( ARGF.read )
-        ec = cli_eval( ctx, data, options[:root_name], options[:verbose] )
-        return ec
-      end
 
+        if options[:json]
+          data = JSON.parse( options[:json] )
+          ec = cli_eval( ctx, data, options[:root_name], options[:verbose] )
+          return ec
+        elsif $stdin.tty?
+          ec = 0
+          if my_argv.empty?
+            ec = 2
+          else
+            my_argv.each do |fn|
+              data = JSON.parse( File.open( fn ).read )
+              tec = cli_eval( ctx, data, options[:root_name], options[:verbose] )
+              ec = tec if tec != 0 #record error but don't let non-error overwrite error
+            end
+          end
+          return ec
+        else
+          data = JSON.parse( ARGF.read )
+          ec = cli_eval( ctx, data, options[:root_name], options[:verbose] )
+          return ec
+        end
+
+      rescue Parslet::ParseFailed => failure
+        puts failure.cause.ascii_tree
+      end
     end
 
   end

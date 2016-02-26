@@ -25,7 +25,7 @@ describe 'evaluate_rules' do
     tree = JCR.parse( 'trule [ ? :string ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    min, max = JCR.get_repetitions( tree[0][:rule][:array_rule] )
+    min, max = JCR.get_repetitions( tree[0][:rule][:array_rule], JCR::EvalConditions.new( nil, nil ) )
     expect( min ).to eq(0)
     expect( max ).to eq(1)
   end
@@ -34,7 +34,7 @@ describe 'evaluate_rules' do
     tree = JCR.parse( 'trule [ + :string ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    min, max = JCR.get_repetitions( tree[0][:rule][:array_rule] )
+    min, max = JCR.get_repetitions( tree[0][:rule][:array_rule], JCR::EvalConditions.new( nil, nil ) )
     expect( min ).to eq(1)
     expect( max ).to eq(Float::INFINITY)
   end
@@ -43,7 +43,7 @@ describe 'evaluate_rules' do
     tree = JCR.parse( 'trule [ * :string ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    min, max = JCR.get_repetitions( tree[0][:rule][:array_rule] )
+    min, max = JCR.get_repetitions( tree[0][:rule][:array_rule], JCR::EvalConditions.new( nil, nil ) )
     expect( min ).to eq(0)
     expect( max ).to eq(Float::INFINITY)
   end
@@ -52,7 +52,7 @@ describe 'evaluate_rules' do
     tree = JCR.parse( 'trule [ 1*4 :string ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    min, max = JCR.get_repetitions( tree[0][:rule][:array_rule] )
+    min, max = JCR.get_repetitions( tree[0][:rule][:array_rule], JCR::EvalConditions.new( nil, nil ) )
     expect( min ).to eq(1)
     expect( max ).to eq(4)
   end
@@ -61,7 +61,7 @@ describe 'evaluate_rules' do
     tree = JCR.parse( 'trule [ 22 :string ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    min, max = JCR.get_repetitions( tree[0][:rule][:array_rule] )
+    min, max = JCR.get_repetitions( tree[0][:rule][:array_rule], JCR::EvalConditions.new( nil, nil ) )
     expect( min ).to eq(22)
     expect( max ).to eq(22)
   end
@@ -70,7 +70,7 @@ describe 'evaluate_rules' do
     tree = JCR.parse( 'trule [ :string ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    min, max = JCR.get_repetitions( tree[0][:rule][:array_rule] )
+    min, max = JCR.get_repetitions( tree[0][:rule][:array_rule], JCR::EvalConditions.new( nil, nil ) )
     expect( min ).to eq(1)
     expect( max ).to eq(1)
   end
