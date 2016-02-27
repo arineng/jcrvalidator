@@ -228,6 +228,17 @@ module JCR
     return false
   end
 
+  def self.get_leaf_rule rule, econs
+    if rule[:target_rule_name ]
+      target = econs.mapping[ rule[:target_rule_name][:rule_name].to_s ]
+      raise "Target rule not in mapping. This should have been checked earlier." unless target
+      trace( econs, "Referencing target rule #{slice_to_s(target)} from #{slice_to_s( rule[:target_rule_name][:rule_name] )}" )
+      return target
+    end
+    #else
+    return rule
+  end
+
   def self.push_trace_stack econs, jcr
     econs.trace_stack.push( find_first_slice( jcr ).inspect )
   end

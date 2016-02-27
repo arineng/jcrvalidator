@@ -99,14 +99,43 @@ module JCR
 
       else # if not grule
 
-        repeat_results = data.select do |k,v|
-          unless behavior.checked_hash[k]
-            e = evaluate_rule(rule, rule_atom, [k, v], econs, nil)
-            behavior.checked_hash[k] = e.success
-            e.success
+        repeat_results = nil
+
+        # do a little lookahead for member rules defined by names
+        # if defined by a name, and not a regex, just pluck it from the object
+        # and short-circuit the enumeration
+
+        lookahead = get_leaf_rule( rule, econs )
+        lrules, lannotations = get_rules_and_annotations( lookahead[:member_rule], econs )
+        if lrules[0][:member_name]
+
+          repeat_results = {}
+          k = lrules[0][:member_name][:q_string].to_s
+          v = data[k]
+          if v
+            unless behavior.checked_hash[k]
+              e = evaluate_rule(rule, rule_atom, [k, v], econs, nil)
+              behavior.checked_hash[k] = e.success
+              repeat_results[ k ] = v if e.success
+            end
+          else
+            trace( econs, "No member '#{k}' found in object.")
           end
+
+        else
+
+          trace( econs, "Scanning object.")
+          repeat_results = data.select do |k,v|
+            unless behavior.checked_hash[k]
+              e = evaluate_rule(rule, rule_atom, [k, v], econs, nil)
+              behavior.checked_hash[k] = e.success
+              e.success
+            end
+          end
+
         end
 
+        trace( econs, "Found #{repeat_results.length} matching members repetitions in object with min #{repeat_min} and max #{repeat_max}" )
         if repeat_results.length == 0 && repeat_min > 0
           retval = Evaluation.new( false, "object does not contain #{rule} for #{raised_rule(jcr,rule_atom)}")
         elsif repeat_results.length < repeat_min
