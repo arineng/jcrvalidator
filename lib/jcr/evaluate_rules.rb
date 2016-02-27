@@ -265,6 +265,14 @@ module JCR
     end
   end
 
+  def self.trace_eval econs, message, evaluation
+    if evaluation.success
+      trace( econs, "#{message} evaluation is true" )
+    else
+      trace( econs, "#{message} evaluation failed: #{evaluation.reason}")
+    end
+  end
+
   def self.find_first_slice slice
     if slice.is_a? Parslet::Slice
       return slice

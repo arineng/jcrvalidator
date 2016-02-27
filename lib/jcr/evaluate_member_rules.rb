@@ -30,7 +30,7 @@ module JCR
     push_trace_stack( econs, jcr )
     trace( econs, "Evaluating member rule for '#{data[0]}' starting at #{slice_to_s(jcr)} against ", data[1])
     retval = evaluate_member( jcr, rule_atom, data, econs )
-    trace( econs, "Member evaluation is #{retval.success}" )
+    trace_eval( econs, "Member", retval )
     pop_trace_stack( econs )
     return retval
 

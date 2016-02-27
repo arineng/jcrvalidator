@@ -30,7 +30,7 @@ module JCR
     push_trace_stack( econs, jcr )
     trace( econs, "Evaluating group rule against ", data )
     retval = evaluate_group( jcr, rule_atom, data, econs, behavior )
-    trace( econs, "Group evaluation is #{retval.success}" )
+    trace_eval( econs, "Group", retval )
     pop_trace_stack( econs )
     return retval
 

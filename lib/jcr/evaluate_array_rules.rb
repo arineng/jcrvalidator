@@ -50,7 +50,7 @@ module JCR
     push_trace_stack( econs, jcr )
     trace( econs, "Evaluating array rule starting at #{slice_to_s(jcr)} against", data )
     retval = evaluate_array( jcr, rule_atom, data, econs, behavior )
-    trace( econs, "Array evaluation is #{retval.success}" )
+    trace_eval( econs, "Array", retval )
     pop_trace_stack( econs )
     return retval
 
