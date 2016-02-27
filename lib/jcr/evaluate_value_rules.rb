@@ -26,10 +26,15 @@ require 'jcr/check_groups'
 module JCR
 
   def self.evaluate_value_rule jcr, rule_atom, data, econs
+
+    push_trace_stack( econs, jcr )
     trace( econs, "Evaluating value rule starting at #{slice_to_s(jcr)} against ", data )
     rules, annotations = get_rules_and_annotations( jcr, econs )
 
-    return evaluate_reject( annotations, evaluate_values( rules[0], rule_atom, data, econs ), econs )
+    retval = evaluate_reject( annotations, evaluate_values( rules[0], rule_atom, data, econs ), econs )
+    trace( econs, "Value evaluation is #{retval.success}")
+    pop_trace_stack( econs )
+    return retval
   end
 
   def self.evaluate_values jcr, rule_atom, data, econs

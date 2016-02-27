@@ -27,7 +27,17 @@ module JCR
 
   def self.evaluate_group_rule jcr, rule_atom, data, econs, behavior = nil
 
+    push_trace_stack( econs, jcr )
     trace( econs, "Evaluating group rule against ", data )
+    retval = evaluate_group( jcr, rule_atom, data, econs, behavior )
+    trace( econs, "Group evaluation is #{retval.success}" )
+    pop_trace_stack( econs )
+    return retval
+
+  end
+
+  def self.evaluate_group jcr, rule_atom, data, econs, behavior = nil
+
     rules, annotations = get_rules_and_annotations( jcr, econs )
 
     retval = nil

@@ -29,7 +29,17 @@ module JCR
 
   def self.evaluate_object_rule jcr, rule_atom, data, econs, behavior = nil
 
+    push_trace_stack( econs, jcr )
     trace( econs, "Evaluating object rule starting at #{slice_to_s(jcr)} against", data )
+    retval = evaluate_object( jcr, rule_atom, data, econs, behavior )
+    trace( econs, "Object evaluation is #{retval.success}" )
+    pop_trace_stack( econs )
+    return retval
+
+  end
+
+  def self.evaluate_object jcr, rule_atom, data, econs, behavior = nil
+
     rules, annotations = get_rules_and_annotations( jcr, econs )
 
     # if the data is not an object (Hash)

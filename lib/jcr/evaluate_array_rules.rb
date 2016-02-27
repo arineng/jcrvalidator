@@ -47,7 +47,17 @@ module JCR
 
   def self.evaluate_array_rule jcr, rule_atom, data, econs, behavior = nil
 
+    push_trace_stack( econs, jcr )
     trace( econs, "Evaluating array rule starting at #{slice_to_s(jcr)} against", data )
+    retval = evaluate_array( jcr, rule_atom, data, econs, behavior )
+    trace( econs, "Array evaluation is #{retval.success}" )
+    pop_trace_stack( econs )
+    return retval
+
+  end
+
+  def self.evaluate_array jcr, rule_atom, data, econs, behavior = nil
+
     rules, annotations = get_rules_and_annotations( jcr, econs )
 
     ordered = true

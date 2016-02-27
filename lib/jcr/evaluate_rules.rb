@@ -53,10 +53,11 @@ module JCR
   end
 
   class EvalConditions
-    attr_accessor :mapping, :callbacks, :trace
+    attr_accessor :mapping, :callbacks, :trace, :trace_stack
     def initialize mapping, callbacks, trace = false
       @mapping = mapping
       @trace = trace
+      @trace_stack = []
       if callbacks
         @callbacks = callbacks
       else
@@ -226,30 +227,59 @@ module JCR
     return false
   end
 
+  def self.push_trace_stack econs, jcr
+    econs.trace_stack.push( find_first_slice( jcr ).inspect )
+  end
+
+  def self.pop_trace_stack econs
+    econs.trace_stack.pop
+  end
+
   def self.trace econs, message, data = nil
-    if data
-      if data.is_a? String
-        s = '"' + data + '"'
-      else
-        s = data.pretty_print_inspect
+    if econs.trace
+      if data
+        if data.is_a? String
+          s = '"' + data + '"'
+        else
+          s = data.pretty_print_inspect
+        end
+        if s.length > 30
+          s = s[0..26]
+          s = s + " ..."
+        end
+        message = "#{message} data: #{s}"
       end
-      if s.length > 30
-        s = s[0..26]
-        s = s + " ..."
-      end
-      message = message + " data: " + s
+      puts "[ #{econs.trace_stack.length}:#{econs.trace_stack.last} ] #{message}"
     end
-    puts message if econs.trace
+  end
+
+  def self.find_first_slice slice
+    if slice.is_a? Parslet::Slice
+      return slice
+    elsif slice.is_a?( Hash ) && !slice.empty?
+      s = nil
+      slice.values.each do |v|
+        s = find_first_slice( v )
+        break if s
+      end
+      return s if s
+    elsif slice.is_a?( Array ) && !slice.empty?
+      s = nil
+      slice.each do |i|
+        s = find_first_slice( i )
+        break if s
+      end
+      return s if s
+    end
+    #else
+    return nil
   end
 
   def self.slice_to_s slice
-    if slice.is_a? Hash
-      retval = slice_to_s( slice.values[ 0 ] )
-    elsif slice.is_a? Array
-      retval = slice_to_s( slice[ 0 ] )
-    elsif slice.is_a? Parslet::Slice
-      pos = slice.line_and_column
-      retval = "'#{slice.to_s}' ( line #{pos[0]} column #{pos[1]} )"
+    s = find_first_slice( slice )
+    if s.is_a? Parslet::Slice
+      pos = s.line_and_column
+      retval = "'#{s.inspect}' ( line #{pos[0]} column #{pos[1]} )"
     else
       retval = slice.to_s
     end

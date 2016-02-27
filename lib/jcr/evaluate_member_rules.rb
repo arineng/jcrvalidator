@@ -27,11 +27,21 @@ module JCR
 
   def self.evaluate_member_rule jcr, rule_atom, data, econs
 
+    push_trace_stack( econs, jcr )
+    trace( econs, "Evaluating member rule for '#{data[0]}' starting at #{slice_to_s(jcr)} against ", data[1])
+    retval = evaluate_member( jcr, rule_atom, data, econs )
+    trace( econs, "Member evaluation is #{retval.success}" )
+    pop_trace_stack( econs )
+    return retval
+
+  end
+
+  def self.evaluate_member jcr, rule_atom, data, econs
+
     # unlike the other evaluate functions, here data is not just the json data.
     # it is an array, the first element being the member name or regex and the
     # second being the json data to be furthered on to other evaluation functions
 
-    trace( econs, "Evaluating member rule for '#{data[0]}' starting at #{slice_to_s(jcr)} against ", data[1])
 
     rules, annotations = get_rules_and_annotations( jcr, econs )
     rule = rules[0]

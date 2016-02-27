@@ -220,17 +220,15 @@ module JCR
       begin
 
         ctx = Context.new( options[:ruleset], options[:verbose] )
-        if options[:verbose]
-          pp "Ruleset Parse Map", ctx.tree
-        end
-
         if options[:overrides]
           options[:overrides].each do |ov|
             ctx.override!( ov )
-            if options[:verbose]
-              pp "Ruleset Parse Map After Override", ctx.tree
-            end
           end
+        end
+
+        if options[:verbose]
+          pp "Ruleset Parse Tree", ctx.tree
+          pp "Ruleset Parse Map", ctx.mapping
         end
 
         if options[:json]
