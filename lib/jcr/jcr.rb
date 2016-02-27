@@ -15,6 +15,7 @@
 require 'optparse'
 require 'rubygems'
 require 'json'
+require 'pp'
 
 require 'jcr/parser'
 require 'jcr/evaluate_rules'
@@ -122,6 +123,7 @@ module JCR
 
     retval = nil
     root_rules.each do |r|
+      pp "Evaluating Root:", r if ctx.trace
       raise "Root rules cannot be member rules" if r[:member_rule]
       retval = JCR.evaluate_rule( r, r, data, EvalConditions.new( ctx.mapping, ctx.callbacks, ctx.trace ) )
       break if retval.success
@@ -218,9 +220,16 @@ module JCR
       begin
 
         ctx = Context.new( options[:ruleset], options[:verbose] )
+        if options[:verbose]
+          pp "Ruleset Parse Map", ctx.tree
+        end
+
         if options[:overrides]
           options[:overrides].each do |ov|
             ctx.override!( ov )
+            if options[:verbose]
+              pp "Ruleset Parse Map After Override", ctx.tree
+            end
           end
         end
 
