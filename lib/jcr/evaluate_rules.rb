@@ -240,7 +240,7 @@ module JCR
   end
 
   def self.push_trace_stack econs, jcr
-    econs.trace_stack.push( find_first_slice( jcr ).inspect )
+    econs.trace_stack.push( find_first_slice( jcr ) )
   end
 
   def self.pop_trace_stack econs
@@ -261,7 +261,8 @@ module JCR
         end
         message = "#{message} data: #{s}"
       end
-      puts "[ #{econs.trace_stack.length}:#{econs.trace_stack.last} ] #{message}"
+      last = econs.trace_stack.last
+      puts "[ #{econs.trace_stack.length}:#{last.line_and_column}@#{last.offset} ] #{message}"
     end
   end
 
