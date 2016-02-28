@@ -28,11 +28,12 @@ module JCR
   def self.evaluate_value_rule jcr, rule_atom, data, econs
 
     push_trace_stack( econs, jcr )
-    trace( econs, "Evaluating value rule starting at #{slice_to_s(jcr)} against ", data )
+    trace( econs, "Evaluating value rule starting at #{slice_to_s(jcr)}" )
     rules, annotations = get_rules_and_annotations( jcr, econs )
+    trace( econs, "Value definition is #{value_to_s(rules[0])} against", data )
 
     retval = evaluate_reject( annotations, evaluate_values( rules[0], rule_atom, data, econs ), econs )
-    trace( econs, "Value evaluation is #{retval.success}")
+    trace( econs, "Value rule evaluation is #{retval.success}")
     pop_trace_stack( econs )
     return retval
   end
@@ -280,6 +281,88 @@ module JCR
 
   def self.bad_value jcr, rule_atom, expected, actual
     Evaluation.new( false, "expected #{expected} but got #{actual} for #{raised_rule(jcr,rule_atom)}" )
+  end
+
+  def self.value_to_s( jcr )
+
+    case
+
+      when jcr[:any]
+        return "any"
+
+      when jcr[:integer_v]
+        return jcr[:integer_v].to_s
+      when jcr[:integer]
+        return jcr[:integer].to_s.to_i
+      when jcr[:integer_min],jcr[:integer_max]
+        min = jcr[:integer_min].to_s.to_i
+        max = jcr[:integer_max].to_s.to_i
+        return "#{min}..#{max}"
+
+      when jcr[:float_v]
+        return jcr[:float_v].to_s
+      when jcr[:float]
+        return jcr[:float].to_s.to_f
+      when jcr[:float_min],jcr[:float_max]
+        min = jcr[:float_min].to_s.to_f
+        max = jcr[:float_max].to_s.to_f
+        return "#{min}..#{max}"
+
+      when jcr[:true_v]
+        return "true"
+      when jcr[:false_v]
+        return "false"
+      when jcr[:boolean_v]
+        return "boolean"
+
+      when jcr[:string]
+        return "string"
+      when jcr[:q_string]
+        return "'#{jcr[:q_string].to_s}'"
+
+      when jcr[:regex]
+        return "/#{jcr[:regex].to_s}/"
+
+      when jcr[:ip4]
+        return "ip4"
+      when jcr[:ip6]
+        return "ip6"
+
+      when jcr[:fqdn]
+        return "fqdn"
+      when jcr[:idn]
+        return "idn"
+
+      when jcr[:uri]
+        return "URI"
+      when jcr[:uri_template]
+        return "URI template #{jcr[:uri_template].to_s}"
+
+      when jcr[:email]
+        return "email"
+
+      when jcr[:phone]
+        return "phone"
+
+      when jcr[:base64]
+        return "base64"
+
+      when jcr[:date_time]
+        return "date-time"
+      when jcr[:full_date]
+        return "full-date"
+      when jcr[:full_time]
+        return "full-time"
+
+      when jcr[:null]
+        return "null"
+
+      when jcr[:group_rule]
+        return "( ... )"
+
+      else
+        return "** unknown value rule **"
+    end
   end
 
 end
