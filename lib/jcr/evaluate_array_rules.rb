@@ -58,7 +58,7 @@ module JCR
 
   def self.evaluate_array jcr, rule_atom, data, econs, behavior = nil
 
-    rules, annotations = get_rules_and_annotations( jcr, econs )
+    rules, annotations = get_rules_and_annotations( jcr )
 
     ordered = true
 

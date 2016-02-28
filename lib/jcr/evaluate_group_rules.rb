@@ -38,7 +38,7 @@ module JCR
 
   def self.evaluate_group jcr, rule_atom, data, econs, behavior = nil
 
-    rules, annotations = get_rules_and_annotations( jcr, econs )
+    rules, annotations = get_rules_and_annotations( jcr )
 
     retval = nil
 

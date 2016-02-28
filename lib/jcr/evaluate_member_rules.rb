@@ -28,7 +28,8 @@ module JCR
   def self.evaluate_member_rule jcr, rule_atom, data, econs
 
     push_trace_stack( econs, jcr )
-    trace( econs, "Evaluating member rule for '#{data[0]}' starting at #{slice_to_s(jcr)} against ", data[1])
+    trace( econs, "Evaluating member rule for key '#{data[0]}' starting at #{slice_to_s(jcr)} against ", data[1])
+    trace_def( econs, "member", jcr, data )
     retval = evaluate_member( jcr, rule_atom, data, econs )
     trace_eval( econs, "Member", retval )
     pop_trace_stack( econs )
@@ -43,7 +44,7 @@ module JCR
     # second being the json data to be furthered on to other evaluation functions
 
 
-    rules, annotations = get_rules_and_annotations( jcr, econs )
+    rules, annotations = get_rules_and_annotations( jcr )
     rule = rules[0]
 
     member_match = false
@@ -70,7 +71,8 @@ module JCR
 
   end
 
-  def self.member_to_s( annotations, rules )
+  def self.member_to_s( jcr )
+    rules, annotations = get_rules_and_annotations( jcr )
     retval = ""
     rule = rules[ 0 ]
     case
@@ -82,9 +84,11 @@ module JCR
         retval = "** unknown member rule **"
     end
     if rule[:primitive_rule]
-      retval = retval + value_to_s( nil, rule[:primitive_rule] )
+      retval = retval + value_to_s( rule[:primitive_rule] )
+    elsif rule[:target_rule]
+      retval = retval + target_to_s( rule[:target_rule] )
     else
-      retval = retval + target_to_s( nil, rule[:target_rule] )
+      retval = retval + "** unknown definition for member **"
     end
     return annotations_to_s( annotations ) + retval
   end

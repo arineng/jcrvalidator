@@ -29,11 +29,11 @@ module JCR
 
     push_trace_stack( econs, jcr )
     trace( econs, "Evaluating value rule starting at #{slice_to_s(jcr)}" )
-    rules, annotations = get_rules_and_annotations( jcr, econs )
-    trace( econs, "Value definition is #{value_to_s(annotations, rules)} against", data )
+    trace_def( econs, "value", jcr, data )
+    rules, annotations = get_rules_and_annotations( jcr )
 
     retval = evaluate_reject( annotations, evaluate_values( rules[0], rule_atom, data, econs ), econs )
-    trace( econs, "Value rule evaluation is #{retval.success}")
+    trace_eval( econs, "Value", retval)
     pop_trace_stack( econs )
     return retval
   end
@@ -283,83 +283,85 @@ module JCR
     Evaluation.new( false, "expected #{expected} but got #{actual} for #{raised_rule(jcr,rule_atom)}" )
   end
 
-  def self.value_to_s( annotations, rules )
+  def self.value_to_s( jcr )
 
-    jcr = rules[ 0 ]
+    rules, annotations = get_rules_and_annotations( jcr )
+
+    rule = rules[ 0 ]
     retval = ""
     case
 
-      when jcr[:any]
+      when rule[:any]
         retval =  "any"
 
-      when jcr[:integer_v]
-        retval =  jcr[:integer_v].to_s
-      when jcr[:integer]
-        retval =  jcr[:integer].to_s.to_i
-      when jcr[:integer_min],jcr[:integer_max]
-        min = jcr[:integer_min].to_s.to_i
-        max = jcr[:integer_max].to_s.to_i
+      when rule[:integer_v]
+        retval =  rule[:integer_v].to_s
+      when rule[:integer]
+        retval =  rule[:integer].to_s.to_i
+      when rule[:integer_min],rule[:integer_max]
+        min = rule[:integer_min].to_s.to_i
+        max = rule[:integer_max].to_s.to_i
         retval =  "#{min}..#{max}"
 
-      when jcr[:float_v]
-        retval =  jcr[:float_v].to_s
-      when jcr[:float]
-        retval =  jcr[:float].to_s.to_f
-      when jcr[:float_min],jcr[:float_max]
-        min = jcr[:float_min].to_s.to_f
-        max = jcr[:float_max].to_s.to_f
+      when rule[:float_v]
+        retval =  rule[:float_v].to_s
+      when rule[:float]
+        retval =  rule[:float].to_s.to_f
+      when rule[:float_min],rule[:float_max]
+        min = rule[:float_min].to_s.to_f
+        max = rule[:float_max].to_s.to_f
         retval =  "#{min}..#{max}"
 
-      when jcr[:true_v]
+      when rule[:true_v]
         retval =  "true"
-      when jcr[:false_v]
+      when rule[:false_v]
         retval =  "false"
-      when jcr[:boolean_v]
+      when rule[:boolean_v]
         retval =  "boolean"
 
-      when jcr[:string]
+      when rule[:string]
         retval =  "string"
-      when jcr[:q_string]
-        retval =  "'#{jcr[:q_string].to_s}'"
+      when rule[:q_string]
+        retval =  "'#{rule[:q_string].to_s}'"
 
-      when jcr[:regex]
-        retval =  "/#{jcr[:regex].to_s}/"
+      when rule[:regex]
+        retval =  "/#{rule[:regex].to_s}/"
 
-      when jcr[:ip4]
+      when rule[:ip4]
         retval =  "ip4"
-      when jcr[:ip6]
+      when rule[:ip6]
         retval =  "ip6"
 
-      when jcr[:fqdn]
+      when rule[:fqdn]
         retval =  "fqdn"
-      when jcr[:idn]
+      when rule[:idn]
         retval =  "idn"
 
-      when jcr[:uri]
+      when rule[:uri]
         retval =  "URI"
-      when jcr[:uri_template]
-        retval =  "URI template #{jcr[:uri_template].to_s}"
+      when rule[:uri_template]
+        retval =  "URI template #{rule[:uri_template].to_s}"
 
-      when jcr[:email]
+      when rule[:email]
         retval =  "email"
 
-      when jcr[:phone]
+      when rule[:phone]
         retval =  "phone"
 
-      when jcr[:base64]
+      when rule[:base64]
         retval =  "base64"
 
-      when jcr[:date_time]
+      when rule[:date_time]
         retval =  "date-time"
-      when jcr[:full_date]
+      when rule[:full_date]
         retval =  "full-date"
-      when jcr[:full_time]
+      when rule[:full_time]
         retval =  "full-time"
 
-      when jcr[:null]
+      when rule[:null]
         retval =  "null"
 
-      when jcr[:group_rule]
+      when rule[:group_rule]
         retval =  "( ... )"
 
       else

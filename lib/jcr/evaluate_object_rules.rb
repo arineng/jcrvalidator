@@ -40,7 +40,7 @@ module JCR
 
   def self.evaluate_object jcr, rule_atom, data, econs, behavior = nil
 
-    rules, annotations = get_rules_and_annotations( jcr, econs )
+    rules, annotations = get_rules_and_annotations( jcr )
 
     # if the data is not an object (Hash)
     return evaluate_reject( annotations,
@@ -106,7 +106,7 @@ module JCR
         # and short-circuit the enumeration
 
         lookahead = get_leaf_rule( rule, econs )
-        lrules, lannotations = get_rules_and_annotations( lookahead[:member_rule], econs )
+        lrules, lannotations = get_rules_and_annotations( lookahead[:member_rule] )
         if lrules[0][:member_name]
 
           repeat_results = {}

@@ -164,7 +164,7 @@ module JCR
     return repeat_min, repeat_max
   end
 
-  def self.get_rules_and_annotations jcr, econs
+  def self.get_rules_and_annotations jcr
     rules = []
     annotations = []
 
@@ -243,6 +243,14 @@ module JCR
     econs.trace_stack.pop
   end
 
+  def self.elide s
+    if s.length > 60
+      s = s[0..56]
+      s = s + " ..."
+    end
+    return s
+  end
+
   def self.trace econs, message, data = nil
     if econs.trace
       if data
@@ -251,15 +259,26 @@ module JCR
         else
           s = data.pretty_print_inspect
         end
-        if s.length > 30
-          s = s[0..26]
-          s = s + " ..."
-        end
-        message = "#{message} data: #{s}"
+        message = "#{message} data: #{elide(s)}"
       end
       last = econs.trace_stack.last
       pos = "#{last.line_and_column}@#{last.offset}" if last
       puts "[ #{econs.trace_stack.length}:#{pos} ] #{message}"
+    end
+  end
+
+  def self.trace_def econs, type, jcr, data
+    if econs.trace
+      s = ""
+      case type
+        when "value"
+          s = elide( value_to_s( jcr ) )
+        when "member"
+          s = elide( member_to_s( jcr ) )
+        else
+          s = "** unknown rule **"
+      end
+      trace( econs, "#{type}: #{s}", data)
     end
   end
 
@@ -326,8 +345,8 @@ module JCR
     return retval
   end
 
-  def self.target_to_s( annotations, rule )
-    return annotations_to_s( annotations ) + " target: " + rule[:rule_name].to_s
+  def self.target_to_s( jcr )
+    return annotations_to_s( jcr[:annotations] ) + " target: " + jcr[:rule_name].to_s
   end
 
 end
