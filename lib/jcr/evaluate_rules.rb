@@ -179,15 +179,12 @@ module JCR
           when sub[:unordered_annotation]
             annotations << sub
             i = i + 1
-            trace( econs, "Rule has unordered annotation" )
           when sub[:reject_annotation]
             annotations << sub
             i = i + 1
-            trace( econs, "Rule has reject annotation" )
           when sub[:root_annotation]
             annotations << sub
             i = i + 1
-            trace( econs, "Rule has root annotation" )
           when sub[:primitive_rule],sub[:object_rule],sub[:group_rule],sub[:array_rule],sub[:target_rule_name]
             break
         end
@@ -195,7 +192,6 @@ module JCR
       rules = jcr[i,jcr.length]
     end
 
-    trace( econs, "Rule has #{rules.length} sub-rules" )
     return rules, annotations
   end
 
@@ -262,7 +258,8 @@ module JCR
         message = "#{message} data: #{s}"
       end
       last = econs.trace_stack.last
-      puts "[ #{econs.trace_stack.length}:#{last.line_and_column}@#{last.offset} ] #{message}"
+      pos = "#{last.line_and_column}@#{last.offset}" if last
+      puts "[ #{econs.trace_stack.length}:#{pos} ] #{message}"
     end
   end
 
@@ -310,4 +307,27 @@ module JCR
   def self.raised_rule jcr, rule_atom
     " rule at #{slice_to_s(jcr)} [ #{jcr} ] from rule at #{slice_to_s(rule_atom)}"
   end
+
+  def self.annotations_to_s( annotations )
+    retval = ""
+    annotations.each do |a|
+      case
+        when a[:unordered_annotation]
+          retval = retval + " @{unordered}"
+        when a[:reject_annotation]
+          retval = retval + " @{reject}"
+        when a[:root_annotation]
+          retval = retval + " @{root}"
+        else
+          retval = retval + " @{ ** unknown annotation ** }"
+      end
+    end if annotations
+    retval = retval + " " if retval.length != 0
+    return retval
+  end
+
+  def self.target_to_s( annotations, rule )
+    return annotations_to_s( annotations ) + " target: " + rule[:rule_name].to_s
+  end
+
 end

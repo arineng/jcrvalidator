@@ -70,4 +70,23 @@ module JCR
 
   end
 
+  def self.member_to_s( annotations, rules )
+    retval = ""
+    rule = rules[ 0 ]
+    case
+      when rule[:member_name]
+        retval = %Q|"#{rule[:member_name][:q_string].to_s}"|
+      when rule[:member_regex]
+        retval = "/#{rule[:member_regex][:regex].to_s}/"
+      else
+        retval = "** unknown member rule **"
+    end
+    if rule[:primitive_rule]
+      retval = retval + value_to_s( nil, rule[:primitive_rule] )
+    else
+      retval = retval + target_to_s( nil, rule[:target_rule] )
+    end
+    return annotations_to_s( annotations ) + retval
+  end
+
 end

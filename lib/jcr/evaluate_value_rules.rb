@@ -30,7 +30,7 @@ module JCR
     push_trace_stack( econs, jcr )
     trace( econs, "Evaluating value rule starting at #{slice_to_s(jcr)}" )
     rules, annotations = get_rules_and_annotations( jcr, econs )
-    trace( econs, "Value definition is #{value_to_s(rules[0])} against", data )
+    trace( econs, "Value definition is #{value_to_s(annotations, rules)} against", data )
 
     retval = evaluate_reject( annotations, evaluate_values( rules[0], rule_atom, data, econs ), econs )
     trace( econs, "Value rule evaluation is #{retval.success}")
@@ -283,86 +283,89 @@ module JCR
     Evaluation.new( false, "expected #{expected} but got #{actual} for #{raised_rule(jcr,rule_atom)}" )
   end
 
-  def self.value_to_s( jcr )
+  def self.value_to_s( annotations, rules )
 
+    jcr = rules[ 0 ]
+    retval = ""
     case
 
       when jcr[:any]
-        return "any"
+        retval =  "any"
 
       when jcr[:integer_v]
-        return jcr[:integer_v].to_s
+        retval =  jcr[:integer_v].to_s
       when jcr[:integer]
-        return jcr[:integer].to_s.to_i
+        retval =  jcr[:integer].to_s.to_i
       when jcr[:integer_min],jcr[:integer_max]
         min = jcr[:integer_min].to_s.to_i
         max = jcr[:integer_max].to_s.to_i
-        return "#{min}..#{max}"
+        retval =  "#{min}..#{max}"
 
       when jcr[:float_v]
-        return jcr[:float_v].to_s
+        retval =  jcr[:float_v].to_s
       when jcr[:float]
-        return jcr[:float].to_s.to_f
+        retval =  jcr[:float].to_s.to_f
       when jcr[:float_min],jcr[:float_max]
         min = jcr[:float_min].to_s.to_f
         max = jcr[:float_max].to_s.to_f
-        return "#{min}..#{max}"
+        retval =  "#{min}..#{max}"
 
       when jcr[:true_v]
-        return "true"
+        retval =  "true"
       when jcr[:false_v]
-        return "false"
+        retval =  "false"
       when jcr[:boolean_v]
-        return "boolean"
+        retval =  "boolean"
 
       when jcr[:string]
-        return "string"
+        retval =  "string"
       when jcr[:q_string]
-        return "'#{jcr[:q_string].to_s}'"
+        retval =  "'#{jcr[:q_string].to_s}'"
 
       when jcr[:regex]
-        return "/#{jcr[:regex].to_s}/"
+        retval =  "/#{jcr[:regex].to_s}/"
 
       when jcr[:ip4]
-        return "ip4"
+        retval =  "ip4"
       when jcr[:ip6]
-        return "ip6"
+        retval =  "ip6"
 
       when jcr[:fqdn]
-        return "fqdn"
+        retval =  "fqdn"
       when jcr[:idn]
-        return "idn"
+        retval =  "idn"
 
       when jcr[:uri]
-        return "URI"
+        retval =  "URI"
       when jcr[:uri_template]
-        return "URI template #{jcr[:uri_template].to_s}"
+        retval =  "URI template #{jcr[:uri_template].to_s}"
 
       when jcr[:email]
-        return "email"
+        retval =  "email"
 
       when jcr[:phone]
-        return "phone"
+        retval =  "phone"
 
       when jcr[:base64]
-        return "base64"
+        retval =  "base64"
 
       when jcr[:date_time]
-        return "date-time"
+        retval =  "date-time"
       when jcr[:full_date]
-        return "full-date"
+        retval =  "full-date"
       when jcr[:full_time]
-        return "full-time"
+        retval =  "full-time"
 
       when jcr[:null]
-        return "null"
+        retval =  "null"
 
       when jcr[:group_rule]
-        return "( ... )"
+        retval =  "( ... )"
 
       else
-        return "** unknown value rule **"
+        retval =  "** unknown value rule **"
     end
+    return annotations_to_s( annotations ) + retval.to_s
   end
 
 end
