@@ -327,6 +327,21 @@ module JCR
     " rule at #{slice_to_s(jcr)} [ #{jcr} ] from rule at #{slice_to_s(rule_atom)}"
   end
 
+  def self.rule_to_s( rule, shallow=true)
+    if rule[:primitive_rule]
+      retval = value_to_s( rule[:primitive_rule] )
+    elsif rule[:member_rule]
+      retval = member_to_s( rule[:member_rule], shallow )
+    elsif rule[:object_rule]
+      retval = object_to_s( rule[:object_rule], shallow )
+    elsif rule[:target_rule]
+      retval = target_to_s( rule[:target_rule] )
+    else
+      retval = "** unknown rule definition **"
+    end
+
+  end
+
   def self.annotations_to_s( annotations )
     retval = ""
     annotations.each do |a|

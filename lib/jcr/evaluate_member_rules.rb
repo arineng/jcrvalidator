@@ -71,7 +71,7 @@ module JCR
 
   end
 
-  def self.member_to_s( jcr )
+  def self.member_to_s( jcr, shallow=true )
     rules, annotations = get_rules_and_annotations( jcr )
     retval = ""
     rule = rules[ 0 ]
@@ -83,13 +83,7 @@ module JCR
       else
         retval = "** unknown member rule **"
     end
-    if rule[:primitive_rule]
-      retval = retval + value_to_s( rule[:primitive_rule] )
-    elsif rule[:target_rule]
-      retval = retval + target_to_s( rule[:target_rule] )
-    else
-      retval = retval + "** unknown definition for member **"
-    end
+    retval = retval + " " + rule_to_s( rule, shallow )
     return annotations_to_s( annotations ) + retval
   end
 

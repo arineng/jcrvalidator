@@ -54,4 +54,9 @@ module JCR
     return evaluate_reject( annotations, retval, econs )
   end
 
+  def self.group_to_s( jcr, shallow=true)
+    rules, annotations = get_rules_and_annotations( jcr )
+    return "#{annotations_to_s( annotations)} ( ... )"
+  end
+
 end

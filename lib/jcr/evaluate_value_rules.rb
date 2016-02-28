@@ -283,7 +283,7 @@ module JCR
     Evaluation.new( false, "expected #{expected} but got #{actual} for #{raised_rule(jcr,rule_atom)}" )
   end
 
-  def self.value_to_s( jcr )
+  def self.value_to_s( jcr, shallow=true )
 
     rules, annotations = get_rules_and_annotations( jcr )
 
@@ -322,7 +322,7 @@ module JCR
       when rule[:string]
         retval =  "string"
       when rule[:q_string]
-        retval =  "'#{rule[:q_string].to_s}'"
+        retval =  %Q|"#{rule[:q_string].to_s}"|
 
       when rule[:regex]
         retval =  "/#{rule[:regex].to_s}/"
@@ -362,7 +362,7 @@ module JCR
         retval =  "null"
 
       when rule[:group_rule]
-        retval =  "( ... )"
+        retval =  group_to_s( rule[:group_rule], shallow )
 
       else
         retval =  "** unknown value rule **"
