@@ -29,6 +29,7 @@ module JCR
 
     push_trace_stack( econs, jcr )
     trace( econs, "Evaluating group rule against ", data )
+    trace_def( econs, "group", jcr, data )
     retval = evaluate_group( jcr, rule_atom, data, econs, behavior )
     trace_eval( econs, "Group", retval )
     pop_trace_stack( econs )
@@ -56,7 +57,7 @@ module JCR
 
   def self.group_to_s( jcr, shallow=true)
     rules, annotations = get_rules_and_annotations( jcr )
-    return "#{annotations_to_s( annotations)} ( ... )"
+    return "#{annotations_to_s( annotations)} ( #{rules_to_s(rules,shallow)} )"
   end
 
 end

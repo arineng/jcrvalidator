@@ -274,7 +274,13 @@ module JCR
         when "value"
           s = elide( value_to_s( jcr ) )
         when "member"
-          s = elide( member_to_s( jcr ) )
+          s = elide( member_to_s( jcr  ) )
+        when "object"
+          s = elide( object_to_s( jcr ) )
+        when "array"
+          s = elide( array_to_s( jcr ) )
+        when "group"
+          s = elide( group_to_s( jcr ) )
         else
           s = "** unknown rule **"
       end
@@ -336,10 +342,27 @@ module JCR
       retval = object_to_s( rule[:object_rule], shallow )
     elsif rule[:target_rule]
       retval = target_to_s( rule[:target_rule] )
+    elsif rule[:rule_name]
+      retval = ""
     else
       retval = "** unknown rule definition **"
     end
+  end
 
+  def self.rules_to_s( rules, shallow=true)
+    retval = ""
+    rules.each do |rule|
+      if rule[:rule_name]
+        next
+      elsif rule[:choice_combiner]
+        retval = retval + " | "
+      elsif rule[:sequence_combiner]
+        retval = retval + " , "
+      else
+        retval = retval + rule_to_s( rule, shallow )
+      end
+    end
+    return retval
   end
 
   def self.annotations_to_s( annotations )

@@ -49,6 +49,7 @@ module JCR
 
     push_trace_stack( econs, jcr )
     trace( econs, "Evaluating array rule starting at #{slice_to_s(jcr)} against", data )
+    trace_def( econs, "array", jcr, data )
     retval = evaluate_array( jcr, rule_atom, data, econs, behavior )
     trace_eval( econs, "Array", retval )
     pop_trace_stack( econs )
@@ -278,4 +279,8 @@ module JCR
     return retval
   end
 
+  def self.array_to_s( jcr, shallow=true )
+    rules, annotations = get_rules_and_annotations( jcr )
+    return "#{annotations_to_s( annotations)} [ #{rules_to_s( rules, shallow )} ]"
+  end
 end

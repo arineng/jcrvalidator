@@ -31,6 +31,7 @@ module JCR
 
     push_trace_stack( econs, jcr )
     trace( econs, "Evaluating object rule starting at #{slice_to_s(jcr)} against", data )
+    trace_def( econs, "object", jcr, data )
     retval = evaluate_object( jcr, rule_atom, data, econs, behavior )
     trace_eval( econs, "Object", retval )
     pop_trace_stack( econs )
@@ -154,6 +155,6 @@ module JCR
 
   def self.object_to_s( jcr, shallow=true )
     rules, annotations = get_rules_and_annotations( jcr )
-    return "#{annotations_to_s( annotations)} { ... }"
+    return "#{annotations_to_s( annotations)} { #{rules_to_s(rules,shallow)} }"
   end
 end
