@@ -123,7 +123,7 @@ module JCR
 
     retval = nil
     root_rules.each do |r|
-      pp "Evaluating Root:", r if ctx.trace
+      pp "Evaluating Root:", rule_to_s( r, false ) if ctx.trace
       raise "Root rules cannot be member rules" if r[:member_rule]
       retval = JCR.evaluate_rule( r, r, data, EvalConditions.new( ctx.mapping, ctx.callbacks, ctx.trace ) )
       break if retval.success
@@ -228,7 +228,13 @@ module JCR
 
         if options[:verbose]
           pp "Ruleset Parse Tree", ctx.tree
-          pp "Ruleset Parse Map", ctx.mapping
+          pp "Ruleset Map"
+          ctx.mapping.each do |name,rule|
+            puts "Parsed Rule: #{name}"
+            puts rule_to_s( rule, false )
+            puts "Parsed Rule Structure: #{name}"
+            pp rule
+          end
         end
 
         if options[:json]

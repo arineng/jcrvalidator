@@ -70,7 +70,7 @@ module JCR
     if jcr.is_a?( Hash )
       if jcr[:rule_name]
         rn = slice_to_s( jcr[:rule_name] )
-        trace( econs, "* Named Rule: #{rn}" )
+        trace( econs, "Named Rule: #{rn}" )
       end
     end
 
@@ -340,13 +340,20 @@ module JCR
       retval = member_to_s( rule[:member_rule], shallow )
     elsif rule[:object_rule]
       retval = object_to_s( rule[:object_rule], shallow )
-    elsif rule[:target_rule]
-      retval = target_to_s( rule[:target_rule] )
+    elsif rule[:array_rule]
+      retval = array_to_s( rule[:array_rule], shallow )
+    elsif rule[:group_rule]
+      retval = group_to_s( rule[:group_rule], shallow )
+    elsif rule[:target_rule_name]
+      retval = target_to_s( rule[:target_rule_name] )
     elsif rule[:rule_name]
-      retval = ""
+      retval = "rule: #{rule[:rule_name].to_s}"
+    elsif rule[:rule]
+      retval = rule_to_s( rule[:rule], shallow )
     else
       retval = "** unknown rule definition **"
     end
+    return retval
   end
 
   def self.rules_to_s( rules, shallow=true)
@@ -358,9 +365,8 @@ module JCR
         retval = retval + " | "
       elsif rule[:sequence_combiner]
         retval = retval + " , "
-      else
-        retval = retval + rule_to_s( rule, shallow )
       end
+      retval = retval + rule_to_s( rule, shallow )
     end
     return retval
   end

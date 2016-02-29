@@ -83,7 +83,7 @@ module JCR
       else
         retval = "** unknown member rule **"
     end
-    retval = retval + " " + rule_to_s( rule, shallow )
+    retval = retval + " : " + rule_to_s( rule, shallow )
     return annotations_to_s( annotations ) + retval
   end
 
