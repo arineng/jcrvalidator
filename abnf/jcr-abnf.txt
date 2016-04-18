@@ -38,7 +38,7 @@ not-multi-line-special = spaces / %x21 / %x23-2E / %x30-3A / %x3C-7C /
 
 root-rule        = value-rule / group-rule
 
-rule             = rule-name *sp-cmt rule-def
+rule             = rule-name *sp-cmt "=" *sp-cmt rule-def
 
 rule-name        = name
 target-rule-name = annotations [ ruleset-id-alias "." ] rule-name
