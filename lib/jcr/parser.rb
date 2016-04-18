@@ -94,8 +94,8 @@ module JCR
         #! root_rule = value_rule / group_rule
         #!
 
-    rule(:rule) { ( rule_name >> spcCmnt? >> rule_def ).as(:rule) }
-        #! rule = rule_name spcCmnt? rule_def
+    rule(:rule) { ( rule_name >> spcCmnt? >> str('=') >> spcCmnt? >> rule_def ).as(:rule) }
+        #! rule = rule_name spcCmnt? "=" spcCmnt? rule_def
         #!
 
     rule(:rule_name)         { name.as(:rule_name) }

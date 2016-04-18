@@ -18,7 +18,7 @@ require_relative '../lib/jcr/evaluate_group_rules'
 describe 'evaluate_group_rules' do
 
   it 'should pass a group with string variable' do
-    tree = JCR.parse( 'trule : ( :string )' )
+    tree = JCR.parse( 'trule = : ( :string )' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", JCR::EvalConditions.new( mapping, nil ) )
@@ -26,7 +26,7 @@ describe 'evaluate_group_rules' do
   end
 
   it 'should fail a group with string variable with reject' do
-    tree = JCR.parse( 'trule : @{reject} ( :string )' )
+    tree = JCR.parse( 'trule = : @{reject} ( :string )' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", JCR::EvalConditions.new( mapping, nil ) )
@@ -34,7 +34,7 @@ describe 'evaluate_group_rules' do
   end
 
   it 'should pass a group with an integer or a string' do
-    tree = JCR.parse( 'trule : ( :integer | :string )' )
+    tree = JCR.parse( 'trule = : ( :integer | :string )' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", JCR::EvalConditions.new( mapping, nil ) )
@@ -42,7 +42,7 @@ describe 'evaluate_group_rules' do
   end
 
   it 'should pass a group with a string or an integer' do
-    tree = JCR.parse( 'trule : ( :string | :integer )' )
+    tree = JCR.parse( 'trule = : ( :string | :integer )' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", JCR::EvalConditions.new( mapping, nil ) )
@@ -50,7 +50,7 @@ describe 'evaluate_group_rules' do
   end
 
   it 'should fail a group with an ip4 or an integer' do
-    tree = JCR.parse( 'trule : ( :ip4 | :integer )' )
+    tree = JCR.parse( 'trule = : ( :ip4 | :integer )' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", JCR::EvalConditions.new( mapping, nil ) )
@@ -58,7 +58,7 @@ describe 'evaluate_group_rules' do
   end
 
   it 'should pass a group with an ip4 or an integer with reject' do
-    tree = JCR.parse( 'trule : @{reject} ( :ip4 | :integer )' )
+    tree = JCR.parse( 'trule = : @{reject} ( :ip4 | :integer )' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", JCR::EvalConditions.new( mapping, nil ) )
