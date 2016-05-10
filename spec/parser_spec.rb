@@ -1009,14 +1009,14 @@ EX5e
   end
 
   it 'should parse multi-line unknown directives with comment, q_strings and regexs' do
-    ex5f = <<'EX5f' # 'EX5f' to prevent #{/...} string interpolation
+    ex5f = %q[
 #{constraint foo
   $name == /p\d{1,5}/ && ; Must allow } and { in comments
-  $when == "} with {" 
+  $when == "} with {"
 }
 # ruleset-id my_awesome_rules
 # import http://arin.net/otherexamples as otherrules
-EX5f
+    ]
     tree = JCR.parse( ex5f )
   end
 
