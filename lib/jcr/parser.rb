@@ -94,14 +94,14 @@ module JCR
         #! root_rule = value_rule / group_rule
         #!
 
-    rule(:rule) { ( rule_name >> spcCmnt? >> str('=') >> spcCmnt? >> rule_def ).as(:rule) }
-        #! rule = rule_name spcCmnt? "=" spcCmnt? rule_def
+    rule(:rule) { ( str('$') >> rule_name >> spcCmnt? >> str('=') >> spcCmnt? >> rule_def ).as(:rule) }
+        #! rule = "$" rule_name spcCmnt? "=" spcCmnt? rule_def
         #!
 
     rule(:rule_name)         { name.as(:rule_name) }
         #! rule_name = name
-    rule(:target_rule_name)  { (annotations.as(:annotations) >> (ruleset_id_alias >> str('.')).maybe >> rule_name).as(:target_rule_name) }
-        #! target_rule_name  = annotations [ ruleset_id_alias "." ] rule_name
+    rule(:target_rule_name)  { (annotations.as(:annotations) >> str('$') >> (ruleset_id_alias >> str('.')).maybe >> rule_name).as(:target_rule_name) }
+        #! target_rule_name  = annotations "$" [ ruleset_id_alias "." ] rule_name
     rule(:name)              { match('[a-zA-Z]') >> match('[a-zA-Z0-9\-_]').repeat }
         #! name              = ALPHA *( ALPHA / DIGIT / "-" / "_" )
         #!

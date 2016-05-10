@@ -22,6 +22,7 @@ require 'big-phoney'
 require 'jcr/parser'
 require 'jcr/map_rule_names'
 require 'jcr/check_groups'
+require 'jcr/evaluate_rules'
 
 module JCR
 

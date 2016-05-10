@@ -19,25 +19,25 @@ require_relative '../lib/jcr/find_roots'
 describe 'find_roots' do
 
   it 'should find no annotated roots with value rule' do
-    tree = JCR.parse( 'vrule= :integer' )
+    tree = JCR.parse( '$vrule= :integer' )
     roots = JCR.find_roots( tree )
     expect( roots.length ).to eq( 0 )
   end
 
   it 'should find no annotated roots with member rule' do
-    tree = JCR.parse( 'vrule= "member" :integer' )
+    tree = JCR.parse( '$vrule= "member" :integer' )
     roots = JCR.find_roots( tree )
     expect( roots.length ).to eq( 0 )
   end
 
   it 'should find no annotated roots with array rule' do
-    tree = JCR.parse( 'vrule= [ *:integer ]' )
+    tree = JCR.parse( '$vrule= [ *:integer ]' )
     roots = JCR.find_roots( tree )
     expect( roots.length ).to eq( 0 )
   end
 
   it 'should find an annotated rule' do
-    tree = JCR.parse( 'vrule= @{root} [ *:integer ]' )
+    tree = JCR.parse( '$vrule= @{root} [ *:integer ]' )
     roots = JCR.find_roots( tree )
     expect( roots.length ).to eq( 1 )
     expect( roots[0] ).to be_an( JCR::Root )
@@ -48,7 +48,7 @@ describe 'find_roots' do
   end
 
   it 'should find an embedded annotated rule' do
-    tree = JCR.parse( 'vrule= [ * @{root} :integer ]' )
+    tree = JCR.parse( '$vrule= [ * @{root} :integer ]' )
     roots = JCR.find_roots( tree )
     expect( roots.length ).to eq( 1 )
     expect( roots[0] ).to be_an( JCR::Root )
@@ -56,7 +56,7 @@ describe 'find_roots' do
   end
 
   it 'should find a sub embedded annotated rule' do
-    tree = JCR.parse( 'vrule= [ * [ * @{root} :integer ] ]' )
+    tree = JCR.parse( '$vrule= [ * [ * @{root} :integer ] ]' )
     roots = JCR.find_roots( tree )
     expect( roots.length ).to eq( 1 )
     expect( roots[0] ).to be_an( JCR::Root )
@@ -65,7 +65,7 @@ describe 'find_roots' do
   end
 
   it 'should find two sub embedded annotated rule' do
-    tree = JCR.parse( 'vrule= [ * @{root} [ * @{root} :integer ] ]' )
+    tree = JCR.parse( '$vrule= [ * @{root} [ * @{root} :integer ] ]' )
     roots = JCR.find_roots( tree )
     expect( roots.length ).to eq( 2 )
     expect( roots[0] ).to be_an( JCR::Root )
@@ -96,15 +96,15 @@ describe 'find_roots' do
 # ruleset-id http://blah.com
 {
     "Image" {
-        width, height, "Title" :string,
-        "thumbnail" @{root} { width, height, "Url" :uri },
-        "IDs" ids
+        $width, $height, "Title" :string,
+        "thumbnail" @{root} { $width, $height, "Url" :uri },
+        "IDs" $ids
     }
 }
 
-width="width" : 0..1280
-height="height" : 0..1024
-ids=@{root} [ *:integer ]
+$width="width" : 0..1280
+$height="height" : 0..1024
+$ids=@{root} [ *:integer ]
 
 EX7
     tree = JCR.parse( ex7 )

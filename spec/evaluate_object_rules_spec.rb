@@ -18,7 +18,7 @@ require_relative '../lib/jcr/evaluate_object_rules'
 describe 'evaluate_object_rules' do
 
   it 'should fail something that is not an object' do
-    tree = JCR.parse( 'trule= { }' )
+    tree = JCR.parse( '$trule= { }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
@@ -26,7 +26,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass something that is not an object with reject' do
-    tree = JCR.parse( 'trule= @{reject} { }' )
+    tree = JCR.parse( '$trule= @{reject} { }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
@@ -34,7 +34,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an empty object against an empty object rule' do
-    tree = JCR.parse( 'trule= { }' )
+    tree = JCR.parse( '$trule= { }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], { }, JCR::EvalConditions.new( mapping, nil ) )
@@ -42,7 +42,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should fail an empty object against an empty reject object rule' do
-    tree = JCR.parse( 'trule= @{reject} { }' )
+    tree = JCR.parse( '$trule= @{reject} { }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], { }, JCR::EvalConditions.new( mapping, nil ) )
@@ -50,7 +50,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should fail a non-empty object against an empty object rule' do
-    tree = JCR.parse( 'trule= { }' )
+    tree = JCR.parse( '$trule= { }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], { "foo"=>"bar"}, JCR::EvalConditions.new( mapping, nil ) )
@@ -58,7 +58,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass a non-empty object against an empty reject object rule' do
-    tree = JCR.parse( 'trule= @{reject} { }' )
+    tree = JCR.parse( '$trule= @{reject} { }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], { "foo"=>"bar"}, JCR::EvalConditions.new( mapping, nil ) )
@@ -66,7 +66,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should fail an empty object against an object rule with a string member' do
-    tree = JCR.parse( 'trule= { "foo" :string }' )
+    tree = JCR.parse( '$trule= { "foo" :string }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], { }, JCR::EvalConditions.new( mapping, nil ) )
@@ -74,7 +74,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should fail an empty object against an object rule with a string member and a string member' do
-    tree = JCR.parse( 'trule= { "foo" :string, "bar" :string }' )
+    tree = JCR.parse( '$trule= { "foo" :string, "bar" :string }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], { }, JCR::EvalConditions.new( mapping, nil ) )
@@ -82,7 +82,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should fail an empty object against an object rule with a string member or a string member' do
-    tree = JCR.parse( 'trule= { "foo" :string| "bar" :string }' )
+    tree = JCR.parse( '$trule= { "foo" :string| "bar" :string }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], { }, JCR::EvalConditions.new( mapping, nil ) )
@@ -90,7 +90,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should fail an object with one string against an object rule with a string member and a string member' do
-    tree = JCR.parse( 'trule= { "foo":string, "bar":string }' )
+    tree = JCR.parse( '$trule= { "foo":string, "bar":string }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], { "foo"=>"thing" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -98,7 +98,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with one string against an object rule with a string member or a string member' do
-    tree = JCR.parse( 'trule= { "foo":string | "bar":string }' )
+    tree = JCR.parse( '$trule= { "foo":string | "bar":string }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], { "foo"=>"thing" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -106,7 +106,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should fail an object with one string against an reject object rule with a string member or a string member' do
-    tree = JCR.parse( 'trule= @{reject} { "foo":string | "bar":string }' )
+    tree = JCR.parse( '$trule= @{reject} { "foo":string | "bar":string }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], { "foo"=>"thing" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -114,7 +114,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should fail an object with one string against an object rule with a string member and an integer member' do
-    tree = JCR.parse( 'trule= { "foo":string, "bar":integer }' )
+    tree = JCR.parse( '$trule= { "foo":string, "bar":integer }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], { "foo"=>"thing" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -122,7 +122,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with string and integer against an object rule with a string member and an integer member' do
-    tree = JCR.parse( 'trule= { "foo":string, "bar":integer }' )
+    tree = JCR.parse( '$trule= { "foo":string, "bar":integer }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], { "foo"=>"thing", "bar"=>2 }, JCR::EvalConditions.new( mapping, nil ) )
@@ -130,7 +130,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with one string against an object rule with a string member or a integer member' do
-    tree = JCR.parse( 'trule= { "foo":string | "bar":integer }' )
+    tree = JCR.parse( '$trule= { "foo":string | "bar":integer }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], { "foo"=>"thing" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -138,7 +138,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with string and integer against an object rule with a string member and an integer member or string member' do
-    tree = JCR.parse( 'trule= { "bar":string, ( "foo":integer | "foo":string ) }' )
+    tree = JCR.parse( '$trule= { "bar":string, ( "foo":integer | "foo":string ) }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], { "bar"=>"thing", "foo"=>2 }, JCR::EvalConditions.new( mapping, nil ) )
@@ -146,7 +146,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with string and string against an object rule with a string member and an integer member or string member' do
-    tree = JCR.parse( 'trule= { "bar":string, ( "foo":integer | "foo":string ) }' )
+    tree = JCR.parse( '$trule= { "bar":string, ( "foo":integer | "foo":string ) }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"bar"=>"thing","foo"=>"thing2" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -154,7 +154,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with two strings against an object rule with string twice' do
-    tree = JCR.parse( 'trule= { 2*2 /m.*/ :string }' )
+    tree = JCR.parse( '$trule= { 2*2 /m.*/ :string }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"m1"=>"thing","m2"=>"thing2" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -162,7 +162,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with two strings against an object rule with string member once or twice' do
-    tree = JCR.parse( 'trule= { 1*2 /m.*/:string }' )
+    tree = JCR.parse( '$trule= { 1*2 /m.*/:string }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"m1"=>"thing","m2"=>"thing2"}, JCR::EvalConditions.new( mapping, nil ) )
@@ -170,7 +170,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with two strings against an object rule with string member once or twice or thrice' do
-    tree = JCR.parse( 'trule= { 1*3 /m.*/:string }' )
+    tree = JCR.parse( '$trule= { 1*3 /m.*/:string }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"m1"=>"thing","m2"=>"thing2" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -178,7 +178,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with one string against an object rule with string member once or twice' do
-    tree = JCR.parse( 'trule= { 1*2 /m.*/:string }' )
+    tree = JCR.parse( '$trule= { 1*2 /m.*/:string }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"m1"=>"thing" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -186,7 +186,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with one string against an object rule with string member default or twice' do
-    tree = JCR.parse( 'trule= { *2 /m.*/:string }' )
+    tree = JCR.parse( '$trule= { *2 /m.*/:string }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"m1"=> "thing" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -194,7 +194,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an empty object  against an object rule with string member default or twice' do
-    tree = JCR.parse( 'trule= { *2 /m.*/:string }' )
+    tree = JCR.parse( '$trule= { *2 /m.*/:string }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {}, JCR::EvalConditions.new( mapping, nil ) )
@@ -202,7 +202,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with one string against an object rule with string member once or default' do
-    tree = JCR.parse( 'trule= { 1* /m.*/:string }' )
+    tree = JCR.parse( '$trule= { 1* /m.*/:string }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"m1"=> "thing" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -210,7 +210,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with two strings against an object rule with string member once or default' do
-    tree = JCR.parse( 'trule= { 1* /m.*/:string }' )
+    tree = JCR.parse( '$trule= { 1* /m.*/:string }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"m1"=> "thing", "m2"=>"thing2" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -218,7 +218,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with two strings against an object rule with string member one or more' do
-    tree = JCR.parse( 'trule= { + /m.*/:string }' )
+    tree = JCR.parse( '$trule= { + /m.*/:string }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"m1"=> "thing", "m2"=>"thing2" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -226,7 +226,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with a string and integer against an object rule with string member once or twice (ignore extras)' do
-    tree = JCR.parse( 'trule= { 1*2 /m.*/:string }' )
+    tree = JCR.parse( '$trule= { 1*2 /m.*/:string }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"m1"=> "thing","m2"=> 2 }, JCR::EvalConditions.new( mapping, nil ) )
@@ -234,7 +234,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with a string and integer against an object rule with string member default or twice (ignore extras)' do
-    tree = JCR.parse( 'trule= { *2 /m.*/:string }' )
+    tree = JCR.parse( '$trule= { *2 /m.*/:string }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"m1"=> "thing", "m2"=>2 }, JCR::EvalConditions.new( mapping, nil ) )
@@ -242,7 +242,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with a string and integer and string against an object rule with string and integer (ignore extra)' do
-    tree = JCR.parse( 'trule= { "foo":string, "bar":integer }' )
+    tree = JCR.parse( '$trule= { "foo":string, "bar":integer }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"foo"=>"thing","bar"=>2,"foo2"=>"thing2" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -250,7 +250,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should fail an object with a string against an object rule with string twice' do
-    tree = JCR.parse( 'trule= { 2*2 /m.*/:string }' )
+    tree = JCR.parse( '$trule= { 2*2 /m.*/:string }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"m1"=> "thing" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -258,7 +258,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with a string and integer against an object rule with string 1*2 and integer 1*2' do
-    tree = JCR.parse( 'trule= { 1*2 /s.*/:string, 1*2 /i.*/:integer }' )
+    tree = JCR.parse( '$trule= { 1*2 /s.*/:string, 1*2 /i.*/:integer }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing", "i1"=> 2 }, JCR::EvalConditions.new( mapping, nil ) )
@@ -266,7 +266,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with two strings and integer against an object rule with string 1*2 and integer 1*2' do
-    tree = JCR.parse( 'trule= { 1*2 /s.*/:string, 1*2 /i.*/:integer }' )
+    tree = JCR.parse( '$trule= { 1*2 /s.*/:string, 1*2 /i.*/:integer }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=> "thing2","i1"=> 2 }, JCR::EvalConditions.new( mapping, nil ) )
@@ -274,7 +274,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with one string and two integer against an object rule with string 1*2 and integer 1*2' do
-    tree = JCR.parse( 'trule= { 1*2 /s.*/:string, 1*2 /i.*/:integer }' )
+    tree = JCR.parse( '$trule= { 1*2 /s.*/:string, 1*2 /i.*/:integer }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","i1"=> 1,"i2"=> 2 }, JCR::EvalConditions.new( mapping, nil ) )
@@ -282,7 +282,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with two string and two integer against an object rule with string 1*2 and integer 1*2' do
-    tree = JCR.parse( 'trule= { 1*2 /s.*/:string, 1*2 /i.*/:integer }' )
+    tree = JCR.parse( '$trule= { 1*2 /s.*/:string, 1*2 /i.*/:integer }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=> "thing2","i1"=> 1,"i2"=> 2 }, JCR::EvalConditions.new( mapping, nil ) )
@@ -290,7 +290,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with two strings and two integers against an object rule with string 1*2 and integer 1*2' do
-    tree = JCR.parse( 'trule= { 1*2 /s.*/:string, 1*2 /i.*/:integer }' )
+    tree = JCR.parse( '$trule= { 1*2 /s.*/:string, 1*2 /i.*/:integer }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=> "thing2","i1"=> 1,"i2"=> 2 }, JCR::EvalConditions.new( mapping, nil ) )
@@ -298,7 +298,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should fail an object with one string and three integer against an object rule with string 1*2 and integer 1*2' do
-    tree = JCR.parse( 'trule= { 1*2 /s.*/:string, 1*2 /i.*/:integer }' )
+    tree = JCR.parse( '$trule= { 1*2 /s.*/:string, 1*2 /i.*/:integer }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","i1"=> 1,"i2"=> 2,"i3"=> 3 }, JCR::EvalConditions.new( mapping, nil ) )
@@ -306,7 +306,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with two strings and two integers against an object rule with string 1*2 and any 1*2' do
-    tree = JCR.parse( 'trule= { 1*2 /s.*/:string, 1*2 /.*/:integer }' )
+    tree = JCR.parse( '$trule= { 1*2 /s.*/:string, 1*2 /.*/:integer }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=> "thing2","1"=> 1,"2"=> 2 }, JCR::EvalConditions.new( mapping, nil ) )
@@ -314,7 +314,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with two strings and two integers against an object rule with string 2 and any 2' do
-    tree = JCR.parse( 'trule= { 2 /s.*/:string, 2 /.*/:integer }' )
+    tree = JCR.parse( '$trule= { 2 /s.*/:string, 2 /.*/:integer }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=> "thing2","1"=> 1,"2"=> 2 }, JCR::EvalConditions.new( mapping, nil ) )
@@ -322,7 +322,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with two strings and two integers against an object rule with string + and any +' do
-    tree = JCR.parse( 'trule= { + /s.*/:string, + /.*/:integer }' )
+    tree = JCR.parse( '$trule= { + /s.*/:string, + /.*/:integer }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=> "thing2","1"=> 1,"2"=> 2 }, JCR::EvalConditions.new( mapping, nil ) )
@@ -330,7 +330,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should fail an object with two strings and two integers against an object rule with string ? and any ?' do
-    tree = JCR.parse( 'trule= { ? /s.*/:string, ? /.*/:integer }' )
+    tree = JCR.parse( '$trule= { ? /s.*/:string, ? /.*/:integer }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=> "thing2","1"=> 1,"2"=> 2 }, JCR::EvalConditions.new( mapping, nil ) )
@@ -338,7 +338,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass an object with one strings and one integers against an object rule with string ? and any ?' do
-    tree = JCR.parse( 'trule= { ? /s.*/:string, ? /.*/:integer }' )
+    tree = JCR.parse( '$trule= { ? /s.*/:string, ? /.*/:integer }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","1"=> 1 }, JCR::EvalConditions.new( mapping, nil ) )
@@ -346,7 +346,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should fail an object with two members against an object rule with overlapping rules' do
-    tree = JCR.parse( 'trule= { 2 /.*/:any, 1 /.*/:any }' )
+    tree = JCR.parse( '$trule= { 2 /.*/:any, 1 /.*/:any }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","1"=> 1 }, JCR::EvalConditions.new( mapping, nil ) )
@@ -354,7 +354,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should ignore extra members in an object' do
-    tree = JCR.parse( 'trule= { 2 /s.*/:string, 1 "foo":integer }' )
+    tree = JCR.parse( '$trule= { 2 /s.*/:string, 1 "foo":integer }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=>"thing2","foo"=>2,"bar"=>"baz" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -362,7 +362,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should not ignore extra members in an object' do
-    tree = JCR.parse( 'trule= { 2 /s.*/:string, 1 "foo":integer, + @{reject} /.*/:any }' )
+    tree = JCR.parse( '$trule= { 2 /s.*/:string, 1 "foo":integer, + @{reject} /.*/:any }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=>"thing2","foo"=>2,"bar"=>"baz" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -370,7 +370,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass object with not extra members using reject' do
-    tree = JCR.parse( 'trule= { 2 /s.*/:string, 1 "foo":integer, ? @{reject} /.*/:any }' )
+    tree = JCR.parse( '$trule= { 2 /s.*/:string, 1 "foo":integer, ? @{reject} /.*/:any }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=>"thing2","foo"=>2 }, JCR::EvalConditions.new( mapping, nil ) )
@@ -378,7 +378,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass object with string member and object member' do
-    tree = JCR.parse( 'trule= { "s1":string, "o1"{ "ss1":string } }' )
+    tree = JCR.parse( '$trule= { "s1":string, "o1"{ "ss1":string } }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","o1"=>{"ss1"=>"thing2"} }, JCR::EvalConditions.new( mapping, nil ) )
@@ -386,7 +386,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass object with a string member and group member containing a string member' do
-    tree = JCR.parse( 'trule= { "s1":string, ( "s2":string ) }' )
+    tree = JCR.parse( '$trule= { "s1":string, ( "s2":string ) }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=>"thing2" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -394,7 +394,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass object with 2 ORed groups of ANDs 1' do
-    tree = JCR.parse( 'trule= { ("s1":string, "s2":string ) | ( "s3":string , "s4":string ) }' )
+    tree = JCR.parse( '$trule= { ("s1":string, "s2":string ) | ( "s3":string , "s4":string ) }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=>"thing2" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -402,7 +402,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass object with 2 ORed groups of ANDs 2' do
-    tree = JCR.parse( 'trule= { ("s1":string, "s2":string ) | ( "s3":string , "s4":string ) }' )
+    tree = JCR.parse( '$trule= { ("s1":string, "s2":string ) | ( "s3":string , "s4":string ) }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s3"=> "thing","s4"=>"thing2" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -410,7 +410,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should fail object with 2 ORed groups of ANDs 2' do
-    tree = JCR.parse( 'trule= { ("s1":string, "s2":string ) | ( "s3":string , "s4":string ) }' )
+    tree = JCR.parse( '$trule= { ("s1":string, "s2":string ) | ( "s3":string , "s4":string ) }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s5"=> "thing","s6"=>"thing2" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -418,7 +418,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass object with simple nested groups' do
-    tree = JCR.parse( 'trule= { ( ("s1":string, "s2":string ) ) }' )
+    tree = JCR.parse( '$trule= { ( ("s1":string, "s2":string ) ) }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=>"thing2" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -426,7 +426,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass object with complex nested groups 1' do
-    tree = JCR.parse( 'trule= { ( ( "s1":string, "s2":string ) | ( "s3":string ) ) , "s4":string }' )
+    tree = JCR.parse( '$trule= { ( ( "s1":string, "s2":string ) | ( "s3":string ) ) , "s4":string }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=>"foo", "s2"=> "thing","s4"=>"thing2" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -434,7 +434,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass object with complex nested groups 2' do
-    tree = JCR.parse( 'trule= { ( ( "s1":string, "s2":string ) | ( "s3":string ) ) , "s4":string }' )
+    tree = JCR.parse( '$trule= { ( ( "s1":string, "s2":string ) | ( "s3":string ) ) , "s4":string }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s3"=>"fuzz", "s4"=>"thing2" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -442,7 +442,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should fail object with complex nested groups 1' do
-    tree = JCR.parse( 'trule= { ( ( "s1":string, "s2":string ) | ( "s3":string ) ) , "s4":string }' )
+    tree = JCR.parse( '$trule= { ( ( "s1":string, "s2":string ) | ( "s3":string ) ) , "s4":string }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s0"=>"fizz", "s4"=>"thing2" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -450,7 +450,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass object with complex nested groups with a named rule 1' do
-    tree = JCR.parse( 'orule = { ( trule | ( "s3":string ) ) , "s4":string } ;; trule = ( "s1":string, "s2":string )' )
+    tree = JCR.parse( '$orule = { ( $trule | ( "s3":string ) ) , "s4":string } ;; $trule = ( "s1":string, "s2":string )' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=>"foo", "s2"=> "thing","s4"=>"thing2" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -458,8 +458,8 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass object with ORed groups of overlapping member rules 1' do
-    tree = JCR.parse( 'orule = { ( a, b ) | ( a, c ) | ( b, c ) }'\
-                      'a = "a":string b = "b":string c = "c":string')
+    tree = JCR.parse( '$orule = { ( $a, $b ) | ( $a, $c ) | ( $b, $c ) }'\
+                      '$a = "a":string $b = "b":string $c = "c":string')
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"a"=>"a", "b"=> "b" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -467,8 +467,8 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass object with ORed groups of overlapping member rules 2' do
-    tree = JCR.parse( 'orule = { ( a, b ) | ( a, c ) | ( b, c ) }'\
-                      'a = "a":string b = "b":string c = "c":string')
+    tree = JCR.parse( '$orule = { ( $a, $b ) | ( $a, $c ) | ( $b, $c ) }'\
+                      '$a = "a":string $b = "b":string $c = "c":string')
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"a"=>"a", "c"=> "c" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -476,8 +476,8 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass object with ORed groups of overlapping member rules 3' do
-    tree = JCR.parse( 'orule = { ( a, b ) | ( a, c ) | ( b, c ) }'\
-                      'a = "a":string b = "b":string c = "c":string')
+    tree = JCR.parse( '$orule = { ( $a, $b ) | ( $a, $c ) | ( $b, $c ) }'\
+                      '$a = "a":string $b = "b":string $c = "c":string')
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"b"=>"b", "c"=> "c" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -485,8 +485,8 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should fail object with ORed groups of overlapping member rules 3' do
-    tree = JCR.parse( 'orule = { ( a, b ) | ( a, c ) | ( b, c ) }'\
-                      'a = "a":string b = "b":string c = "c":string')
+    tree = JCR.parse( '$orule = { ( $a, $b ) | ( $a, $c ) | ( $b, $c ) }'\
+                      '$a = "a":string $b = "b":string $c = "c":string')
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"b"=>"b", "d"=> "d" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -494,8 +494,8 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass object with ORed groups with manditory member but optional if another exists 1' do
-    tree = JCR.parse( 'orule = { ( a, b ) | ( a, ?b, c ) }'\
-                      'a = "a":string b = "b":string c = "c":string')
+    tree = JCR.parse( '$orule = { ( $a, $b ) | ( $a, ?$b, $c ) }'\
+                      '$a = "a":string $b = "b":string $c = "c":string')
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"a"=>"a", "b"=> "b" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -503,8 +503,8 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should fail object with ORed groups with manditory member but optional if another exists 1' do
-    tree = JCR.parse( 'orule = { ( a, b ) | ( a, ?b, c ) }'\
-                      'a = "a":string b = "b":string c = "c":string')
+    tree = JCR.parse( '$orule = { ( $a, $b ) | ( $a, ?$b, $c ) }'\
+                      '$a = "a":string $b = "b":string $c = "c":string')
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"a"=>"a" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -512,8 +512,8 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass object with ORed groups with manditory member but optional if another exists 2' do
-    tree = JCR.parse( 'orule = { ( a, b ) | ( a, ?b, c ) }'\
-                      'a = "a":string b = "b":string c = "c":string')
+    tree = JCR.parse( '$orule = { ( $a, $b ) | ( $a, ?$b, $c ) }'\
+                      '$a = "a":string $b = "b":string $c = "c":string')
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"a"=>"a", "c"=> "c" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -521,8 +521,8 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass object with ORed groups with manditory member but optional if another exists 3' do
-    tree = JCR.parse( 'orule = { ( a, b ) | ( a, ?b, c ) }'\
-                      'a = "a":string b = "b":string c = "c":string')
+    tree = JCR.parse( '$orule = { ( $a, $b ) | ( $a, ?$b, $c ) }'\
+                      '$a = "a":string $b = "b":string $c = "c":string')
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"a"=>"a", "b"=>"b", "c"=> "c" }, JCR::EvalConditions.new( mapping, nil ) )
