@@ -257,8 +257,8 @@ module JCR
                                           ( spcCmnt? >> choice_combiner >> spcCmnt? >> object_item ).repeat(1) ).maybe }
         #! object_items = object_item (*( sequence_combiner object_item ) /
         #!                             *( choice_combiner object_item ) )
-    rule(:object_item ) { repetition.maybe >> spcCmnt? >> object_item_types }
-        #! object_item = [ repetition spcCmnt? ] object_item_types
+    rule(:object_item ) { object_item_types >> spcCmnt? >> repetition.maybe }
+        #! object_item = object_item_types [ spcCmnt? repetition ]
     rule(:object_item_types) { member_rule | target_rule_name | object_group }
         #! object_item_types = member_rule / target_rule_name / object_group
     rule(:object_group) { ( str('(') >> spcCmnt? >> object_items.maybe >> spcCmnt? >> str(')') ).as(:group_rule) }
@@ -272,8 +272,8 @@ module JCR
                                          ( spcCmnt? >> choice_combiner >> spcCmnt? >> array_item ).repeat(1) ).maybe }
         #! array_items = array_item (*( sequence_combiner array_item ) /
         #!                           *( choice_combiner array_item ) )
-    rule(:array_item)   { repetition.maybe >> spcCmnt? >> array_item_types }
-        #! array_item = [ repetition ] spcCmnt? array_item_types
+    rule(:array_item)   { array_item_types >> spcCmnt? >> repetition.maybe }
+        #! array_item = spcCmnt? array_item_types spcCmnt? [ repetition ]
     rule(:array_item_types) { type_rule | array_group }
         #! array_item_types = type_rule / array_group
     rule(:array_group)  { ( str('(') >> spcCmnt? >> array_items.maybe >> spcCmnt? >> str(')') ).as(:group_rule) }
@@ -286,8 +286,8 @@ module JCR
                                          ( spcCmnt? >> choice_combiner >> spcCmnt? >> group_item ).repeat(1) ).maybe }
         #! group_items = group_item (*( sequence_combiner group_item ) /
         #!                           *( choice_combiner group_item ) )
-    rule(:group_item)   { repetition.maybe >> spcCmnt? >> group_item_types }
-        #! group_item = [ repetition ] spcCmnt? group_item_types
+    rule(:group_item)   { group_item_types >> spcCmnt? >> repetition.maybe }
+        #! group_item = spcCmnt? group_item_types spcCmnt? [ repetition ]
     rule(:group_item_types) { member_rule | type_rule | group_group }
         #! group_item_types = member_rule / type_rule / group_group
     rule(:group_group)  { group_rule }
@@ -300,20 +300,22 @@ module JCR
         #! choice_combiner = spcCmnt? "|" spcCmnt?
         #!
 
-    rule(:repetition)          { optional | one_or_more | min_max_repetition | specific_repetition }
-        #! repetition = optional / one_or_more / min_max_repetition /
-        #!              min_repetition / max_repetition /
-        #!              zero_or_more / specific_repetition
+    rule(:repetition)          { str('<') >> spcCmnt? >> ( optional | one_or_more | zero_or_more |
+                                              min_max_repetition | specific_repetition ) >> spcCmnt? >> str('>') }
+        #! repetition = "<" spcCmnt? ( optional / one_or_more / min_max_repetition /
+        #!                    min_repetition / max_repetition /
+        #!                    zero_or_more / specific_repetition ) spcCmnt? ">"
     rule(:optional)            { str('?').as(:optional) }
         #! optional = "?"
     rule(:one_or_more)         { str('+').as(:one_or_more) }
         #! one_or_more = "+"
+    rule(:zero_or_more)        { str('*').as(:zero_or_more) }
         #! zero_or_more = "*"
-    rule(:min_max_repetition)  {      # This includes zero_or_more, min_only and max_only cases
-            p_integer.maybe.as(:repetition_min) >> spcCmnt? >> str('*').as(:repetition_interval) >> spcCmnt? >> p_integer.maybe.as(:repetition_max) }
-        #! min_max_repetition = min_repeat spcCmnt? "*" spcCmnt? max_repeat
-        #! min_repetition = min_repeat spcCmnt? "*"
-        #! max_repetition = "*" spcCmnt? max_repeat
+    rule(:min_max_repetition)  {      # This includes min_only and max_only cases
+            p_integer.maybe.as(:repetition_min) >> spcCmnt? >> str("..").as(:repetition_interval) >> spcCmnt? >> p_integer.maybe.as(:repetition_max) }
+        #! min_max_repetition = min_repeat spcCmnt? ".." spcCmnt? max_repeat
+        #! min_repetition = min_repeat spcCmnt? ".."
+        #! max_repetition = ".." spcCmnt? max_repeat
         #! min_repeat = p_integer
         #! max_repeat = p_integer
     rule(:specific_repetition) { p_integer.as(:specific_repetition) }
