@@ -25,10 +25,10 @@ $width = "width" : 0..1280
 $height = "height" : 0..1024
 
 $root = {
-    "Image" {
+    "Image" :{
         $width, $height, "Title" :string,
-        "thumbnail" { $width, $height, "Url" :uri },
-        "IDs" [ *:integer ]
+        "thumbnail" :{ $width, $height, "Url" :uri },
+        "IDs" : [ *integer ]
     }
 }
 EX7
@@ -40,54 +40,54 @@ EX7
   end
 
   it 'should check rule names' do
-    tree = JCR.parse( '$vrule = : integer ;; $mrule = "thing" $vrule' )
+    tree = JCR.parse( '$vrule = integer ;; $mrule = "thing" :  $vrule' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
   end
 
   it 'should raise error with missing member rule' do
-    tree = JCR.parse( '$vrule = : integer ;; $mrule = "thing" $missingrule' )
+    tree = JCR.parse( '$vrule = integer ;; $mrule = "thing" : $missingrule' )
     mapping = JCR.map_rule_names( tree )
     expect{ JCR.check_rule_target_names( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should find rule names in array' do
-    tree = JCR.parse( '$vrule1 = : integer ;; $vrule2 = : float $arule = [ $vrule1, $vrule2 ]' )
+    tree = JCR.parse( '$vrule1 = integer ;; $vrule2 = float $arule = [ $vrule1, $vrule2 ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
   end
 
   it 'should find rule names in array of array' do
-    tree = JCR.parse( '$vrule1 = : integer ;; $arule = [ $vrule1, [ $vrule1 ] ]' )
+    tree = JCR.parse( '$vrule1 = integer ;; $arule = [ $vrule1, [ $vrule1 ] ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
   end
 
   it 'should not find rule names in array of array' do
-    tree = JCR.parse( '$vrule1 = : integer ;; $arule = [ $vrule1, [ $vrule2 ] ]' )
+    tree = JCR.parse( '$vrule1 = integer ;; $arule = [ $vrule1, [ $vrule2 ] ]' )
     mapping = JCR.map_rule_names( tree )
     expect{ JCR.check_rule_target_names( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should not find rule names in array of array in array' do
-    tree = JCR.parse( '$vrule1 = : integer ;; $arule = [ $vrule1, [ $vrule1, [ $vrule2 ] ] ]' )
+    tree = JCR.parse( '$vrule1 = integer ;; $arule = [ $vrule1, [ $vrule1, [ $vrule2 ] ] ]' )
     mapping = JCR.map_rule_names( tree )
     expect{ JCR.check_rule_target_names( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should not allow rules with the same name' do
-    tree = JCR.parse( '$vrule = : integer ;; $vrule = : string' )
+    tree = JCR.parse( '$vrule = integer ;; $vrule = string' )
     expect{ JCR.map_rule_names( tree ) }.to raise_error RuntimeError
   end
 
   it 'should  allow rules with the same name' do
-    tree = JCR.parse( '$vrule = : integer ;; $vrule = : string' )
+    tree = JCR.parse( '$vrule = integer ;; $vrule = string' )
     mapping = JCR.map_rule_names( tree, true )
     JCR.check_rule_target_names( tree, mapping )
   end
 
   it 'should map just a default rule' do
-    tree = JCR.parse( '[ *:integer ]' )
+    tree = JCR.parse( '[ *integer ]' )
     mapping = JCR.map_rule_names( tree, true )
     JCR.check_rule_target_names( tree, mapping )
   end
@@ -99,10 +99,10 @@ $width = "width" : 0..1280
 $height = "height" : 0..1024
 
 $root = {
-    "Image" {
+    "Image": {
         $width, $height, "Title" :string,
-        "thumbnail" { $width, $height, "Url" :uri },
-        "IDs" [ *:integer ]
+        "thumbnail" :{ $width, $height, "Url" :uri },
+        "IDs" :[ *integer ]
     }
 }
 EX7
@@ -120,10 +120,10 @@ $width = "width" : 0..1280
 $height = "height" : 0..1024
 
 $root = {
-    "Image" {
+    "Image" :{
         $width, $height, "Title" :string,
-        "thumbnail" { $width, $height, "Url" :uri },
-        "IDs" [ *:integer ]
+        "thumbnail": { $width, $height, "Url" :uri },
+        "IDs": [ *integer ]
     }
 }
 EX7

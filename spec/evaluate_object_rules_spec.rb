@@ -378,7 +378,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass object with string member and object member' do
-    tree = JCR.parse( '$trule= { "s1":string, "o1"{ "ss1":string } }' )
+    tree = JCR.parse( '$trule= { "s1":string, "o1" :{ "ss1":string } }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","o1"=>{"ss1"=>"thing2"} }, JCR::EvalConditions.new( mapping, nil ) )

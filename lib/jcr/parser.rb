@@ -106,24 +106,24 @@ module JCR
         #! name              = ALPHA *( ALPHA / DIGIT / "-" / "_" )
         #!
 
-    rule(:rule_def)          { type_rule | member_rule | group_rule }
-        #! rule_def = type_rule / member_rule / group_rule
+    rule(:rule_def)          { member_rule | type_rule | group_rule }
+        #! rule_def = member_rule / type_rule / group_rule
     rule(:type_rule)         { value_rule | type_choice_rule | target_rule_name }
         #! type_rule = value_rule / type_choice_rule / target_rule_name
     rule(:value_rule)         { primitive_rule | array_rule | object_rule }
         #! value_rule = primitive_rule / array_rule / object_rule
-    rule(:member_rule)       { ( annotations >> member_name_spec >> spcCmnt? >> type_rule ).as(:member_rule) }
+    rule(:member_rule)       { ( annotations >> member_name_spec >> spcCmnt? >> str(':') >> spcCmnt? >> type_rule ).as(:member_rule) }
         #! member_rule = annotations
-        #!               member_name_spec spcCmnt? type_rule
+        #!               member_name_spec spcCmnt? ":" spcCmnt? type_rule
     rule(:member_name_spec)  { regex.as(:member_regex) | q_string.as(:member_name) }
         #! member_name_spec = regex / q_string
-    rule(:type_choice_rule)  { str(':').as(:type_choice_signifier) >> spcCmnt? >> type_choice }
-        #! type_choice_rule = ":" spcCmnt? type_choice
+    rule(:type_choice_rule)  { spcCmnt? >> type_choice }
+        #! type_choice_rule = spcCmnt? type_choice
     rule(:type_choice)       { ( annotations >> str('(') >> type_choice_items >> ( choice_combiner >> type_choice_items ).repeat >> str(')') ).as(:group_rule) }
         #! type_choice = annotations "(" type_choice_items
         #!               *( choice_combiner type_choice_items ) ")"
-    rule(:type_choice_items) { spcCmnt? >> (type_choice | type_rule) >> spcCmnt? }
-        #! type_choice_items = spcCmnt? ( type_choice / type_rule ) spcCmnt?
+    rule(:type_choice_items) { spcCmnt? >> (type_choice_rule | type_rule) >> spcCmnt? }
+        #! type_choice_items = spcCmnt? ( type_choice_rule / type_rule ) spcCmnt?
         #!
 
     rule(:annotations)       { ( str('@{') >> spcCmnt? >> annotation_set >> spcCmnt? >> str('}') >> spcCmnt? ).repeat }
@@ -147,23 +147,23 @@ module JCR
         #! annotation_parameters = multi_line_parameters
         #!
 
-    rule(:primitive_rule)        { ( annotations >> str(':') >> spcCmnt? >> primimitive_def ).as(:primitive_rule) }
-        #! primitive_rule = annotations ":" spcCmnt? primimitive_def
+    rule(:primitive_rule)        { ( annotations >> spcCmnt? >> primimitive_def ).as(:primitive_rule) }
+        #! primitive_rule = annotations spcCmnt? primimitive_def
 
     rule(:primimitive_def) {
-        null_type | boolean_type | true_value | false_value |
-        string_type | string_range | string_value | 
-        float_type | float_range | float_value |
-        integer_type | integer_range | integer_value | 
-        ip4_type | ip6_type | fqdn_type | idn_type |
-        uri_range | uri_type | phone_type | email_type |
-        full_date_type | full_time_type | date_time_type |
-        base64_type | any
+          string_type | string_range | string_value |
+          null_type | boolean_type | true_value | false_value |
+          float_type | float_range | float_value |
+          integer_type | integer_range | integer_value |
+          ip4_type | ip6_type | fqdn_type | idn_type |
+          uri_range | uri_type | phone_type | email_type |
+          full_date_type | full_time_type | date_time_type |
+          base64_type | any
     }
-        #! primimitive_def = null_type / boolean_type / true_value / false_value /
-        #!             string_type / string_range / string_value / 
+        #! primimitive_def = string_type / string_range / string_value /
+        #!             null_type / boolean_type / true_value / false_value /
         #!             float_type / float_range / float_value /
-        #!             integer_type / integer_range / integer_value / 
+        #!             integer_type / integer_range / integer_value /
         #!             ip4_type / ip6_type / fqdn_type / idn_type /
         #!             uri_range / uri_type / phone_type / email_type /
         #!             full_date_type / full_time_type / date_time_type /
@@ -250,9 +250,14 @@ module JCR
         #> any-kw = "any"
         #!
 
+      rule(:object_rule)  { ( annotations >> spcCmnt?.maybe >>
+              str('{') >> spcCmnt? >> object_items.maybe >> spcCmnt? >> str('}') ).as(:object_rule) }
+        #! object_rule = annotations spcCmnt? "{" spcCmnt? [ object_items spcCmnt? ] "}"
+=begin
     rule(:object_rule)  { ( annotations >> (str(':') >> spcCmnt?).maybe >>
                         str('{') >> spcCmnt? >> object_items.maybe >> spcCmnt? >> str('}') ).as(:object_rule) }
         #! object_rule = annotations [ ":" spcCmnt? ] "{" spcCmnt? [ object_items spcCmnt? ] "}"
+=end
     rule(:object_items) { object_item >> (( spcCmnt? >> sequence_combiner >> spcCmnt? >> object_item ).repeat(1) |
                                           ( spcCmnt? >> choice_combiner >> spcCmnt? >> object_item ).repeat(1) ).maybe }
         #! object_items = object_item (*( sequence_combiner object_item ) /
@@ -265,9 +270,14 @@ module JCR
         #! object_group = "(" spcCmnt? [ object_items spcCmnt? ] ")"
         #!
 
-    rule(:array_rule)   { ( annotations >> (str(':') >> spcCmnt?).maybe >> 
+      rule(:array_rule)   { ( annotations >> spcCmnt?.maybe >>
+              str('[') >> spcCmnt? >> array_items.maybe >> spcCmnt? >> str(']') ).as(:array_rule) }
+        #! array_rule = annotations spcCmnt? "[" spcCmnt? [ array_items spcCmnt? ] "]"
+=begin
+    rule(:array_rule)   { ( annotations >> (str(':') >> spcCmnt?).maybe >>
                         str('[') >> spcCmnt? >> array_items.maybe >> spcCmnt? >> str(']') ).as(:array_rule) }
         #! array_rule = annotations [ ":" spcCmnt? ] "[" spcCmnt? [ array_items spcCmnt? ] "]"
+=end
     rule(:array_items)  { array_item >> (( spcCmnt? >> sequence_combiner >> spcCmnt? >> array_item ).repeat(1) |
                                          ( spcCmnt? >> choice_combiner >> spcCmnt? >> array_item ).repeat(1) ).maybe }
         #! array_items = array_item (*( sequence_combiner array_item ) /
@@ -288,8 +298,8 @@ module JCR
         #!                           *( choice_combiner group_item ) )
     rule(:group_item)   { repetition.maybe >> spcCmnt? >> group_item_types }
         #! group_item = [ repetition ] spcCmnt? group_item_types
-    rule(:group_item_types) { type_rule | member_rule | group_group }
-        #! group_item_types = type_rule / member_rule / group_group
+    rule(:group_item_types) { member_rule | type_rule | group_group }
+        #! group_item_types = member_rule / type_rule / group_group
     rule(:group_group)  { group_rule }
         #! group_group = group_rule
         #!

@@ -22,7 +22,7 @@ describe 'evaluate_rules' do
   #
 
   it 'should see an optional as min 0 max 1' do
-    tree = JCR.parse( '$trule= [ ? :string ]' )
+    tree = JCR.parse( '$trule= [ ? string ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     min, max = JCR.get_repetitions( tree[0][:rule][:array_rule], JCR::EvalConditions.new( nil, nil ) )
@@ -31,7 +31,7 @@ describe 'evaluate_rules' do
   end
 
   it 'should see a one or more as min 1 max infinity' do
-    tree = JCR.parse( '$trule= [ + :string ]' )
+    tree = JCR.parse( '$trule= [ + string ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     min, max = JCR.get_repetitions( tree[0][:rule][:array_rule], JCR::EvalConditions.new( nil, nil ) )
@@ -40,7 +40,7 @@ describe 'evaluate_rules' do
   end
 
   it 'should see a zero or more as min 0 max infinity' do
-    tree = JCR.parse( '$trule= [ * :string ]' )
+    tree = JCR.parse( '$trule= [ * string ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     min, max = JCR.get_repetitions( tree[0][:rule][:array_rule], JCR::EvalConditions.new( nil, nil ) )
@@ -49,7 +49,7 @@ describe 'evaluate_rules' do
   end
 
   it 'should see a 1 to 4 as min 1 max 4' do
-    tree = JCR.parse( '$trule= [ 1*4 :string ]' )
+    tree = JCR.parse( '$trule= [ 1*4 string ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     min, max = JCR.get_repetitions( tree[0][:rule][:array_rule], JCR::EvalConditions.new( nil, nil ) )
@@ -58,7 +58,7 @@ describe 'evaluate_rules' do
   end
 
   it 'should see 22 as min 22 max 22' do
-    tree = JCR.parse( '$trule= [ 22 :string ]' )
+    tree = JCR.parse( '$trule= [ 22 string ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     min, max = JCR.get_repetitions( tree[0][:rule][:array_rule], JCR::EvalConditions.new( nil, nil ) )
@@ -67,7 +67,7 @@ describe 'evaluate_rules' do
   end
 
   it 'should see nothing as min 1 max 1' do
-    tree = JCR.parse( '$trule= [ :string ]' )
+    tree = JCR.parse( '$trule= [ string ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     min, max = JCR.get_repetitions( tree[0][:rule][:array_rule], JCR::EvalConditions.new( nil, nil ) )

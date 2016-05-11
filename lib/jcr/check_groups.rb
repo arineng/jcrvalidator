@@ -27,8 +27,6 @@ module JCR
         check_groups( tree[:rule], mapping )
       elsif tree[:primitive_rule]
         check_value_for_group( tree[:primitive_rule], mapping )
-      elsif tree[:type_choice_signifier]
-        check_value_for_group( tree, mapping )
       elsif tree[:member_rule]
         check_member_for_group( tree[:member_rule], mapping )
       elsif tree[:array_rule]
