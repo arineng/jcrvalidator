@@ -302,7 +302,7 @@ module JCR
 
     rule(:repetition)          { str('@') >> spcCmnt? >> ( optional | one_or_more | zero_or_more |
                                               min_max_repetition | specific_repetition ) }
-        #! repetition = "<" spcCmnt? ( optional / one_or_more / min_max_repetition /
+        #! repetition = "@" spcCmnt? ( optional / one_or_more / min_max_repetition /
         #!                    min_repetition / max_repetition /
         #!                    zero_or_more / specific_repetition )
     rule(:optional)            { str('?').as(:optional) }
