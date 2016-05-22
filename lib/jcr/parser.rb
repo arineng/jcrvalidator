@@ -155,7 +155,7 @@ module JCR
           null_type | boolean_type | true_value | false_value |
           float_type | float_range | float_value |
           integer_type | integer_range | integer_value |
-          ip4_type | ip6_type | fqdn_type | idn_type |
+          ipv4_type | ipv6_type | fqdn_type | idn_type |
           uri_range | uri_type | phone_type | email_type |
           full_date_type | full_time_type | date_time_type |
           base64_type | any
@@ -164,7 +164,7 @@ module JCR
         #!             null_type / boolean_type / true_value / false_value /
         #!             float_type / float_range / float_value /
         #!             integer_type / integer_range / integer_value /
-        #!             ip4_type / ip6_type / fqdn_type / idn_type /
+        #!             ipv4_type / ipv6_type / fqdn_type / idn_type /
         #!             uri_range / uri_type / phone_type / email_type /
         #!             full_date_type / full_time_type / date_time_type /
         #!             base64_type / any
@@ -209,12 +209,12 @@ module JCR
         #! integer_max = integer
     rule(:integer_value)   { integer.as(:integer) }
         #! integer_value = integer
-    rule(:ip4_type)       { str('ip4').as(:ip4) }
-        #! ip4_type = ip4-kw
-        #> ip4-kw = "ip4"
-    rule(:ip6_type)       { str('ip6').as(:ip6) }
-        #! ip6_type = ip6-kw
-        #> ip6-kw = "ip6"
+    rule(:ipv4_type)       { str('ipv4').as(:ipv4) }
+        #! ipv4_type = ipv4-kw
+        #> ipv4-kw = "ipv4"
+    rule(:ipv6_type)       { str('ipv6').as(:ipv6) }
+        #! ipv6_type = ipv6-kw
+        #> ipv6-kw = "ipv6"
     rule(:fqdn_type)      { str('fqdn').as(:fqdn) }
         #! fqdn_type = fqdn-kw
         #> fqdn-kw = "fqdn"

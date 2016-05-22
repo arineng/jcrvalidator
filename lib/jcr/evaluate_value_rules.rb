@@ -120,7 +120,7 @@ module JCR
       # ip addresses
       #
 
-      when jcr[:ip4]
+      when jcr[:ipv4]
         return bad_value( jcr, rule_atom, "IPv4 Address", data ) unless data.is_a? String
         begin
           ip = IPAddr.new( data )
@@ -128,7 +128,7 @@ module JCR
           return bad_value( jcr, rule_atom, "IPv4 Address", data )
         end
         return bad_value( jcr, rule_atom, "IPv4 Address", data ) unless ip.ipv4?
-      when jcr[:ip6]
+      when jcr[:ipv6]
         return bad_value( jcr, rule_atom, "IPv6 Address", data ) unless data.is_a? String
         begin
           ip = IPAddr.new( data )
@@ -327,10 +327,10 @@ module JCR
       when rule[:regex]
         retval =  "/#{rule[:regex].to_s}/"
 
-      when rule[:ip4]
-        retval =  "ip4"
-      when rule[:ip6]
-        retval =  "ip6"
+      when rule[:ipv4]
+        retval =  "ipv4"
+      when rule[:ipv6]
+        retval =  "ipv6"
 
       when rule[:fqdn]
         retval =  "fqdn"

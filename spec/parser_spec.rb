@@ -20,11 +20,11 @@ describe 'parser' do
 =begin
   an example of printing out the ascii_tree
 
-  it 'should parse an ip4 value defintion 1' do
+  it 'should parse an ipv4 value defintion 1' do
     begin
-      tree = JCR.parse( '$trule = ip4' )
+      tree = JCR.parse( '$trule = ipv4' )
         expect(tree[0][:rule][:rule_name]).to eq("trule")
-        expect(tree[0][:rule][:primitive_rule][:ip4]).to eq("ip4")
+        expect(tree[0][:rule][:primitive_rule][:ipv4]).to eq("ipv4")
       rescue Parslet::ParseFailed => failure
 
         puts failure.cause.ascii_tree
@@ -32,34 +32,34 @@ describe 'parser' do
   end
 =end
 
-  it 'should parse an ip4 value defintion 1' do
-    tree = JCR.parse( '$trule = ip4' )
+  it 'should parse an ipv4 value defintion 1' do
+    tree = JCR.parse( '$trule = ipv4' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
-    expect(tree[0][:rule][:primitive_rule][:ip4]).to eq("ip4")
+    expect(tree[0][:rule][:primitive_rule][:ipv4]).to eq("ipv4")
   end
 
-  it 'should parse an ip4 value defintion 2' do
-    tree = JCR.parse( '$trule = ip4' )
-    expect(tree[0][:rule][:primitive_rule][:ip4]).to eq("ip4")
+  it 'should parse an ipv4 value defintion 2' do
+    tree = JCR.parse( '$trule = ipv4' )
+    expect(tree[0][:rule][:primitive_rule][:ipv4]).to eq("ipv4")
   end
 
-  it 'should parse an ip4 value defintion 3' do
-    tree = JCR.parse( '$trule = ip4 ' )
-    expect(tree[0][:rule][:primitive_rule][:ip4]).to eq("ip4")
+  it 'should parse an ipv4 value defintion 3' do
+    tree = JCR.parse( '$trule = ipv4 ' )
+    expect(tree[0][:rule][:primitive_rule][:ipv4]).to eq("ipv4")
   end
 
-  it 'should parse an ip6 value defintion 1' do
-    tree = JCR.parse( '$trule = ip6' )
+  it 'should parse an ipv6 value defintion 1' do
+    tree = JCR.parse( '$trule = ipv6' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
-    expect(tree[0][:rule][:primitive_rule][:ip6]).to eq("ip6")
+    expect(tree[0][:rule][:primitive_rule][:ipv6]).to eq("ipv6")
   end
-  it 'should parse an ip6 value defintion 2' do
-    tree = JCR.parse( '$trule = ip6' )
-    expect(tree[0][:rule][:primitive_rule][:ip6]).to eq("ip6")
+  it 'should parse an ipv6 value defintion 2' do
+    tree = JCR.parse( '$trule = ipv6' )
+    expect(tree[0][:rule][:primitive_rule][:ipv6]).to eq("ipv6")
   end
-  it 'should parse an ip6 value defintion 3' do
-    tree = JCR.parse( '$trule = ip6 ' )
-    expect(tree[0][:rule][:primitive_rule][:ip6]).to eq("ip6")
+  it 'should parse an ipv6 value defintion 3' do
+    tree = JCR.parse( '$trule = ipv6 ' )
+    expect(tree[0][:rule][:primitive_rule][:ipv6]).to eq("ipv6")
   end
 
   it 'should parse a string constant' do
@@ -1060,7 +1060,7 @@ $nameserver = {
      "name" : fqdn,
 
      ; the ip addresses of the nameserver
-     "ipAddresses" : [ ( ip4 | ip6 )@* ],
+     "ipAddresses" : [ ( ipv4 | ipv6 )@* ],
 
      ; common rules for all structures
      $common
@@ -1173,7 +1173,7 @@ EX12
 
   it 'should parse groups as groups' do
     ex12 = <<EX12
-$encodings = ( "base32" | "base64" | integer | /^.{5,10}/ | ip4 | ip6 | fqdn )
+$encodings = ( "base32" | "base64" | integer | /^.{5,10}/ | ipv4 | ipv6 | fqdn )
 EX12
     tree = JCR.parse( ex12 )
     expect(tree[0][:rule][:rule_name]).to eq("encodings")
@@ -1188,11 +1188,11 @@ EX12
   end
 
   it 'should error with 1 member with group of OR values and member with group of AND values' do
-    expect{ JCR.parse( '$mrule = "thing" : ( integer | float ) ;; $mrule2 = "thing2" : ( ip4 , ip6 )' ) }.to raise_error Parslet::ParseFailed
+    expect{ JCR.parse( '$mrule = "thing" : ( integer | float ) ;; $mrule2 = "thing2" : ( ipv4 , ipv6 )' ) }.to raise_error Parslet::ParseFailed
   end
 
   it 'should error with member with group of value OR group' do
-    expect{ JCR.parse( '$mrule = "thing" : ( integer | ( ip4 , ip6 ) ) ' ) }.to raise_error Parslet::ParseFailed
+    expect{ JCR.parse( '$mrule = "thing" : ( integer | ( ipv4 , ipv6 ) ) ' ) }.to raise_error Parslet::ParseFailed
   end
 
   it 'should error with object with group of value OR value' do
@@ -1224,11 +1224,11 @@ EX12
   end
 
   it 'should error with array with group of value OR with group with member' do
-    expect{ JCR.parse( '$trule = any ;; $rule = [ ( integer | ( ip4 | "thing" : $trule ) ) ]' ) }.to raise_error Parslet::ParseFailed
+    expect{ JCR.parse( '$trule = any ;; $rule = [ ( integer | ( ipv4 | "thing" : $trule ) ) ]' ) }.to raise_error Parslet::ParseFailed
   end
 
   it 'should error with array with group of OR values and array with group of values and member' do
-    expect{ JCR.parse( '$trule = any ;; $rule = [ ( integer | float ) ] ;; $rule2 = [ ( ip4 , "thing" : $trule ) ]' ) }.to raise_error Parslet::ParseFailed
+    expect{ JCR.parse( '$trule = any ;; $rule = [ ( integer | float ) ] ;; $rule2 = [ ( ipv4 , "thing" : $trule ) ]' ) }.to raise_error Parslet::ParseFailed
   end
 
   it 'should error with array with value and group of one value and one member' do
@@ -1244,7 +1244,7 @@ EX12
   end
 
   it 'should error with value with group of value OR group with member' do
-    expect{ JCR.parse( '$trule = :any ;; $rule = ( integer | ( ip4 | "thing" : $trule ) ) ' ) }.to raise_error Parslet::ParseFailed
+    expect{ JCR.parse( '$trule = :any ;; $rule = ( integer | ( ipv4 | "thing" : $trule ) ) ' ) }.to raise_error Parslet::ParseFailed
   end
 
   it 'should error with value with group of ORed and ANDED values' do
