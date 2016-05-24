@@ -155,7 +155,7 @@ module JCR
           null_type | boolean_type | true_value | false_value |
           double_type | float_type | float_range | float_value |
           integer_type | integer_range | integer_value |
-          ipv4_type | ipv6_type | fqdn_type | idn_type |
+          ipv4_type | ipv6_type | ipaddr_type | fqdn_type | idn_type |
           uri_range | uri_type | phone_type | email_type |
           datetime_type | date_type | time_type |
           hex_type | base32hex_type | base32_type | base64url_type | base64_type |
@@ -165,7 +165,7 @@ module JCR
         #!             null_type / boolean_type / true_value / false_value /
         #!             double_type / float_type / float_range / float_value /
         #!             integer_type / integer_range / integer_value /
-        #!             ipv4_type / ipv6_type / fqdn_type / idn_type /
+        #!             ipv4_type / ipv6_type / ipaddr_type / fqdn_type / idn_type /
         #!             uri_range / uri_type / phone_type / email_type /
         #!             datetime_type / date_type / time_type /
         #!             hex_type / base32hex_type / base32_type / base64url_type / base64_type /
@@ -220,6 +220,9 @@ module JCR
     rule(:ipv6_type)       { str('ipv6').as(:ipv6) }
         #! ipv6_type = ipv6-kw
         #> ipv6-kw = "ipv6"
+    rule(:ipaddr_type)       { str('ipaddr').as(:ipaddr) }
+        #! ipaddr_type = ipaddr-kw
+        #> ipaddr-kw = "ipaddr"
     rule(:fqdn_type)      { str('fqdn').as(:fqdn) }
         #! fqdn_type = fqdn-kw
         #> fqdn-kw = "fqdn"

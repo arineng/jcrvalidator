@@ -141,6 +141,14 @@ module JCR
           return bad_value( jcr, rule_atom, "IPv6 Address", data )
         end
         return bad_value( jcr, rule_atom, "IPv6 Address", data ) unless ip.ipv6?
+      when jcr[:ipaddr]
+        return bad_value( jcr, rule_atom, "IP Address", data ) unless data.is_a? String
+        begin
+          ip = IPAddr.new( data )
+        rescue IPAddr::InvalidAddressError
+          return bad_value( jcr, rule_atom, "IP Address", data )
+        end
+        return bad_value( jcr, rule_atom, "IP Address", data ) unless ip.ipv6? || ip.ipv4?
 
       #
       # domain names

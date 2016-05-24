@@ -62,6 +62,12 @@ describe 'parser' do
     expect(tree[0][:rule][:primitive_rule][:ipv6]).to eq("ipv6")
   end
 
+  it 'should parse an ipaddr value' do
+    tree = JCR.parse( '$trule = ipaddr' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:primitive_rule][:ipaddr]).to eq("ipaddr")
+  end
+
   it 'should parse a string constant' do
     tree = JCR.parse( '$trule = "a string constant"' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
