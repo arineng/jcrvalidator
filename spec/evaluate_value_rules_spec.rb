@@ -682,7 +682,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( '$trule= base64' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzdA==", JCR::EvalConditions.new( mapping, nil ) )
+    e = JCR.evaluate_rule( tree[0], tree[0], "VGVz+/==", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -712,6 +712,50 @@ describe 'evaluate_value_rules' do
 
   it 'should fail a string with base64 characters after padding' do
     tree = JCR.parse( '$trule= base64' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzdA==aaa", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  #
+  # Base64url data type
+  #
+
+  it 'should pass a base64url string' do
+    tree = JCR.parse( '$trule= base64url' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "VGVz-_==", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass a empty base64url string' do
+    tree = JCR.parse( '$trule= base64url' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a number that is not a base64url string' do
+    tree = JCR.parse( '$trule= base64url' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a string with illegal base64url characters' do
+    tree = JCR.parse( '$trule= base64url' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzdA%==", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a string with base64url characters after padding' do
+    tree = JCR.parse( '$trule= base64url' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "VGVzdA==aaa", JCR::EvalConditions.new( mapping, nil ) )

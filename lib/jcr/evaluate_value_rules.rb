@@ -220,19 +220,41 @@ module JCR
 
       when jcr[:base64]
         return bad_value( jcr, rule_atom, "Base 64 Data", data ) unless data.is_a? String
-        return bad_value( jcr, rule_atom, "Base 64 Data", data ) if data.empty?
         pad_start = false
         data.each_char do |char|
-          if pad_start && char != '='
-            return bad_value( jcr, rule_atom, "Base 64 Data", data )
-          elsif char == '='
+          if char == '='
             pad_start = true
-          end
-          unless (char >= 'a' && char <= 'z') \
-              || (char >= 'A' && char <= 'Z') \
-              || (char >= '0' && char <='9') \
-              || char == '=' || char == '+' || char == '/'
+          elsif pad_start && char != '='
             return bad_value( jcr, rule_atom, "Base 64 Data", data )
+          else 
+              unless (char >= 'a' && char <= 'z') \
+                  || (char >= 'A' && char <= 'Z') \
+                  || (char >= '0' && char <='9') \
+                  || char == '+' || char == '/'
+                return bad_value( jcr, rule_atom, "Base 64 Data", data )
+              end
+          end
+        end
+
+      #
+      # base64url values
+      #
+
+      when jcr[:base64url]
+        return bad_value( jcr, rule_atom, "Base64url Data", data ) unless data.is_a? String
+        pad_start = false
+        data.each_char do |char|
+          if char == '='
+            pad_start = true
+          elsif pad_start && char != '='
+            return bad_value( jcr, rule_atom, "Base64url Data", data )
+          else 
+              unless (char >= 'a' && char <= 'z') \
+                  || (char >= 'A' && char <= 'Z') \
+                  || (char >= '0' && char <='9') \
+                  || char == '-' || char == '_'
+                return bad_value( jcr, rule_atom, "Base64url Data", data )
+              end
           end
         end
 
@@ -357,6 +379,9 @@ module JCR
 
       when rule[:base64]
         retval =  "base64"
+
+      when rule[:base64url]
+        retval =  "base64url"
 
       when rule[:datetime]
         retval =  "datetime"
