@@ -85,6 +85,11 @@ module JCR
         return bad_value( jcr, rule_atom, min, data ) unless data >= min
         max = jcr[:float_max].to_s.to_f
         return bad_value( jcr, rule_atom, max, data ) unless data <= max
+      when jcr[:double_v]
+        sf = jcr[:double_v].to_s
+        if sf == "double"
+          return bad_value( jcr, rule_atom, "double", data ) unless data.is_a?( Float )
+        end
 
       #
       # boolean
@@ -303,6 +308,8 @@ module JCR
         max = rule[:integer_max].to_s.to_i
         retval =  "#{min}..#{max}"
 
+      when rule[:double_v]
+        retval =  rule[:double_v].to_s
       when rule[:float_v]
         retval =  rule[:float_v].to_s
       when rule[:float]

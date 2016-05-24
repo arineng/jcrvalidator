@@ -213,6 +213,11 @@ describe 'parser' do
     expect(tree[0][:rule][:primitive_rule][:integer_max]).to eq("-100")
   end
 
+  it 'should parse a double value' do
+    tree = JCR.parse( '$trule = double' )
+    expect(tree[0][:rule][:primitive_rule][:double_v]).to eq("double")
+  end
+
   it 'should parse a float value' do
     tree = JCR.parse( '$trule = float' )
     expect(tree[0][:rule][:primitive_rule][:float_v]).to eq("float")

@@ -191,10 +191,26 @@ describe 'evaluate_value_rules' do
   end
 
   #
-  # float value tests
+  # float / double value tests
   #
 
-  it 'should pass an float variable' do
+  it 'should pass a double variable' do
+    tree = JCR.parse( '$trule= double' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2.1, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a double variable when passed a string' do
+    tree = JCR.parse( '$trule= double' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "foo", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass a float variable' do
     tree = JCR.parse( '$trule= float' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
@@ -202,7 +218,7 @@ describe 'evaluate_value_rules' do
     expect( e.success ).to be_truthy
   end
 
-  it 'should fail an float variable when passed a string' do
+  it 'should fail a float variable when passed a string' do
     tree = JCR.parse( '$trule= float' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )

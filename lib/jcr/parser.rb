@@ -153,7 +153,7 @@ module JCR
     rule(:primimitive_def) {
           string_type | string_range | string_value |
           null_type | boolean_type | true_value | false_value |
-          float_type | float_range | float_value |
+          double_type | float_type | float_range | float_value |
           integer_type | integer_range | integer_value |
           ipv4_type | ipv6_type | fqdn_type | idn_type |
           uri_range | uri_type | phone_type | email_type |
@@ -162,7 +162,7 @@ module JCR
     }
         #! primimitive_def = string_type / string_range / string_value /
         #!             null_type / boolean_type / true_value / false_value /
-        #!             float_type / float_range / float_value /
+        #!             double_type / float_type / float_range / float_value /
         #!             integer_type / integer_range / integer_value /
         #!             ipv4_type / ipv6_type / fqdn_type / idn_type /
         #!             uri_range / uri_type / phone_type / email_type /
@@ -187,6 +187,9 @@ module JCR
         #! string_value = q_string
     rule(:string_range)    { regex }
         #! string_range = regex
+    rule(:double_type)     { str('double').as(:double_v) }
+        #! double_type = double-kw
+        #> double-kw = "double"
     rule(:float_type)     { str('float').as(:float_v) }
         #! float_type = float-kw
         #> float-kw = "float"
