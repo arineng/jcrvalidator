@@ -275,33 +275,12 @@ module JCR
         end
 
       #
-      # base64 values
-      #
-
-      when jcr[:base64]
-        return bad_value( jcr, rule_atom, "Base 64 Data", data ) unless data.is_a? String
-        pad_start = false
-        data.each_char do |char|
-          if char == '='
-            pad_start = true
-          elsif pad_start && char != '='
-            return bad_value( jcr, rule_atom, "Base 64 Data", data )
-          else 
-              unless (char >= 'a' && char <= 'z') \
-                  || (char >= 'A' && char <= 'Z') \
-                  || (char >= '0' && char <='9') \
-                  || char == '+' || char == '/'
-                return bad_value( jcr, rule_atom, "Base 64 Data", data )
-              end
-          end
-        end
-
-      #
       # base64url values
       #
 
       when jcr[:base64url]
         return bad_value( jcr, rule_atom, "Base64url Data", data ) unless data.is_a? String
+        return bad_value( jcr, rule_atom, "Base64url Data", data ) unless data.length % 4 == 0
         pad_start = false
         data.each_char do |char|
           if char == '='
@@ -314,6 +293,29 @@ module JCR
                   || (char >= '0' && char <='9') \
                   || char == '-' || char == '_'
                 return bad_value( jcr, rule_atom, "Base64url Data", data )
+              end
+          end
+        end
+
+      #
+      # base64 values
+      #
+
+      when jcr[:base64]
+        return bad_value( jcr, rule_atom, "Base 64 Data", data ) unless data.is_a? String
+        return bad_value( jcr, rule_atom, "Base 64 Data", data ) unless data.length % 4 == 0
+        pad_start = false
+        data.each_char do |char|
+          if char == '='
+            pad_start = true
+          elsif pad_start && char != '='
+            return bad_value( jcr, rule_atom, "Base 64 Data", data )
+          else 
+              unless (char >= 'a' && char <= 'z') \
+                  || (char >= 'A' && char <= 'Z') \
+                  || (char >= '0' && char <='9') \
+                  || char == '+' || char == '/'
+                return bad_value( jcr, rule_atom, "Base 64 Data", data )
               end
           end
         end

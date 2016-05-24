@@ -838,7 +838,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( '$trule= base64' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzdA%==", JCR::EvalConditions.new( mapping, nil ) )
+    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzA%==", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -846,7 +846,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( '$trule= base64' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzdA==aaa", JCR::EvalConditions.new( mapping, nil ) )
+    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzdA==aaaa", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -882,7 +882,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( '$trule= base64url' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzdA%==", JCR::EvalConditions.new( mapping, nil ) )
+    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzA%==", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -890,7 +890,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( '$trule= base64url' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzdA==aaa", JCR::EvalConditions.new( mapping, nil ) )
+    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzdA==aaaa", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
