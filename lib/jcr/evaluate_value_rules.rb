@@ -229,6 +229,51 @@ module JCR
             return bad_value( jcr, rule_atom, "Hex Data", data )
           end
         end
+
+      #
+      # base32hex values
+      #
+
+      when jcr[:base32hex]
+        return bad_value( jcr, rule_atom, "Base32hex Data", data ) unless data.is_a? String
+        return bad_value( jcr, rule_atom, "Base32hex Data", data ) unless data.length % 8 == 0
+        pad_start = false
+        data.each_char do |char|
+          if char == '='
+            pad_start = true
+          elsif pad_start && char != '='
+            return bad_value( jcr, rule_atom, "Base32hex Data", data )
+          else 
+              unless (char >= '0' && char <='9') \
+                  || (char >= 'A' && char <= 'V') \
+                  || (char >= 'a' && char <= 'v')
+                return bad_value( jcr, rule_atom, "Base32hex Data", data )
+              end
+          end
+        end
+
+      #
+      # base32 values
+      #
+
+      when jcr[:base32]
+        return bad_value( jcr, rule_atom, "Base 32 Data", data ) unless data.is_a? String
+        return bad_value( jcr, rule_atom, "Base 32 Data", data ) unless data.length % 8 == 0
+        pad_start = false
+        data.each_char do |char|
+          if char == '='
+            pad_start = true
+          elsif pad_start && char != '='
+            return bad_value( jcr, rule_atom, "Base 32 Data", data )
+          else 
+              unless (char >= 'a' && char <= 'z') \
+                  || (char >= 'A' && char <= 'Z') \
+                  || (char >= '2' && char <='7')
+                return bad_value( jcr, rule_atom, "Base 32 Data", data )
+              end
+          end
+        end
+
       #
       # base64 values
       #
@@ -394,6 +439,8 @@ module JCR
 
       when rule[:hex]
         retval =  "hex"
+      when rule[:base32url]
+        retval =  "base32url"
       when rule[:base64url]
         retval =  "base64url"
       when rule[:base64]
