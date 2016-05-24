@@ -686,6 +686,14 @@ describe 'evaluate_value_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should pass a empty base64 string' do
+    tree = JCR.parse( '$trule= base64' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
   it 'should fail a number that is not a base64 string' do
     tree = JCR.parse( '$trule= base64' )
     mapping = JCR.map_rule_names( tree )
