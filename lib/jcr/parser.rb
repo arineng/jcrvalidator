@@ -158,7 +158,7 @@ module JCR
           ipv4_type | ipv6_type | fqdn_type | idn_type |
           uri_range | uri_type | phone_type | email_type |
           datetime_type | date_type | time_type |
-          base64url_type | base64_type |
+          hex_type | base64url_type | base64_type |
           any
     }
         #! primimitive_def = string_type / string_range / string_value /
@@ -168,7 +168,7 @@ module JCR
         #!             ipv4_type / ipv6_type / fqdn_type / idn_type /
         #!             uri_range / uri_type / phone_type / email_type /
         #!             datetime_type / date_type / time_type /
-        #!             base64url_type / base64_type /
+        #!             hex_type / base64url_type / base64_type /
         #!             any
     rule(:null_type)      { str('null').as(:null) }
         #! null_type = null-kw
@@ -247,12 +247,15 @@ module JCR
     rule(:time_type) { str('time').as(:time) }
         #! time_type = time-kw
         #> time-kw = "time"
-    rule(:base64_type)    { str('base64').as(:base64) }
-        #! base64_type = base64-kw
-        #> base64-kw = "base64"
+    rule(:hex_type)    { str('hex').as(:hex) }
+        #! hex_type = hex-kw
+        #> hex-kw = "hex"
     rule(:base64url_type)    { str('base64url').as(:base64url) }
         #! base64url_type = base64url-kw
         #> base64url-kw = "base64url"
+    rule(:base64_type)    { str('base64').as(:base64) }
+        #! base64_type = base64-kw
+        #> base64-kw = "base64"
     rule(:any)         { str('any').as(:any) }
         #! any = any-kw
         #> any-kw = "any"

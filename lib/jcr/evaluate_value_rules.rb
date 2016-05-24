@@ -215,6 +215,21 @@ module JCR
         return bad_value( jcr, rule_atom, "Phone Number", data ) unless p.valid?
 
       #
+      # hex values
+      #
+
+      when jcr[:hex]
+        return bad_value( jcr, rule_atom, "Hex Data", data ) unless data.is_a? String
+        return bad_value( jcr, rule_atom, "Hex Data", data ) unless data.length % 2 == 0
+        pad_start = false
+        data.each_char do |char|
+          unless (char >= '0' && char <='9') \
+              || (char >= 'A' && char <= 'F') \
+              || (char >= 'a' && char <= 'f')
+            return bad_value( jcr, rule_atom, "Hex Data", data )
+          end
+        end
+      #
       # base64 values
       #
 
@@ -377,11 +392,12 @@ module JCR
       when rule[:phone]
         retval =  "phone"
 
-      when rule[:base64]
-        retval =  "base64"
-
+      when rule[:hex]
+        retval =  "hex"
       when rule[:base64url]
         retval =  "base64url"
+      when rule[:base64]
+        retval =  "base64"
 
       when rule[:datetime]
         retval =  "datetime"
