@@ -128,12 +128,12 @@ module JCR
 
     rule(:annotations)       { ( str('@{') >> spcCmnt? >> annotation_set >> spcCmnt? >> str('}') >> spcCmnt? ).repeat }
         #! annotations = *( "@{" spcCmnt? annotation_set spcCmnt? "}" spcCmnt? )
-    rule(:annotation_set)    { reject_annotation | unordered_annotation | root_annotation | tbd_annotation }
-        #! annotation_set = reject_annotation / unordered_annotation /
+    rule(:annotation_set)    { not_annotation | unordered_annotation | root_annotation | tbd_annotation }
+        #! annotation_set = not_annotation / unordered_annotation /
         #!                  root_annotation / tbd_annotation
-    rule(:reject_annotation) { str('reject').as(:reject_annotation) }
-        #! reject_annotation = reject-kw
-        #> reject-kw = "reject"
+    rule(:not_annotation) { str('not').as(:not_annotation) }
+        #! not_annotation = not-kw
+        #> not-kw = "not"
     rule(:unordered_annotation) { str('unordered').as(:unordered_annotation) }
         #! unordered_annotation = unordered-kw
         #> unordered-kw = "unordered"

@@ -75,21 +75,21 @@ module JCR
     end
 
     # if the data is not an array
-    return evaluate_reject( annotations,
+    return evaluate_not( annotations,
       Evaluation.new( false, "#{data} is not an array #{raised_rule(jcr,rule_atom)}"), econs ) unless data.is_a? Array
 
     # if the array is zero length and there are zero sub-rules (it is suppose to be empty)
-    return evaluate_reject( annotations,
+    return evaluate_not( annotations,
       Evaluation.new( true, nil ), econs ) if rules.empty? && data.empty?
 
     # if the array is not empty and there are zero sub-rules (it is suppose to be empty)
-    return evaluate_reject( annotations,
+    return evaluate_not( annotations,
       Evaluation.new( false, "Non-empty array for #{raised_rule(jcr,rule_atom)}" ), econs ) if rules.empty? && data.length != 0
 
     if ordered
-      return evaluate_reject( annotations, evaluate_array_rule_ordered( rules, rule_atom, data, econs, behavior ), econs )
+      return evaluate_not( annotations, evaluate_array_rule_ordered( rules, rule_atom, data, econs, behavior ), econs )
     else
-      return evaluate_reject( annotations, evaluate_array_rule_unordered( rules, rule_atom, data, econs, behavior ), econs )
+      return evaluate_not( annotations, evaluate_array_rule_unordered( rules, rule_atom, data, econs, behavior ), econs )
     end
   end
 

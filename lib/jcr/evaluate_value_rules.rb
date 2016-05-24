@@ -32,7 +32,7 @@ module JCR
     trace_def( econs, "value", jcr, data )
     rules, annotations = get_rules_and_annotations( jcr )
 
-    retval = evaluate_reject( annotations, evaluate_values( rules[0], rule_atom, data, econs ), econs )
+    retval = evaluate_not( annotations, evaluate_values( rules[0], rule_atom, data, econs ), econs )
     trace_eval( econs, "Value", retval)
     pop_trace_stack( econs )
     return retval

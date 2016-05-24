@@ -1255,24 +1255,24 @@ EX12
     expect{ JCR.parse( '$my_int = ..' ) }.to raise_error Parslet::ParseFailed
   end
 
-  it 'should parse value rule with reject directive' do
-    tree = JCR.parse( '$my_int = @{reject} 2' )
+  it 'should parse value rule with {not} annotation directive' do
+    tree = JCR.parse( '$my_int = @{not} 2' )
   end
 
-  it 'should parse member rule with reject directive' do
-    tree = JCR.parse( '$my_mem = @{reject} "count" :integer' )
+  it 'should parse member rule with {not} annotation directive' do
+    tree = JCR.parse( '$my_mem = @{not} "count" :integer' )
   end
 
-  it 'should parse object rule with reject directive' do
-    tree = JCR.parse( '$my_rule = @{reject} { "count" :integer }' )
+  it 'should parse object rule with {not} annotation directive' do
+    tree = JCR.parse( '$my_rule = @{not} { "count" :integer }' )
   end
 
-  it 'should parse object rule with reject directive' do
-    tree = JCR.parse( '$my_rule = @{root} @{reject} { "count" :integer }' )
+  it 'should parse object rule with {not} annotation directive' do
+    tree = JCR.parse( '$my_rule = @{root} @{not} { "count" :integer }' )
   end
 
-  it 'should parse array rule with reject directive' do
-    tree = JCR.parse( '$my_rule = @{reject} [ integer@* ]' )
+  it 'should parse array rule with {not} annotation directive' do
+    tree = JCR.parse( '$my_rule = @{not} [ integer@* ]' )
   end
 
   it 'should parse array rule with unordered directive' do
@@ -1284,27 +1284,27 @@ EX12
   end
 
   it 'should parse array rule with unordered directive' do
-    tree = JCR.parse( '$my_rule = @{unordered} @{reject} [ integer@* ]' )
+    tree = JCR.parse( '$my_rule = @{unordered} @{not} [ integer@* ]' )
   end
 
   it 'should parse array rule with unordered directive' do
-    tree = JCR.parse( '$my_rule = @{reject} @{unordered} [ integer@* ]' )
+    tree = JCR.parse( '$my_rule = @{not} @{unordered} [ integer@* ]' )
   end
 
-  it 'should parse group rule with reject directive' do
-    tree = JCR.parse( '$my_rule = @{ reject } ( integer@* )' )
+  it 'should parse group rule with {not} annotation directive' do
+    tree = JCR.parse( '$my_rule = @{ not } ( integer@* )' )
   end
 
-  it 'should parse array rule with reject directive on value rule' do
-    tree = JCR.parse( '$my_rule = [ @{reject} integer @* ]' )
+  it 'should parse array rule with {not} annotation directive on value rule' do
+    tree = JCR.parse( '$my_rule = [ @{not} integer @* ]' )
   end
 
-  it 'should parse array rule with reject directive on target rule' do
-    JCR.parse( '$my_rule = [ @{reject} $target_rule ]' )
+  it 'should parse array rule with {not} annotation directive on target rule' do
+    JCR.parse( '$my_rule = [ @{not} $target_rule ]' )
   end
 
-  it 'should parse a group rule with a rulename only with reject' do
-    tree = JCR.parse( '$trule = @{reject} ( $my_rule1 )' )
+  it 'should parse a group rule with a rulename only with {not} annotation' do
+    tree = JCR.parse( '$trule = @{not} ( $my_rule1 )' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
   end
 

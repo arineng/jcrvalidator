@@ -46,8 +46,8 @@ describe 'evaluate_value_rules' do
     expect( e.success ).to be_truthy
   end
 
-  it 'should fail when any rule matches an array with reject' do
-    tree = JCR.parse( '$trule= @{reject} any' )
+  it 'should fail when any rule matches an array with {not} annotation' do
+    tree = JCR.parse( '$trule= @{not} any' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 3 ], JCR::EvalConditions.new( mapping, nil ) )
@@ -66,8 +66,8 @@ describe 'evaluate_value_rules' do
     expect( e.success ).to be_truthy
   end
 
-  it 'should fail when a string matches a string constant with reject' do
-    tree = JCR.parse( '$trule= @{reject} "a string constant"' )
+  it 'should fail when a string matches a string constant with {not} annotation' do
+    tree = JCR.parse( '$trule= @{not} "a string constant"' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", JCR::EvalConditions.new( mapping, nil ) )
@@ -346,8 +346,8 @@ describe 'evaluate_value_rules' do
     expect( e.success ).to be_truthy
   end
 
-  it 'should fail a null with reject' do
-    tree = JCR.parse( '$trule= @{reject} null' )
+  it 'should fail a null with {not} annotation' do
+    tree = JCR.parse( '$trule= @{not} null' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], nil, JCR::EvalConditions.new( mapping, nil ) )
