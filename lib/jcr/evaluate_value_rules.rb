@@ -235,14 +235,14 @@ module JCR
       # time and date values
       #
 
-      when jcr[:date_time]
+      when jcr[:datetime]
         return bad_value( jcr, rule_atom, "Time and Date", data ) unless data.is_a? String
         begin
           Time.iso8601( data )
         rescue ArgumentError
           return bad_value( jcr, rule_atom, "Time and Date", data )
         end
-      when jcr[:full_date]
+      when jcr[:date]
         return bad_value( jcr, rule_atom, "Date", data ) unless data.is_a? String
         begin
           d = data + "T23:20:50.52Z"
@@ -250,7 +250,7 @@ module JCR
         rescue ArgumentError
           return bad_value( jcr, rule_atom, "Date", data )
         end
-      when jcr[:full_time]
+      when jcr[:time]
         return bad_value( jcr, rule_atom, "Time", data ) unless data.is_a? String
         begin
           t = "1985-04-12T" + data + "Z"
@@ -351,12 +351,12 @@ module JCR
       when rule[:base64]
         retval =  "base64"
 
-      when rule[:date_time]
-        retval =  "date-time"
-      when rule[:full_date]
-        retval =  "full-date"
-      when rule[:full_time]
-        retval =  "full-time"
+      when rule[:datetime]
+        retval =  "datetime"
+      when rule[:date]
+        retval =  "date"
+      when rule[:time]
+        retval =  "time"
 
       when rule[:null]
         retval =  "null"

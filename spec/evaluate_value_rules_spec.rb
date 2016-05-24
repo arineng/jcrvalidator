@@ -698,80 +698,80 @@ describe 'evaluate_value_rules' do
   # Date and Time value tests
   #
 
-  it 'should pass a date-time string' do
-    tree = JCR.parse( '$trule= date-time' )
+  it 'should pass a datetime string' do
+    tree = JCR.parse( '$trule= datetime' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "1985-04-12T23:20:50.52Z", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
-  it 'should fail a number being passed as date-time' do
-    tree = JCR.parse( '$trule= date-time' )
+  it 'should fail a number being passed as datetime' do
+    tree = JCR.parse( '$trule= datetime' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
-  it 'should fail a badly formatted date-time' do
-    tree = JCR.parse( '$trule= date-time' )
+  it 'should fail a badly formatted datetime' do
+    tree = JCR.parse( '$trule= datetime' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "1985-04-12T23.20.50.52Z", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
-  it 'should pass a full-date string' do
-    tree = JCR.parse( '$trule= full-date' )
+  it 'should pass a date string' do
+    tree = JCR.parse( '$trule= date' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "1985-04-12", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
-  it 'should fail a number being passed as full-date' do
-    tree = JCR.parse( '$trule= full-date' )
+  it 'should fail a number being passed as date' do
+    tree = JCR.parse( '$trule= date' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
-  it 'should fail a badly formatted full-date' do
-    tree = JCR.parse( '$trule= full-date' )
+  it 'should fail a badly formatted date' do
+    tree = JCR.parse( '$trule= date' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "1985-14-12", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
-  it 'should pass a full-time string' do
-    tree = JCR.parse( '$trule= full-time' )
+  it 'should pass a time string' do
+    tree = JCR.parse( '$trule= time' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "23:20:50.52", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
-  it 'should fail a number being passed as full-time' do
-    tree = JCR.parse( '$trule= full-time' )
+  it 'should fail a number being passed as time' do
+    tree = JCR.parse( '$trule= time' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
-  it 'should fail a badly formatted full-time with Z' do
-    tree = JCR.parse( '$trule= full-time' )
+  it 'should fail a badly formatted time with Z' do
+    tree = JCR.parse( '$trule= time' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "23.20.50.52Z", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
-  it 'should fail a badly formatted full-time with bad-data' do
-    tree = JCR.parse( '$trule= full-time' )
+  it 'should fail a badly formatted time with bad-data' do
+    tree = JCR.parse( '$trule= time' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "24.20.50.52", JCR::EvalConditions.new( mapping, nil ) )

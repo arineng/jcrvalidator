@@ -157,7 +157,7 @@ module JCR
           integer_type | integer_range | integer_value |
           ipv4_type | ipv6_type | fqdn_type | idn_type |
           uri_range | uri_type | phone_type | email_type |
-          full_date_type | full_time_type | date_time_type |
+          datetime_type | date_type | time_type |
           base64_type | any
     }
         #! primimitive_def = string_type / string_range / string_value /
@@ -166,7 +166,7 @@ module JCR
         #!             integer_type / integer_range / integer_value /
         #!             ipv4_type / ipv6_type / fqdn_type / idn_type /
         #!             uri_range / uri_type / phone_type / email_type /
-        #!             full_date_type / full_time_type / date_time_type /
+        #!             datetime_type / date_type / time_type /
         #!             base64_type / any
     rule(:null_type)      { str('null').as(:null) }
         #! null_type = null-kw
@@ -233,15 +233,15 @@ module JCR
     rule(:email_type)     { str('email').as(:email) }
         #! email_type = email-kw
         #> email-kw = "email"
-    rule(:full_date_type) { str('full-date').as(:full_date) }
-        #! full-date_type = full-date-kw
-        #> full-date-kw = "full-date"
-    rule(:full_time_type) { str('full-time').as(:full_time) }
-        #! full-time_type = full-time-kw
-        #> full-time-kw = "full-time"
-    rule(:date_time_type) { str('date-time').as(:date_time) }
-        #! date-time_type = date-time-kw
-        #> date-time-kw = "date-time"
+    rule(:datetime_type) { str('datetime').as(:datetime) }
+        #! datetime_type = datetime-kw
+        #> datetime-kw = "datetime"
+    rule(:date_type) { str('date').as(:date) }
+        #! date_type = date-kw
+        #> date-kw = "date"
+    rule(:time_type) { str('time').as(:time) }
+        #! time_type = time-kw
+        #> time-kw = "time"
     rule(:base64_type)    { str('base64').as(:base64) }
         #! base64_type = base64-kw
         #> base64-kw = "base64"
