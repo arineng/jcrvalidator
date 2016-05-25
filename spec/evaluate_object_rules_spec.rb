@@ -25,8 +25,8 @@ describe 'evaluate_object_rules' do
     expect( e.success ).to be_falsey
   end
 
-  it 'should pass something that is not an object with reject' do
-    tree = JCR.parse( '$trule= @{reject} { }' )
+  it 'should pass something that is not an object with {not} annotation' do
+    tree = JCR.parse( '$trule= @{not} { }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
@@ -41,8 +41,8 @@ describe 'evaluate_object_rules' do
     expect( e.success ).to be_truthy
   end
 
-  it 'should fail an empty object against an empty reject object rule' do
-    tree = JCR.parse( '$trule= @{reject} { }' )
+  it 'should fail an empty object against an empty {not} annotation object rule' do
+    tree = JCR.parse( '$trule= @{not} { }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], { }, JCR::EvalConditions.new( mapping, nil ) )
@@ -57,8 +57,8 @@ describe 'evaluate_object_rules' do
     expect( e.success ).to be_falsey
   end
 
-  it 'should pass a non-empty object against an empty reject object rule' do
-    tree = JCR.parse( '$trule= @{reject} { }' )
+  it 'should pass a non-empty object against an empty {not} annotation object rule' do
+    tree = JCR.parse( '$trule= @{not} { }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], { "foo"=>"bar"}, JCR::EvalConditions.new( mapping, nil ) )
@@ -105,8 +105,8 @@ describe 'evaluate_object_rules' do
     expect( e.success ).to be_truthy
   end
 
-  it 'should fail an object with one string against an reject object rule with a string member or a string member' do
-    tree = JCR.parse( '$trule= @{reject} { "foo":string | "bar":string }' )
+  it 'should fail an object with one string against an {not} annotation object rule with a string member or a string member' do
+    tree = JCR.parse( '$trule= @{not} { "foo":string | "bar":string }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], { "foo"=>"thing" }, JCR::EvalConditions.new( mapping, nil ) )
@@ -362,15 +362,15 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should not ignore extra members in an object' do
-    tree = JCR.parse( '$trule= { /s.*/:string@2, "foo":integer@1, @{reject} /.*/:any@+ }' )
+    tree = JCR.parse( '$trule= { /s.*/:string@2, "foo":integer@1, @{not} /.*/:any@+ }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=>"thing2","foo"=>2,"bar"=>"baz" }, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
-  it 'should pass object with not extra members using reject' do
-    tree = JCR.parse( '$trule= { /s.*/:string@2, "foo":integer@1, @{reject} /.*/:any @? }' )
+  it 'should pass object with not extra members using {not} annotation' do
+    tree = JCR.parse( '$trule= { /s.*/:string@2, "foo":integer@1, @{not} /.*/:any @? }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=>"thing2","foo"=>2 }, JCR::EvalConditions.new( mapping, nil ) )

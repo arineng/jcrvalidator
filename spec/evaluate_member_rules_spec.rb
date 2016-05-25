@@ -29,8 +29,8 @@ describe 'evaluate_member_rules' do
     expect( e.success ).to be_truthy
   end
 
-  it 'should fail a member with string and any value with reject' do
-    tree = JCR.parse( '$mrule = @{reject} "mname" :any' )
+  it 'should fail a member with string and any value with {not} annotation' do
+    tree = JCR.parse( '$mrule = @{not} "mname" :any' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "mname", "anything" ], JCR::EvalConditions.new( mapping, nil ) )
@@ -53,8 +53,8 @@ describe 'evaluate_member_rules' do
     expect( e.success ).to be_falsey
   end
 
-  it 'should pass a member with mismatch string and an integer with reject' do
-    tree = JCR.parse( '$mrule = @{reject} "mname" :integer' )
+  it 'should pass a member with mismatch string and an integer with {not} annotation' do
+    tree = JCR.parse( '$mrule = @{not} "mname" :integer' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "blah", 2 ], JCR::EvalConditions.new( mapping, nil ) )
@@ -89,8 +89,8 @@ describe 'evaluate_member_rules' do
     expect( e.success ).to be_truthy
   end
 
-  it 'should fail a member with regex and any value with reject' do
-    tree = JCR.parse( '$mrule = @{reject} /ab.*/ :any' )
+  it 'should fail a member with regex and any value with {not} annotation' do
+    tree = JCR.parse( '$mrule = @{not} /ab.*/ :any' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "abc", "anything" ], JCR::EvalConditions.new( mapping, nil ) )
@@ -113,8 +113,8 @@ describe 'evaluate_member_rules' do
     expect( e.success ).to be_falsey
   end
 
-  it 'should pass a member with mismatch regex and an integer with reject' do
-    tree = JCR.parse( '$mrule = @{reject} /ab.*/ :integer' )
+  it 'should pass a member with mismatch regex and an integer with {not} annotation' do
+    tree = JCR.parse( '$mrule = @{not} /ab.*/ :integer' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "blah", 2 ], JCR::EvalConditions.new( mapping, nil ) )

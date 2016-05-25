@@ -19,7 +19,7 @@ require_relative '../lib/jcr/jcr'
 
 describe 'jcr' do
 
-  it 'should pass defualt rule' do
+  it 'should pass default rule' do
     ex = <<EX
 # ruleset-id rfcXXXX
 # jcr-version 0.5
@@ -32,7 +32,7 @@ EX
     expect( e.success ).to be_truthy
   end
 
-  it 'should fail defualt rule' do
+  it 'should fail default rule' do
     ex = <<EX
 # ruleset-id rfcXXXX
 # jcr-version 0.5
@@ -45,7 +45,7 @@ EX
     expect( e.success ).to be_falsey
   end
 
-  it 'should pass defualt rule referencing another rule' do
+  it 'should pass default rule referencing another rule' do
     ex = <<EX
 # ruleset-id rfcXXXX
 # jcr-version 0.5
@@ -59,7 +59,7 @@ EX
     expect( e.success ).to be_truthy
   end
 
-  it 'should pass defualt rule referencing two rules with JSON' do
+  it 'should pass default rule referencing two rules with JSON' do
     ex = <<EX
 # ruleset-id rfcXXXX
 # jcr-version 0.5
@@ -131,7 +131,7 @@ EX
     expect( e.success ).to be_falsey
   end
 
-  it 'should pass defualt rule referencing two rules with JSON and override' do
+  it 'should pass default rule referencing two rules with JSON and override' do
     ex = <<EX
 # ruleset-id rfcXXXX
 # jcr-version 0.5
@@ -151,7 +151,7 @@ OV
     expect( e.success ).to be_truthy
   end
 
-  it 'should fail defualt rule referencing two rules with JSON and override!' do
+  it 'should fail default rule referencing two rules with JSON and override!' do
     ex = <<EX
 # ruleset-id rfcXXXX
 # jcr-version 0.5
@@ -171,7 +171,7 @@ OV
     expect( e.success ).to be_falsey
   end
 
-  it 'should fail defualt rule referencing two rules with JSON and override!' do
+  it 'should fail default rule referencing two rules with JSON and override!' do
     ex = <<EX
 # ruleset-id rfcXXXX
 # jcr-version 0.5

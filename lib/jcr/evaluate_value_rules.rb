@@ -32,7 +32,7 @@ module JCR
     trace_def( econs, "value", jcr, data )
     rules, annotations = get_rules_and_annotations( jcr )
 
-    retval = evaluate_reject( annotations, evaluate_values( rules[0], rule_atom, data, econs ), econs )
+    retval = evaluate_not( annotations, evaluate_values( rules[0], rule_atom, data, econs ), econs )
     trace_eval( econs, "Value", retval)
     pop_trace_stack( econs )
     return retval
@@ -66,6 +66,20 @@ module JCR
         return bad_value( jcr, rule_atom, min, data ) unless data >= min
         max = jcr[:integer_max].to_s.to_i
         return bad_value( jcr, rule_atom, max, data ) unless data <= max
+      when jcr[:sized_int_v]
+        bits = jcr[:sized_int_v][:bits].to_i
+        return bad_value( jcr, rule_atom, "int" + bits.to_s, data ) unless data.is_a?( Fixnum )
+        min = -(2**(bits-1))
+        return bad_value( jcr, rule_atom, min, data ) unless data >= min
+        max = 2**(bits-1)-1
+        return bad_value( jcr, rule_atom, max, data ) unless data <= max
+      when jcr[:sized_uint_v]
+        bits = jcr[:sized_uint_v][:bits].to_i
+        return bad_value( jcr, rule_atom, "int" + bits.to_s, data ) unless data.is_a?( Fixnum )
+        min = 0
+        return bad_value( jcr, rule_atom, min, data ) unless data >= min
+        max = 2**bits-1
+        return bad_value( jcr, rule_atom, max, data ) unless data <= max
 
       #
       # floats
@@ -85,6 +99,11 @@ module JCR
         return bad_value( jcr, rule_atom, min, data ) unless data >= min
         max = jcr[:float_max].to_s.to_f
         return bad_value( jcr, rule_atom, max, data ) unless data <= max
+      when jcr[:double_v]
+        sf = jcr[:double_v].to_s
+        if sf == "double"
+          return bad_value( jcr, rule_atom, "double", data ) unless data.is_a?( Float )
+        end
 
       #
       # boolean
@@ -120,7 +139,7 @@ module JCR
       # ip addresses
       #
 
-      when jcr[:ip4]
+      when jcr[:ipv4]
         return bad_value( jcr, rule_atom, "IPv4 Address", data ) unless data.is_a? String
         begin
           ip = IPAddr.new( data )
@@ -128,7 +147,7 @@ module JCR
           return bad_value( jcr, rule_atom, "IPv4 Address", data )
         end
         return bad_value( jcr, rule_atom, "IPv4 Address", data ) unless ip.ipv4?
-      when jcr[:ip6]
+      when jcr[:ipv6]
         return bad_value( jcr, rule_atom, "IPv6 Address", data ) unless data.is_a? String
         begin
           ip = IPAddr.new( data )
@@ -136,6 +155,14 @@ module JCR
           return bad_value( jcr, rule_atom, "IPv6 Address", data )
         end
         return bad_value( jcr, rule_atom, "IPv6 Address", data ) unless ip.ipv6?
+      when jcr[:ipaddr]
+        return bad_value( jcr, rule_atom, "IP Address", data ) unless data.is_a? String
+        begin
+          ip = IPAddr.new( data )
+        rescue IPAddr::InvalidAddressError
+          return bad_value( jcr, rule_atom, "IP Address", data )
+        end
+        return bad_value( jcr, rule_atom, "IP Address", data ) unless ip.ipv6? || ip.ipv4?
 
       #
       # domain names
@@ -210,24 +237,108 @@ module JCR
         return bad_value( jcr, rule_atom, "Phone Number", data ) unless p.valid?
 
       #
+      # hex values
+      #
+
+      when jcr[:hex]
+        return bad_value( jcr, rule_atom, "Hex Data", data ) unless data.is_a? String
+        return bad_value( jcr, rule_atom, "Hex Data", data ) unless data.length % 2 == 0
+        pad_start = false
+        data.each_char do |char|
+          unless (char >= '0' && char <='9') \
+              || (char >= 'A' && char <= 'F') \
+              || (char >= 'a' && char <= 'f')
+            return bad_value( jcr, rule_atom, "Hex Data", data )
+          end
+        end
+
+      #
+      # base32hex values
+      #
+
+      when jcr[:base32hex]
+        return bad_value( jcr, rule_atom, "Base32hex Data", data ) unless data.is_a? String
+        return bad_value( jcr, rule_atom, "Base32hex Data", data ) unless data.length % 8 == 0
+        pad_start = false
+        data.each_char do |char|
+          if char == '='
+            pad_start = true
+          elsif pad_start && char != '='
+            return bad_value( jcr, rule_atom, "Base32hex Data", data )
+          else 
+              unless (char >= '0' && char <='9') \
+                  || (char >= 'A' && char <= 'V') \
+                  || (char >= 'a' && char <= 'v')
+                return bad_value( jcr, rule_atom, "Base32hex Data", data )
+              end
+          end
+        end
+
+      #
+      # base32 values
+      #
+
+      when jcr[:base32]
+        return bad_value( jcr, rule_atom, "Base 32 Data", data ) unless data.is_a? String
+        return bad_value( jcr, rule_atom, "Base 32 Data", data ) unless data.length % 8 == 0
+        pad_start = false
+        data.each_char do |char|
+          if char == '='
+            pad_start = true
+          elsif pad_start && char != '='
+            return bad_value( jcr, rule_atom, "Base 32 Data", data )
+          else 
+              unless (char >= 'a' && char <= 'z') \
+                  || (char >= 'A' && char <= 'Z') \
+                  || (char >= '2' && char <='7')
+                return bad_value( jcr, rule_atom, "Base 32 Data", data )
+              end
+          end
+        end
+
+      #
+      # base64url values
+      #
+
+      when jcr[:base64url]
+        return bad_value( jcr, rule_atom, "Base64url Data", data ) unless data.is_a? String
+        return bad_value( jcr, rule_atom, "Base64url Data", data ) unless data.length % 4 == 0
+        pad_start = false
+        data.each_char do |char|
+          if char == '='
+            pad_start = true
+          elsif pad_start && char != '='
+            return bad_value( jcr, rule_atom, "Base64url Data", data )
+          else 
+              unless (char >= 'a' && char <= 'z') \
+                  || (char >= 'A' && char <= 'Z') \
+                  || (char >= '0' && char <='9') \
+                  || char == '-' || char == '_'
+                return bad_value( jcr, rule_atom, "Base64url Data", data )
+              end
+          end
+        end
+
+      #
       # base64 values
       #
 
       when jcr[:base64]
         return bad_value( jcr, rule_atom, "Base 64 Data", data ) unless data.is_a? String
-        return bad_value( jcr, rule_atom, "Base 64 Data", data ) if data.empty?
+        return bad_value( jcr, rule_atom, "Base 64 Data", data ) unless data.length % 4 == 0
         pad_start = false
         data.each_char do |char|
-          if pad_start && char != '='
-            return bad_value( jcr, rule_atom, "Base 64 Data", data )
-          elsif char == '='
+          if char == '='
             pad_start = true
-          end
-          unless (char >= 'a' && char <= 'z') \
-              || (char >= 'A' && char <= 'Z') \
-              || (char >= '0' && char <='9') \
-              || char == '=' || char == '+' || char == '/'
+          elsif pad_start && char != '='
             return bad_value( jcr, rule_atom, "Base 64 Data", data )
+          else 
+              unless (char >= 'a' && char <= 'z') \
+                  || (char >= 'A' && char <= 'Z') \
+                  || (char >= '0' && char <='9') \
+                  || char == '+' || char == '/'
+                return bad_value( jcr, rule_atom, "Base 64 Data", data )
+              end
           end
         end
 
@@ -235,14 +346,14 @@ module JCR
       # time and date values
       #
 
-      when jcr[:date_time]
+      when jcr[:datetime]
         return bad_value( jcr, rule_atom, "Time and Date", data ) unless data.is_a? String
         begin
           Time.iso8601( data )
         rescue ArgumentError
           return bad_value( jcr, rule_atom, "Time and Date", data )
         end
-      when jcr[:full_date]
+      when jcr[:date]
         return bad_value( jcr, rule_atom, "Date", data ) unless data.is_a? String
         begin
           d = data + "T23:20:50.52Z"
@@ -250,7 +361,7 @@ module JCR
         rescue ArgumentError
           return bad_value( jcr, rule_atom, "Date", data )
         end
-      when jcr[:full_time]
+      when jcr[:time]
         return bad_value( jcr, rule_atom, "Time", data ) unless data.is_a? String
         begin
           t = "1985-04-12T" + data + "Z"
@@ -302,7 +413,13 @@ module JCR
         min = rule[:integer_min].to_s.to_i
         max = rule[:integer_max].to_s.to_i
         retval =  "#{min}..#{max}"
+      when rule[:sized_int_v]
+        retval =  "int" + rule[:sized_int_v][:bits].to_s
+      when rule[:sized_uint_v]
+        retval =  "uint" + rule[:sized_uint_v][:bits].to_s
 
+      when rule[:double_v]
+        retval =  rule[:double_v].to_s
       when rule[:float_v]
         retval =  rule[:float_v].to_s
       when rule[:float]
@@ -327,10 +444,10 @@ module JCR
       when rule[:regex]
         retval =  "/#{rule[:regex].to_s}/"
 
-      when rule[:ip4]
-        retval =  "ip4"
-      when rule[:ip6]
-        retval =  "ip6"
+      when rule[:ipv4]
+        retval =  "ipv4"
+      when rule[:ipv6]
+        retval =  "ipv6"
 
       when rule[:fqdn]
         retval =  "fqdn"
@@ -348,15 +465,21 @@ module JCR
       when rule[:phone]
         retval =  "phone"
 
+      when rule[:hex]
+        retval =  "hex"
+      when rule[:base32url]
+        retval =  "base32url"
+      when rule[:base64url]
+        retval =  "base64url"
       when rule[:base64]
         retval =  "base64"
 
-      when rule[:date_time]
-        retval =  "date-time"
-      when rule[:full_date]
-        retval =  "full-date"
-      when rule[:full_time]
-        retval =  "full-time"
+      when rule[:datetime]
+        retval =  "datetime"
+      when rule[:date]
+        retval =  "date"
+      when rule[:time]
+        retval =  "time"
 
       when rule[:null]
         retval =  "null"

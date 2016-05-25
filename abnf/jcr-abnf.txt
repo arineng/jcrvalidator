@@ -15,8 +15,8 @@ multi-line-directive = "{" *sp-cmt
                    (directive-def / multi-line-tbd-directive-d) *sp-cmt "}"
 directive-def    = jcr-version-d / ruleset-id-d / import-d
 jcr-version-d    = jcr-version-kw spaces major-version "." minor-version
-major-version    = p-integer
-minor-version    = p-integer
+major-version    = non-neg-integer
+minor-version    = non-neg-integer
 ruleset-id-d     = ruleset-id-kw spaces ruleset-id
 import-d         = import-kw spaces ruleset-id
                    [ spaces as-kw spaces ruleset-id-alias ]
@@ -38,42 +38,44 @@ not-multi-line-special = spaces / %x21 / %x23-2E / %x30-3A / %x3C-7C /
 
 root-rule        = value-rule / group-rule
 
-rule             = rule-name *sp-cmt "=" *sp-cmt rule-def
+rule             = "$" rule-name *sp-cmt "=" *sp-cmt rule-def
 
 rule-name        = name
-target-rule-name = annotations [ ruleset-id-alias "." ] rule-name
+target-rule-name = annotations "$" [ ruleset-id-alias "." ] rule-name
 name             = ALPHA *( ALPHA / DIGIT / "-" / "-" )
 
-rule-def         = type-rule / member-rule / group-rule
+rule-def         = member-rule / type-rule / group-rule
 type-rule        = value-rule / type-choice-rule / target-rule-name
 value-rule       = primitive-rule / array-rule / object-rule
 member-rule      = annotations
-                   member-name-spec *sp-cmt type-rule
+                   member-name-spec *sp-cmt ":" *sp-cmt type-rule
 member-name-spec = regex / q-string
-type-choice-rule = ":" *sp-cmt type-choice
+type-choice-rule = *sp-cmt type-choice
 type-choice      = annotations "(" type-choice-items
                    *( choice-combiner type-choice-items ) ")"
-type-choice-items = *sp-cmt ( type-choice / type-rule ) *sp-cmt
+type-choice-items = *sp-cmt ( type-choice-rule / type-rule ) *sp-cmt
 
 annotations      = *( "@{" *sp-cmt annotation-set *sp-cmt "}" *sp-cmt )
-annotation-set   = reject-annotation / unordered-annotation /
+annotation-set   = not-annotation / unordered-annotation /
                    root-annotation / tbd-annotation
-reject-annotation = reject-kw
+not-annotation   = not-kw
 unordered-annotation = unordered-kw
 root-annotation  = root-kw
 tbd-annotation   = annotation-name [ spaces annotation-parameters ]
 annotation-name  = name
 annotation-parameters = multi-line-parameters
 
-primitive-rule   = annotations ":" *sp-cmt primimitive-def
-primimitive-def  = null-type / boolean-type / true-value / false-value /
-                   string-type / string-range / string-value / 
-                   float-type / float-range / float-value /
-                   integer-type / integer-range / integer-value / 
-                   ip4-type / ip6-type / fqdn-type / idn-type /
+primitive-rule   = annotations primimitive-def
+primimitive-def  = string-type / string-range / string-value /
+                   null-type / boolean-type / true-value / false-value /
+                   double-type / float-type / float-range / float-value /
+                   integer-type / integer-range / integer-value /
+                   sized-int-type / sized-uint-type /
+                   ipv4-type / ipv6-type / ipaddr-type / fqdn-type / idn-type /
                    uri-range / uri-type / phone-type / email-type /
-                   full-date-type / full-time-type / date-time-type /
-                   base64-type / any
+                   datetime-type / date-type / time-type /
+                   hex-type / base32hex-type / base32-type / base64url-type / base64-type /
+                   any
 null-type        = null-kw
 boolean-type     = boolean-kw
 true-value       = true-kw
@@ -81,6 +83,7 @@ false-value      = false-kw
 string-type      = string-kw
 string-value     = q-string
 string-range     = regex
+double-type      = double-kw
 float-type       = float-kw
 float-range      = float-min ".." [ float-max ] / ".." float-max
 float-min        = float
@@ -91,59 +94,67 @@ integer-range    = integer-min ".." [ integer-max ] / ".." integer-max
 integer-min      = integer
 integer-max      = integer
 integer-value    = integer
-ip4-type         = ip4-kw
-ip6-type         = ip6-kw
+sized-int-type   = int-kw pos-integer
+sized-uint-type  = uint-kw pos-integer
+ipv4-type        = ipv4-kw
+ipv6-type        = ipv6-kw
+ipaddr-type      = ipaddr-kw
 fqdn-type        = fqdn-kw
 idn-type         = idn-kw
 uri-range        = uri-dotdot-kw uri-template
 uri-type         = uri-kw
 phone-type       = phone-kw
 email-type       = email-kw
-full-date-type   = full-date-kw
-full-time-type   = full-time-kw
-date-time-type   = date-time-kw
+datetime-type    = datetime-kw
+date-type        = date-kw
+time-type        = time-kw
+hex-type         = hex-kw
+base32hex-type   = base32hex-kw
+base32-type      = base32-kw
+base64url-type   = base64url-kw
 base64-type      = base64-kw
 any              = any-kw
 
-object-rule      = annotations [ ":" *sp-cmt ] "{" *sp-cmt [ object-items *sp-cmt ] "}"
+object-rule      = annotations "{" *sp-cmt [ object-items *sp-cmt ] "}"
 object-items     = object-item (*( sequence-combiner object-item ) /
                    *( choice-combiner object-item ) )
-object-item      = [ repetition *sp-cmt ] object-item-types
+object-item      = object-item-types [ *sp-cmt repetition ]
 object-item-types = member-rule / target-rule-name / object-group
 object-group     = "(" *sp-cmt [ object-items *sp-cmt ] ")"
 
-array-rule       = annotations [ ":" *sp-cmt ] "[" *sp-cmt [ array-items *sp-cmt ] "]"
+array-rule       = annotations "[" *sp-cmt [ array-items *sp-cmt ] "]"
 array-items      = array-item (*( sequence-combiner array-item ) /
                    *( choice-combiner array-item ) )
-array-item       = [ repetition ] *sp-cmt array-item-types
+array-item       = *sp-cmt array-item-types *sp-cmt [ repetition ]
 array-item-types = type-rule / array-group
 array-group      = "(" *sp-cmt [ array-items *sp-cmt ] ")"
 
 group-rule       = annotations "(" *sp-cmt [ group-items *sp-cmt ] ")"
 group-items      = group-item (*( sequence-combiner group-item ) /
                    *( choice-combiner group-item ) )
-group-item       = [ repetition ] *sp-cmt group-item-types
-group-item-types = type-rule / member-rule / group-group
+group-item       = *sp-cmt group-item-types *sp-cmt [ repetition ]
+group-item-types = member-rule / type-rule / group-group
 group-group      = group-rule
 
 sequence-combiner = *sp-cmt "," *sp-cmt
 choice-combiner  = *sp-cmt "|" *sp-cmt
 
-repetition       = optional / one-or-more / min-max-repetition /
+repetition       = "@" *sp-cmt ( optional / one-or-more / min-max-repetition /
                    min-repetition / max-repetition /
-                   zero-or-more / specific-repetition
+                   zero-or-more / specific-repetition )
 optional         = "?"
 one-or-more      = "+"
 zero-or-more     = "*"
-min-max-repetition = min-repeat *sp-cmt "*" *sp-cmt max-repeat
-min-repetition   = min-repeat *sp-cmt "*"
-max-repetition   = "*" *sp-cmt max-repeat
-min-repeat       = p-integer
-max-repeat       = p-integer
-specific-repetition = p-integer
+min-max-repetition = min-repeat ".." max-repeat
+min-repetition   = min-repeat ".."
+max-repetition   = ".."  max-repeat
+min-repeat       = non-neg-integer
+max-repeat       = non-neg-integer
+specific-repetition = non-neg-integer
 
-integer          = ["-"] 1*DIGIT
-p-integer        = 1*DIGIT
+integer          = "0" / ["-"] pos-integer
+non-neg-integer  = "0" / pos-integer
+pos-integer      = digit1-9 *DIGIT
 
 float            = [ minus ] int frac [ exp ]
                    ; From RFC 7159 except 'frac' required
@@ -184,28 +195,36 @@ uri-template     = 1*ALPHA ":" 1*not-space
 ;; Keywords
 any-kw           = %x61.6E.79                      ; "any"
 as-kw            = %x61.73                         ; "as"
+base32-kw        = %x62.61.73.65.33.32             ; "base32"
+base32hex-kw     = %x62.61.73.65.33.32.68.65.78    ; "base32hex"
 base64-kw        = %x62.61.73.65.36.34             ; "base64"
+base64url-kw     = %x62.61.73.65.36.34.75.72.6C    ; "base64url"
 boolean-kw       = %x62.6F.6F.6C.65.61.6E          ; "boolean"
-date-time-kw     = %x64.61.74.65.2D.74.69.6D.65    ; "date-time"
+date-kw          = %x64.61.74.65                   ; "date"
+datetime-kw      = %x64.61.74.65.74.69.6D.65       ; "datetime"
+double-kw        = %x64.6F.75.62.6C.65             ; "double"
 email-kw         = %x65.6D.61.69.6C                ; "email"
 false-kw         = %x66.61.6C.73.65                ; "false"
 float-kw         = %x66.6C.6F.61.74                ; "float"
 fqdn-kw          = %x66.71.64.6E                   ; "fqdn"
-full-date-kw     = %x66.75.6C.6C.2D.64.61.74.65    ; "full-date"
-full-time-kw     = %x66.75.6C.6C.2D.74.69.6D.65    ; "full-time"
+hex-kw           = %x68.65.78                      ; "hex"
 idn-kw           = %x69.64.6E                      ; "idn"
 import-kw        = %x69.6D.70.6F.72.74             ; "import"
+int-kw           = %x69.6E.74                      ; "int"
 integer-kw       = %x69.6E.74.65.67.65.72          ; "integer"
-ip4-kw           = %x69.70.34                      ; "ip4"
-ip6-kw           = %x69.70.36                      ; "ip6"
+ipaddr-kw        = %x69.70.61.64.64.72             ; "ipaddr"
+ipv4-kw          = %x69.70.76.34                   ; "ipv4"
+ipv6-kw          = %x69.70.76.36                   ; "ipv6"
 jcr-version-kw   = %x6A.63.72.2D.76.65.72.73.69.6F.6E ; "jcr-version"
+not-kw           = %x6E.6F.74                      ; "not"
 null-kw          = %x6E.75.6C.6C                   ; "null"
 phone-kw         = %x70.68.6F.6E.65                ; "phone"
-reject-kw        = %x72.65.6A.65.63.74             ; "reject"
 root-kw          = %x72.6F.6F.74                   ; "root"
 ruleset-id-kw    = %x72.75.6C.65.73.65.74.2D.69.64 ; "ruleset-id"
 string-kw        = %x73.74.72.69.6E.67             ; "string"
+time-kw          = %x74.69.6D.65                   ; "time"
 true-kw          = %x74.72.75.65                   ; "true"
+uint-kw          = %x75.69.6E.74                   ; "uint"
 unordered-kw     = %x75.6E.6F.72.64.65.72.65.64    ; "unordered"
 uri-dotdot-kw    = %x75.72.69.2E.2E                ; "uri.."
 uri-kw           = %x75.72.69                      ; "uri"

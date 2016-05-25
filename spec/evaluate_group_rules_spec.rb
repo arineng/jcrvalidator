@@ -25,8 +25,8 @@ describe 'evaluate_group_rules' do
     expect( e.success ).to be_truthy
   end
 
-  it 'should fail a group with string variable with reject' do
-    tree = JCR.parse( '$trule = @{reject} ( string )' )
+  it 'should fail a group with string variable with {not} annotation' do
+    tree = JCR.parse( '$trule = @{not} ( string )' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", JCR::EvalConditions.new( mapping, nil ) )
@@ -49,16 +49,16 @@ describe 'evaluate_group_rules' do
     expect( e.success ).to be_truthy
   end
 
-  it 'should fail a group with an ip4 or an integer' do
-    tree = JCR.parse( '$trule = ( ip4 | integer )' )
+  it 'should fail a group with an ipv4 or an integer' do
+    tree = JCR.parse( '$trule = ( ipv4 | integer )' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
-  it 'should pass a group with an ip4 or an integer with reject' do
-    tree = JCR.parse( '$trule = @{reject} ( ip4 | integer )' )
+  it 'should pass a group with an ipv4 or an integer with {not} annotation' do
+    tree = JCR.parse( '$trule = @{not} ( ipv4 | integer )' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", JCR::EvalConditions.new( mapping, nil ) )

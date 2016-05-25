@@ -46,8 +46,8 @@ describe 'evaluate_value_rules' do
     expect( e.success ).to be_truthy
   end
 
-  it 'should fail when any rule matches an array with reject' do
-    tree = JCR.parse( '$trule= @{reject} any' )
+  it 'should fail when any rule matches an array with {not} annotation' do
+    tree = JCR.parse( '$trule= @{not} any' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, 3 ], JCR::EvalConditions.new( mapping, nil ) )
@@ -66,8 +66,8 @@ describe 'evaluate_value_rules' do
     expect( e.success ).to be_truthy
   end
 
-  it 'should fail when a string matches a string constant with reject' do
-    tree = JCR.parse( '$trule= @{reject} "a string constant"' )
+  it 'should fail when a string matches a string constant with {not} annotation' do
+    tree = JCR.parse( '$trule= @{not} "a string constant"' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", JCR::EvalConditions.new( mapping, nil ) )
@@ -190,11 +190,195 @@ describe 'evaluate_value_rules' do
     expect( e.success ).to be_falsey
   end
 
+  it 'should pass a sized integer within a range' do
+    tree = JCR.parse( '$trule= int8' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 100, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass a negative sized integer within a range' do
+    tree = JCR.parse( '$trule= int8' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], -100, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a sized integer below a range' do
+    tree = JCR.parse( '$trule= int8' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], -129, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a sized integer above a range' do
+    tree = JCR.parse( '$trule= int8' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 128, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass a sized integer at the min of a range' do
+    tree = JCR.parse( '$trule= int8' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], -128, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass a sized integer at the max of a range' do
+    tree = JCR.parse( '$trule= int8' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 127, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a sized integer below a range' do
+    tree = JCR.parse( '$trule= int16' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], -32769, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a sized integer above a range' do
+    tree = JCR.parse( '$trule= int16' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 32768, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass a sized integer at the min of a range' do
+    tree = JCR.parse( '$trule= int16' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], -32768, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass a sized integer at the max of a range' do
+    tree = JCR.parse( '$trule= int16' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 32767, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a sized integer range when passed a string' do
+    tree = JCR.parse( '$trule= int8' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "foo", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass a sized unsigned integer within a range' do
+    tree = JCR.parse( '$trule= uint8' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 100, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a sized unsigned integer below a range' do
+    tree = JCR.parse( '$trule= uint8' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], -1, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a sized unsigned integer above a range' do
+    tree = JCR.parse( '$trule= uint8' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 256, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass a sized unsigned integer at the min of a range' do
+    tree = JCR.parse( '$trule= uint8' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 0, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass a sized unsigned integer at the max of a range' do
+    tree = JCR.parse( '$trule= uint8' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 255, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a sized unsigned integer below a range' do
+    tree = JCR.parse( '$trule= uint16' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], -1, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a sized unsigned integer above a range' do
+    tree = JCR.parse( '$trule= uint16' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 65536, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass a sized unsigned integer at the min of a range' do
+    tree = JCR.parse( '$trule= uint16' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 0, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass a sized unsigned integer at the max of a range' do
+    tree = JCR.parse( '$trule= uint16' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 65535, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a sized unsigned integer range when passed a string' do
+    tree = JCR.parse( '$trule= uint8' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "foo", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
   #
-  # float value tests
+  # float / double value tests
   #
 
-  it 'should pass an float variable' do
+  it 'should pass a double variable' do
+    tree = JCR.parse( '$trule= double' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2.1, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a double variable when passed a string' do
+    tree = JCR.parse( '$trule= double' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "foo", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass a float variable' do
     tree = JCR.parse( '$trule= float' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
@@ -202,7 +386,7 @@ describe 'evaluate_value_rules' do
     expect( e.success ).to be_truthy
   end
 
-  it 'should fail an float variable when passed a string' do
+  it 'should fail a float variable when passed a string' do
     tree = JCR.parse( '$trule= float' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
@@ -346,8 +530,8 @@ describe 'evaluate_value_rules' do
     expect( e.success ).to be_truthy
   end
 
-  it 'should fail a null with reject' do
-    tree = JCR.parse( '$trule= @{reject} null' )
+  it 'should fail a null with {not} annotation' do
+    tree = JCR.parse( '$trule= @{not} null' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], nil, JCR::EvalConditions.new( mapping, nil ) )
@@ -387,7 +571,7 @@ describe 'evaluate_value_rules' do
   #
 
   it 'should pass an IPv4 address that matches' do
-    tree = JCR.parse( '$trule= ip4' )
+    tree = JCR.parse( '$trule= ipv4' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "192.1.1.1", JCR::EvalConditions.new( mapping, nil ) )
@@ -395,7 +579,7 @@ describe 'evaluate_value_rules' do
   end
 
   it 'should fail an IPv4 address that does not match' do
-    tree = JCR.parse( '$trule= ip4' )
+    tree = JCR.parse( '$trule= ipv4' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "192.1.1.1.1.1.1", JCR::EvalConditions.new( mapping, nil ) )
@@ -403,7 +587,7 @@ describe 'evaluate_value_rules' do
   end
 
   it 'should fail an IPv4 address that is not a string' do
-    tree = JCR.parse( '$trule= ip4' )
+    tree = JCR.parse( '$trule= ipv4' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
@@ -411,7 +595,7 @@ describe 'evaluate_value_rules' do
   end
 
   it 'should fail an IPv4 address that is suppose to be an IPv6 address' do
-    tree = JCR.parse( '$trule= ip6' )
+    tree = JCR.parse( '$trule= ipv6' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "192.1.1.1", JCR::EvalConditions.new( mapping, nil ) )
@@ -419,7 +603,7 @@ describe 'evaluate_value_rules' do
   end
 
   it 'should pass an IPv6 address that matches' do
-    tree = JCR.parse( '$trule= ip6' )
+    tree = JCR.parse( '$trule= ipv6' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "2001:0000::1", JCR::EvalConditions.new( mapping, nil ) )
@@ -427,7 +611,7 @@ describe 'evaluate_value_rules' do
   end
 
   it 'should pass a fully expanded IPv6 address that matches' do
-    tree = JCR.parse( '$trule= ip6' )
+    tree = JCR.parse( '$trule= ipv6' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "2001:0000:0000:0000:0000:0000:0000:0001", JCR::EvalConditions.new( mapping, nil ) )
@@ -435,7 +619,7 @@ describe 'evaluate_value_rules' do
   end
 
   it 'should fail an IPv6 address that does not match' do
-    tree = JCR.parse( '$trule= ip6' )
+    tree = JCR.parse( '$trule= ipv6' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "2001:0000::1....", JCR::EvalConditions.new( mapping, nil ) )
@@ -443,7 +627,7 @@ describe 'evaluate_value_rules' do
   end
 
   it 'should fail an IPv6 address that is not a string' do
-    tree = JCR.parse( '$trule= ip6' )
+    tree = JCR.parse( '$trule= ipv6' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [], JCR::EvalConditions.new( mapping, nil ) )
@@ -451,10 +635,50 @@ describe 'evaluate_value_rules' do
   end
 
   it 'should fail an IPv6 address that is suppose to be an IPv4 address' do
-    tree = JCR.parse( '$trule= ip4' )
+    tree = JCR.parse( '$trule= ipv4' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "2001:0000::1", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass an ipaddr that matches an IPv4 address' do
+    tree = JCR.parse( '$trule= ipaddr' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "192.1.1.1", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass an ipaddr that matches an IPv6 address' do
+    tree = JCR.parse( '$trule= ipaddr' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "2001:0000::1", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail an ipaddr address that is not a string' do
+    tree = JCR.parse( '$trule= ipaddr' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail an ipaddr address that does not match' do
+    tree = JCR.parse( '$trule= ipaddr' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "192.1.1.1.1.1.1", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail an ipaddr that does not match' do
+    tree = JCR.parse( '$trule= ipaddr' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "2001:0000::1....", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -659,6 +883,138 @@ describe 'evaluate_value_rules' do
   end
 
   #
+  # Hex data type
+  #
+
+  it 'should pass a hex string' do
+    tree = JCR.parse( '$trule= hex' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "1234AB", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass a empty hex string' do
+    tree = JCR.parse( '$trule= hex' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a number that is not a hex string' do
+    tree = JCR.parse( '$trule= hex' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a string with illegal hex characters' do
+    tree = JCR.parse( '$trule= hex' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "1234GH", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a hex string that does not have even length' do
+    tree = JCR.parse( '$trule= hex' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "12345", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  #
+  # Base32hex data type
+  #
+
+  it 'should pass a base32hex string' do
+    tree = JCR.parse( '$trule= base32hex' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "ABcdEFV3", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass a empty base32hex string' do
+    tree = JCR.parse( '$trule= base32hex' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a number that is not a base32hex string' do
+    tree = JCR.parse( '$trule= base32hex' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a string with illegal base32hex characters' do
+    tree = JCR.parse( '$trule= base32hex' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "ABcdEFCZ", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a base32hex string if length is not multiple of 8' do
+    tree = JCR.parse( '$trule= base32hex' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "ABCD", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  #
+  # Base32 data type
+  #
+
+  it 'should pass a base32 string' do
+    tree = JCR.parse( '$trule= base32' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "ABcdEFZ3", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass a empty base32 string' do
+    tree = JCR.parse( '$trule= base32' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a number that is not a base32 string' do
+    tree = JCR.parse( '$trule= base32' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a string with illegal base32 characters' do
+    tree = JCR.parse( '$trule= base32' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "ABcdEFZ1", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a base32 string if length is not multiple of 8' do
+    tree = JCR.parse( '$trule= base32' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "ABCD", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  #
   # Base64 data type
   #
 
@@ -666,7 +1022,15 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( '$trule= base64' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzdA==", JCR::EvalConditions.new( mapping, nil ) )
+    e = JCR.evaluate_rule( tree[0], tree[0], "VGVz+/==", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass a empty base64 string' do
+    tree = JCR.parse( '$trule= base64' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
@@ -682,7 +1046,7 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( '$trule= base64' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzdA%==", JCR::EvalConditions.new( mapping, nil ) )
+    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzA%==", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -690,7 +1054,51 @@ describe 'evaluate_value_rules' do
     tree = JCR.parse( '$trule= base64' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
-    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzdA==aaa", JCR::EvalConditions.new( mapping, nil ) )
+    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzdA==aaaa", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  #
+  # Base64url data type
+  #
+
+  it 'should pass a base64url string' do
+    tree = JCR.parse( '$trule= base64url' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "VGVz-_==", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass a empty base64url string' do
+    tree = JCR.parse( '$trule= base64url' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a number that is not a base64url string' do
+    tree = JCR.parse( '$trule= base64url' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a string with illegal base64url characters' do
+    tree = JCR.parse( '$trule= base64url' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzA%==", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a string with base64url characters after padding' do
+    tree = JCR.parse( '$trule= base64url' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "VGVzdA==aaaa", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
@@ -698,80 +1106,80 @@ describe 'evaluate_value_rules' do
   # Date and Time value tests
   #
 
-  it 'should pass a date-time string' do
-    tree = JCR.parse( '$trule= date-time' )
+  it 'should pass a datetime string' do
+    tree = JCR.parse( '$trule= datetime' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "1985-04-12T23:20:50.52Z", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
-  it 'should fail a number being passed as date-time' do
-    tree = JCR.parse( '$trule= date-time' )
+  it 'should fail a number being passed as datetime' do
+    tree = JCR.parse( '$trule= datetime' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
-  it 'should fail a badly formatted date-time' do
-    tree = JCR.parse( '$trule= date-time' )
+  it 'should fail a badly formatted datetime' do
+    tree = JCR.parse( '$trule= datetime' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "1985-04-12T23.20.50.52Z", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
-  it 'should pass a full-date string' do
-    tree = JCR.parse( '$trule= full-date' )
+  it 'should pass a date string' do
+    tree = JCR.parse( '$trule= date' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "1985-04-12", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
-  it 'should fail a number being passed as full-date' do
-    tree = JCR.parse( '$trule= full-date' )
+  it 'should fail a number being passed as date' do
+    tree = JCR.parse( '$trule= date' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
-  it 'should fail a badly formatted full-date' do
-    tree = JCR.parse( '$trule= full-date' )
+  it 'should fail a badly formatted date' do
+    tree = JCR.parse( '$trule= date' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "1985-14-12", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
-  it 'should pass a full-time string' do
-    tree = JCR.parse( '$trule= full-time' )
+  it 'should pass a time string' do
+    tree = JCR.parse( '$trule= time' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "23:20:50.52", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
-  it 'should fail a number being passed as full-time' do
-    tree = JCR.parse( '$trule= full-time' )
+  it 'should fail a number being passed as time' do
+    tree = JCR.parse( '$trule= time' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 2, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
-  it 'should fail a badly formatted full-time with Z' do
-    tree = JCR.parse( '$trule= full-time' )
+  it 'should fail a badly formatted time with Z' do
+    tree = JCR.parse( '$trule= time' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "23.20.50.52Z", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
-  it 'should fail a badly formatted full-time with bad-data' do
-    tree = JCR.parse( '$trule= full-time' )
+  it 'should fail a badly formatted time with bad-data' do
+    tree = JCR.parse( '$trule= time' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "24.20.50.52", JCR::EvalConditions.new( mapping, nil ) )

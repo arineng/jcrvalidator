@@ -54,11 +54,11 @@ module JCR
         #!                        (directive_def / multi_line_tbd_directive_d) spcCmnt? "}"
     rule(:directive_def) { jcr_version_d | ruleset_id_d | import_d }
         #! directive_def = jcr_version_d / ruleset_id_d / import_d
-    rule(:jcr_version_d) { (str('jcr-version') >> spaces >> p_integer.as(:major_version) >> str('.') >> p_integer.as(:minor_version)).as(:jcr_version_d) }
+    rule(:jcr_version_d) { (str('jcr-version') >> spaces >> non_neg_integer.as(:major_version) >> str('.') >> non_neg_integer.as(:minor_version)).as(:jcr_version_d) }
         #! jcr_version_d = jcr-version-kw spaces major_version "." minor_version
         #> jcr-version-kw = "jcr-version"
-        #! major_version = p_integer
-        #! minor_version = p_integer
+        #! major_version = non_neg_integer
+        #! minor_version = non_neg_integer
     rule(:ruleset_id_d)  { (str('ruleset-id') >> spaces >> ruleset_id.as(:ruleset_id)).as(:ruleset_id_d) }
         #! ruleset_id_d = ruleset-id-kw spaces ruleset_id
         #> ruleset-id-kw = "ruleset-id"
@@ -128,12 +128,12 @@ module JCR
 
     rule(:annotations)       { ( str('@{') >> spcCmnt? >> annotation_set >> spcCmnt? >> str('}') >> spcCmnt? ).repeat }
         #! annotations = *( "@{" spcCmnt? annotation_set spcCmnt? "}" spcCmnt? )
-    rule(:annotation_set)    { reject_annotation | unordered_annotation | root_annotation | tbd_annotation }
-        #! annotation_set = reject_annotation / unordered_annotation /
+    rule(:annotation_set)    { not_annotation | unordered_annotation | root_annotation | tbd_annotation }
+        #! annotation_set = not_annotation / unordered_annotation /
         #!                  root_annotation / tbd_annotation
-    rule(:reject_annotation) { str('reject').as(:reject_annotation) }
-        #! reject_annotation = reject-kw
-        #> reject-kw = "reject"
+    rule(:not_annotation) { str('not').as(:not_annotation) }
+        #! not_annotation = not-kw
+        #> not-kw = "not"
     rule(:unordered_annotation) { str('unordered').as(:unordered_annotation) }
         #! unordered_annotation = unordered-kw
         #> unordered-kw = "unordered"
@@ -147,27 +147,31 @@ module JCR
         #! annotation_parameters = multi_line_parameters
         #!
 
-    rule(:primitive_rule)        { ( annotations >> spcCmnt? >> primimitive_def ).as(:primitive_rule) }
-        #! primitive_rule = annotations spcCmnt? primimitive_def
+    rule(:primitive_rule)        { ( annotations >> primimitive_def ).as(:primitive_rule) }
+        #! primitive_rule = annotations primimitive_def
 
     rule(:primimitive_def) {
           string_type | string_range | string_value |
           null_type | boolean_type | true_value | false_value |
-          float_type | float_range | float_value |
+          double_type | float_type | float_range | float_value |
           integer_type | integer_range | integer_value |
-          ip4_type | ip6_type | fqdn_type | idn_type |
+          sized_int_type | sized_uint_type |
+          ipv4_type | ipv6_type | ipaddr_type | fqdn_type | idn_type |
           uri_range | uri_type | phone_type | email_type |
-          full_date_type | full_time_type | date_time_type |
-          base64_type | any
+          datetime_type | date_type | time_type |
+          hex_type | base32hex_type | base32_type | base64url_type | base64_type |
+          any
     }
         #! primimitive_def = string_type / string_range / string_value /
         #!             null_type / boolean_type / true_value / false_value /
-        #!             float_type / float_range / float_value /
+        #!             double_type / float_type / float_range / float_value /
         #!             integer_type / integer_range / integer_value /
-        #!             ip4_type / ip6_type / fqdn_type / idn_type /
+        #!             sized_int_type / sized_uint_type /
+        #!             ipv4_type / ipv6_type / ipaddr_type / fqdn_type / idn_type /
         #!             uri_range / uri_type / phone_type / email_type /
-        #!             full_date_type / full_time_type / date_time_type /
-        #!             base64_type / any
+        #!             datetime_type / date_type / time_type /
+        #!             hex_type / base32hex_type / base32_type / base64url_type / base64_type /
+        #!             any
     rule(:null_type)      { str('null').as(:null) }
         #! null_type = null-kw
         #> null-kw = "null"
@@ -187,6 +191,9 @@ module JCR
         #! string_value = q_string
     rule(:string_range)    { regex }
         #! string_range = regex
+    rule(:double_type)     { str('double').as(:double_v) }
+        #! double_type = double-kw
+        #> double-kw = "double"
     rule(:float_type)     { str('float').as(:float_v) }
         #! float_type = float-kw
         #> float-kw = "float"
@@ -209,12 +216,21 @@ module JCR
         #! integer_max = integer
     rule(:integer_value)   { integer.as(:integer) }
         #! integer_value = integer
-    rule(:ip4_type)       { str('ip4').as(:ip4) }
-        #! ip4_type = ip4-kw
-        #> ip4-kw = "ip4"
-    rule(:ip6_type)       { str('ip6').as(:ip6) }
-        #! ip6_type = ip6-kw
-        #> ip6-kw = "ip6"
+    rule(:sized_int_type)   { ( str('int') >> pos_integer.as(:bits) ).as(:sized_int_v) }
+        #! sized_int_type = int-kw pos_integer
+        #> int-kw = "int"
+    rule(:sized_uint_type)   { ( str('uint') >> pos_integer.as(:bits) ).as(:sized_uint_v) }
+        #! sized_uint_type = uint-kw pos_integer
+        #> uint-kw = "uint"
+    rule(:ipv4_type)       { str('ipv4').as(:ipv4) }
+        #! ipv4_type = ipv4-kw
+        #> ipv4-kw = "ipv4"
+    rule(:ipv6_type)       { str('ipv6').as(:ipv6) }
+        #! ipv6_type = ipv6-kw
+        #> ipv6-kw = "ipv6"
+    rule(:ipaddr_type)       { str('ipaddr').as(:ipaddr) }
+        #! ipaddr_type = ipaddr-kw
+        #> ipaddr-kw = "ipaddr"
     rule(:fqdn_type)      { str('fqdn').as(:fqdn) }
         #! fqdn_type = fqdn-kw
         #> fqdn-kw = "fqdn"
@@ -233,15 +249,27 @@ module JCR
     rule(:email_type)     { str('email').as(:email) }
         #! email_type = email-kw
         #> email-kw = "email"
-    rule(:full_date_type) { str('full-date').as(:full_date) }
-        #! full-date_type = full-date-kw
-        #> full-date-kw = "full-date"
-    rule(:full_time_type) { str('full-time').as(:full_time) }
-        #! full-time_type = full-time-kw
-        #> full-time-kw = "full-time"
-    rule(:date_time_type) { str('date-time').as(:date_time) }
-        #! date-time_type = date-time-kw
-        #> date-time-kw = "date-time"
+    rule(:datetime_type) { str('datetime').as(:datetime) }
+        #! datetime_type = datetime-kw
+        #> datetime-kw = "datetime"
+    rule(:date_type) { str('date').as(:date) }
+        #! date_type = date-kw
+        #> date-kw = "date"
+    rule(:time_type) { str('time').as(:time) }
+        #! time_type = time-kw
+        #> time-kw = "time"
+    rule(:hex_type)    { str('hex').as(:hex) }
+        #! hex_type = hex-kw
+        #> hex-kw = "hex"
+    rule(:base32hex_type)    { str('base32hex').as(:base32hex) }
+        #! base32hex_type = base32hex-kw
+        #> base32hex-kw = "base32hex"
+    rule(:base32_type)    { str('base32').as(:base32) }
+        #! base32_type = base32-kw
+        #> base32-kw = "base32"
+    rule(:base64url_type)    { str('base64url').as(:base64url) }
+        #! base64url_type = base64url-kw
+        #> base64url-kw = "base64url"
     rule(:base64_type)    { str('base64').as(:base64) }
         #! base64_type = base64-kw
         #> base64-kw = "base64"
@@ -250,9 +278,9 @@ module JCR
         #> any-kw = "any"
         #!
 
-    rule(:object_rule)  { ( annotations >> spcCmnt?.maybe >>
+    rule(:object_rule)  { ( annotations >>
               str('{') >> spcCmnt? >> object_items.maybe >> spcCmnt? >> str('}') ).as(:object_rule) }
-        #! object_rule = annotations spcCmnt? "{" spcCmnt? [ object_items spcCmnt? ] "}"
+        #! object_rule = annotations "{" spcCmnt? [ object_items spcCmnt? ] "}"
     rule(:object_items) { object_item >> (( spcCmnt? >> sequence_combiner >> spcCmnt? >> object_item ).repeat(1) |
                                           ( spcCmnt? >> choice_combiner >> spcCmnt? >> object_item ).repeat(1) ).maybe }
         #! object_items = object_item (*( sequence_combiner object_item ) /
@@ -265,9 +293,9 @@ module JCR
         #! object_group = "(" spcCmnt? [ object_items spcCmnt? ] ")"
         #!
 
-      rule(:array_rule)   { ( annotations >> spcCmnt?.maybe >>
+      rule(:array_rule)   { ( annotations >>
               str('[') >> spcCmnt? >> array_items.maybe >> spcCmnt? >> str(']') ).as(:array_rule) }
-        #! array_rule = annotations spcCmnt? "[" spcCmnt? [ array_items spcCmnt? ] "]"
+        #! array_rule = annotations "[" spcCmnt? [ array_items spcCmnt? ] "]"
     rule(:array_items)  { array_item >> (( spcCmnt? >> sequence_combiner >> spcCmnt? >> array_item ).repeat(1) |
                                          ( spcCmnt? >> choice_combiner >> spcCmnt? >> array_item ).repeat(1) ).maybe }
         #! array_items = array_item (*( sequence_combiner array_item ) /
@@ -312,20 +340,22 @@ module JCR
     rule(:zero_or_more)        { str('*').as(:zero_or_more) }
         #! zero_or_more = "*"
     rule(:min_max_repetition)  {      # This includes min_only and max_only cases
-            p_integer.maybe.as(:repetition_min) >> str("..").as(:repetition_interval) >> p_integer.maybe.as(:repetition_max) }
+            non_neg_integer.maybe.as(:repetition_min) >> str("..").as(:repetition_interval) >> non_neg_integer.maybe.as(:repetition_max) }
         #! min_max_repetition = min_repeat ".." max_repeat
         #! min_repetition = min_repeat ".."
         #! max_repetition = ".."  max_repeat
-        #! min_repeat = p_integer
-        #! max_repeat = p_integer
-    rule(:specific_repetition) { p_integer.as(:specific_repetition) }
-        #! specific_repetition = p_integer
+        #! min_repeat = non_neg_integer
+        #! max_repeat = non_neg_integer
+    rule(:specific_repetition) { non_neg_integer.as(:specific_repetition) }
+        #! specific_repetition = non_neg_integer
         #!
 
-    rule(:integer)   { str('-').maybe >> match('[0-9]').repeat(1) }
-        #! integer = ["-"] 1*DIGIT
-    rule(:p_integer) { match('[0-9]').repeat(1) }
-        #! p_integer = 1*DIGIT
+    rule(:integer)   { str('0') | str('-').maybe >> pos_integer }
+        #! integer = "0" / ["-"] pos_integer
+    rule(:non_neg_integer) { str('0') | pos_integer }
+        #! non_neg_integer = "0" / pos_integer
+    rule(:pos_integer) { match('[1-9]') >> match('[0-9]').repeat }
+        #! pos_integer = digit1-9 *DIGIT
         #!
 
     rule(:float)     { str('-').maybe >> match('[0-9]').repeat(1) >> str('.' ) >> match('[0-9]').repeat(1) }

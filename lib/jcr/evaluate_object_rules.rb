@@ -44,15 +44,15 @@ module JCR
     rules, annotations = get_rules_and_annotations( jcr )
 
     # if the data is not an object (Hash)
-    return evaluate_reject( annotations,
+    return evaluate_not( annotations,
       Evaluation.new( false, "#{data} is not an object for #{raised_rule(jcr,rule_atom)}"), econs ) unless data.is_a? Hash
 
     # if the object has no members and there are zero sub-rules (it is suppose to be empty)
-    return evaluate_reject( annotations,
+    return evaluate_not( annotations,
       Evaluation.new( true, nil ), econs ) if rules.empty? && data.length == 0
 
     # if the object has members and there are zero sub-rules (it is suppose to be empty)
-    return evaluate_reject( annotations,
+    return evaluate_not( annotations,
       Evaluation.new( false, "Non-empty object for #{raised_rule(jcr,rule_atom)}" ), econs ) if rules.empty? && data.length != 0
 
     retval = nil
@@ -64,7 +64,7 @@ module JCR
       if rule[:choice_combiner] && retval && retval.success
         next
       elsif rule[:sequence_combiner] && retval && !retval.success
-        return evaluate_reject( annotations, retval, econs ) # short circuit
+        return evaluate_not( annotations, retval, econs ) # short circuit
       end
 
       repeat_min, repeat_max = get_repetitions( rule, econs )
@@ -150,7 +150,7 @@ module JCR
 
     end # end if grule else
 
-    return evaluate_reject( annotations, retval, econs )
+    return evaluate_not( annotations, retval, econs )
   end
 
   def self.object_to_s( jcr, shallow=true )
