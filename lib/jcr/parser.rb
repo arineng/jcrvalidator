@@ -54,11 +54,11 @@ module JCR
         #!                        (directive_def / multi_line_tbd_directive_d) spcCmnt? "}"
     rule(:directive_def) { jcr_version_d | ruleset_id_d | import_d }
         #! directive_def = jcr_version_d / ruleset_id_d / import_d
-    rule(:jcr_version_d) { (str('jcr-version') >> spaces >> p_integer.as(:major_version) >> str('.') >> p_integer.as(:minor_version)).as(:jcr_version_d) }
+    rule(:jcr_version_d) { (str('jcr-version') >> spaces >> non_neg_integer.as(:major_version) >> str('.') >> non_neg_integer.as(:minor_version)).as(:jcr_version_d) }
         #! jcr_version_d = jcr-version-kw spaces major_version "." minor_version
         #> jcr-version-kw = "jcr-version"
-        #! major_version = p_integer
-        #! minor_version = p_integer
+        #! major_version = non_neg_integer
+        #! minor_version = non_neg_integer
     rule(:ruleset_id_d)  { (str('ruleset-id') >> spaces >> ruleset_id.as(:ruleset_id)).as(:ruleset_id_d) }
         #! ruleset_id_d = ruleset-id-kw spaces ruleset_id
         #> ruleset-id-kw = "ruleset-id"
@@ -155,6 +155,7 @@ module JCR
           null_type | boolean_type | true_value | false_value |
           double_type | float_type | float_range | float_value |
           integer_type | integer_range | integer_value |
+          sized_int_type | sized_uint_type |
           ipv4_type | ipv6_type | ipaddr_type | fqdn_type | idn_type |
           uri_range | uri_type | phone_type | email_type |
           datetime_type | date_type | time_type |
@@ -165,6 +166,7 @@ module JCR
         #!             null_type / boolean_type / true_value / false_value /
         #!             double_type / float_type / float_range / float_value /
         #!             integer_type / integer_range / integer_value /
+        #!             sized_int_type / sized_uint_type /
         #!             ipv4_type / ipv6_type / ipaddr_type / fqdn_type / idn_type /
         #!             uri_range / uri_type / phone_type / email_type /
         #!             datetime_type / date_type / time_type /
@@ -214,6 +216,12 @@ module JCR
         #! integer_max = integer
     rule(:integer_value)   { integer.as(:integer) }
         #! integer_value = integer
+    rule(:sized_int_type)   { ( str('int') >> pos_integer.as(:bits) ).as(:sized_int_v) }
+        #! sized_int_type = int-kw pos_integer
+        #> int-kw = "int"
+    rule(:sized_uint_type)   { ( str('uint') >> pos_integer.as(:bits) ).as(:sized_uint_v) }
+        #! sized_uint_type = uint-kw pos_integer
+        #> uint-kw = "uint"
     rule(:ipv4_type)       { str('ipv4').as(:ipv4) }
         #! ipv4_type = ipv4-kw
         #> ipv4-kw = "ipv4"
@@ -332,20 +340,22 @@ module JCR
     rule(:zero_or_more)        { str('*').as(:zero_or_more) }
         #! zero_or_more = "*"
     rule(:min_max_repetition)  {      # This includes min_only and max_only cases
-            p_integer.maybe.as(:repetition_min) >> str("..").as(:repetition_interval) >> p_integer.maybe.as(:repetition_max) }
+            non_neg_integer.maybe.as(:repetition_min) >> str("..").as(:repetition_interval) >> non_neg_integer.maybe.as(:repetition_max) }
         #! min_max_repetition = min_repeat ".." max_repeat
         #! min_repetition = min_repeat ".."
         #! max_repetition = ".."  max_repeat
-        #! min_repeat = p_integer
-        #! max_repeat = p_integer
-    rule(:specific_repetition) { p_integer.as(:specific_repetition) }
-        #! specific_repetition = p_integer
+        #! min_repeat = non_neg_integer
+        #! max_repeat = non_neg_integer
+    rule(:specific_repetition) { non_neg_integer.as(:specific_repetition) }
+        #! specific_repetition = non_neg_integer
         #!
 
-    rule(:integer)   { str('-').maybe >> match('[0-9]').repeat(1) }
-        #! integer = ["-"] 1*DIGIT
-    rule(:p_integer) { match('[0-9]').repeat(1) }
-        #! p_integer = 1*DIGIT
+    rule(:integer)   { str('0') | str('-').maybe >> pos_integer }
+        #! integer = "0" / ["-"] pos_integer
+    rule(:non_neg_integer) { str('0') | pos_integer }
+        #! non_neg_integer = "0" / pos_integer
+    rule(:pos_integer) { match('[1-9]') >> match('[0-9]').repeat }
+        #! pos_integer = digit1-9 *DIGIT
         #!
 
     rule(:float)     { str('-').maybe >> match('[0-9]').repeat(1) >> str('.' ) >> match('[0-9]').repeat(1) }

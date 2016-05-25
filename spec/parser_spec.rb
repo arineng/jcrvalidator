@@ -219,6 +219,16 @@ describe 'parser' do
     expect(tree[0][:rule][:primitive_rule][:integer_max]).to eq("-100")
   end
 
+  it 'should parse a sized int value without a range' do
+    tree = JCR.parse( '$trule = int32' )
+    expect(tree[0][:rule][:primitive_rule][:sized_int_v][:bits]).to eq("32")
+  end
+
+  it 'should parse a sized int value without a range' do
+    tree = JCR.parse( '$trule = uint32' )
+    expect(tree[0][:rule][:primitive_rule][:sized_uint_v][:bits]).to eq("32")
+  end
+
   it 'should parse a double value' do
     tree = JCR.parse( '$trule = double' )
     expect(tree[0][:rule][:primitive_rule][:double_v]).to eq("double")

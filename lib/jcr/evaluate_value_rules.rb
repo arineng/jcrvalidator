@@ -66,6 +66,20 @@ module JCR
         return bad_value( jcr, rule_atom, min, data ) unless data >= min
         max = jcr[:integer_max].to_s.to_i
         return bad_value( jcr, rule_atom, max, data ) unless data <= max
+      when jcr[:sized_int_v]
+        bits = jcr[:sized_int_v][:bits].to_i
+        return bad_value( jcr, rule_atom, "int" + bits.to_s, data ) unless data.is_a?( Fixnum )
+        min = -(2**(bits-1))
+        return bad_value( jcr, rule_atom, min, data ) unless data >= min
+        max = 2**(bits-1)-1
+        return bad_value( jcr, rule_atom, max, data ) unless data <= max
+      when jcr[:sized_uint_v]
+        bits = jcr[:sized_uint_v][:bits].to_i
+        return bad_value( jcr, rule_atom, "int" + bits.to_s, data ) unless data.is_a?( Fixnum )
+        min = 0
+        return bad_value( jcr, rule_atom, min, data ) unless data >= min
+        max = 2**bits-1
+        return bad_value( jcr, rule_atom, max, data ) unless data <= max
 
       #
       # floats
@@ -399,6 +413,10 @@ module JCR
         min = rule[:integer_min].to_s.to_i
         max = rule[:integer_max].to_s.to_i
         retval =  "#{min}..#{max}"
+      when rule[:sized_int_v]
+        retval =  "int" + rule[:sized_int_v][:bits].to_s
+      when rule[:sized_uint_v]
+        retval =  "uint" + rule[:sized_uint_v][:bits].to_s
 
       when rule[:double_v]
         retval =  rule[:double_v].to_s
