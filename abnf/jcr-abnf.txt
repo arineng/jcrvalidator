@@ -68,8 +68,8 @@ tbd-annotation   = annotation-name [ spaces annotation-parameters ]
 annotation-name  = name
 annotation-parameters = multi-line-parameters
 
-primitive-rule   = annotations primimitive-def
-primimitive-def  = string-type / string-range / string-value /
+primitive-rule   = annotations primitive-def
+primitive-def    = string-type / string-range / string-value /
                    null-type / boolean-type / true-value / false-value /
                    double-type / float-type / float-range / float-value /
                    integer-type / integer-range / integer-value /

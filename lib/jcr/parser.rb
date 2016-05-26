@@ -153,10 +153,10 @@ module JCR
         #! annotation_parameters = multi_line_parameters
         #!
 
-    rule(:primitive_rule)        { ( annotations >> primimitive_def ).as(:primitive_rule) }
-        #! primitive_rule = annotations primimitive_def
+    rule(:primitive_rule)        { ( annotations >> primitive_def ).as(:primitive_rule) }
+        #! primitive_rule = annotations primitive_def
 
-    rule(:primimitive_def) {
+    rule(:primitive_def) {
           string_type | string_range | string_value |
           null_type | boolean_type | true_value | false_value |
           double_type | float_type | float_range | float_value |
@@ -168,7 +168,7 @@ module JCR
           hex_type | base32hex_type | base32_type | base64url_type | base64_type |
           any
     }
-        #! primimitive_def = string_type / string_range / string_value /
+        #! primitive_def = string_type / string_range / string_value /
         #!             null_type / boolean_type / true_value / false_value /
         #!             double_type / float_type / float_range / float_value /
         #!             integer_type / integer_range / integer_value /
@@ -416,8 +416,8 @@ module JCR
 
   class Transformer < Parslet::Transform
 
-    rule(:rule_def=>simple(:primimitive_def)) { puts "found rule definition" }
-    rule(:primimitive_def => simple(:x)) { puts "value sought is " + x }
+    rule(:rule_def=>simple(:primitive_def)) { puts "found rule definition" }
+    rule(:primitive_def => simple(:x)) { puts "value sought is " + x }
 
   end
 
