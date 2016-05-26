@@ -106,10 +106,14 @@ module JCR
         #! name              = ALPHA *( ALPHA / DIGIT / "-" / "_" )
         #!
 
-    rule(:rule_def)          { member_rule | type_rule | group_rule }
-        #! rule_def = member_rule / type_rule / group_rule
-    rule(:type_rule)         { value_rule | type_choice_rule | target_rule_name }
-        #! type_rule = value_rule / type_choice_rule / target_rule_name
+    rule(:rule_def)          { member_rule | (type_designator >> rule_def_type_rule) | 
+                               array_rule | object_rule | group_rule | target_rule_name }
+        #! rule_def = member_rule / type_designator rule_def_type_rule /
+        #!            array_rule / object_rule / group_rule / target_rule_name
+    rule(:type_designator)   { str('type') >> spcCmnt.repeat(1) | str(':') >> spcCmnt? }
+        #! type_designator = "type" 1*spcCmnt / ":" spcCmnt?
+    rule(:rule_def_type_rule)     { value_rule | type_choice_rule }
+        #! rule_def_type_rule = value_rule / type_choice_rule
     rule(:value_rule)         { primitive_rule | array_rule | object_rule }
         #! value_rule = primitive_rule / array_rule / object_rule
     rule(:member_rule)       { ( annotations >> member_name_spec >> spcCmnt? >> str(':') >> spcCmnt? >> type_rule ).as(:member_rule) }
@@ -117,6 +121,8 @@ module JCR
         #!               member_name_spec spcCmnt? ":" spcCmnt? type_rule
     rule(:member_name_spec)  { regex.as(:member_regex) | q_string.as(:member_name) }
         #! member_name_spec = regex / q_string
+    rule(:type_rule)         { value_rule | type_choice_rule | target_rule_name }
+        #! type_rule = value_rule / type_choice_rule / target_rule_name
     rule(:type_choice_rule)  { spcCmnt? >> type_choice }
         #! type_choice_rule = spcCmnt? type_choice
     rule(:type_choice)       { ( annotations >> str('(') >> type_choice_items >> ( choice_combiner >> type_choice_items ).repeat >> str(')') ).as(:group_rule) }
