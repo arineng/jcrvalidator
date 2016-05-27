@@ -1,5 +1,4 @@
-jcr              = *( sp-cmt / directive ) [ root-rule ]
-                   *( sp-cmt / directive / rule )
+jcr              = *( sp-cmt / directive / root-rule / rule )
 
 sp-cmt           = spaces / comment
 spaces           = 1*( WSP / CR / LF )
