@@ -44,12 +44,15 @@ rule-name        = name
 target-rule-name = annotations "$" [ ruleset-id-alias "." ] rule-name
 name             = ALPHA *( ALPHA / DIGIT / "-" / "-" )
 
-rule-def         = member-rule / type-rule / group-rule
-type-rule        = value-rule / type-choice-rule / target-rule-name
+rule-def         = member-rule / type-designator rule-def-type-rule /
+                   array-rule / object-rule / group-rule / target-rule-name
+type-designator  = "type" 1*sp-cmt / ":" *sp-cmt
+rule-def-type-rule = value-rule / type-choice-rule
 value-rule       = primitive-rule / array-rule / object-rule
 member-rule      = annotations
                    member-name-spec *sp-cmt ":" *sp-cmt type-rule
 member-name-spec = regex / q-string
+type-rule        = value-rule / type-choice-rule / target-rule-name
 type-choice-rule = *sp-cmt type-choice
 type-choice      = annotations "(" type-choice-items
                    *( choice-combiner type-choice-items ) ")"
@@ -65,8 +68,8 @@ tbd-annotation   = annotation-name [ spaces annotation-parameters ]
 annotation-name  = name
 annotation-parameters = multi-line-parameters
 
-primitive-rule   = annotations primimitive-def
-primimitive-def  = string-type / string-range / string-value /
+primitive-rule   = annotations primitive-def
+primitive-def    = string-type / string-range / string-value /
                    null-type / boolean-type / true-value / false-value /
                    double-type / float-type / float-range / float-value /
                    integer-type / integer-range / integer-value /

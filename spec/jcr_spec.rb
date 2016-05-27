@@ -51,7 +51,7 @@ EX
 # jcr-version 0.5
 
 [ $my_rule @* ]
-$my_rule = 0..2
+$my_rule =: 0..2
 
 EX
     ctx = JCR.ingest_ruleset( ex )
@@ -65,8 +65,8 @@ EX
 # jcr-version 0.5
 
 [ $my_integers @2, $my_strings @2 ]
-$my_integers = 0..2
-$my_strings = ( "foo" | "bar" )
+$my_integers =: 0..2
+$my_strings =: ( "foo" | "bar" )
 
 EX
     data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
@@ -81,8 +81,8 @@ EX
 # jcr-version 0.5
 
 [ $my_integers @2, $my_strings @2 ]
-$my_integers = 0..2
-$my_strings = ( "foo" | "bar" )
+$my_integers =: 0..2
+$my_strings =: ( "foo" | "bar" )
 
 EX
     data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
@@ -96,8 +96,8 @@ EX
 # jcr-version 0.5
 
 [ $my_integers @2, $my_strings @2 ]
-$my_integers = 0..2
-$my_strings = ( "foo" | "bar" )
+$my_integers =: 0..2
+$my_strings =: ( "foo" | "bar" )
 
 EX
     data1 = JSON.parse( '[ 1, 2, "foo", "bar" ]')
@@ -115,8 +115,8 @@ EX
 # jcr-version 0.5
 
 [ $my_integers @2, $my_strings @2 ]
-$my_integers = 0..2
-$my_strings = ( "foo" | "bar" )
+$my_integers =: 0..2
+$my_strings =: ( "foo" | "bar" )
 
 EX
     data1 = JSON.parse( '[ 1, 2, "foo", "bar" ]')
@@ -137,12 +137,12 @@ EX
 # jcr-version 0.5
 
 [ $my_integers @2, $my_strings @2 ]
-$my_integers=integer
-$my_strings=( "foo" | "bar" )
+$my_integers=:integer
+$my_strings=type ( "foo" | "bar" )
 
 EX
     ov = <<OV
-$my_integers=0..2
+$my_integers=:0..2
 OV
     data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
     ctx = JCR::Context.new( ex )
@@ -157,12 +157,12 @@ OV
 # jcr-version 0.5
 
 [ $my_integers @2, $my_strings @2 ]
-$my_integers= integer
-$my_strings =( "foo" | "bar" )
+$my_integers=: integer
+$my_strings =:( "foo" | "bar" )
 
 EX
     ov = <<OV
-$my_integers =0..1
+$my_integers =:0..1
 OV
     data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
     ctx = JCR::Context.new( ex )
@@ -177,12 +177,12 @@ OV
 # jcr-version 0.5
 
 [ $my_integers @2, $my_strings @2 ]
-$my_integers =integer
-$my_strings =( "foo" | "bar" )
+$my_integers =:integer
+$my_strings =:( "foo" | "bar" )
 
 EX
     ov = <<OV
-$my_integers=0..1
+$my_integers=:0..1
 OV
     data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
     ctx = JCR::Context.new( ex )
@@ -199,9 +199,9 @@ OV
 # jcr-version 0.5
 
 [ $my_integers @2, $my_strings @2 ]
-$oroot =@{root} [ $my_strings @2, $my_integers @2 ]
-$my_integers=0..2
-$my_strings=( "foo" | "bar" )
+$oroot =:@{root} [ $my_strings @2, $my_integers @2 ]
+$my_integers=:0..2
+$my_strings=:( "foo" | "bar" )
 
 EX
     data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
@@ -222,8 +222,8 @@ EX
 # jcr-version 0.5
 
 [ $my_integers @1..2, $my_strings @2 ]
-$my_integers = 0..2
-$my_strings = ( "foo" | "bar" )
+$my_integers = :0..2
+$my_strings = :( "foo" | "bar" )
 
 EX
     my_eval_count = 0
@@ -247,8 +247,8 @@ EX
 # jcr-version 0.5
 
 [ $my_integers @2, $my_strings @2 ]
-$my_integers = 0..2
-$my_strings =( "foo" | "bar" )
+$my_integers = :0..2
+$my_strings =:( "foo" | "bar" )
 
 EX
     my_eval_count = 0
@@ -272,8 +272,8 @@ EX
 # jcr-version 0.5
 
 [ $my_integers @2, $my_strings @2 ]
-$my_integers= 0..2
-$my_strings= ( "foo" | "bar" )
+$my_integers= :0..2
+$my_strings= :( "foo" | "bar" )
 
 EX
     my_eval_count = 0
@@ -297,8 +297,8 @@ EX
 # jcr-version 0.5
 
 [ $my_integers @2, $my_strings @2 ]
-$my_integers =0..2
-$my_strings = ( "foo" | "bar" )
+$my_integers =:0..2
+$my_strings = :( "foo" | "bar" )
 
 EX
     my_eval_count = 0
@@ -324,9 +324,9 @@ EX
 [ $my_integers @2, $my_strings @2 ]
 
 ; this will be the rule we custom validate
-$my_integers = 0..4
+$my_integers = :0..4
 
-$my_strings = ( "foo" | "bar" )
+$my_strings = :( "foo" | "bar" )
 
 RULESET
 
