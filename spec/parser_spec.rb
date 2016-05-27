@@ -806,15 +806,15 @@ describe 'parser' do
   end
 
   it 'should parse two top array rules' do
-    JCR.parse( '$trule = integer [ any @* ] [ $trule @2 ]' )
+    JCR.parse( '$trule = "baz":integer [ any @* ] [ integer @2 ]' )
   end
 
   it 'should parse two top array rules' do
-    JCR.parse( '[ any @* ] $trule = integer [ $trule @2 ]' )
+    JCR.parse( '[ any @* ] $trule = "baz":integer [ integer @2 ]' )
   end
 
   it 'should parse two top array rules' do
-    JCR.parse( '[ any @* ] [ $trule @2 ] $trule = integer' )
+    JCR.parse( '[ any @* ] [ integer @2 ] $trule = "baz":integer' )
   end
 
   it 'should parse a top object rule' do
@@ -826,15 +826,15 @@ describe 'parser' do
   end
 
   it 'should parse two top object rules' do
-    tree = JCR.parse( '$trule = integer { "foo" :$trule }{ "bar" :any }' )
+    tree = JCR.parse( '$trule = "baz":integer { "foo" :integer }{ "bar" :any }' )
   end
 
   it 'should parse two top object rules' do
-    tree = JCR.parse( '{ "foo" :$trule }$trule = integer{ "bar" :any }' )
+    tree = JCR.parse( '{ "foo" :integer }$trule = "baz":integer{ "bar" :any }' )
   end
 
   it 'should parse two top object rules' do
-    tree = JCR.parse( '{"foo":$trule}{"bar":any}$trule=integer' )
+    tree = JCR.parse( '{"foo":integer}{"bar":any}$trule="baz":integer' )
   end
 
   it 'should parse a top value rule and another rules separated by a comment' do
