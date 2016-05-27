@@ -21,9 +21,8 @@ module JCR
 
     root(:jcr)
 
-    rule(:jcr) { ( spcCmnt | directive ).repeat >> root_rule.maybe >> ( spcCmnt | directive | rule ).repeat }
-    #! jcr = *( sp-cmt / directive ) [ root_rule ]
-    #!       *( sp-cmt / directive / rule )
+    rule(:jcr) { ( spcCmnt | directive | root_rule | rule ).repeat }
+    #! jcr = *( sp-cmt / directive / root_rule / rule )
     #!
 
     rule(:spcCmnt)  { spaces | comment }
