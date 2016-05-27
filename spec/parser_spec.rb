@@ -822,12 +822,40 @@ describe 'parser' do
     tree = JCR.parse( '[ any @* ]' )
   end
 
-  it 'should not parse two top array rules' do
-    expect{ JCR.parse( '[ any @* ] [ integer @2 ]' ) }.to raise_error Parslet::ParseFailed
+  it 'should parse two top array rules' do
+    JCR.parse( '[ any @* ] [ integer @2 ]' )
+  end
+
+  it 'should parse two top array rules' do
+    JCR.parse( '$trule = "baz":integer [ any @* ] [ integer @2 ]' )
+  end
+
+  it 'should parse two top array rules' do
+    JCR.parse( '[ any @* ] $trule = "baz":integer [ integer @2 ]' )
+  end
+
+  it 'should parse two top array rules' do
+    JCR.parse( '[ any @* ] [ integer @2 ] $trule = "baz":integer' )
   end
 
   it 'should parse a top object rule' do
     tree = JCR.parse( '{ "foo" :any }' )
+  end
+
+  it 'should parse two top object rules' do
+    tree = JCR.parse( '{ "foo" :any }{ "bar" :any }' )
+  end
+
+  it 'should parse two top object rules' do
+    tree = JCR.parse( '$trule = "baz":integer { "foo" :integer }{ "bar" :any }' )
+  end
+
+  it 'should parse two top object rules' do
+    tree = JCR.parse( '{ "foo" :integer }$trule = "baz":integer{ "bar" :any }' )
+  end
+
+  it 'should parse two top object rules' do
+    tree = JCR.parse( '{"foo":integer}{"bar":any}$trule="baz":integer' )
   end
 
   it 'should parse a top value rule and another rules separated by a comment' do
@@ -1222,7 +1250,7 @@ EX12
   end
 
   it 'should error with member with group of two ANDED values' do
-    expect{ JCR.parse( '$mrule = "thing" ( integer , float ) ' ) }.to raise_error Parslet::ParseFailed
+    expect{ JCR.parse( '$mrule = "thing" :( integer , float ) ' ) }.to raise_error Parslet::ParseFailed
   end
 
   it 'should error with member with group of ORed and ANDED values' do
