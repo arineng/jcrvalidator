@@ -175,7 +175,7 @@ describe 'evaluate_value_rules' do
   end
 
   it 'should pass an integer at below max when no min is specified' do
-    tree = JCR.parse( '$trule= ..3' )
+    tree = JCR.parse( '$trule=: ..3' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 1, JCR::EvalConditions.new( mapping, nil ) )
@@ -183,7 +183,7 @@ describe 'evaluate_value_rules' do
   end
 
   it 'should pass an integer that is max when no min is specified' do
-    tree = JCR.parse( '$trule= ..3' )
+    tree = JCR.parse( '$trule=: ..3' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 3, JCR::EvalConditions.new( mapping, nil ) )
@@ -191,7 +191,7 @@ describe 'evaluate_value_rules' do
   end
 
   it 'should fail an integer that is above the max when no min is specified' do
-    tree = JCR.parse( '$trule= ..3' )
+    tree = JCR.parse( '$trule=: ..3' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 4, JCR::EvalConditions.new( mapping, nil ) )
@@ -207,7 +207,7 @@ describe 'evaluate_value_rules' do
   end
 
   it 'should pass an integer that is min when no max is specified' do
-    tree = JCR.parse( '$trule= 1..' )
+    tree = JCR.parse( '$trule=: 1..' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 1, JCR::EvalConditions.new( mapping, nil ) )
@@ -215,7 +215,7 @@ describe 'evaluate_value_rules' do
   end
 
   it 'should pass an integer that is over the min when no max is specified' do
-    tree = JCR.parse( '$trule= 1..' )
+    tree = JCR.parse( '$trule=: 1..' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 3, JCR::EvalConditions.new( mapping, nil ) )
@@ -223,7 +223,7 @@ describe 'evaluate_value_rules' do
   end
 
   it 'should fail an integer that is below the min when no max is specified' do
-    tree = JCR.parse( '$trule= 1..' )
+    tree = JCR.parse( '$trule=: 1..' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 0, JCR::EvalConditions.new( mapping, nil ) )
@@ -499,7 +499,7 @@ describe 'evaluate_value_rules' do
   end
 
   it 'should pass a float at the min of a range when no max is specified' do
-    tree = JCR.parse( '$trule= 1.1..' )
+    tree = JCR.parse( '$trule=: 1.1..' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 1.1, JCR::EvalConditions.new( mapping, nil ) )
@@ -507,7 +507,7 @@ describe 'evaluate_value_rules' do
   end
 
   it 'should pass a float at above the min of a range when no max is specified' do
-    tree = JCR.parse( '$trule= 1.1..' )
+    tree = JCR.parse( '$trule=: 1.1..' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 3.1, JCR::EvalConditions.new( mapping, nil ) )
@@ -515,7 +515,7 @@ describe 'evaluate_value_rules' do
   end
 
   it 'should fail a float at below the min of a range when no max is specified' do
-    tree = JCR.parse( '$trule= 1.1..' )
+    tree = JCR.parse( '$trule=: 1.1..' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 0.1, JCR::EvalConditions.new( mapping, nil ) )
@@ -531,7 +531,7 @@ describe 'evaluate_value_rules' do
   end
 
   it 'should pass a float at the max of a range when no min is specified' do
-    tree = JCR.parse( '$trule= ..3.1' )
+    tree = JCR.parse( '$trule=: ..3.1' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 3.1, JCR::EvalConditions.new( mapping, nil ) )
@@ -539,7 +539,7 @@ describe 'evaluate_value_rules' do
   end
 
   it 'should pass a float at below the max of a range when no min is specified' do
-    tree = JCR.parse( '$trule= ..3.1' )
+    tree = JCR.parse( '$trule=: ..3.1' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 1.1, JCR::EvalConditions.new( mapping, nil ) )
@@ -547,7 +547,7 @@ describe 'evaluate_value_rules' do
   end
 
   it 'should fail a float at above the max of a range when no min is specified' do
-    tree = JCR.parse( '$trule= ..3.1' )
+    tree = JCR.parse( '$trule=: ..3.1' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], 4.1, JCR::EvalConditions.new( mapping, nil ) )
