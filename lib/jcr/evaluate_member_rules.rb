@@ -63,10 +63,10 @@ module JCR
 
     if member_match
       e = evaluate_rule( rule, rule_atom, data[ 1 ], econs )
-      return evaluate_reject( annotations, e, econs )
+      return evaluate_not( annotations, e, econs )
     end
 
-    return evaluate_reject( annotations,
+    return evaluate_not( annotations,
        Evaluation.new( false, "#{match_spec} does not match #{data[0]} for #{raised_rule( jcr, rule_atom)}" ), econs )
 
   end

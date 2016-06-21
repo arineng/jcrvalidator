@@ -182,7 +182,7 @@ module JCR
           when sub[:unordered_annotation]
             annotations << sub
             i = i + 1
-          when sub[:reject_annotation]
+          when sub[:not_annotation]
             annotations << sub
             i = i + 1
           when sub[:root_annotation]
@@ -198,17 +198,17 @@ module JCR
     return rules, annotations
   end
 
-  def self.evaluate_reject annotations, evaluation, econs
-    reject = false
+  def self.evaluate_not annotations, evaluation, econs
+    is_not = false
     annotations.each do |a|
-      if a[:reject_annotation]
-        reject = true
+      if a[:not_annotation]
+        is_not = true
         break
       end
     end
 
-    if reject
-      trace( econs, "Rejection annotation changing result from #{evaluation.success} to #{!evaluation.success}")
+    if is_not
+      trace( econs, "Not annotation changing result from #{evaluation.success} to #{!evaluation.success}")
       evaluation.success = !evaluation.success
     end
     return evaluation
@@ -380,8 +380,8 @@ module JCR
       case
         when a[:unordered_annotation]
           retval = retval + " @{unordered}"
-        when a[:reject_annotation]
-          retval = retval + " @{reject}"
+        when a[:not_annotation]
+          retval = retval + " @{not}"
         when a[:root_annotation]
           retval = retval + " @{root}"
         else

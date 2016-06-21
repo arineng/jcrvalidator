@@ -46,14 +46,14 @@ module JCR
 
     rules.each do |rule|
       if rule[:choice_combiner] && retval && retval.success
-        return evaluate_reject( annotations, retval, econs ) # short circuit
+        return evaluate_not( annotations, retval, econs ) # short circuit
       elsif rule[:sequence_combiner] && retval && !retval.success
-        return evaluate_reject( annotations, retval, econs ) # short circuit
+        return evaluate_not( annotations, retval, econs ) # short circuit
       end
       retval = evaluate_rule( rule, rule_atom, data, econs, behavior )
     end
 
-    return evaluate_reject( annotations, retval, econs )
+    return evaluate_not( annotations, retval, econs )
   end
 
   def self.group_to_s( jcr, shallow=true)
