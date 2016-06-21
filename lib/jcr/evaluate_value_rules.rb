@@ -60,6 +60,14 @@ module JCR
       when jcr[:integer]
         i = jcr[:integer].to_s.to_i
         return bad_value( jcr, rule_atom, i, data ) unless data == i
+      when jcr[:integer_min] != nil && jcr[:integer_max] == nil
+        return bad_value( jcr, rule_atom, "integer", data ) unless data.is_a?( Fixnum )
+        min = jcr[:integer_min].to_s.to_i
+        return bad_value( jcr, rule_atom, min, data ) unless data >= min
+      when jcr[:integer_max] == nil && jcr[:integer_max] != nil
+        return bad_value( jcr, rule_atom, "integer", data ) unless data.is_a?( Fixnum )
+        max = jcr[:integer_max].to_s.to_i
+        return bad_value( jcr, rule_atom, max, data ) unless data <= max
       when jcr[:integer_min],jcr[:integer_max]
         return bad_value( jcr, rule_atom, "integer", data ) unless data.is_a?( Fixnum )
         min = jcr[:integer_min].to_s.to_i
@@ -79,6 +87,14 @@ module JCR
       when jcr[:float]
         f = jcr[:float].to_s.to_f
         return bad_value( jcr, rule_atom, f, data ) unless data == f
+      when jcr[:float_min] != nil && jcr[:float_max] == nil
+        return bad_value( jcr, rule_atom, "float", data ) unless data.is_a?( Float )
+        min = jcr[:float_min].to_s.to_f
+        return bad_value( jcr, rule_atom, min, data ) unless data >= min
+      when jcr[:float_min] == nil && jcr[:float_max] != nil
+        return bad_value( jcr, rule_atom, "float", data ) unless data.is_a?( Float )
+        max = jcr[:float_max].to_s.to_f
+        return bad_value( jcr, rule_atom, max, data ) unless data <= max
       when jcr[:float_min],jcr[:float_max]
         return bad_value( jcr, rule_atom, "float", data ) unless data.is_a?( Float )
         min = jcr[:float_min].to_s.to_f
@@ -299,8 +315,10 @@ module JCR
       when rule[:integer]
         retval =  rule[:integer].to_s.to_i
       when rule[:integer_min],rule[:integer_max]
-        min = rule[:integer_min].to_s.to_i
-        max = rule[:integer_max].to_s.to_i
+        min = "-INF"
+        max = "INF"
+        min = rule[:integer_min].to_s.to_i if rule[:integer_min]
+        max = rule[:integer_max].to_s.to_i if rule[:integer_max]
         retval =  "#{min}..#{max}"
 
       when rule[:float_v]
@@ -308,8 +326,10 @@ module JCR
       when rule[:float]
         retval =  rule[:float].to_s.to_f
       when rule[:float_min],rule[:float_max]
-        min = rule[:float_min].to_s.to_f
-        max = rule[:float_max].to_s.to_f
+        min = "-INF"
+        max = "INF"
+        min = rule[:float_min].to_s.to_f if rule[:float_min]
+        max = rule[:float_max].to_s.to_f if rule[:float_max]
         retval =  "#{min}..#{max}"
 
       when rule[:true_v]
