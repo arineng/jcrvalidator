@@ -917,6 +917,21 @@ EX
     tree = JCR.parse( ex )
   end
 
+  it 'should parse multiple nameless or root rules' do
+    ex = <<EX1A
+[ 1, 2, 3 ]
+
+[ "foo", "bar", "baz", string ]
+
+{
+  "mom": string,
+  "applie pie": integer,
+  "chevrolet": { "wheels" : 4, "seats": 2, "engine" : "big" }
+}
+EX1A
+    tree = JCR.parse( ex )
+  end
+
   it 'should parse an array rule with rule names and repitition and a group rule with newlines' do
     ex1 = <<EX1
 $trule=:[
@@ -1384,6 +1399,11 @@ EX12
 
   it 'should parse an unknown annotation' do
     tree = JCR.parse( '$my_int =: @{assert $ % 3 == 0} 2' )
+    expect(tree[0][:rule][:rule_name]).to eq("my_int")
+  end
+
+  it 'should parse an unknown annotation before the rule name' do
+    tree = JCR.parse( '@{doc "this is my integer"} $my_int =: 2' )
     expect(tree[0][:rule][:rule_name]).to eq("my_int")
   end
 
