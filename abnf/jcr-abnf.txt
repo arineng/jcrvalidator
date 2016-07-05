@@ -37,7 +37,7 @@ not-multi-line-special = spaces / %x21 / %x23-2E / %x30-3A / %x3C-7C /
 
 root-rule        = value-rule / group-rule
 
-rule             = "$" rule-name *sp-cmt "=" *sp-cmt rule-def
+rule             = annotations "$" rule-name *sp-cmt "=" *sp-cmt rule-def
 
 rule-name        = name
 target-rule-name = annotations "$" [ ruleset-id-alias "." ] rule-name
@@ -45,7 +45,7 @@ name             = ALPHA *( ALPHA / DIGIT / "-" / "-" )
 
 rule-def         = member-rule / type-designator rule-def-type-rule /
                    array-rule / object-rule / group-rule / target-rule-name
-type-designator  = "type" 1*sp-cmt / ":" *sp-cmt
+type-designator  = type-kw 1*sp-cmt / ":" *sp-cmt
 rule-def-type-rule = value-rule / type-choice-rule
 value-rule       = primitive-rule / array-rule / object-rule
 member-rule      = annotations
@@ -226,6 +226,7 @@ ruleset-id-kw    = %x72.75.6C.65.73.65.74.2D.69.64 ; "ruleset-id"
 string-kw        = %x73.74.72.69.6E.67             ; "string"
 time-kw          = %x74.69.6D.65                   ; "time"
 true-kw          = %x74.72.75.65                   ; "true"
+type-kw          = %x74.79.70.65                   ; "type"
 uint-kw          = %x75.69.6E.74                   ; "uint"
 unordered-kw     = %x75.6E.6F.72.64.65.72.65.64    ; "unordered"
 uri-dotdot-kw    = %x75.72.69.2E.2E                ; "uri.."
