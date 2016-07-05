@@ -166,6 +166,10 @@ module JCR
         options[:ruleset] = ruleset
       end
 
+      opt.on("--test-jcr", "parse and test the JCR only") do |testjcr|
+        options[:testjcr] = true
+      end
+
       opt.on("-S STRING","name of root rule. All roots will be tried if none is specified") do |root_name|
         if options[:root_name]
           puts "A root has already been specified. Use -h for help.", ""
@@ -237,7 +241,11 @@ module JCR
           end
         end
 
-        if options[:json]
+        if options[:testjcr]
+          #we got this far which means the JCR was already parsed without
+          #issue. therefore return 0
+          return 0
+        elsif options[:json]
           data = JSON.parse( options[:json] )
           ec = cli_eval( ctx, data, options[:root_name], options[:verbose] )
           return ec
