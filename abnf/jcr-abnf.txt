@@ -120,21 +120,21 @@ any              = any-kw
 object-rule      = annotations "{" *sp-cmt [ object-items *sp-cmt ] "}"
 object-items     = object-item (*( sequence-combiner object-item ) /
                    *( choice-combiner object-item ) )
-object-item      = object-item-types [ *sp-cmt repetition ]
+object-item      = object-item-types *sp-cmt [ repetition ]
 object-item-types = member-rule / target-rule-name / object-group
 object-group     = "(" *sp-cmt [ object-items *sp-cmt ] ")"
 
 array-rule       = annotations "[" *sp-cmt [ array-items *sp-cmt ] "]"
 array-items      = array-item (*( sequence-combiner array-item ) /
                    *( choice-combiner array-item ) )
-array-item       = *sp-cmt array-item-types *sp-cmt [ repetition ]
+array-item       = array-item-types *sp-cmt [ repetition ]
 array-item-types = type-rule / array-group
 array-group      = "(" *sp-cmt [ array-items *sp-cmt ] ")"
 
 group-rule       = annotations "(" *sp-cmt [ group-items *sp-cmt ] ")"
 group-items      = group-item (*( sequence-combiner group-item ) /
                    *( choice-combiner group-item ) )
-group-item       = *sp-cmt group-item-types *sp-cmt [ repetition ]
+group-item       = group-item-types *sp-cmt [ repetition ]
 group-item-types = member-rule / type-rule / group-group
 group-group      = group-rule
 
