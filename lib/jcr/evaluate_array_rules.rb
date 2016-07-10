@@ -109,7 +109,7 @@ module JCR
         break
       end
 
-      repeat_min, repeat_max = get_repetitions( rule, econs )
+      repeat_min, repeat_max, repeat_step = get_repetitions( rule, econs )
 
       # group rules must be evaluated differently
       # groups require the effects of the evaluation to be discarded if they are false
@@ -178,6 +178,10 @@ module JCR
 
       end # end if grule else
 
+      if repeat_step && array_index % repeat_step != 0
+        retval = Evaluation.new( false, "Matches (#{array_index }) do not meat repetition step for #{repeat_max} % #{repeat_step}")
+      end
+
     end
 
     behavior.last_index = array_index
@@ -208,7 +212,7 @@ module JCR
         break
       end
 
-      repeat_min, repeat_max = get_repetitions( rule, econs )
+      repeat_min, repeat_max, repeat_step = get_repetitions( rule, econs )
 
       # group rules must be evaluated differently
       # groups require the effects of the evaluation to be discarded if they are false
@@ -237,6 +241,8 @@ module JCR
           retval = Evaluation.new( false, "array does not have enough #{rule} for #{raised_rule(jcr,rule_atom)}")
         elsif successes > repeat_max
           retval = Evaluation.new( false, "array has too many #{rule} for #{raised_rule(jcr,rule_atom)}")
+        elsif repeat_step && successes % repeat_step != 0
+          retval = Evaluation.new( false, "array matches (#{successes}) do not meet repetition step of #{repeat_max} % #{repeat_step} with #{rule} for #{raised_rule(jcr,rule_atom)}")
         else
           retval = Evaluation.new( true, nil )
         end
@@ -262,6 +268,8 @@ module JCR
           retval = Evaluation.new( false, "array does not have enough #{rule} for #{raised_rule(jcr,rule_atom)}")
         elsif successes > repeat_max
           retval = Evaluation.new( false, "array has too many #{rule} for #{raised_rule(jcr,rule_atom)}")
+        elsif repeat_step && successes % repeat_step != 0
+          retval = Evaluation.new( false, "array matches (#{successes}) do not meet repetition step of #{repeat_max} % #{repeat_step} with #{rule} for #{raised_rule(jcr,rule_atom)}")
         else
           retval = Evaluation.new( true, nil)
         end

@@ -67,7 +67,7 @@ module JCR
         return evaluate_not( annotations, retval, econs ) # short circuit
       end
 
-      repeat_min, repeat_max = get_repetitions( rule, econs )
+      repeat_min, repeat_max, repeat_step = get_repetitions( rule, econs )
 
       # Pay attention here:
       # Group rules need to be treated differently than other rules
@@ -79,7 +79,7 @@ module JCR
       if (grule = get_group(rule, econs))
 
         successes = 0
-        for i in 0..repeat_max
+        for i in 0..repeat_max-1
           group_behavior = ObjectBehavior.new
           e = evaluate_rule( grule, rule_atom, data, econs, group_behavior )
           if e.success
@@ -94,6 +94,8 @@ module JCR
           retval = Evaluation.new( false, "object does not contain group #{rule} for #{raised_rule(jcr,rule_atom)}")
         elsif successes < repeat_min
           retval = Evaluation.new( false, "object does not have contain necessary number of group #{rule} for #{raised_rule(jcr,rule_atom)}")
+        elsif repeat_step && successes % repeat_step != 0
+          retval = Evaluation.new( false, "object matches (#{successes}) do not have contain repetition #{repeat_max} % #{repeat_step} of group #{rule} for #{raised_rule(jcr,rule_atom)}")
         else
           retval = Evaluation.new( true, nil )
         end
@@ -126,11 +128,15 @@ module JCR
         else
 
           trace( econs, "Scanning object.")
+          i = 0
           repeat_results = data.select do |k,v|
             unless behavior.checked_hash[k]
-              e = evaluate_rule(rule, rule_atom, [k, v], econs, nil)
-              behavior.checked_hash[k] = e.success
-              e.success
+              if i <= repeat_max
+                e = evaluate_rule(rule, rule_atom, [k, v], econs, nil)
+                behavior.checked_hash[k] = e.success
+                i = i + 1 if e.success
+                e.success
+              end
             end
           end
 
@@ -143,6 +149,8 @@ module JCR
           retval = Evaluation.new( false, "object does not have enough #{rule} for #{raised_rule(jcr,rule_atom)}")
         elsif repeat_results.length > repeat_max
           retval = Evaluation.new( false, "object has too many #{rule} for #{raised_rule(jcr,rule_atom)}")
+        elsif repeat_step && repeat_results.length % repeat_step != 0
+          retval = Evaluation.new( false, "object matches (#{repeat_results.length}) does not match repetition step of #{repeat_max} & #{repeat_step} for #{rule} for #{raised_rule(jcr,rule_atom)}")
         else
           retval = Evaluation.new( true, nil)
         end

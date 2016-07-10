@@ -177,6 +177,22 @@ describe 'evaluate_array_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should pass an array with two strings against an array rule with string 1..4 % 2' do
+    tree = JCR.parse( '$trule =: [ string @1..4%2 ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2" ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail an array with three strings against an array rule with string 1..4 % 2' do
+    tree = JCR.parse( '$trule =: [ string @1..4%2 ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", "thing3" ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
   it 'should pass an array with one string against an array rule with string once or twice' do
     tree = JCR.parse( '$trule =: [ string @1..2 ]' )
     mapping = JCR.map_rule_names( tree )
@@ -191,6 +207,22 @@ describe 'evaluate_array_rules' do
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "thing" ], JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
+  end
+
+  it 'should pass an array with two strings against an array rule with ..4%2' do
+    tree = JCR.parse( '$trule =: [ string @..4%2 ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing1" ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail an array with three strings against an array rule with ..4%2' do
+    tree = JCR.parse( '$trule =: [ string @..4%2 ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing1", "thing3" ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
   end
 
   it 'should pass an empty array against an array rule with string default or twice' do
@@ -217,12 +249,44 @@ describe 'evaluate_array_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should pass an array with two strings against an array rule with string 1..%2' do
+    tree = JCR.parse( '$trule =: [ string @1..%2 ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2" ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass an array with three strings against an array rule with string 1..%2' do
+    tree = JCR.parse( '$trule =: [ string @1..%2 ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", "thing3" ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
   it 'should pass an array with two strings against an array rule with string +' do
     tree = JCR.parse( '$trule =: [ string @+ ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2" ], JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
+  end
+
+  it 'should pass an array with two strings against an array rule with string + step 2' do
+    tree = JCR.parse( '$trule =: [ string @+%2 ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2" ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail an array with two strings against an array rule with string + step 3' do
+    tree = JCR.parse( '$trule =: [ string @+%3 ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2" ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
   end
 
   it 'should fail an array with a string and integer against an array rule with string once or twice' do
@@ -361,6 +425,22 @@ describe 'evaluate_array_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should pass an array with two strings and two integers against an array rule with string * step 2 and any * step 2' do
+    tree = JCR.parse( '$trule =: [ string @*%2, any @*%2 ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", 1, 2 ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail an array with two strings and two integers against an array rule with string * step 3 and any * step 3' do
+    tree = JCR.parse( '$trule =: [ string @*%3, any @*%3 ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", 1, 2 ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
   it 'should pass an array with two strings and two arrays against an array rule with string 1*2 and any 1*2' do
     tree = JCR.parse( '$trule =: [ string @1..2, any @1..2 ]' )
     mapping = JCR.map_rule_names( tree )
@@ -425,12 +505,100 @@ describe 'evaluate_array_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should pass an array with two strings and two arrays against an unordered array rule with string 1..2 and 1..2 named group any' do
+    tree = JCR.parse( '$trule =: @{unordered} [ string@1..2, $grule @1..2 ] ;; $grule = (any)' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", [ 1, 2 ], [ 2, 3 ] ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass an array with two strings and two arrays against an unordered array rule with string 1..2 step 2 and 1..2 step 2 named group any' do
+    tree = JCR.parse( '$trule =: @{unordered} [ string@1..2%2, $grule @1..2%2 ] ;; $grule = (any)' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", [ 1, 2 ], [ 2, 3 ] ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail an array with two strings and two arrays against an unordered array rule with string 1..2 step 3 and 1..2 step 3 named group any' do
+    tree = JCR.parse( '$trule =: @{unordered} [ string@1..2%3, $grule @1..2%3 ] ;; $grule = (any)' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", [ 1, 2 ], [ 2, 3 ] ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail an array with two strings and two arrays against an unordered array rule with string 1..3 step 2 and 1..3 step 2 named group any' do
+    tree = JCR.parse( '$trule =: @{unordered} [ string@1..3%2, $grule @1..3%2 ] ;; $grule = (any)' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", "thing3", [ 1, 2 ], [ 2, 3 ], [ 4, 5 ] ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
   it 'should fail an array with two strings and three arrays against an unordered array rule with string 2 and 2 named group any' do
     tree = JCR.parse( '$trule =: @{unordered} [ string@2, $grule@2 ] ;; $grule = (any)' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", [ 1, 2 ], [ 2, 3 ], [ 4, 5 ] ], JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
+  end
+
+  it 'should pass an array with two strings and two integers against an unordered array rule with string 1..2 and integer 1..2' do
+    tree = JCR.parse( '$trule =: @{unordered} [ string@1..2, integer@1..2 ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, "thing", "thing2"  ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass an array with two strings and two integers against an unordered array rule with string 1..3 and integer 1..3' do
+    tree = JCR.parse( '$trule =: @{unordered} [ string@1..3, integer@1..3 ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, "thing", "thing2"  ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass an array with two strings and two integers against an unordered array rule with string 1..3 step 2 and integer 1..3 step 2' do
+    tree = JCR.parse( '$trule =: @{unordered} [ string@1..3%2, integer@1..3%2 ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, "thing", "thing2"  ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail an array with two strings and two integers against an unordered array rule with string 1..6 step 3 and integer 1..6 step 3' do
+    tree = JCR.parse( '$trule =: @{unordered} [ string@1..6%3, integer@1..6%3 ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, "thing", "thing2"  ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass an array with two strings and two integers against an unordered array rule with string ..2 and integer ..2' do
+    tree = JCR.parse( '$trule =: @{unordered} [ string@..2, integer@..2 ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, "thing", "thing2"  ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass an array with two strings and two integers against an unordered array rule with string + and integer +' do
+    tree = JCR.parse( '$trule =: @{unordered} [ string@+, integer@+ ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, "thing", "thing2"  ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass an array with two strings and two integers against an unordered array rule with string * and integer *' do
+    tree = JCR.parse( '$trule =: @{unordered} [ string@*, integer@* ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ 1, 2, "thing", "thing2"  ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
   end
 
   it 'should pass an array with two strings and two integers against an unordered array rule with string 2 and any 2' do

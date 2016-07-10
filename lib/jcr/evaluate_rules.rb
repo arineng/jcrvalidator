@@ -132,15 +132,18 @@ module JCR
 
     repeat_min = 1
     repeat_max = 1
+    repeat_step = nil
     if rule[:optional]
       repeat_min = 0
       repeat_max = 1
     elsif rule[:one_or_more]
       repeat_min = 1
       repeat_max = Float::INFINITY
+      repeat_step = rule[:repetition_step].to_s.to_i if rule[:repetition_step]
     elsif rule[:zero_or_more]
       repeat_min = 0
       repeat_max = Float::INFINITY
+      repeat_step = rule[:repetition_step].to_s.to_i if rule[:repetition_step]
     elsif rule[:specific_repetition] && rule[:specific_repetition].is_a?( Parslet::Slice )
       repeat_min = repeat_max = rule[:specific_repetition].to_s.to_i
     else
@@ -161,10 +164,16 @@ module JCR
           repeat_max = o.to_s.to_i
         end
       end
+      o = rule[:repetition_step]
+      if o
+        if o.is_a?( Parslet::Slice )
+          repeat_step = o.to_s.to_i
+        end
+      end
     end
 
-    trace( econs, "rule repetition min = #{repeat_min} max = #{repeat_max}" )
-    return repeat_min, repeat_max
+    trace( econs, "rule repetition min = #{repeat_min} max = #{repeat_max} repetition step = #{repeat_step}" )
+    return repeat_min, repeat_max, repeat_step
   end
 
   def self.get_rules_and_annotations jcr

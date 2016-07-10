@@ -169,6 +169,30 @@ describe 'evaluate_object_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should pass an object with two strings against an object rule with string member 1..2 step 2' do
+    tree = JCR.parse( '$trule=: { /m.*/:string @1..2%2 }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"m1"=>"thing","m2"=>"thing2"}, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass an object with two strings against an object rule with string member 1..4 step 2' do
+    tree = JCR.parse( '$trule=: { /m.*/:string @1..4%2 }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"m1"=>"thing","m2"=>"thing2"}, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail an object with two strings against an object rule with string member 1..6 step 3' do
+    tree = JCR.parse( '$trule=: { /m.*/:string @1..6%3 }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"m1"=>"thing","m2"=>"thing2"}, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
   it 'should pass an object with two strings against an object rule with string member once or twice or thrice' do
     tree = JCR.parse( '$trule=: { /m.*/:string @1..3 }' )
     mapping = JCR.map_rule_names( tree )
@@ -391,6 +415,86 @@ describe 'evaluate_object_rules' do
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=>"thing2" }, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
+  end
+
+  it 'should pass object with a string member and optional group member containing a string member' do
+    tree = JCR.parse( '$trule=: { "s1":string, ( "s2":string ) @? }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing" }, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass object with a string member and 0..1 group member containing a string member' do
+    tree = JCR.parse( '$trule=: { "s1":string, ( "s2":string ) @0..1 }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=>"thing2" }, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass object with a string member and 0..2 group member containing a string member' do
+    tree = JCR.parse( '$trule=: { "s1":string, ( "s2":string ) @0..2 }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=>"thing2" }, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass object w/ 2 mems against a string member and 0..2 group member containing a string member' do
+    tree = JCR.parse( '$trule=: { "s1":string, ( /s[2-9]/:string ) @0..2 }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=>"thing2" }, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass object w/ 2 mems against a string member and 1..2 group member containing a string member' do
+    tree = JCR.parse( '$trule=: { "s1":string, ( /s[2-9]/:string @1..2 ) }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=>"thing2" }, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass object w/ 3 mems against a string member and 0..2 group member containing a string member' do
+    tree = JCR.parse( '$trule=: { "s1":string, ( /s[2-9]/:string ) @0..2 }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=>"thing2","s3"=>"thing3" }, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass object w/ 3 mems against a string member and 0..3 group member containing a string member' do
+    tree = JCR.parse( '$trule=: { "s1":string, ( /s[2-9]/:string ) @0..3 }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=>"thing2","s3"=>"thing3" }, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass object w/ 4 mems against a string member and 0..3 group member containing a string member' do
+    tree = JCR.parse( '$trule=: { "s1":string, ( /s[2-9]/:string ) @0..3 }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=>"thing2","s3"=>"thing3","s4"=>"thing4" }, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass object w/ 3 mems against a string member and 0..4%2 group member containing a string member' do
+    tree = JCR.parse( '$trule=: { "s1":string, ( /s[2-9]/:string ) @0..4%2 }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=>"thing2","s3"=>"thing3" }, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail object w/ 3 mems against a string member and 0..6%3 group member containing a string member' do
+    tree = JCR.parse( '$trule=: { "s1":string, ( /s[2-9]/:string @0..6%3 ) }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=> "thing","s2"=>"thing2","s3"=>"thing3" }, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
   end
 
   it 'should pass object with 2 ORed groups of ANDs 1' do
