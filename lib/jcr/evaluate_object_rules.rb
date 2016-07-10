@@ -81,6 +81,7 @@ module JCR
         successes = 0
         for i in 0..repeat_max-1
           group_behavior = ObjectBehavior.new
+          group_behavior.checked_hash.merge!( behavior.checked_hash )
           e = evaluate_rule( grule, rule_atom, data, econs, group_behavior )
           if e.success
             behavior.checked_hash.merge!( group_behavior.checked_hash )
@@ -131,7 +132,7 @@ module JCR
           i = 0
           repeat_results = data.select do |k,v|
             unless behavior.checked_hash[k]
-              if i <= repeat_max
+              if i < repeat_max
                 e = evaluate_rule(rule, rule_atom, [k, v], econs, nil)
                 behavior.checked_hash[k] = e.success
                 i = i + 1 if e.success
