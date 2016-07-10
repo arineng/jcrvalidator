@@ -46,16 +46,15 @@ name             = ALPHA *( ALPHA / DIGIT / "-" / "-" )
 rule-def         = member-rule / type-designator rule-def-type-rule /
                    array-rule / object-rule / group-rule / target-rule-name
 type-designator  = type-kw 1*sp-cmt / ":" *sp-cmt
-rule-def-type-rule = value-rule / type-choice-rule
+rule-def-type-rule = value-rule / type-choice
 value-rule       = primitive-rule / array-rule / object-rule
 member-rule      = annotations
                    member-name-spec *sp-cmt ":" *sp-cmt type-rule
 member-name-spec = regex / q-string
-type-rule        = value-rule / type-choice-rule / target-rule-name
-type-choice-rule = *sp-cmt type-choice
+type-rule        = value-rule / type-choice / target-rule-name
 type-choice      = annotations "(" type-choice-items
                    *( choice-combiner type-choice-items ) ")"
-type-choice-items = *sp-cmt ( type-choice-rule / type-rule ) *sp-cmt
+type-choice-items = *sp-cmt ( type-choice / type-rule ) *sp-cmt
 
 annotations      = *( "@{" *sp-cmt annotation-set *sp-cmt "}" *sp-cmt )
 annotation-set   = not-annotation / unordered-annotation /

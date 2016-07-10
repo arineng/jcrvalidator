@@ -112,8 +112,8 @@ module JCR
     rule(:type_designator)   { str('type') >> spcCmnt.repeat(1) | str(':') >> spcCmnt? }
         #! type_designator = type-kw 1*spcCmnt / ":" spcCmnt?
         #> type-kw = "type"
-    rule(:rule_def_type_rule)     { value_rule | type_choice_rule }
-        #! rule_def_type_rule = value_rule / type_choice_rule
+    rule(:rule_def_type_rule)     { value_rule | type_choice }
+        #! rule_def_type_rule = value_rule / type_choice
     rule(:value_rule)         { primitive_rule | array_rule | object_rule }
         #! value_rule = primitive_rule / array_rule / object_rule
     rule(:member_rule)       { ( annotations >> member_name_spec >> spcCmnt? >> str(':') >> spcCmnt? >> type_rule ).as(:member_rule) }
@@ -121,15 +121,13 @@ module JCR
         #!               member_name_spec spcCmnt? ":" spcCmnt? type_rule
     rule(:member_name_spec)  { regex.as(:member_regex) | q_string.as(:member_name) }
         #! member_name_spec = regex / q_string
-    rule(:type_rule)         { value_rule | type_choice_rule | target_rule_name }
-        #! type_rule = value_rule / type_choice_rule / target_rule_name
-    rule(:type_choice_rule)  { spcCmnt? >> type_choice }
-        #! type_choice_rule = spcCmnt? type_choice
+    rule(:type_rule)         { value_rule | type_choice | target_rule_name }
+        #! type_rule = value_rule / type_choice / target_rule_name
     rule(:type_choice)       { ( annotations >> str('(') >> type_choice_items >> ( choice_combiner >> type_choice_items ).repeat >> str(')') ).as(:group_rule) }
         #! type_choice = annotations "(" type_choice_items
         #!               *( choice_combiner type_choice_items ) ")"
-    rule(:type_choice_items) { spcCmnt? >> (type_choice_rule | type_rule) >> spcCmnt? }
-        #! type_choice_items = spcCmnt? ( type_choice_rule / type_rule ) spcCmnt?
+    rule(:type_choice_items) { spcCmnt? >> (type_choice | type_rule) >> spcCmnt? }
+        #! type_choice_items = spcCmnt? ( type_choice / type_rule ) spcCmnt?
         #!
 
     rule(:annotations)       { ( str('@{') >> spcCmnt? >> annotation_set >> spcCmnt? >> str('}') >> spcCmnt? ).repeat }
