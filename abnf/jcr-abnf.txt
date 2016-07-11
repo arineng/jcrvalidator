@@ -144,14 +144,15 @@ repetition       = "@" *sp-cmt ( optional / one-or-more / min-max-repetition /
                    min-repetition / max-repetition /
                    zero-or-more / specific-repetition )
 optional         = "?"
-one-or-more      = "+"
-zero-or-more     = "*"
-min-max-repetition = min-repeat ".." max-repeat
-min-repetition   = min-repeat ".."
-max-repetition   = ".."  max-repeat
+one-or-more      = "+" [ repetition-step ]
+zero-or-more     = "*" [ repetition-step ]
+min-max-repetition = min-repeat ".." max-repeat [ repetition-step ]
+min-repetition   = min-repeat ".." [ repetition-step ]
+max-repetition   = ".."  max-repeat [ repetition-step ]
 min-repeat       = non-neg-integer
 max-repeat       = non-neg-integer
 specific-repetition = non-neg-integer
+repetition-step  = "%" non-neg-integer
 
 integer          = "0" / ["-"] pos-integer
 non-neg-integer  = "0" / pos-integer
