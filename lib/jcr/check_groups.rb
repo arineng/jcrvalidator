@@ -38,7 +38,7 @@ module JCR
   end
 
   def self.check_value_for_group node, mapping
-    if node[:group_rule]
+    if node.is_a?( Hash ) && node[:group_rule]
       disallowed_group_in_value?( node[:group_rule], mapping )
     end
   end
