@@ -774,6 +774,42 @@ describe 'parser' do
     expect(tree[0][:rule][:rule_name]).to eq("trule")
   end
 
+  it 'should parse an array rule with an choice array group' do
+    tree = JCR.parse( '$trule = :[ ($my_rule1| $my_rule2 )@+]' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:array_rule][:group_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
+    expect(tree[0][:rule][:array_rule][:group_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
+  end
+
+  it 'should parse an array rule with an sequence array group' do
+    tree = JCR.parse( '$trule = :[ ($my_rule1, $my_rule2 )@+]' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:array_rule][:group_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
+    expect(tree[0][:rule][:array_rule][:group_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
+  end
+
+  it 'should parse an array rule with an explicit type choice' do
+    tree = JCR.parse( '$trule = :[ :($my_rule1| $my_rule2 )@+]' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:array_rule][:group_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
+    expect(tree[0][:rule][:array_rule][:group_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
+  end
+
+  it 'should parse an array rule with an explicit type choice' do
+    tree = JCR.parse( '$trule = :[ type ($my_rule1| $my_rule2 )@+]' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:array_rule][:group_rule][0][:target_rule_name][:rule_name]).to eq("my_rule1")
+    expect(tree[0][:rule][:array_rule][:group_rule][1][:target_rule_name][:rule_name]).to eq("my_rule2")
+  end
+
+  it 'should NOT parse an array rule with an invalid explicit type choice' do
+    expect{ tree = JCR.parse( '$trule = :[ :($my_rule1, $my_rule2 )@+]' ) }.to raise_error Parslet::ParseFailed
+  end
+
+  it 'should NOT parse an array rule with an invalid explicit type choice' do
+    expect{ tree = JCR.parse( '$trule = :[ type ($my_rule1, $my_rule2 )@+]' ) }.to raise_error Parslet::ParseFailed
+  end
+
   it 'should parse an array rule with a rulename and a group rule' do
     tree = JCR.parse( '$trule = :[ $my_rule1 | ( integer | { $my_rule2 } ) ]' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
