@@ -54,6 +54,7 @@ member-name-spec = regex / q-string
 type-rule        = value-rule / type-choice / target-rule-name
 type-choice      = annotations "(" type-choice-items
                    *( choice-combiner type-choice-items ) ")"
+explicit-type-choice = type-designator type-choice
 type-choice-items = *sp-cmt ( type-choice / type-rule ) *sp-cmt
 
 annotations      = *( "@{" *sp-cmt annotation-set *sp-cmt "}" *sp-cmt )
@@ -120,21 +121,21 @@ object-rule      = annotations "{" *sp-cmt [ object-items *sp-cmt ] "}"
 object-items     = object-item (*( sequence-combiner object-item ) /
                    *( choice-combiner object-item ) )
 object-item      = object-item-types *sp-cmt [ repetition ]
-object-item-types = member-rule / target-rule-name / object-group
+object-item-types = object-group / member-rule / target-rule-name
 object-group     = "(" *sp-cmt [ object-items *sp-cmt ] ")"
 
 array-rule       = annotations "[" *sp-cmt [ array-items *sp-cmt ] "]"
 array-items      = array-item (*( sequence-combiner array-item ) /
                    *( choice-combiner array-item ) )
 array-item       = array-item-types *sp-cmt [ repetition ]
-array-item-types = type-rule / array-group
+array-item-types = array-group / type-rule / explicit-type-choice
 array-group      = "(" *sp-cmt [ array-items *sp-cmt ] ")"
 
 group-rule       = annotations "(" *sp-cmt [ group-items *sp-cmt ] ")"
 group-items      = group-item (*( sequence-combiner group-item ) /
                    *( choice-combiner group-item ) )
 group-item       = group-item-types *sp-cmt [ repetition ]
-group-item-types = member-rule / type-rule / group-group
+group-item-types = group-group / member-rule / type-rule / explicit-type-choice
 group-group      = group-rule
 
 sequence-combiner = *sp-cmt "," *sp-cmt
@@ -146,13 +147,14 @@ repetition       = "@" *sp-cmt ( optional / one-or-more / min-max-repetition /
 optional         = "?"
 one-or-more      = "+"
 zero-or-more     = "*"
-min-max-repetition = min-repeat ".." max-repeat
+min-max-repetition = min-repeat ".." max-repeat ?repetition-step
 min-repetition   = min-repeat ".."
 max-repetition   = ".."  max-repeat
 min-repeat       = non-neg-integer
 max-repeat       = non-neg-integer
 specific-repetition = non-neg-integer
 
+repetition-step  = "%" non-neg-integer
 integer          = "0" / ["-"] pos-integer
 non-neg-integer  = "0" / pos-integer
 pos-integer      = digit1-9 *DIGIT
