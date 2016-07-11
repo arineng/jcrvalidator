@@ -126,6 +126,8 @@ module JCR
     rule(:type_choice)       { ( annotations >> str('(') >> type_choice_items >> ( choice_combiner >> type_choice_items ).repeat >> str(')') ).as(:group_rule) }
         #! type_choice = annotations "(" type_choice_items
         #!               *( choice_combiner type_choice_items ) ")"
+    rule(:explicit_type_choice) { type_designator >> type_choice }
+        #! explicit_type_choice = type_designator type_choice
     rule(:type_choice_items) { spcCmnt? >> (type_choice | type_rule) >> spcCmnt? }
         #! type_choice_items = spcCmnt? ( type_choice / type_rule ) spcCmnt?
         #!
@@ -291,8 +293,8 @@ module JCR
         #!                             *( choice_combiner object_item ) )
     rule(:object_item ) { object_item_types >> spcCmnt? >> repetition.maybe }
         #! object_item = object_item_types spcCmnt? [ repetition ]
-    rule(:object_item_types) { member_rule | target_rule_name | object_group }
-        #! object_item_types = member_rule / target_rule_name / object_group
+    rule(:object_item_types) { object_group | member_rule | target_rule_name }
+        #! object_item_types = object_group / member_rule / target_rule_name
     rule(:object_group) { ( str('(') >> spcCmnt? >> object_items.maybe >> spcCmnt? >> str(')') ).as(:group_rule) }
         #! object_group = "(" spcCmnt? [ object_items spcCmnt? ] ")"
         #!
@@ -306,8 +308,8 @@ module JCR
         #!                           *( choice_combiner array_item ) )
     rule(:array_item)   { array_item_types >> spcCmnt? >> repetition.maybe }
         #! array_item = array_item_types spcCmnt? [ repetition ]
-    rule(:array_item_types) { type_rule | array_group }
-        #! array_item_types = type_rule / array_group
+    rule(:array_item_types) { array_group | type_rule | explicit_type_choice }
+        #! array_item_types = array_group / type_rule / explicit_type_choice
     rule(:array_group)  { ( str('(') >> spcCmnt? >> array_items.maybe >> spcCmnt? >> str(')') ).as(:group_rule) }
         #! array_group = "(" spcCmnt? [ array_items spcCmnt? ] ")"
         #!
@@ -320,8 +322,8 @@ module JCR
         #!                           *( choice_combiner group_item ) )
     rule(:group_item)   { group_item_types >> spcCmnt? >> repetition.maybe }
         #! group_item = group_item_types spcCmnt? [ repetition ]
-    rule(:group_item_types) { member_rule | type_rule | group_group }
-        #! group_item_types = member_rule / type_rule / group_group
+    rule(:group_item_types) { group_group | member_rule | type_rule | explicit_type_choice }
+        #! group_item_types = group_group / member_rule / type_rule / explicit_type_choice
     rule(:group_group)  { group_rule }
         #! group_group = group_rule
         #!
