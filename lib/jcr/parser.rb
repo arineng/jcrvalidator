@@ -340,24 +340,24 @@ module JCR
     rule(:optional)            { str('?').as(:optional) }
         #! optional = "?"
     rule(:one_or_more)         { str('+').as(:one_or_more) >> repetition_step.maybe }
-        #! one_or_more = "+"
+        #! one_or_more = "+" [ repetition_step ]
     rule(:zero_or_more)        { str('*').as(:zero_or_more) >> repetition_step.maybe }
-        #! zero_or_more = "*"
+        #! zero_or_more = "*" [ repetition_step ]
     rule(:min_max_repetition)  {      # This includes min_only and max_only cases
             non_neg_integer.maybe.as(:repetition_min) >>
             str("..").as(:repetition_interval) >>
             non_neg_integer.maybe.as(:repetition_max) >>
             repetition_step.maybe }
-        #! min_max_repetition = min_repeat ".." max_repeat ?repetition_step
-        #! min_repetition = min_repeat ".."
-        #! max_repetition = ".."  max_repeat
+        #! min_max_repetition = min_repeat ".." max_repeat [ repetition_step ]
+        #! min_repetition = min_repeat ".." [ repetition_step ]
+        #! max_repetition = ".."  max_repeat [ repetition_step ]
         #! min_repeat = non_neg_integer
         #! max_repeat = non_neg_integer
     rule(:specific_repetition) { non_neg_integer.as(:specific_repetition) }
         #! specific_repetition = non_neg_integer
-        #!
     rule(:repetition_step) { str('%') >> non_neg_integer.as(:repetition_step) }
         #! repetition_step = "%" non_neg_integer
+        #!
 
     rule(:integer)   { str('0') | str('-').maybe >> pos_integer }
         #! integer = "0" / ["-"] pos_integer
