@@ -562,7 +562,7 @@ describe 'evaluate_object_rules' do
   end
 
   it 'should pass object with complex nested groups with a named rule 1' do
-    tree = JCR.parse( '$orule =: { ( $trule | ( "s3":string ) ) , "s4":string } ;; $trule = ( "s1":string, "s2":string )' )
+    tree = JCR.parse( '$orule =: { ( $trule | ( "s3":string ) ) , "s4":string }  $trule = ( "s1":string, "s2":string )' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"s1"=>"foo", "s2"=> "thing","s4"=>"thing2" }, JCR::EvalConditions.new( mapping, nil ) )

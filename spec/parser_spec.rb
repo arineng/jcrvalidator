@@ -906,17 +906,17 @@ describe 'parser' do
   end
 
   it 'should parse a value rule with a comment' do
-    tree = JCR.parse( '$trule = :/.*/ ;\;;' )
+    tree = JCR.parse( "$trule = :/.*/ ;\;;\n" )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
   end
 
   it 'should parse a member regex rule with a comment' do
-    tree = JCR.parse( '$trule = /.*/ : $target_rule ;\;;' )
+    tree = JCR.parse( "$trule = /.*/ : $target_rule ;\;;\n" )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
   end
 
-  it 'should parse two rules separated by a comment' do
-    tree = JCR.parse( '$trule1 = :/.*/ ;; $trule2 = /.*/ : $target_rule' )
+  it 'should parse two rules on the same line' do
+    tree = JCR.parse( '$trule1 = :/.*/  $trule2 = /.*/ : $target_rule' )
     expect(tree[0][:rule][:rule_name]).to eq("trule1")
     expect(tree[1][:rule][:rule_name]).to eq("trule2")
   end
@@ -963,10 +963,6 @@ describe 'parser' do
 
   it 'should parse two top object rules' do
     tree = JCR.parse( '{"foo":integer}{"bar":any}$trule="baz":integer' )
-  end
-
-  it 'should parse a top value rule and another rules separated by a comment' do
-    tree = JCR.parse( '[ $target_rule @* ] ;; $trule = :/.*/' )
   end
 
   it 'should parse multiple comments before any directives' do
@@ -1067,18 +1063,6 @@ $trule =:[ ;comment 1
   $my_rule1 @1..2, ;comment 2
   ( string | integer ),
   ( $my_rule2 | $my_rule3 ) ;comment 3
-] ;comment 4
-EX2A
-    tree = JCR.parse( ex2a )
-    expect(tree[0][:rule][:rule_name]).to eq("trule")
-  end
-
-  it 'should parse group rules and value groups with embedded comments' do
-    ex2a = <<EX2A
-$trule =:[ ;comment 1
-  $my_rule1 ;one or two; @1..2, ;comment 2
-  ;can be string or integer; ( string | integer ),
-  ( $my_rule2 | ;my third rule; $my_rule3 ) ;comment 3
 ] ;comment 4
 EX2A
     tree = JCR.parse( ex2a )
@@ -1380,7 +1364,7 @@ EX12
   end
 
   it 'should error with 1 member with group of OR values and member with group of AND values' do
-    expect{ JCR.parse( '$mrule = "thing" : ( integer | float ) ;; $mrule2 = "thing2" : ( ipv4 , ipv6 )' ) }.to raise_error Parslet::ParseFailed
+    expect{ JCR.parse( '$mrule = "thing" : ( integer | float )  $mrule2 = "thing2" : ( ipv4 , ipv6 )' ) }.to raise_error Parslet::ParseFailed
   end
 
   it 'should error with member with group of value OR group' do
@@ -1416,27 +1400,27 @@ EX12
   end
 
   it 'should error with array with group of value OR with group with member' do
-    expect{ JCR.parse( '$trule = :any ;; $rule = :[ ( integer | ( ipv4 | "thing" : $trule ) ) ]' ) }.to raise_error Parslet::ParseFailed
+    expect{ JCR.parse( '$trule = :any  $rule = :[ ( integer | ( ipv4 | "thing" : $trule ) ) ]' ) }.to raise_error Parslet::ParseFailed
   end
 
   it 'should error with array with group of OR values and array with group of values and member' do
-    expect{ JCR.parse( '$trule = :any ;; $rule = :[ ( integer | float ) ] ;; $rule2 = :[ ( ipv4 , "thing" : $trule ) ]' ) }.to raise_error Parslet::ParseFailed
+    expect{ JCR.parse( '$trule = :any  $rule = :[ ( integer | float ) ]  $rule2 = :[ ( ipv4 , "thing" : $trule ) ]' ) }.to raise_error Parslet::ParseFailed
   end
 
   it 'should error with array with value and group of one value and one member' do
-    expect{ JCR.parse( '$trule = :any ;; $rule = :[ string, ( integer, "thing" : $trule ) ]' ) }.to raise_error Parslet::ParseFailed
+    expect{ JCR.parse( '$trule = :any  $rule = :[ string, ( integer, "thing" : $trule ) ]' ) }.to raise_error Parslet::ParseFailed
   end
 
   it 'should error with array with group of one value and one member' do
-    expect{ JCR.parse( '$trule = :any ;; $rule = :[ ( integer, "thing" : $trule ) ]' ) }.to raise_error Parslet::ParseFailed
+    expect{ JCR.parse( '$trule = :any  $rule = :[ ( integer, "thing" : $trule ) ]' ) }.to raise_error Parslet::ParseFailed
   end
 
   it 'should error with array with group of one member' do
-    expect{ JCR.parse( '$trule = :any ;; $rule = :[ ( "thing" : $trule ) ]' ) }.to raise_error Parslet::ParseFailed
+    expect{ JCR.parse( '$trule = :any  $rule = :[ ( "thing" : $trule ) ]' ) }.to raise_error Parslet::ParseFailed
   end
 
   it 'should error with value with group of value OR group with member' do
-    expect{ JCR.parse( '$trule = :any ;; $rule = :( integer | ( ipv4 | "thing" : $trule ) ) ' ) }.to raise_error Parslet::ParseFailed
+    expect{ JCR.parse( '$trule = :any  $rule = :( integer | ( ipv4 | "thing" : $trule ) ) ' ) }.to raise_error Parslet::ParseFailed
   end
 
   it 'should error with value with group of ORed and ANDED values' do
