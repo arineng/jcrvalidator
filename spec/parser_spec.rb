@@ -147,14 +147,14 @@ describe 'parser' do
     expect(tree[0][:rule][:primitive_rule][:uri]).to eq("uri")
   end
 
-  it 'should parse a uri template' do
-    tree = JCR.parse( '$trule = type uri..{scheme}://example.com/{path}' )
-    expect(tree[0][:rule][:primitive_rule][:uri_template]).to eq("{scheme}://example.com/{path}")
+  it 'should parse a uri scheme' do
+    tree = JCR.parse( '$trule = type uri..http' )
+    expect(tree[0][:rule][:primitive_rule][:uri_scheme]).to eq("http")
   end
 
-  it 'should parse a uri template 2' do
-    tree = JCR.parse( '$trule = type uri..http://example.com/{path}' )
-    expect(tree[0][:rule][:primitive_rule][:uri_template]).to eq("http://example.com/{path}")
+  it 'should parse a uri scheme 2' do
+    tree = JCR.parse( '$trule = type uri..http' )
+    expect(tree[0][:rule][:primitive_rule][:uri_scheme]).to eq("http")
   end
 
   it 'should parse an any' do

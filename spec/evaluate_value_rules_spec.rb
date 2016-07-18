@@ -879,7 +879,7 @@ describe 'evaluate_value_rules' do
   end
 
   #
-  # URI and URI template value tests
+  # URI and URI scheme value tests
   #
 
   it 'should pass a URI' do
@@ -898,24 +898,24 @@ describe 'evaluate_value_rules' do
     expect( e.success ).to be_falsey
   end
 
-  it 'should pass a URI template' do
-    tree = JCR.parse( '$trule=: uri..http://example.com/{?query*}' )
+  it 'should pass a URI scheme' do
+    tree = JCR.parse( '$trule=: uri..http' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "http://example.com/?foo=bar", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
-  it 'should fail a non-matching URI template' do
-    tree = JCR.parse( '$trule=: uri..http://example.com/{?query*}' )
+  it 'should fail a non-matching URI scheme' do
+    tree = JCR.parse( '$trule=: uri..https' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "http://example.com", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
   end
 
-  it 'should fail a non-string against URI template' do
-    tree = JCR.parse( '$trule=: uri..http://example.com/{?query*}' )
+  it 'should fail a non-string against URI scheme' do
+    tree = JCR.parse( '$trule=: uri..http' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {}, JCR::EvalConditions.new( mapping, nil ) )
