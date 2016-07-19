@@ -414,8 +414,8 @@ module JCR
         #! regex_modifiers = *( "i" / "s" / "x" )
         #!
 
-    rule(:uri_scheme) { ( match('[a-zA-Z{}]').repeat(1) ).as(:uri_scheme) }
-        #! uri_scheme = 1*ALPHA ":" 1*not-space
+    rule(:uri_scheme) { ( match('[a-zA-Z]').repeat(1) ).as(:uri_scheme) }
+        #! uri_scheme = 1*ALPHA
 
   end
 

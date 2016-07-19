@@ -193,7 +193,7 @@ not-slash        = HTAB / CR / LF / %x20-2E / %x30-10FFFF
                    ; Any char except "/"
 regex-modifiers  = *( "i" / "s" / "x" )
 
-uri-scheme       = 1*ALPHA ":" 1*not-space
+uri-scheme       = 1*ALPHA
 
 ;; Keywords
 any-kw           = %x61.6E.79                      ; "any"
