@@ -36,11 +36,11 @@ module JCR
         #/ spaces? -> [ spaces ]
     rule(:wsp)      { match('[\t ]') }
         # WSP is a standard ABNF production so is not expanded here
-    rule(:comment)  { str(';') >> ( str('\;') | match('[^\r\n;]') ).repeat >> match('[\r\n;]') }
-        #! comment = ";" *( "\;" / comment-char ) comment-end-char
-        #! comment-char = HTAB / %x20-3A / %x3C-10FFFF
-        #!            ; Any char other than ";" / CR / LF
-        #! comment-end-char = CR / LF / ";"
+    rule(:comment)  { str(';') >> match('[^\r\n]').repeat >> match('[\r\n]') }
+        #! comment = ";" *comment-char comment-end-char
+        #! comment-char = HTAB / %x20-10FFFF
+        #!            ; Any char other than CR / LF
+        #! comment-end-char = CR / LF
         #!
 
     rule(:directive) { ( str('#') >> (one_line_directive | multi_line_directive) ).as(:directive) }
