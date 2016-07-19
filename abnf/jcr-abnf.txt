@@ -2,10 +2,10 @@ jcr              = *( sp-cmt / directive / root-rule / rule )
 
 sp-cmt           = spaces / comment
 spaces           = 1*( WSP / CR / LF )
-comment          = ";" *( "\;" / comment-char ) comment-end-char
-comment-char     = HTAB / %x20-3A / %x3C-10FFFF
-                   ; Any char other than ";" / CR / LF
-comment-end-char = CR / LF / ";"
+comment          = ";" *comment-char comment-end-char
+comment-char     = HTAB / %x20-10FFFF
+                   ; Any char other than CR / LF
+comment-end-char = CR / LF
 
 directive        = "#" (one-line-directive / multi-line-directive)
 one-line-directive = [ spaces ] 
@@ -13,9 +13,10 @@ one-line-directive = [ spaces ]
 multi-line-directive = "{" *sp-cmt
                    (directive-def / multi-line-tbd-directive-d) *sp-cmt "}"
 directive-def    = jcr-version-d / ruleset-id-d / import-d
-jcr-version-d    = jcr-version-kw spaces major-version "." minor-version
+jcr-version-d    = jcr-version-kw spaces major-version "." minor-version *(spaces extension-id)
 major-version    = non-neg-integer
 minor-version    = non-neg-integer
+extension-id     = ALPHA *not-space
 ruleset-id-d     = ruleset-id-kw spaces ruleset-id
 import-d         = import-kw spaces ruleset-id
                    [ spaces as-kw spaces ruleset-id-alias ]
