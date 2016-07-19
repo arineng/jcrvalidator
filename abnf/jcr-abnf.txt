@@ -103,7 +103,7 @@ ipv6-type        = ipv6-kw
 ipaddr-type      = ipaddr-kw
 fqdn-type        = fqdn-kw
 idn-type         = idn-kw
-uri-range        = uri-dotdot-kw uri-template
+uri-range        = uri-dotdot-kw uri-scheme
 uri-type         = uri-kw
 phone-type       = phone-kw
 email-type       = email-kw
@@ -193,7 +193,7 @@ not-slash        = HTAB / CR / LF / %x20-2E / %x30-10FFFF
                    ; Any char except "/"
 regex-modifiers  = *( "i" / "s" / "x" )
 
-uri-template     = 1*ALPHA ":" 1*not-space
+uri-scheme       = 1*ALPHA
 
 ;; Keywords
 any-kw           = %x61.6E.79                      ; "any"

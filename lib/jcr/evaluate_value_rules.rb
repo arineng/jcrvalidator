@@ -219,25 +219,17 @@ module JCR
         end
 
       #
-      # uri and uri templates
+      # uri and uri scheme
       #
 
       when jcr[:uri]
         return bad_value( jcr, rule_atom, "URI", data ) unless data.is_a?( String )
         uri = Addressable::URI.parse( data )
         return bad_value( jcr, rule_atom, "URI", data ) unless uri.is_a?( Addressable::URI )
-      when jcr[:uri_template]
-        t = jcr[:uri_template].to_s
+      when jcr[:uri_scheme]
+        t = jcr[:uri_scheme].to_s
         return bad_value( jcr, rule_atom, t, data ) unless data.is_a? String
-        template = Addressable::Template.new( t )
-        e = template.extract( data )
-        if e == nil
-          return bad_value( jcr, rule_atom, t, data )
-        else
-          e.each do |k,v|
-            return bad_value( jcr, rule_atom, t, data ) unless v
-          end
-        end
+        return bad_value( jcr, rule_atom, t, data ) unless data.start_with?( t )
 
       #
       # phone and email value rules
@@ -476,8 +468,8 @@ module JCR
 
       when rule[:uri]
         retval =  "URI"
-      when rule[:uri_template]
-        retval =  "URI template #{rule[:uri_template].to_s}"
+      when rule[:uri_scheme]
+        retval =  "URI with specific scheme #{rule[:uri_scheme].to_s}"
 
       when rule[:email]
         retval =  "email"

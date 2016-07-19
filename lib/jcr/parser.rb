@@ -243,8 +243,8 @@ module JCR
     rule(:idn_type)       { str('idn').as(:idn) }
         #! idn_type = idn-kw
         #> idn-kw = "idn"
-    rule(:uri_range)       { str('uri..') >> uri_template }
-        #! uri_range = uri-dotdot-kw uri_template
+    rule(:uri_range)       { str('uri..') >> uri_scheme }
+        #! uri_range = uri-dotdot-kw uri_scheme
         #> uri-dotdot-kw = "uri.."
     rule(:uri_type)       { str('uri').as(:uri) }
         #! uri_type = uri-kw
@@ -414,8 +414,8 @@ module JCR
         #! regex_modifiers = *( "i" / "s" / "x" )
         #!
 
-    rule(:uri_template) { ( match('[a-zA-Z{}]').repeat(1) >> str(':') >> match('[\S]').repeat(1) ).as(:uri_template) }
-        #! uri_template = 1*ALPHA ":" 1*not-space
+    rule(:uri_scheme) { ( match('[a-zA-Z]').repeat(1) ).as(:uri_scheme) }
+        #! uri_scheme = 1*ALPHA
 
   end
 
