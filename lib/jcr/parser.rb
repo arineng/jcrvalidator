@@ -53,11 +53,16 @@ module JCR
         #!                        (directive_def / multi_line_tbd_directive_d) spcCmnt? "}"
     rule(:directive_def) { jcr_version_d | ruleset_id_d | import_d }
         #! directive_def = jcr_version_d / ruleset_id_d / import_d
-    rule(:jcr_version_d) { (str('jcr-version') >> spaces >> non_neg_integer.as(:major_version) >> str('.') >> non_neg_integer.as(:minor_version)).as(:jcr_version_d) }
-        #! jcr_version_d = jcr-version-kw spaces major_version "." minor_version
+    rule(:jcr_version_d) { ( str('jcr-version') >> spaces >>
+                             non_neg_integer.as(:major_version) >> str('.') >> non_neg_integer.as(:minor_version) >>
+                             ( spaces >> extension_id ).repeat
+                           ).as(:jcr_version_d) }
+        #! jcr_version_d = jcr-version-kw spaces major_version "." minor_version *(spaces extension_id)
         #> jcr-version-kw = "jcr-version"
         #! major_version = non_neg_integer
         #! minor_version = non_neg_integer
+    rule(:extension_id)        { match('[a-zA-Z]') >> match('[\S]').repeat }
+        #! extension_id = ALPHA *not-space
     rule(:ruleset_id_d)  { (str('ruleset-id') >> spaces >> ruleset_id.as(:ruleset_id)).as(:ruleset_id_d) }
         #! ruleset_id_d = ruleset-id-kw spaces ruleset_id
         #> ruleset-id-kw = "ruleset-id"
