@@ -52,10 +52,10 @@ module JCR
     major = directive[:major_version].to_str.to_i
     minor = directive[:minor_version].to_str.to_i
     if major != 0
-      raise "jcr version #{major}.#{minor} is incompatible with 0.5"
+      raise "jcr version #{major}.#{minor} is incompatible with 0.7"
     end
-    if minor != 5
-      raise "jcr version #{major}.#{minor} is incompatible with 0.5"
+    if minor != 7
+      raise "jcr version #{major}.#{minor} is incompatible with 0.7"
     end
   end
 
