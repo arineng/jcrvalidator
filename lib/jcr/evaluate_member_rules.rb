@@ -55,7 +55,13 @@ module JCR
         member_match = true
       end
     else # must be regex
-      match_spec = Regexp.new( rule[:member_regex][:regex].to_s )
+      regex = rule[:member_regex][:regex]
+      if regex.is_a? Array
+        match_spec = Regexp.new( "" )
+        trace( econs, "Noting empty regular expression." )
+      else
+        match_spec = Regexp.new( rule[:member_regex][:regex].to_s )
+      end
       if match_spec =~ data[ 0 ]
         member_match = true
       end
