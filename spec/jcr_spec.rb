@@ -22,7 +22,7 @@ describe 'jcr' do
   it 'should pass default rule' do
     ex = <<EX
 # ruleset-id rfcXXXX
-# jcr-version 0.5
+# jcr-version 0.7
 
 [ integer@* ]
 
@@ -35,7 +35,7 @@ EX
   it 'should fail default rule' do
     ex = <<EX
 # ruleset-id rfcXXXX
-# jcr-version 0.5
+# jcr-version 0.7
 
 [ string@* ]
 
@@ -48,7 +48,7 @@ EX
   it 'should pass default rule referencing another rule' do
     ex = <<EX
 # ruleset-id rfcXXXX
-# jcr-version 0.5
+# jcr-version 0.7
 
 [ $my_rule @* ]
 $my_rule =: 0..2
@@ -62,7 +62,7 @@ EX
   it 'should pass default rule referencing two rules with JSON' do
     ex = <<EX
 # ruleset-id rfcXXXX
-# jcr-version 0.5
+# jcr-version 0.7
 
 [ $my_integers @2, $my_strings @2 ]
 $my_integers =: 0..2
@@ -78,7 +78,7 @@ EX
   it 'should initialize a context and evaluate JSON' do
     ex = <<EX
 # ruleset-id rfcXXXX
-# jcr-version 0.5
+# jcr-version 0.7
 
 [ $my_integers @2, $my_strings @2 ]
 $my_integers =: 0..2
@@ -93,7 +93,7 @@ EX
   it 'should initialize a context and evaluate two JSONs' do
     ex = <<EX
 # ruleset-id rfcXXXX
-# jcr-version 0.5
+# jcr-version 0.7
 
 [ $my_integers @2, $my_strings @2 ]
 $my_integers =: 0..2
@@ -112,7 +112,7 @@ EX
   it 'should initialize a context and evaluate two JSONs and fail a third' do
     ex = <<EX
 # ruleset-id rfcXXXX
-# jcr-version 0.5
+# jcr-version 0.7
 
 [ $my_integers @2, $my_strings @2 ]
 $my_integers =: 0..2
@@ -134,7 +134,7 @@ EX
   it 'should pass default rule referencing two rules with JSON and override' do
     ex = <<EX
 # ruleset-id rfcXXXX
-# jcr-version 0.5
+# jcr-version 0.7
 
 [ $my_integers @2, $my_strings @2 ]
 $my_integers=:integer
@@ -154,7 +154,7 @@ OV
   it 'should fail default rule referencing two rules with JSON and override!' do
     ex = <<EX
 # ruleset-id rfcXXXX
-# jcr-version 0.5
+# jcr-version 0.7
 
 [ $my_integers @2, $my_strings @2 ]
 $my_integers=: integer
@@ -174,7 +174,7 @@ OV
   it 'should fail default rule referencing two rules with JSON and override!' do
     ex = <<EX
 # ruleset-id rfcXXXX
-# jcr-version 0.5
+# jcr-version 0.7
 
 [ $my_integers @2, $my_strings @2 ]
 $my_integers =:integer
@@ -196,7 +196,7 @@ OV
   it 'should evaluate JSON against multiple roots' do
     ex = <<EX
 # ruleset-id rfcXXXX
-# jcr-version 0.5
+# jcr-version 0.7
 
 [ $my_integers @2, $my_strings @2 ]
 $oroot =:@{root} [ $my_strings @2, $my_integers @2 ]
@@ -219,7 +219,7 @@ EX
   it 'should callback eval_true once' do
     ex = <<EX
 # ruleset-id rfcXXXX
-# jcr-version 0.5
+# jcr-version 0.7
 
 [ $my_integers @1..2, $my_strings @2 ]
 $my_integers = :0..2
@@ -244,7 +244,7 @@ EX
   it 'should callback eval_true twice' do
     ex = <<EX
 # ruleset-id rfcXXXX
-# jcr-version 0.5
+# jcr-version 0.7
 
 [ $my_integers @2, $my_strings @2 ]
 $my_integers = :0..2
@@ -269,7 +269,7 @@ EX
   it 'should callback eval_false once' do
     ex = <<EX
 # ruleset-id rfcXXXX
-# jcr-version 0.5
+# jcr-version 0.7
 
 [ $my_integers @2, $my_strings @2 ]
 $my_integers= :0..2
@@ -294,7 +294,7 @@ EX
   it 'should callback eval_false twice by changing return value' do
     ex = <<EX
 # ruleset-id rfcXXXX
-# jcr-version 0.5
+# jcr-version 0.7
 
 [ $my_integers @2, $my_strings @2 ]
 $my_integers =:0..2
@@ -319,7 +319,7 @@ EX
   it 'should use callback to evaluate even numbers' do
     ruleset = <<RULESET
 # ruleset-id rfcXXXX
-# jcr-version 0.5
+# jcr-version 0.7
 
 [ $my_integers @2, $my_strings @2 ]
 
