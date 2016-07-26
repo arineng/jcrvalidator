@@ -23,7 +23,7 @@ describe 'process_directives' do
 # ruleset-id rfcXXXX
 ; a comment
 ; another comment
-# jcr-version 0.5
+# jcr-version 0.7
 ; yet another comment
 EX
     ctx = JCR::Context.new
@@ -32,12 +32,12 @@ EX
     expect( ctx.id ).to eq("rfcXXXX")
   end
 
-  it 'should process jcr-version 0.5' do
+  it 'should process jcr-version 0.7' do
     ex = <<EX
 # ruleset-id rfcXXXX
 ; a comment
 ; another comment
-# jcr-version 0.5
+# jcr-version 0.7
 ; yet another comment
 EX
     ctx = JCR::Context.new
@@ -45,7 +45,7 @@ EX
     JCR.process_directives( ctx )
   end
 
-  it 'should fail to process jcr-version 0.5' do
+  it 'should fail to process jcr-version 0.4' do
     ex = <<EX
 # ruleset-id rfcXXXX
 # jcr-version 0.4

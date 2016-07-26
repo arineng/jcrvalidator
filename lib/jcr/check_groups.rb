@@ -14,6 +14,7 @@
 
 require 'jcr/parser'
 require 'jcr/map_rule_names'
+require 'pp'
 
 module JCR
 
@@ -69,6 +70,9 @@ module JCR
   end
 
   def self.check_member_for_group node, mapping
+    if node.is_a? Array
+      node = node[0]
+    end
     if node[:target_rule_name]
       trule = get_name_mapping( node[:target_rule_name][:rule_name], mapping )
       disallowed_group_in_member?( trule, mapping )

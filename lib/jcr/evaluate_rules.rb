@@ -45,7 +45,7 @@ end
 module JCR
 
   class Evaluation
-    attr_accessor :success, :reason, :child_evaluation
+    attr_accessor :success, :reason, :member_found
     def initialize success, reason
       @success = success
       @reason = reason
@@ -207,6 +207,16 @@ module JCR
     return rules, annotations
   end
 
+  def self.merge_rules rules
+    new_rule = Hash.new
+    rules.each do |rule|
+      new_rule.merge!(rule) do |key,oldval,newval|
+        raise "error: conflict in merge of #{rule} with #{new_rule}"
+      end
+    end
+    return new_rule
+  end
+
   def self.evaluate_not annotations, evaluation, econs
     is_not = false
     annotations.each do |a|
@@ -363,7 +373,7 @@ module JCR
     elsif rule[:rule]
       retval = rule_to_s( rule[:rule], shallow )
     else
-      retval = "** unknown rule definition **"
+      retval = "** unknown rule definition ** #{rule}"
     end
     return retval
   end

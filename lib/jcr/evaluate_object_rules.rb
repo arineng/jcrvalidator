@@ -124,21 +124,31 @@ module JCR
             end
           else
             trace( econs, "No member '#{k}' found in object.")
+            e = evaluate_rule(rule, rule_atom, [nil, nil], econs, nil)
+            repeat_results[ nil ] = nil if e.success
           end
 
         else
 
-          trace( econs, "Scanning object.")
+          regex = lrules[0][:member_regex][:regex]
+          trace( econs, "Scanning object for #{regex}.")
           i = 0
+          found = false
           repeat_results = data.select do |k,v|
             unless behavior.checked_hash[k]
               if i < repeat_max
                 e = evaluate_rule(rule, rule_atom, [k, v], econs, nil)
                 behavior.checked_hash[k] = e.success
                 i = i + 1 if e.success
+                found = true if e.member_found
                 e.success
               end
             end
+          end
+          unless found
+            trace( econs, "No member matching #{regex} found in object.")
+            e = evaluate_rule(rule, rule_atom, [nil, nil], econs, nil)
+            repeat_results[ nil ] = nil if e.success
           end
 
         end

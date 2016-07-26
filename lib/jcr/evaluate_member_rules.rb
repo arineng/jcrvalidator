@@ -45,7 +45,7 @@ module JCR
 
 
     rules, annotations = get_rules_and_annotations( jcr )
-    rule = rules[0]
+    rule = merge_rules( rules )
 
     member_match = false
 
@@ -69,6 +69,7 @@ module JCR
 
     if member_match
       e = evaluate_rule( rule, rule_atom, data[ 1 ], econs )
+      e.member_found = true
       return evaluate_not( annotations, e, econs )
     end
 
@@ -80,7 +81,7 @@ module JCR
   def self.member_to_s( jcr, shallow=true )
     rules, annotations = get_rules_and_annotations( jcr )
     retval = ""
-    rule = rules[ 0 ]
+    rule = merge_rules( rules )
     case
       when rule[:member_name]
         retval = %Q|"#{rule[:member_name][:q_string].to_s}"|
