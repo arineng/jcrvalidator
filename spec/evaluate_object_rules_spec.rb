@@ -641,4 +641,20 @@ describe 'evaluate_object_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should pass a restricted object' do
+    tree = JCR.parse( '$orule = { "foo" : 1, "bar" : 2, @{not} // : any @+ }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"foo"=>1, "bar"=> 2 }, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail an unrestricted object' do
+    tree = JCR.parse( '$orule = { "foo" : 1, "bar" : 2, @{not} // : any @+ }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"foo"=>1, "bar"=> 2, "baz" => 3 }, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
 end
