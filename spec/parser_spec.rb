@@ -1135,6 +1135,19 @@ EX5a
     expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
   end
 
+  it 'should parse jcr-version directive major and minor numbers followed by integer root rule' do
+    ex5a = <<EX5a
+# jcr-version 4.0
+integer
+string
+EX5a
+    tree = JCR.parse( ex5a )
+    expect(tree[0][:directive][:jcr_version_d][:major_version]).to eq("4")
+    expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
+    expect(tree[1][:primitive_rule][:integer_v]).to eq("integer")
+    expect(tree[2][:primitive_rule][:string]).to eq("string")
+  end
+
   it 'should parse jcr-version directive major and minor numbers with 1 extension' do
     ex5a = <<EX5a
 # jcr-version 4.0 foo_1
