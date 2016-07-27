@@ -32,6 +32,8 @@ module JCR
         #/ spcCmnt? -> *sp-cmt
     rule(:spaces)   { match('\s').repeat(1) }
         #! spaces = 1*( WSP / CR / LF )
+    rule(:non_eol_spaces)   { match('[ \t\f]').repeat(1) }
+        #! spaces = 1*( WSP )
     rule(:spaces?)  { spaces.maybe }
         #/ spaces? -> [ spaces ]
     rule(:wsp)      { match('[\t ]') }
@@ -55,9 +57,9 @@ module JCR
         #! directive_def = jcr_version_d / ruleset_id_d / import_d
     rule(:jcr_version_d) { ( str('jcr-version') >> spaces >>
                              non_neg_integer.as(:major_version) >> str('.') >> non_neg_integer.as(:minor_version) >>
-                             ( spaces >> extension_id ).repeat
+                             ( non_eol_spaces >> extension_id ).repeat
                            ).as(:jcr_version_d) }
-        #! jcr_version_d = jcr-version-kw spaces major_version "." minor_version *(spaces extension_id)
+        #! jcr_version_d = jcr-version-kw spaces major_version "." minor_version *(non_eol_spaces extension_id)
         #> jcr-version-kw = "jcr-version"
         #! major_version = non_neg_integer
         #! minor_version = non_neg_integer
