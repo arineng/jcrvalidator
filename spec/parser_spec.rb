@@ -1150,7 +1150,40 @@ EX5a
 
   it 'should parse jcr-version directive major and minor numbers with 1 extension' do
     ex5a = <<EX5a
-# jcr-version 4.0 foo_1
+# jcr-version 4.0 (foo_1)
+# ruleset-id my_awesome_rules
+# import http://arin.net/otherexamples as otherrules
+EX5a
+    tree = JCR.parse( ex5a )
+    expect(tree[0][:directive][:jcr_version_d][:major_version]).to eq("4")
+    expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
+  end
+
+  it 'should parse jcr-version directive major and minor numbers with 1 extension with leading space' do
+    ex5a = <<EX5a
+# jcr-version 4.0 ( foo_1)
+# ruleset-id my_awesome_rules
+# import http://arin.net/otherexamples as otherrules
+EX5a
+    tree = JCR.parse( ex5a )
+    expect(tree[0][:directive][:jcr_version_d][:major_version]).to eq("4")
+    expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
+  end
+
+  it 'should parse jcr-version directive major and minor numbers with 1 extension with trailing space' do
+    ex5a = <<EX5a
+# jcr-version 4.0 (foo_1 )
+# ruleset-id my_awesome_rules
+# import http://arin.net/otherexamples as otherrules
+EX5a
+    tree = JCR.parse( ex5a )
+    expect(tree[0][:directive][:jcr_version_d][:major_version]).to eq("4")
+    expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
+  end
+
+  it 'should parse jcr-version directive major and minor numbers with 1 extension with leading and trailing space' do
+    ex5a = <<EX5a
+# jcr-version 4.0 ( foo_1 )
 # ruleset-id my_awesome_rules
 # import http://arin.net/otherexamples as otherrules
 EX5a
@@ -1161,7 +1194,40 @@ EX5a
 
   it 'should parse jcr-version directive major and minor numbers with 2 extensions' do
     ex5a = <<EX5a
-# jcr-version 4.0 foo_1 bar_4
+# jcr-version 4.0 (foo_1 bar_4)
+# ruleset-id my_awesome_rules
+# import http://arin.net/otherexamples as otherrules
+EX5a
+    tree = JCR.parse( ex5a )
+    expect(tree[0][:directive][:jcr_version_d][:major_version]).to eq("4")
+    expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
+  end
+
+  it 'should parse jcr-version directive major and minor numbers with 2 extensions with leading space' do
+    ex5a = <<EX5a
+# jcr-version 4.0 ( foo_1 bar_4)
+# ruleset-id my_awesome_rules
+# import http://arin.net/otherexamples as otherrules
+EX5a
+    tree = JCR.parse( ex5a )
+    expect(tree[0][:directive][:jcr_version_d][:major_version]).to eq("4")
+    expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
+  end
+
+  it 'should parse jcr-version directive major and minor numbers with 2 extensions with trailing space' do
+    ex5a = <<EX5a
+# jcr-version 4.0 (foo_1 bar_4 )
+# ruleset-id my_awesome_rules
+# import http://arin.net/otherexamples as otherrules
+EX5a
+    tree = JCR.parse( ex5a )
+    expect(tree[0][:directive][:jcr_version_d][:major_version]).to eq("4")
+    expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
+  end
+
+  it 'should parse jcr-version directive major and minor numbers with 2 extensions with leading and trailing' do
+    ex5a = <<EX5a
+# jcr-version 4.0 ( foo_1 bar_4 )
 # ruleset-id my_awesome_rules
 # import http://arin.net/otherexamples as otherrules
 EX5a

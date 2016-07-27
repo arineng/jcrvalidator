@@ -32,8 +32,6 @@ module JCR
         #/ spcCmnt? -> *sp-cmt
     rule(:spaces)   { match('\s').repeat(1) }
         #! spaces = 1*( WSP / CR / LF )
-    rule(:non_eol_spaces)   { match('[ \t\f]').repeat(1) }
-        #! spaces = 1*( WSP )
     rule(:spaces?)  { spaces.maybe }
         #/ spaces? -> [ spaces ]
     rule(:wsp)      { match('[\t ]') }
@@ -57,14 +55,15 @@ module JCR
         #! directive_def = jcr_version_d / ruleset_id_d / import_d
     rule(:jcr_version_d) { ( str('jcr-version') >> spaces >>
                              non_neg_integer.as(:major_version) >> str('.') >> non_neg_integer.as(:minor_version) >>
-                             ( non_eol_spaces >> extension_id ).repeat
+                             ( spaces >> str('(') >> spaces? >> extension_id >> ( spaces? >> extension_id ).repeat >> spaces? >> str(')') ).maybe
                            ).as(:jcr_version_d) }
-        #! jcr_version_d = jcr-version-kw spaces major_version "." minor_version *(non_eol_spaces extension_id)
+        #! jcr_version_d = jcr-version-kw spaces major_version "." minor_version
+        #!                 [ spaces "(" spaces? extension_id *( spaces? extension_id) spaces? ")" ]
         #> jcr-version-kw = "jcr-version"
         #! major_version = non_neg_integer
         #! minor_version = non_neg_integer
-    rule(:extension_id)        { match('[a-zA-Z]') >> match('[\S]').repeat }
-        #! extension_id = ALPHA *not-space
+    rule(:extension_id)        { name }
+        #! extension_id = name
     rule(:ruleset_id_d)  { (str('ruleset-id') >> spaces >> ruleset_id.as(:ruleset_id)).as(:ruleset_id_d) }
         #! ruleset_id_d = ruleset-id-kw spaces ruleset_id
         #> ruleset-id-kw = "ruleset-id"
