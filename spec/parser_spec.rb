@@ -1236,6 +1236,31 @@ EX5a
     expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
   end
 
+  it 'should parse jcr-version directive major and minor numbers with 2 extensions with leading and trailing two lines' do
+    ex5a = %q[
+#{ jcr-version 4.0
+   ( foo_1 bar_4 ) }
+# ruleset-id my_awesome_rules
+# import http://arin.net/otherexamples as otherrules
+]
+    tree = JCR.parse( ex5a )
+    expect(tree[0][:directive][:jcr_version_d][:major_version]).to eq("4")
+    expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
+  end
+
+  it 'should parse jcr-version directive major and minor numbers with 2 extensions with leading and trailing three lines' do
+    ex5a = %q[
+#{ jcr-version
+   4.0
+   ( foo_1 bar_4 ) }
+# ruleset-id my_awesome_rules
+# import http://arin.net/otherexamples as otherrules
+]
+    tree = JCR.parse( ex5a )
+    expect(tree[0][:directive][:jcr_version_d][:major_version]).to eq("4")
+    expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
+  end
+
   it 'should parse directives with spaces after them' do
   # Note: ~ characters in JCR below changed to spaces by the gsub() regular expression
     ex5b = <<EX5b
