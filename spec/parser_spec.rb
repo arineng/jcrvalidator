@@ -1150,7 +1150,7 @@ EX5a
 
   it 'should parse jcr-version directive major and minor numbers with 1 extension' do
     ex5a = <<EX5a
-# jcr-version 4.0 (foo_1)
+# jcr-version 4.0 +foo_1-1.0
 # ruleset-id my_awesome_rules
 # import http://arin.net/otherexamples as otherrules
 EX5a
@@ -1161,29 +1161,7 @@ EX5a
 
   it 'should parse jcr-version directive major and minor numbers with 1 extension with leading space' do
     ex5a = <<EX5a
-# jcr-version 4.0 ( foo_1)
-# ruleset-id my_awesome_rules
-# import http://arin.net/otherexamples as otherrules
-EX5a
-    tree = JCR.parse( ex5a )
-    expect(tree[0][:directive][:jcr_version_d][:major_version]).to eq("4")
-    expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
-  end
-
-  it 'should parse jcr-version directive major and minor numbers with 1 extension with trailing space' do
-    ex5a = <<EX5a
-# jcr-version 4.0 (foo_1 )
-# ruleset-id my_awesome_rules
-# import http://arin.net/otherexamples as otherrules
-EX5a
-    tree = JCR.parse( ex5a )
-    expect(tree[0][:directive][:jcr_version_d][:major_version]).to eq("4")
-    expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
-  end
-
-  it 'should parse jcr-version directive major and minor numbers with 1 extension with leading and trailing space' do
-    ex5a = <<EX5a
-# jcr-version 4.0 ( foo_1 )
+# jcr-version 4.0 + foo_1
 # ruleset-id my_awesome_rules
 # import http://arin.net/otherexamples as otherrules
 EX5a
@@ -1194,7 +1172,7 @@ EX5a
 
   it 'should parse jcr-version directive major and minor numbers with 2 extensions' do
     ex5a = <<EX5a
-# jcr-version 4.0 (foo_1 bar_4)
+# jcr-version 4.0 +foo_1 +bar_4
 # ruleset-id my_awesome_rules
 # import http://arin.net/otherexamples as otherrules
 EX5a
@@ -1205,29 +1183,7 @@ EX5a
 
   it 'should parse jcr-version directive major and minor numbers with 2 extensions with leading space' do
     ex5a = <<EX5a
-# jcr-version 4.0 ( foo_1 bar_4)
-# ruleset-id my_awesome_rules
-# import http://arin.net/otherexamples as otherrules
-EX5a
-    tree = JCR.parse( ex5a )
-    expect(tree[0][:directive][:jcr_version_d][:major_version]).to eq("4")
-    expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
-  end
-
-  it 'should parse jcr-version directive major and minor numbers with 2 extensions with trailing space' do
-    ex5a = <<EX5a
-# jcr-version 4.0 (foo_1 bar_4 )
-# ruleset-id my_awesome_rules
-# import http://arin.net/otherexamples as otherrules
-EX5a
-    tree = JCR.parse( ex5a )
-    expect(tree[0][:directive][:jcr_version_d][:major_version]).to eq("4")
-    expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
-  end
-
-  it 'should parse jcr-version directive major and minor numbers with 2 extensions with leading and trailing' do
-    ex5a = <<EX5a
-# jcr-version 4.0 ( foo_1 bar_4 )
+# jcr-version 4.0 + foo_1 + bar_4
 # ruleset-id my_awesome_rules
 # import http://arin.net/otherexamples as otherrules
 EX5a
@@ -1239,7 +1195,19 @@ EX5a
   it 'should parse jcr-version directive major and minor numbers with 2 extensions with leading and trailing two lines' do
     ex5a = %q[
 #{ jcr-version 4.0
-   ( foo_1 bar_4 ) }
+   + foo_1 + bar_4 }
+# ruleset-id my_awesome_rules
+# import http://arin.net/otherexamples as otherrules
+]
+    tree = JCR.parse( ex5a )
+    expect(tree[0][:directive][:jcr_version_d][:major_version]).to eq("4")
+    expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
+  end
+
+  it 'should parse jcr-version directive major and minor numbers with comment & 2 extensions with leading and trailing two lines' do
+    ex5a = %q[
+#{ jcr-version 4.0 ; A comment
+   +foo_1 +bar_4 }
 # ruleset-id my_awesome_rules
 # import http://arin.net/otherexamples as otherrules
 ]
@@ -1252,7 +1220,7 @@ EX5a
     ex5a = %q[
 #{ jcr-version
    4.0
-   ( foo_1 bar_4 ) }
+   + foo_1 + bar_4 }
 # ruleset-id my_awesome_rules
 # import http://arin.net/otherexamples as otherrules
 ]
@@ -1303,6 +1271,18 @@ EX5d
 # import http://arin.net/otherexamples as otherrules
 EX5e
     tree = JCR.parse( ex5e )
+  end
+
+  it 'should permit parsing multi-line unknown directives with early comment' do
+    ex5e = <<'EX5e' # 'EX5e' to prevent #{/...} string interpolation
+#{ constraint; A comment
+  foo
+  $name }
+# ruleset-id my_awesome_rules
+# import http://arin.net/otherexamples as otherrules
+EX5e
+    tree = JCR.parse( ex5e )
+    expect(tree[0][:directive][:directive_name]).to eq("constraint")
   end
 
   it 'should parse multi-line unknown directives with comment, q_strings and regexs' do

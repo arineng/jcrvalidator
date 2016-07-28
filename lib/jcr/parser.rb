@@ -36,6 +36,12 @@ module JCR
         #/ spaces? -> [ spaces ]
     rule(:wsp)      { match('[\t ]') }
         # WSP is a standard ABNF production so is not expanded here
+    rule(:dsps)     { spcCmnt.repeat(1) | wsp.repeat(1) }
+        #! DSPs =     ; Directive spaces
+        #!        1*WSP /     ; When in one-line directive
+        #!        1*spcCmnt   ; When in muti-line directive
+    rule(:dsps?)    { dsps.maybe }
+        #/ DSPs? -> [ DSPs ]
     rule(:comment)  { str(';') >> match('[^\r\n]').repeat >> match('[\r\n]') }
         #! comment = ";" *comment-char comment-end-char
         #! comment-char = HTAB / %x20-10FFFF
@@ -45,31 +51,31 @@ module JCR
 
     rule(:directive) { ( str('#') >> (one_line_directive | multi_line_directive) ).as(:directive) }
         #! directive = "#" (one_line_directive / multi_line_directive)
-    rule(:one_line_directive) { ( spaces? >> ( directive_def | one_line_tbd_directive_d ) >> wsp.repeat >> match('[\r\n]') ) }
-        #! one_line_directive = spaces? 
+    rule(:one_line_directive) { ( dsps? >> ( directive_def | one_line_tbd_directive_d ) >> wsp.repeat >> match('[\r\n]') ) }
+        #! one_line_directive = DSPs? 
         #!                      (directive_def / one_line_tbd_directive_d) *WSP eol
     rule(:multi_line_directive) { str('{') >> spcCmnt? >> (directive_def | multi_line_tbd_directive_d) >> spcCmnt? >> str('}') }
         #! multi_line_directive = "{" spcCmnt?
         #!                        (directive_def / multi_line_tbd_directive_d) spcCmnt? "}"
     rule(:directive_def) { jcr_version_d | ruleset_id_d | import_d }
         #! directive_def = jcr_version_d / ruleset_id_d / import_d
-    rule(:jcr_version_d) { ( str('jcr-version') >> spaces >>
+    rule(:jcr_version_d) { ( str('jcr-version') >> dsps >>
                              non_neg_integer.as(:major_version) >> str('.') >> non_neg_integer.as(:minor_version) >>
-                             ( spaces >> str('(') >> spaces? >> extension_id >> ( spaces? >> extension_id ).repeat >> spaces? >> str(')') ).maybe
+                             ( dsps >> str('+') >> dsps? >> extension_id ).repeat
                            ).as(:jcr_version_d) }
-        #! jcr_version_d = jcr-version-kw spaces major_version "." minor_version
-        #!                 [ spaces "(" spaces? extension_id *( spaces? extension_id) spaces? ")" ]
+        #! jcr_version_d = jcr-version-kw DSPs major_version "." minor_version
+        #!                 *( DSPs "+" DSPs? extension_id )
         #> jcr-version-kw = "jcr-version"
         #! major_version = non_neg_integer
         #! minor_version = non_neg_integer
-    rule(:extension_id)        { name }
-        #! extension_id = name
-    rule(:ruleset_id_d)  { (str('ruleset-id') >> spaces >> ruleset_id.as(:ruleset_id)).as(:ruleset_id_d) }
-        #! ruleset_id_d = ruleset-id-kw spaces ruleset_id
+    rule(:extension_id)  { match('[a-zA-Z]') >> match('[\S]').repeat }
+        #! extension_id = ALPHA *not-space
+    rule(:ruleset_id_d)  { (str('ruleset-id') >> dsps >> ruleset_id.as(:ruleset_id)).as(:ruleset_id_d) }
+        #! ruleset_id_d = ruleset-id-kw DSPs ruleset_id
         #> ruleset-id-kw = "ruleset-id"
-    rule(:import_d)      { (str('import') >> spaces >> ruleset_id.as(:ruleset_id) >> ( spaces >> str('as') >> spaces >> ruleset_id_alias ).maybe).as(:import_d) }
-        #! import_d = import-kw spaces ruleset_id
-        #!            [ spaces as_kw spaces ruleset_id_alias ]
+    rule(:import_d)      { (str('import') >> dsps >> ruleset_id.as(:ruleset_id) >> ( dsps >> str('as') >> dsps >> ruleset_id_alias ).maybe).as(:import_d) }
+        #! import_d = import-kw DSPs ruleset_id
+        #!            [ DSPs as_kw DSPs ruleset_id_alias ]
         #> import-kw = "import"
         #> as-kw = "as"
     rule(:ruleset_id)        { match('[a-zA-Z]') >> match('[\S]').repeat }
@@ -83,9 +89,9 @@ module JCR
         #! one_line_directive_parameters = *not_eol
         #! not_eol = HTAB / %x20-10FFFF
         #! eol = CR / LF
-    rule(:multi_line_tbd_directive_d) { name.as(:directive_name) >> ( spaces >> multi_line_directive_parameters.as(:directive_parameters) ).maybe }
+    rule(:multi_line_tbd_directive_d) { name.as(:directive_name) >> ( spcCmnt.repeat(1) >> multi_line_directive_parameters.as(:directive_parameters) ).maybe }
         #! multi_line_tbd_directive_d = directive_name
-        #!                   [ spaces multi_line_directive_parameters ]
+        #!                   [ 1*spcCmnt multi_line_directive_parameters ]
     rule(:multi_line_directive_parameters) { multi_line_parameters }
         #! multi_line_directive_parameters = multi_line_parameters
     rule(:multi_line_parameters) { (comment | q_string | regex | match('[^"/;}]')).repeat }

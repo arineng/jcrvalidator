@@ -2,24 +2,28 @@ jcr              = *( sp-cmt / directive / root-rule / rule )
 
 sp-cmt           = spaces / comment
 spaces           = 1*( WSP / CR / LF )
+DSPs             = ; Directive spaces
+                   1*WSP /     ; When in one-line directive
+                   1*sp-cmt   ; When in muti-line directive
 comment          = ";" *comment-char comment-end-char
 comment-char     = HTAB / %x20-10FFFF
                    ; Any char other than CR / LF
 comment-end-char = CR / LF
 
 directive        = "#" (one-line-directive / multi-line-directive)
-one-line-directive = [ spaces ] 
+one-line-directive = [ DSPs ] 
                    (directive-def / one-line-tbd-directive-d) *WSP eol
 multi-line-directive = "{" *sp-cmt
                    (directive-def / multi-line-tbd-directive-d) *sp-cmt "}"
 directive-def    = jcr-version-d / ruleset-id-d / import-d
-jcr-version-d    = jcr-version-kw spaces major-version "." minor-version *(spaces extension-id)
+jcr-version-d    = jcr-version-kw DSPs major-version "." minor-version
+                   *( DSPs "+" [ DSPs ] extension-id )
 major-version    = non-neg-integer
 minor-version    = non-neg-integer
 extension-id     = ALPHA *not-space
-ruleset-id-d     = ruleset-id-kw spaces ruleset-id
-import-d         = import-kw spaces ruleset-id
-                   [ spaces as-kw spaces ruleset-id-alias ]
+ruleset-id-d     = ruleset-id-kw DSPs ruleset-id
+import-d         = import-kw DSPs ruleset-id
+                   [ DSPs as-kw DSPs ruleset-id-alias ]
 ruleset-id       = ALPHA *not-space
 not-space        = %x21-10FFFF
 ruleset-id-alias = name
@@ -29,7 +33,7 @@ one-line-directive-parameters = *not-eol
 not-eol          = HTAB / %x20-10FFFF
 eol              = CR / LF
 multi-line-tbd-directive-d = directive-name
-                   [ spaces multi-line-directive-parameters ]
+                   [ 1*sp-cmt multi-line-directive-parameters ]
 multi-line-directive-parameters = multi-line-parameters
 multi-line-parameters = *(comment / q-string / regex /
                    not-multi-line-special)
