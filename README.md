@@ -98,6 +98,9 @@ the -07 version, a pre-release of which can be found [here](https://raw.githubus
   * More group rule checking (code was there, just wan't being invoked)
 * 0.5.3 - Fixes to the gem dependencies
 * 0.6.0 - Fixes from 0.5.3 plus closer tracking to -07
+* 0.6.1 - Towards -07
+  * Updates to track the latest release candidate of -07
+  * Updated docs, tests, and build
 
 The current version of the JCR specification can be found 
 [here](https://raw.githubusercontent.com/arineng/jcr/07/draft-newton-json-content-rules.txt)
@@ -199,5 +202,5 @@ $ bundle install
 To run the unit tests:
 
 ```
-rspec
+rake test
 ````

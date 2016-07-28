@@ -3,8 +3,8 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |s|
   s.name        = 'jcrvalidator'
-  s.version     = '0.6.0'
-  s.date        = '2016-07-16'
+  s.version     = '0.6.1'
+  s.date        = '2016-07-28'
   s.summary     = "JCR Validator"
   s.description = "A JSON Content Rules (JCR) Validator library and command line utility. Version 0.6.x is closely following -07 of the draft."
   s.authors     = ["Andrew Newton","Pete Cordell"]
