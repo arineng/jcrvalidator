@@ -216,6 +216,31 @@ EX
     expect( e.success ).to be_truthy
   end
 
+  it 'should evaluate JSON against multiple nameless roots' do
+    ex = <<EX
+# jcr-version 0.7
+
+[ 1, 2, 3 ]
+
+[ "a", "b", "c" ]
+
+{ "a": 1, "b": 2, "c" : 3}
+
+EX
+    data = JSON.parse( '[ 1, 2, 3 ]')
+    e = JCR::Context.new( ex ).evaluate( data )
+    expect( e.success ).to be_truthy
+    data = JSON.parse( '[ 4, 2, 6 ]')
+    e = JCR::Context.new( ex ).evaluate( data )
+    expect( e.success ).to be_falsey
+    data = JSON.parse( '[ "a", "b", "c" ]')
+    e = JCR::Context.new( ex ).evaluate( data )
+    expect( e.success ).to be_truthy
+    data = JSON.parse( '{ "a": 1, "b": 2, "c":3 }')
+    e = JCR::Context.new( ex ).evaluate( data )
+    expect( e.success ).to be_truthy
+  end
+
   it 'should callback eval_true once' do
     ex = <<EX
 # ruleset-id rfcXXXX

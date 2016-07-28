@@ -112,4 +112,28 @@ EX7
     expect( roots.length ).to eq( 3 )
   end
 
+  it 'should find multiple nameless roots' do
+    ex7 = <<EX7
+# ruleset-id http://blah.com
+{
+    "Image" :{
+        $width, $height, "Title" :string,
+        "thumbnail": { $width, $height, "Url" :uri },
+        "IDs": $ids
+    }
+}
+
+$width="width" : 0..1280
+$height="height" : 0..1024
+$ids= [ integer@* ]
+
+{ $width, $height }
+
+{ "IDs" : $ids }
+EX7
+    tree = JCR.parse( ex7 )
+    roots = JCR.find_roots( tree )
+    expect( roots.length ).to eq( 3 )
+  end
+
 end
