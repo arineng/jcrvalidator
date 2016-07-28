@@ -33,7 +33,7 @@ module JCR
     trace( econs, "Evaluating object rule starting at #{slice_to_s(jcr)} against", data )
     trace_def( econs, "object", jcr, data )
     retval = evaluate_object( jcr, rule_atom, data, econs, behavior )
-    trace_eval( econs, "Object", retval )
+    trace_eval( econs, "Object", retval, jcr, data, "object" )
     pop_trace_stack( econs )
     return retval
 

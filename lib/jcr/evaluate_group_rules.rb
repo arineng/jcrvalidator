@@ -32,7 +32,7 @@ module JCR
     trace( econs, "Evaluating group rule against ", data )
     trace_def( econs, "group", jcr, data )
     retval = evaluate_group( jcr, rule_atom, data, econs, behavior )
-    trace_eval( econs, "Group", retval )
+    trace_eval( econs, "Group", retval, jcr, data, "group" )
     pop_trace_stack( econs )
     return retval
 

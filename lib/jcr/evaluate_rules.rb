@@ -19,6 +19,7 @@ require 'addressable/uri'
 require 'addressable/template'
 require 'email_address_validator'
 require 'big-phoney'
+require 'json'
 
 require 'jcr/parser'
 require 'jcr/map_rule_names'
@@ -53,8 +54,9 @@ module JCR
   end
 
   class EvalConditions
-    attr_accessor :mapping, :callbacks, :trace, :trace_stack
+    attr_accessor :mapping, :callbacks, :trace, :trace_stack, :first_failure
     def initialize mapping, callbacks, trace = false
+      @first_failure = nil
       @mapping = mapping
       @trace = trace
       @trace_stack = []
@@ -306,15 +308,27 @@ module JCR
         else
           s = "** unknown rule **"
       end
-      trace( econs, "#{type}: #{s}", data)
+      trace( econs, "#{type} definition: #{s}", data)
     end
   end
 
-  def self.trace_eval econs, message, evaluation
+  def self.trace_eval econs, message, evaluation, jcr, data, type
     if evaluation.success
       trace( econs, "#{message} evaluation is true" )
     else
       trace( econs, "#{message} evaluation failed: #{evaluation.reason}")
+      unless econs.first_failure
+        econs.first_failure = evaluation
+        trace( econs, "** LIKELY ROOT CAUSE FOR FAILURE **" )
+        trace( econs, "***********************************" )
+        rule = find_first_slice( jcr )
+        pos = "Failed rule at line,column: #{rule.line_and_column} file position offset: #{rule.offset}"
+        trace( econs, pos )
+        trace_def( econs, type, jcr, data )
+        data_s = "JSON that failed to validate: #{data.to_json}"
+        trace( econs, data_s )
+        trace( econs, "***********************************" )
+      end
     end
   end
 
