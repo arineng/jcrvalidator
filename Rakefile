@@ -6,3 +6,8 @@ desc "this is the default"
 task :default do
   puts "Hello World!"
 end
+
+desc "test command line examples"
+task :test_cli do
+  sh "cd examples; bash examples.sh -n"
+end
