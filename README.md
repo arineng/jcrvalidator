@@ -4,7 +4,10 @@
 
 ## Background
 
-JSON Content Rules (JCR) is a language for specifying and testing the interchange of data in JSON format used by computer protocols and processes.  The syntax of JCR is not JSON but is "JSON-like", possessing the conciseness and utility that has made JSON popular. It was created by the American Registry for Internet Numbers (ARIN) in an effort to better describe the JSON structures in protocols such as RDAP.
+JSON Content Rules (JCR) is a language for specifying and testing the interchange of data in JSON 
+format used by computer protocols and processes.  The syntax of JCR is a superset of JSON
+possessing the conciseness and utility that has made JSON popular. It was created by the 
+American Registry for Internet Numbers (ARIN) in an effort to better describe the JSON structures in protocols such as RDAP.
 
 ### A First Example: Specifying Content
 
@@ -52,23 +55,23 @@ JSON Content Rules (JCR) is a language for specifying and testing the interchang
    members as named rules.
 
       {
-        fn,
-        lc,
-        wc
+        $fn,
+        $lc,
+        $wc
       }
 
-      fn "file-name"  : string
-      lc "line-count" : 0..
-      wc "word-count" : 0..
+      $fn = "file-name"  : string
+      $lc = "line-count" : 0..
+      $wc = "word-count" : 0..
 
    With each member specified as a named rule, software testers can
    override them locally for specific test cases.  In the following
    example, the named rules are locally overridden for the test case
    where the file name is "rfc4627.txt".
 
-      fn "file-name"  : "rfc4627.txt"
-      lc "line-count" : 2102
-      wc "word-count" : 16714
+      $fn = "file-name"  : "rfc4627.txt"
+      $lc = "line-count" : 2102
+      $wc = "word-count" : 16714
 
    In this example, the protocol specification describes the JSON object
    in general and an implementation overrides the rules for testing
@@ -76,7 +79,10 @@ JSON Content Rules (JCR) is a language for specifying and testing the interchang
    
 ### More Information on JCR
 
-More information on JCR can be found at [json-content-rules.org](http://json-content-rules.org/). The current specification is an IETF Internet Draft (I-D) versioned as -05. It can be found [here](http://tools.ietf.org/html/draft-newton-json-content-rules-05).
+More information on JCR can be found at [json-content-rules.org](http://json-content-rules.org/). 
+The current published specification is an IETF Internet Draft (I-D) versioned as -06,
+which is now out of date and incompatible with this software. This software closely tracks
+the -07 version, a pre-release of which can be found [here](https://raw.githubusercontent.com/arineng/jcr/07/draft-newton-json-content-rules.txt)
    
 ## Version History
 
@@ -90,17 +96,22 @@ More information on JCR can be found at [json-content-rules.org](http://json-con
   * Changed command line option -s to -S to be more consistent
   * Will no longer allow member rules to be root rules
   * More group rule checking (code was there, just wan't being invoked)
+* 0.5.3 - Fixes to the gem dependencies
+* 0.6.0 - Fixes from 0.5.3 plus closer tracking to -07
 
 The current version of the JCR specification can be found 
-[here](http://tools.ietf.org/html/draft-newton-json-content-rules-05)
+[here](https://raw.githubusercontent.com/arineng/jcr/07/draft-newton-json-content-rules.txt)
   
 ## Features
 
-This JCR Validator can be used by other Ruby code directly, or it may be invoked on the command line using the `jcr` command.
+This JCR Validator can be used by other Ruby code directly, 
+or it may be invoked on the command line using the `jcr` command.
 
-The command line utility can be given specific rulesets to override a primary testing for the purposes of local testing. If no root rule is given, it will test against all roots.
+The command line utility can be given specific override rulesets for 
+the purposes of local testing. If no root rule is given, it will test against all roots.
 
-The library has all the features of the command line utility, and also has the ability to allow for custom validation of rules using Ruby code.
+The library has all the features of the command line utility, 
+and also has the ability to allow for custom validation of rules using Ruby code.
   
 ## Installation
 
@@ -119,10 +130,10 @@ You can find a bunch of command line examples in `examples/examples.sh`
 Here are some quick nibbles:
 
 ```
-$ echo "[ 1, 2]" | bin/jcr -v -R "[ *:integer ]"
+$ echo "[ 1, 2]" | bin/jcr -v -R "[ integer @* ]"
 Success!
 
-$ echo "[ 1, 2]" | bin/jcr -v -R "[ *:string ]"
+$ echo "[ 1, 2]" | bin/jcr -v -R "[ string @* ]"
 Failure: ....
 
 $ bin/jcr -v -r example.jcr example.json
