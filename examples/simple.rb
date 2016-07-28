@@ -19,11 +19,11 @@ require 'jcr'
 
 ruleset = <<RULESET
 # ruleset-id rfcXXXX
-# jcr-version 0.5
+# jcr-version 0.7
 
-[ 2 my_integers, 2 my_strings ]
-my_integers :0..2
-my_strings ( :"foo" | :"bar" )
+[ $my_integers @2, $my_strings @2 ]
+$my_integers =: 0..2
+$my_strings =: ( "foo" | "bar" )
 
 RULESET
 
@@ -33,12 +33,16 @@ ctx = JCR::Context.new( ruleset )
 
 # Evaluate the first JSON
 data1 = JSON.parse( '[ 1, 2, "foo", "bar" ]')
-e = ctx.evaluate( data1 )
+e1 = ctx.evaluate( data1 )
 # Should be true
-puts "Ruleset evaluation of JSON = " + e.success.to_s
+puts "Ruleset evaluation of JSON = " + e1.success.to_s
 
 data2 = JSON.parse( '[ 2, 1, "bar", "foo" ]')
-e = ctx.evaluate( data2 )
+e2 = ctx.evaluate( data2 )
 # Should be true
-puts "Ruleset evaluation of JSON = " + e.success.to_s
+puts "Ruleset evaluation of JSON = " + e2.success.to_s
+
+#return the evaluations as an exit code
+exit e1.success && e2.success
+
 

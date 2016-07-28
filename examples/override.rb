@@ -18,16 +18,16 @@ require 'jcr'
 
 ruleset = <<RULESET
 # ruleset-id rfcXXXX
-# jcr-version 0.5
+# jcr-version 0.7
 
-[ 2 my_integers, 2 my_strings ]
-my_integers :0..2
-my_strings ( :"foo" | :"bar" )
+[ $my_integers @2, $my_strings @2 ]
+$my_integers =:0..2
+$my_strings =: ( "foo" | "bar" )
 
 RULESET
 
 override = <<OVERRIDE
-my_integers :0..1
+$my_integers =:0..1
 OVERRIDE
 
 # Create a JCR context.
@@ -35,20 +35,22 @@ ctx = JCR::Context.new( ruleset )
 
 # Evaluate the JSON without the override
 data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
-e = ctx.evaluate( data )
+e1 = ctx.evaluate( data )
 # Should be true
-puts "Ruleset evaluation of JSON = " + e.success.to_s
+puts "Ruleset evaluation of JSON = " + e1.success.to_s
 
 # Create a new context with overriden rules
 new_ctx = ctx.override( override )
-e = new_ctx.evaluate( data )
+e2 = new_ctx.evaluate( data )
 # Should be false
-puts "New Context Ruleset evaluation of JSON = " + e.success.to_s
+puts "New Context Ruleset evaluation of JSON = " + e2.success.to_s
 
 # The first context can be modified as well
 ctx.override!( override )
-e = ctx.evaluate( data )
+e3 = ctx.evaluate( data )
 # Should be false
-puts "Overriden Ruleset evaluation of JSON = " + e.success.to_s
+puts "Overriden Ruleset evaluation of JSON = " + e3.success.to_s
 
+#return the evaluations as an exit code
+exit e1.success && !e2.success && !e3.success
 

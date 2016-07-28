@@ -19,14 +19,14 @@ require 'jcr'
 
 ruleset = <<RULESET
 # ruleset-id rfcXXXX
-# jcr-version 0.5
+# jcr-version 0.7
 
-[ 2 my_integers, 2 my_strings ]
+[ $my_integers @2, $my_strings @2 ]
 
 ; this will be the rule we custom validate
-my_integers :0..4
+$my_integers =:0..4
 
-my_strings ( :"foo" | :"bar" )
+$my_strings = ( "foo" | "bar" )
 
 RULESET
 
@@ -65,11 +65,14 @@ end
 ctx.callbacks[ "my_integers" ] = c
 
 data1 = JSON.parse( '[ 2, 4, "foo", "bar" ]')
-e = ctx.evaluate( data1 )
-puts "Ruleset evaluation of JSON = " + e.success.to_s
+e1 = ctx.evaluate( data1 )
+puts "Ruleset evaluation of JSON = " + e1.success.to_s
 puts "my_eval_count = " + my_eval_count.to_s
 
 data2 = JSON.parse( '[ 3, 4, "foo", "bar" ]')
-e = ctx.evaluate( data2 )
-puts "Ruleset evaluation of JSON = " + e.success.to_s
+e2 = ctx.evaluate( data2 )
+puts "Ruleset evaluation of JSON = " + e2.success.to_s
 puts "my_eval_count = " + my_eval_count.to_s
+
+#return the evaluations as an exit code
+exit e1.success && !e2.success
