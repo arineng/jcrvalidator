@@ -1,14 +1,14 @@
 # ruleset-id file://blahbalh ; a collection of rules
 
-rule1 : integer
-rule2 : float
-rule3 : 0..1
-rule4 : 0.0..1.0
-rule5 : "a string"
-rule6 : /a.*regex/
-rule7 : true
-rule8 : false
-rule9 : null
-rule10: ( :integer | :"string" | :/a.*regex/ | :string | :integer )
+$rule1 =: integer
+$rule2 =: float
+$rule3 =: 0..1
+$rule4 =: 0.0..1.0
+$rule5 =: "a string"
+$rule6 =: /a.*regex/
+$rule7 =: true
+$rule8 =: false
+$rule9 =: null
+$rule10 =: ( integer | "string" | /a.*regex/ | string | integer )
 
 

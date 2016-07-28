@@ -207,6 +207,13 @@ module JCR
       opt.on("-h","display help") do |help|
         options[:help] = true
       end
+
+      opt.separator  ""
+      opt.separator  "Return codes:"
+      opt.separator  " 0 = success"
+      opt.separator  " 1 = parsing or other bad condition"
+      opt.separator  " 2 = fall through bad condition"
+      opt.separator  " 3 = unsuccessful evaluation of JSON"
     end
 
     opt_parser.parse! my_argv
@@ -286,7 +293,7 @@ module JCR
       if verbose
         puts "Failure: #{e.reason}"
       end
-      ec = 1
+      ec = 3
     end
     return ec
   end
