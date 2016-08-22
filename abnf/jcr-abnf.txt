@@ -12,11 +12,15 @@ comment-end-char = CR / LF
 
 directive        = "#" (one-line-directive / multi-line-directive)
 one-line-directive = [ DSPs ] 
-                   (directive-def / one-line-tbd-directive-d) *WSP eol
+                   (directive-def / one-line-tbd-directive-d)
+                   *WSP eol
 multi-line-directive = "{" *sp-cmt
-                   (directive-def / multi-line-tbd-directive-d) *sp-cmt "}"
+                   ( directive-def /
+                   multi-line-tbd-directive-d )
+                   *sp-cmt "}"
 directive-def    = jcr-version-d / ruleset-id-d / import-d
-jcr-version-d    = jcr-version-kw DSPs major-version "." minor-version
+jcr-version-d    = jcr-version-kw DSPs major-version
+                   "." minor-version
                    *( DSPs "+" [ DSPs ] extension-id )
 major-version    = non-neg-integer
 minor-version    = non-neg-integer
@@ -27,7 +31,8 @@ import-d         = import-kw DSPs ruleset-id
 ruleset-id       = ALPHA *not-space
 not-space        = %x21-10FFFF
 ruleset-id-alias = name
-one-line-tbd-directive-d = directive-name [ WSP one-line-directive-parameters ]
+one-line-tbd-directive-d = directive-name
+                   [ WSP one-line-directive-parameters ]
 directive-name   = name
 one-line-directive-parameters = *not-eol
 not-eol          = HTAB / %x20-10FFFF
@@ -37,19 +42,23 @@ multi-line-tbd-directive-d = directive-name
 multi-line-directive-parameters = multi-line-parameters
 multi-line-parameters = *(comment / q-string / regex /
                    not-multi-line-special)
-not-multi-line-special = spaces / %x21 / %x23-2E / %x30-3A / %x3C-7C /
-                   %x7E-10FFFF ; not ", /, ; or }
+not-multi-line-special = spaces / %x21 / %x23-2E / %x30-3A /
+                   %x3C-7C / %x7E-10FFFF ; not ", /, ; or }
 
 root-rule        = value-rule / group-rule
 
-rule             = annotations "$" rule-name *sp-cmt "=" *sp-cmt rule-def
+rule             = annotations "$" rule-name *sp-cmt
+                   "=" *sp-cmt rule-def
 
 rule-name        = name
-target-rule-name = annotations "$" [ ruleset-id-alias "." ] rule-name
+target-rule-name = annotations "$"
+                   [ ruleset-id-alias "." ]
+                   rule-name
 name             = ALPHA *( ALPHA / DIGIT / "-" / "-" )
 
 rule-def         = member-rule / type-designator rule-def-type-rule /
-                   array-rule / object-rule / group-rule / target-rule-name
+                   array-rule / object-rule / group-rule /
+                   target-rule-name
 type-designator  = type-kw 1*sp-cmt / ":" *sp-cmt
 rule-def-type-rule = value-rule / type-choice
 value-rule       = primitive-rule / array-rule / object-rule
@@ -62,7 +71,8 @@ type-choice      = annotations "(" type-choice-items
 explicit-type-choice = type-designator type-choice
 type-choice-items = *sp-cmt ( type-choice / type-rule ) *sp-cmt
 
-annotations      = *( "@{" *sp-cmt annotation-set *sp-cmt "}" *sp-cmt )
+annotations      = *( "@{" *sp-cmt annotation-set *sp-cmt "}"
+                   *sp-cmt )
 annotation-set   = not-annotation / unordered-annotation /
                    root-annotation / tbd-annotation
 not-annotation   = not-kw
@@ -74,15 +84,16 @@ annotation-parameters = multi-line-parameters
 
 primitive-rule   = annotations primitive-def
 primitive-def    = string-type / string-range / string-value /
-                   null-type / boolean-type / true-value / false-value /
-                   double-type / float-type / float-range / float-value /
+                   null-type / boolean-type / true-value /
+                   false-value / double-type / float-type /
+                   float-range / float-value /
                    integer-type / integer-range / integer-value /
-                   sized-int-type / sized-uint-type /
-                   ipv4-type / ipv6-type / ipaddr-type / fqdn-type / idn-type /
+                   sized-int-type / sized-uint-type / ipv4-type /
+                   ipv6-type / ipaddr-type / fqdn-type / idn-type /
                    uri-range / uri-type / phone-type / email-type /
                    datetime-type / date-type / time-type /
-                   hex-type / base32hex-type / base32-type / base64url-type / base64-type /
-                   any
+                   hex-type / base32hex-type / base32-type /
+                   base64url-type / base64-type / any
 null-type        = null-kw
 boolean-type     = boolean-kw
 true-value       = true-kw
@@ -97,7 +108,8 @@ float-min        = float
 float-max        = float
 float-value      = float
 integer-type     = integer-kw
-integer-range    = integer-min ".." [ integer-max ] / ".." integer-max
+integer-range    = integer-min ".." [ integer-max ] /
+                   ".." integer-max
 integer-min      = integer
 integer-max      = integer
 integer-value    = integer
@@ -122,7 +134,8 @@ base64url-type   = base64url-kw
 base64-type      = base64-kw
 any              = any-kw
 
-object-rule      = annotations "{" *sp-cmt [ object-items *sp-cmt ] "}"
+object-rule      = annotations "{" *sp-cmt
+                   [ object-items *sp-cmt ] "}"
 object-items     = object-item (*( sequence-combiner object-item ) /
                    *( choice-combiner object-item ) )
 object-item      = object-item-types *sp-cmt [ repetition ]
@@ -140,19 +153,22 @@ group-rule       = annotations "(" *sp-cmt [ group-items *sp-cmt ] ")"
 group-items      = group-item (*( sequence-combiner group-item ) /
                    *( choice-combiner group-item ) )
 group-item       = group-item-types *sp-cmt [ repetition ]
-group-item-types = group-group / member-rule / type-rule / explicit-type-choice
+group-item-types = group-group / member-rule /
+                   type-rule / explicit-type-choice
 group-group      = group-rule
 
 sequence-combiner = *sp-cmt "," *sp-cmt
 choice-combiner  = *sp-cmt "|" *sp-cmt
 
-repetition       = "@" *sp-cmt ( optional / one-or-more / min-max-repetition /
+repetition       = "@" *sp-cmt ( optional / one-or-more /
+                   min-max-repetition /
                    min-repetition / max-repetition /
                    zero-or-more / specific-repetition )
 optional         = "?"
 one-or-more      = "+" [ repetition-step ]
 zero-or-more     = "*" [ repetition-step ]
-min-max-repetition = min-repeat ".." max-repeat [ repetition-step ]
+min-max-repetition = min-repeat ".." max-repeat
+                   [ repetition-step ]
 min-repetition   = min-repeat ".." [ repetition-step ]
 max-repetition   = ".."  max-repeat [ repetition-step ]
 min-repeat       = non-neg-integer
@@ -193,7 +209,8 @@ escape           = %x5C              ; \
 quotation-mark   = %x22      ; "
 unescaped        = %x20-21 / %x23-5B / %x5D-10FFFF
 
-regex            = "/" *( escape "/" / not-slash ) "/" [ regex-modifiers ]
+regex            = "/" *( escape "/" / not-slash ) "/"
+                   [ regex-modifiers ]
 not-slash        = HTAB / CR / LF / %x20-2E / %x30-10FFFF
                    ; Any char except "/"
 regex-modifiers  = *( "i" / "s" / "x" )

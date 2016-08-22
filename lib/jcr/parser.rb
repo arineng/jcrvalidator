@@ -53,17 +53,21 @@ module JCR
         #! directive = "#" (one_line_directive / multi_line_directive)
     rule(:one_line_directive) { ( dsps? >> ( directive_def | one_line_tbd_directive_d ) >> wsp.repeat >> match('[\r\n]') ) }
         #! one_line_directive = DSPs? 
-        #!                      (directive_def / one_line_tbd_directive_d) *WSP eol
+        #!                      (directive_def / one_line_tbd_directive_d)
+        #!                      *WSP eol
     rule(:multi_line_directive) { str('{') >> spcCmnt? >> (directive_def | multi_line_tbd_directive_d) >> spcCmnt? >> str('}') }
         #! multi_line_directive = "{" spcCmnt?
-        #!                        (directive_def / multi_line_tbd_directive_d) spcCmnt? "}"
+        #!                        ( directive_def /
+        #!                          multi_line_tbd_directive_d )
+        #!                        spcCmnt? "}"
     rule(:directive_def) { jcr_version_d | ruleset_id_d | import_d }
         #! directive_def = jcr_version_d / ruleset_id_d / import_d
     rule(:jcr_version_d) { ( str('jcr-version') >> dsps >>
                              non_neg_integer.as(:major_version) >> str('.') >> non_neg_integer.as(:minor_version) >>
                              ( dsps >> str('+') >> dsps? >> extension_id ).repeat
                            ).as(:jcr_version_d) }
-        #! jcr_version_d = jcr-version-kw DSPs major_version "." minor_version
+        #! jcr_version_d = jcr-version-kw DSPs major_version
+        #!                 "." minor_version
         #!                 *( DSPs "+" DSPs? extension_id )
         #> jcr-version-kw = "jcr-version"
         #! major_version = non_neg_integer
@@ -84,7 +88,8 @@ module JCR
     rule(:ruleset_id_alias)  { name.as(:ruleset_id_alias) }
         #! ruleset_id_alias = name
     rule(:one_line_tbd_directive_d) { name.as(:directive_name) >> ( wsp >> match('[^\r\n]').repeat.as(:directive_parameters) ).maybe }
-        #! one_line_tbd_directive_d = directive_name [ WSP one_line_directive_parameters ]
+        #! one_line_tbd_directive_d = directive_name
+        #!                            [ WSP one_line_directive_parameters ]
         #! directive_name = name
         #! one_line_directive_parameters = *not_eol
         #! not_eol = HTAB / %x20-10FFFF
@@ -97,8 +102,8 @@ module JCR
     rule(:multi_line_parameters) { (comment | q_string | regex | match('[^"/;}]')).repeat }
         #! multi_line_parameters = *(comment / q_string / regex /
         #!                         not_multi_line_special)
-        #! not_multi_line_special = spaces / %x21 / %x23-2E / %x30-3A / %x3C-7C /
-        #!                          %x7E-10FFFF ; not ", /, ; or }
+        #! not_multi_line_special = spaces / %x21 / %x23-2E / %x30-3A /
+        #!                          %x3C-7C / %x7E-10FFFF ; not ", /, ; or }
         #!
 
     rule(:root_rule) { value_rule | group_rule } # N.B. Not target_rule_name
@@ -106,13 +111,16 @@ module JCR
         #!
 
     rule(:rule) { ( annotations.as(:annotations) >>  str('$') >> rule_name >> spcCmnt? >> str('=') >> spcCmnt? >> rule_def ).as(:rule) }
-        #! rule = annotations "$" rule_name spcCmnt? "=" spcCmnt? rule_def
+        #! rule = annotations "$" rule_name spcCmnt?
+        #!        "=" spcCmnt? rule_def
         #!
 
     rule(:rule_name)         { name.as(:rule_name) }
         #! rule_name = name
     rule(:target_rule_name)  { (annotations.as(:annotations) >> str('$') >> (ruleset_id_alias >> str('.')).maybe >> rule_name).as(:target_rule_name) }
-        #! target_rule_name  = annotations "$" [ ruleset_id_alias "." ] rule_name
+        #! target_rule_name  = annotations "$"
+        #!                     [ ruleset_id_alias "." ]
+        #!                     rule_name
     rule(:name)              { match('[a-zA-Z]') >> match('[a-zA-Z0-9\-_]').repeat }
         #! name              = ALPHA *( ALPHA / DIGIT / "-" / "_" )
         #!
@@ -120,7 +128,8 @@ module JCR
     rule(:rule_def)          { member_rule | (type_designator >> rule_def_type_rule) | 
                                array_rule | object_rule | group_rule | target_rule_name }
         #! rule_def = member_rule / type_designator rule_def_type_rule /
-        #!            array_rule / object_rule / group_rule / target_rule_name
+        #!            array_rule / object_rule / group_rule /
+        #!            target_rule_name
     rule(:type_designator)   { str('type') >> spcCmnt.repeat(1) | str(':') >> spcCmnt? }
         #! type_designator = type-kw 1*spcCmnt / ":" spcCmnt?
         #> type-kw = "type"
@@ -145,7 +154,8 @@ module JCR
         #!
 
     rule(:annotations)       { ( str('@{') >> spcCmnt? >> annotation_set >> spcCmnt? >> str('}') >> spcCmnt? ).repeat }
-        #! annotations = *( "@{" spcCmnt? annotation_set spcCmnt? "}" spcCmnt? )
+        #! annotations = *( "@{" spcCmnt? annotation_set spcCmnt? "}"
+        #!                  spcCmnt? )
     rule(:annotation_set)    { not_annotation | unordered_annotation | root_annotation | tbd_annotation }
         #! annotation_set = not_annotation / unordered_annotation /
         #!                  root_annotation / tbd_annotation
@@ -181,15 +191,16 @@ module JCR
           any
     }
         #! primitive_def = string_type / string_range / string_value /
-        #!             null_type / boolean_type / true_value / false_value /
-        #!             double_type / float_type / float_range / float_value /
+        #!             null_type / boolean_type / true_value /
+        #!             false_value / double_type / float_type /
+        #!             float_range / float_value /
         #!             integer_type / integer_range / integer_value /
-        #!             sized_int_type / sized_uint_type /
-        #!             ipv4_type / ipv6_type / ipaddr_type / fqdn_type / idn_type /
+        #!             sized_int_type / sized_uint_type / ipv4_type /
+        #!             ipv6_type / ipaddr_type / fqdn_type / idn_type /
         #!             uri_range / uri_type / phone_type / email_type /
         #!             datetime_type / date_type / time_type /
-        #!             hex_type / base32hex_type / base32_type / base64url_type / base64_type /
-        #!             any
+        #!             hex_type / base32hex_type / base32_type /
+        #!             base64url_type / base64_type / any
     rule(:null_type)      { str('null').as(:null) }
         #! null_type = null-kw
         #> null-kw = "null"
@@ -229,7 +240,8 @@ module JCR
     rule(:integer_range)   {
         integer.as(:integer_min) >> str('..') >> integer.maybe.as(:integer_max) | ( str('..') >> integer.as(:integer_max) )
     }
-        #! integer_range = integer_min ".." [ integer_max ] / ".." integer_max
+        #! integer_range = integer_min ".." [ integer_max ] /
+        #!                 ".." integer_max
         #! integer_min = integer
         #! integer_max = integer
     rule(:integer_value)   { integer.as(:integer) }
@@ -298,7 +310,8 @@ module JCR
 
     rule(:object_rule)  { ( annotations >>
               str('{') >> spcCmnt? >> object_items.maybe >> spcCmnt? >> str('}') ).as(:object_rule) }
-        #! object_rule = annotations "{" spcCmnt? [ object_items spcCmnt? ] "}"
+        #! object_rule = annotations "{" spcCmnt?
+        #!                               [ object_items spcCmnt? ] "}"
     rule(:object_items) { object_item >> (( spcCmnt? >> sequence_combiner >> spcCmnt? >> object_item ).repeat(1) |
                                           ( spcCmnt? >> choice_combiner >> spcCmnt? >> object_item ).repeat(1) ).maybe }
         #! object_items = object_item (*( sequence_combiner object_item ) /
@@ -335,7 +348,8 @@ module JCR
     rule(:group_item)   { group_item_types >> spcCmnt? >> repetition.maybe }
         #! group_item = group_item_types spcCmnt? [ repetition ]
     rule(:group_item_types) { group_group | member_rule | type_rule | explicit_type_choice }
-        #! group_item_types = group_group / member_rule / type_rule / explicit_type_choice
+        #! group_item_types = group_group / member_rule /
+        #!                    type_rule / explicit_type_choice
     rule(:group_group)  { group_rule }
         #! group_group = group_rule
         #!
@@ -348,9 +362,10 @@ module JCR
 
     rule(:repetition)          { str('@') >> spcCmnt? >> ( optional | one_or_more | zero_or_more |
                                               min_max_repetition | specific_repetition ) }
-        #! repetition = "@" spcCmnt? ( optional / one_or_more / min_max_repetition /
-        #!                    min_repetition / max_repetition /
-        #!                    zero_or_more / specific_repetition )
+        #! repetition = "@" spcCmnt? ( optional / one_or_more /
+        #!                             min_max_repetition /
+        #!                             min_repetition / max_repetition /
+        #!                             zero_or_more / specific_repetition )
     rule(:optional)            { str('?').as(:optional) }
         #! optional = "?"
     rule(:one_or_more)         { str('+').as(:one_or_more) >> repetition_step.maybe }
@@ -362,7 +377,8 @@ module JCR
             str("..").as(:repetition_interval) >>
             non_neg_integer.maybe.as(:repetition_max) >>
             repetition_step.maybe }
-        #! min_max_repetition = min_repeat ".." max_repeat [ repetition_step ]
+        #! min_max_repetition = min_repeat ".." max_repeat
+        #!                     [ repetition_step ]
         #! min_repetition = min_repeat ".." [ repetition_step ]
         #! max_repetition = ".."  max_repeat [ repetition_step ]
         #! min_repeat = non_neg_integer
@@ -419,7 +435,8 @@ module JCR
         #!
 
     rule(:regex)     { str('/') >> (str('\\/') | match('[^/]+')).repeat.as(:regex) >> str('/') >> regex_modifiers.maybe }
-        #! regex = "/" *( escape "/" / not-slash ) "/" [ regex_modifiers ]
+        #! regex = "/" *( escape "/" / not-slash ) "/"
+        #!         [ regex_modifiers ]
         #! not-slash = HTAB / CR / LF / %x20-2E / %x30-10FFFF
         #!             ; Any char except "/"
     rule(:regex_modifiers) { match('[isx]').repeat.as(:regex_modifiers) }
