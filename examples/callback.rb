@@ -21,7 +21,7 @@ ruleset = <<RULESET
 # ruleset-id rfcXXXX
 # jcr-version 0.7
 
-[ $my_integers @2, $my_strings @2 ]
+[ $my_integers *2, $my_strings *2 ]
 
 ; this will be the rule we custom validate
 $my_integers =:0..4

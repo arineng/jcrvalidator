@@ -20,7 +20,7 @@ ruleset = <<RULESET
 # ruleset-id rfcXXXX
 # jcr-version 0.7
 
-[ $my_integers @2, $my_strings @2 ]
+[ $my_integers *2, $my_strings *2 ]
 $my_integers =:0..2
 $my_strings =: ( "foo" | "bar" )
 
