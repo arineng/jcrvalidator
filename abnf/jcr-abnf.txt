@@ -160,13 +160,14 @@ group-group      = group-rule
 sequence-combiner = *sp-cmt "," *sp-cmt
 choice-combiner  = *sp-cmt "|" *sp-cmt
 
-repetition       = "@" *sp-cmt ( optional / one-or-more /
-                   min-max-repetition /
-                   min-repetition / max-repetition /
-                   zero-or-more / specific-repetition )
+repetition       = optional / one-or-more /
+                   repetition-range / zero-or-more
 optional         = "?"
 one-or-more      = "+" [ repetition-step ]
 zero-or-more     = "*" [ repetition-step ]
+repetition-range = "*" *sp-cmt (
+                   min-max-repetition / min-repetition /
+                   max-repetition / specific-repetition )
 min-max-repetition = min-repeat ".." max-repeat
                    [ repetition-step ]
 min-repetition   = min-repeat ".." [ repetition-step ]
@@ -174,7 +175,8 @@ max-repetition   = ".."  max-repeat [ repetition-step ]
 min-repeat       = non-neg-integer
 max-repeat       = non-neg-integer
 specific-repetition = non-neg-integer
-repetition-step  = "%" non-neg-integer
+repetition-step  = "%" step-size
+step-size        = non-neg-integer
 
 integer          = "0" / ["-"] pos-integer
 non-neg-integer  = "0" / pos-integer
