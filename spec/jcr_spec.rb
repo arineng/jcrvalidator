@@ -24,7 +24,7 @@ describe 'jcr' do
 # ruleset-id rfcXXXX
 # jcr-version 0.7
 
-[ integer@* ]
+[ integer* ]
 
 EX
     ctx = JCR.ingest_ruleset( ex )
@@ -37,7 +37,7 @@ EX
 # ruleset-id rfcXXXX
 # jcr-version 0.7
 
-[ string@* ]
+[ string* ]
 
 EX
     ctx = JCR.ingest_ruleset( ex )
@@ -50,7 +50,7 @@ EX
 # ruleset-id rfcXXXX
 # jcr-version 0.7
 
-[ $my_rule @* ]
+[ $my_rule * ]
 $my_rule =: 0..2
 
 EX
@@ -64,7 +64,7 @@ EX
 # ruleset-id rfcXXXX
 # jcr-version 0.7
 
-[ $my_integers @2, $my_strings @2 ]
+[ $my_integers *2, $my_strings *2 ]
 $my_integers =: 0..2
 $my_strings =: ( "foo" | "bar" )
 
@@ -80,7 +80,7 @@ EX
 # ruleset-id rfcXXXX
 # jcr-version 0.7
 
-[ $my_integers @2, $my_strings @2 ]
+[ $my_integers *2, $my_strings *2 ]
 $my_integers =: 0..2
 $my_strings =: ( "foo" | "bar" )
 
@@ -95,7 +95,7 @@ EX
 # ruleset-id rfcXXXX
 # jcr-version 0.7
 
-[ $my_integers @2, $my_strings @2 ]
+[ $my_integers *2, $my_strings *2 ]
 $my_integers =: 0..2
 $my_strings =: ( "foo" | "bar" )
 
@@ -114,7 +114,7 @@ EX
 # ruleset-id rfcXXXX
 # jcr-version 0.7
 
-[ $my_integers @2, $my_strings @2 ]
+[ $my_integers *2, $my_strings *2 ]
 $my_integers =: 0..2
 $my_strings =: ( "foo" | "bar" )
 
@@ -136,7 +136,7 @@ EX
 # ruleset-id rfcXXXX
 # jcr-version 0.7
 
-[ $my_integers @2, $my_strings @2 ]
+[ $my_integers *2, $my_strings *2 ]
 $my_integers=:integer
 $my_strings=type ( "foo" | "bar" )
 
@@ -156,7 +156,7 @@ OV
 # ruleset-id rfcXXXX
 # jcr-version 0.7
 
-[ $my_integers @2, $my_strings @2 ]
+[ $my_integers *2, $my_strings *2 ]
 $my_integers=: integer
 $my_strings =:( "foo" | "bar" )
 
@@ -176,7 +176,7 @@ OV
 # ruleset-id rfcXXXX
 # jcr-version 0.7
 
-[ $my_integers @2, $my_strings @2 ]
+[ $my_integers *2, $my_strings *2 ]
 $my_integers =:integer
 $my_strings =:( "foo" | "bar" )
 
@@ -198,8 +198,8 @@ OV
 # ruleset-id rfcXXXX
 # jcr-version 0.7
 
-[ $my_integers @2, $my_strings @2 ]
-$oroot =:@{root} [ $my_strings @2, $my_integers @2 ]
+[ $my_integers *2, $my_strings *2 ]
+$oroot =:@{root} [ $my_strings *2, $my_integers *2 ]
 $my_integers=:0..2
 $my_strings=:( "foo" | "bar" )
 
@@ -246,7 +246,7 @@ EX
 # ruleset-id rfcXXXX
 # jcr-version 0.7
 
-[ $my_integers @1..2, $my_strings @2 ]
+[ $my_integers *1..2, $my_strings *2 ]
 $my_integers = :0..2
 $my_strings = :( "foo" | "bar" )
 
@@ -271,7 +271,7 @@ EX
 # ruleset-id rfcXXXX
 # jcr-version 0.7
 
-[ $my_integers @2, $my_strings @2 ]
+[ $my_integers *2, $my_strings *2 ]
 $my_integers = :0..2
 $my_strings =:( "foo" | "bar" )
 
@@ -296,7 +296,7 @@ EX
 # ruleset-id rfcXXXX
 # jcr-version 0.7
 
-[ $my_integers @2, $my_strings @2 ]
+[ $my_integers *2, $my_strings *2 ]
 $my_integers= :0..2
 $my_strings= :( "foo" | "bar" )
 
@@ -321,7 +321,7 @@ EX
 # ruleset-id rfcXXXX
 # jcr-version 0.7
 
-[ $my_integers @2, $my_strings @2 ]
+[ $my_integers *2, $my_strings *2 ]
 $my_integers =:0..2
 $my_strings = :( "foo" | "bar" )
 
@@ -346,7 +346,7 @@ EX
 # ruleset-id rfcXXXX
 # jcr-version 0.7
 
-[ $my_integers @2, $my_strings @2 ]
+[ $my_integers *2, $my_strings *2 ]
 
 ; this will be the rule we custom validate
 $my_integers = :0..4
@@ -403,7 +403,7 @@ RULESET
   end
 
   it 'should parse from the command line' do
-    ex = JCR.main( ['-R', '[ integer @2 ]', '-J', '[ 1, 2 ]'] )
+    ex = JCR.main( ['-R', '[ integer *2 ]', '-J', '[ 1, 2 ]'] )
     expect(ex).to eq(0)
   end
 

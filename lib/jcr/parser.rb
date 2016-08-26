@@ -360,18 +360,21 @@ module JCR
         #! choice_combiner = spcCmnt? "|" spcCmnt?
         #!
 
-    rule(:repetition)          { str('@') >> spcCmnt? >> ( optional | one_or_more | zero_or_more |
-                                              min_max_repetition | specific_repetition ) }
-        #! repetition = "@" spcCmnt? ( optional / one_or_more /
-        #!                             min_max_repetition /
-        #!                             min_repetition / max_repetition /
-        #!                             zero_or_more / specific_repetition )
+    rule(:repetition)          { optional | one_or_more |
+                                 repetition_range | zero_or_more }
+        #! repetition = optional / one_or_more /
+        #!              repetition_range / zero_or_more
     rule(:optional)            { str('?').as(:optional) }
         #! optional = "?"
     rule(:one_or_more)         { str('+').as(:one_or_more) >> repetition_step.maybe }
         #! one_or_more = "+" [ repetition_step ]
     rule(:zero_or_more)        { str('*').as(:zero_or_more) >> repetition_step.maybe }
         #! zero_or_more = "*" [ repetition_step ]
+    rule(:repetition_range)    { str('*') >> spcCmnt? >>
+                                 (min_max_repetition | specific_repetition) }
+        #! repetition_range = "*" spcCmnt? (
+        #!                             min_max_repetition / min_repetition /
+        #!                             max_repetition / specific_repetition )
     rule(:min_max_repetition)  {      # This includes min_only and max_only cases
             non_neg_integer.maybe.as(:repetition_min) >>
             str("..").as(:repetition_interval) >>
@@ -386,7 +389,8 @@ module JCR
     rule(:specific_repetition) { non_neg_integer.as(:specific_repetition) }
         #! specific_repetition = non_neg_integer
     rule(:repetition_step) { str('%') >> non_neg_integer.as(:repetition_step) }
-        #! repetition_step = "%" non_neg_integer
+        #! repetition_step = "%" step_size
+        #! step_size = non_neg_integer
         #!
 
     rule(:integer)   { str('0') | str('-').maybe >> pos_integer }

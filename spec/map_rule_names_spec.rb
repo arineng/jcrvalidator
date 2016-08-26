@@ -28,7 +28,7 @@ $root = :{
     "Image" :{
         $width, $height, "Title" :string,
         "thumbnail" :{ $width, $height, "Url" :uri },
-        "IDs" : [ integer@* ]
+        "IDs" : [ integer* ]
     }
 }
 EX7
@@ -87,7 +87,7 @@ EX7
   end
 
   it 'should map just a default rule' do
-    tree = JCR.parse( '[ integer@* ]' )
+    tree = JCR.parse( '[ integer* ]' )
     mapping = JCR.map_rule_names( tree, true )
     JCR.check_rule_target_names( tree, mapping )
   end
@@ -102,7 +102,7 @@ $root =: {
     "Image": {
         $width, $height, "Title" :string,
         "thumbnail" :{ $width, $height, "Url" :uri },
-        "IDs" :[ integer@* ]
+        "IDs" :[ integer* ]
     }
 }
 EX7
@@ -123,7 +123,7 @@ $root =: {
     "Image" :{
         $width, $height, "Title" :string,
         "thumbnail": { $width, $height, "Url" :uri },
-        "IDs": [ integer@* ]
+        "IDs": [ integer* ]
     }
 }
 EX7
