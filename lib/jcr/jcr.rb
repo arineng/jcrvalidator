@@ -23,6 +23,7 @@ require 'jcr/check_groups'
 require 'jcr/find_roots'
 require 'jcr/map_rule_names'
 require 'jcr/process_directives'
+require 'jcr/version'
 
 module JCR
 
@@ -214,6 +215,9 @@ module JCR
       opt.separator  " 1 = parsing or other bad condition"
       opt.separator  " 2 = fall through bad condition"
       opt.separator  " 3 = unsuccessful evaluation of JSON"
+
+      opt.separator  ""
+      opt.separator  "JCR Version " + JCR::VERSION
     end
 
     opt_parser.parse! my_argv

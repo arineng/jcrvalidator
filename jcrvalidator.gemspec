@@ -1,9 +1,11 @@
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
+require 'jcr/version'
+
 Gem::Specification.new do |s|
   s.name        = 'jcrvalidator'
-  s.version     = '0.6.2'
+  s.version     = JCR::VERSION
   s.date        = '2016-08-26'
   s.summary     = "JCR Validator"
   s.description = "A JSON Content Rules (JCR) Validator library and command line utility. Version 0.6.x is closely following -07 of the draft."
