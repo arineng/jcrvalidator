@@ -15,6 +15,6 @@
 
 module JCR
 
-  VERSION = "0.6.3alpha"
+  VERSION = "0.6.3alpha1"
 
 end
