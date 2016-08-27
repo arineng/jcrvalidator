@@ -90,7 +90,7 @@ primitive-def    = string-type / string-range / string-value /
                    integer-type / integer-range / integer-value /
                    sized-int-type / sized-uint-type / ipv4-type /
                    ipv6-type / ipaddr-type / fqdn-type / idn-type /
-                   uri-range / uri-type / phone-type / email-type /
+                   uri-type / phone-type / email-type /
                    datetime-type / date-type / time-type /
                    hex-type / base32hex-type / base32-type /
                    base64url-type / base64-type / any
@@ -120,8 +120,7 @@ ipv6-type        = ipv6-kw
 ipaddr-type      = ipaddr-kw
 fqdn-type        = fqdn-kw
 idn-type         = idn-kw
-uri-range        = uri-dotdot-kw uri-scheme
-uri-type         = uri-kw
+uri-type         = uri-kw [ ".." uri-scheme ]
 phone-type       = phone-kw
 email-type       = email-kw
 datetime-type    = datetime-kw
@@ -254,7 +253,6 @@ true-kw          = %x74.72.75.65                   ; "true"
 type-kw          = %x74.79.70.65                   ; "type"
 uint-kw          = %x75.69.6E.74                   ; "uint"
 unordered-kw     = %x75.6E.6F.72.64.65.72.65.64    ; "unordered"
-uri-dotdot-kw    = %x75.72.69.2E.2E                ; "uri.."
 uri-kw           = %x75.72.69                      ; "uri"
 
 ;; Referenced RFC 5234 Core Rules
