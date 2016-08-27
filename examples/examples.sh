@@ -35,18 +35,18 @@ done
 # Pass JSON into the JCR validator against a ruleset given on the command line
 # from JSON given in standard input
 # This one should succeed
-echo "[ 1, 2]" | jcr $VF -R "[ integer @* ]"
+echo "[ 1, 2]" | jcr $VF -R "[ integer * ]"
 assert "echo $?" 0
 
 # Pass JSON into the JCR validator against a ruleset given on the command line
 # from JSON given on the command line
 # This one should succeed
-jcr $VF -R "[ integer @* ]" -J "[ 1, 2]"
+jcr $VF -R "[ integer * ]" -J "[ 1, 2]"
 assert "echo $?" 0
 
 # Pass JSON into the JCR validator against a ruleset given on the command line
 # This one should fail
-echo "[ 1, 2]" | jcr $VF -R "[ string @* ]"
+echo "[ 1, 2]" | jcr $VF -R "[ string * ]"
 assert "echo $?" 3
 
 # Pass JSON into the JCR validator from a file with a ruleset specified in a file

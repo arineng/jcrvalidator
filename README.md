@@ -101,6 +101,7 @@ the -07 version, a pre-release of which can be found [here](https://raw.githubus
 * 0.6.1 - Towards -07
   * Updates to track the latest release candidate of -07
   * Updated docs, tests, and build
+* 0.6.2 - Update of repetition syntax going into -07
 
 The current version of the JCR specification can be found 
 [here](https://raw.githubusercontent.com/arineng/jcr/07/draft-newton-json-content-rules.txt)
@@ -133,10 +134,10 @@ You can find a bunch of command line examples in `examples/examples.sh`
 Here are some quick nibbles:
 
 ```
-$ echo "[ 1, 2]" | bin/jcr -v -R "[ integer @* ]"
+$ echo "[ 1, 2]" | bin/jcr -v -R "[ integer * ]"
 Success!
 
-$ echo "[ 1, 2]" | bin/jcr -v -R "[ string @* ]"
+$ echo "[ 1, 2]" | bin/jcr -v -R "[ string * ]"
 Failure: ....
 
 $ bin/jcr -v -r example.jcr example.json

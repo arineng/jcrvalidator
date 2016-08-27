@@ -1,9 +1,9 @@
 # jcr-version 0.7
 # ruleset-id example1
 
-[ $my_integers @2, $my_strings @2 ]
+[ $my_integers *2, $my_strings *2 ]
 
-$other_root = @{root} [ $my_strings @2, $my_integers @2 ]
+$other_root = @{root} [ $my_strings *2, $my_integers *2 ]
 
 $my_integers =: 0..5
 $my_strings =: ( "foo" | "bar" )
