@@ -178,7 +178,7 @@ module JCR
 
       end # end if grule else
 
-      if repeat_step && array_index % repeat_step != 0
+      if repeat_step && ( array_index - repeat_min ) % repeat_step != 0
         retval = Evaluation.new( false, "Matches (#{array_index }) do not meat repetition step for #{repeat_max} % #{repeat_step}")
       end
 
@@ -241,7 +241,7 @@ module JCR
           retval = Evaluation.new( false, "array does not have enough #{rule} for #{raised_rule(jcr,rule_atom)}")
         elsif successes > repeat_max
           retval = Evaluation.new( false, "array has too many #{rule} for #{raised_rule(jcr,rule_atom)}")
-        elsif repeat_step && successes % repeat_step != 0
+        elsif repeat_step && ( successes - repeat_min ) % repeat_step != 0
           retval = Evaluation.new( false, "array matches (#{successes}) do not meet repetition step of #{repeat_max} % #{repeat_step} with #{rule} for #{raised_rule(jcr,rule_atom)}")
         else
           retval = Evaluation.new( true, nil )
@@ -268,7 +268,7 @@ module JCR
           retval = Evaluation.new( false, "array does not have enough #{rule} for #{raised_rule(jcr,rule_atom)}")
         elsif successes > repeat_max
           retval = Evaluation.new( false, "array has too many #{rule} for #{raised_rule(jcr,rule_atom)}")
-        elsif repeat_step && successes % repeat_step != 0
+        elsif repeat_step && ( successes - repeat_min ) % repeat_step != 0
           retval = Evaluation.new( false, "array matches (#{successes}) do not meet repetition step of #{repeat_max} % #{repeat_step} with #{rule} for #{raised_rule(jcr,rule_atom)}")
         else
           retval = Evaluation.new( true, nil)

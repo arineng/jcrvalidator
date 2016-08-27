@@ -169,16 +169,16 @@ describe 'evaluate_object_rules' do
     expect( e.success ).to be_truthy
   end
 
-  it 'should pass an object with two strings against an object rule with string member 1..2 step 2' do
-    tree = JCR.parse( '$trule=: { /m.*/:string *1..2%2 }' )
+  it 'should pass an object with three strings against an object rule with string member 0..2 step 2' do
+    tree = JCR.parse( '$trule=: { /m.*/:string *0..2%2 }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"m1"=>"thing","m2"=>"thing2"}, JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
   end
 
-  it 'should pass an object with two strings against an object rule with string member 1..4 step 2' do
-    tree = JCR.parse( '$trule=: { /m.*/:string *1..4%2 }' )
+  it 'should pass an object with two strings against an object rule with string member 0..4 step 2' do
+    tree = JCR.parse( '$trule=: { /m.*/:string *0..4%2 }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], {"m1"=>"thing","m2"=>"thing2"}, JCR::EvalConditions.new( mapping, nil ) )
