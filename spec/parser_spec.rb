@@ -149,7 +149,7 @@ describe 'parser' do
 
   it 'should parse a uri scheme' do
     tree = JCR.parse( '$trule = type uri..http' )
-    expect(tree[0][:rule][:primitive_rule][:uri_scheme]).to eq("http")
+    expect(tree[0][:rule][:primitive_rule][:uri][:uri_scheme]).to eq("http")
   end
 
   it 'should parse a uri scheme with a value immediately succeeding' do

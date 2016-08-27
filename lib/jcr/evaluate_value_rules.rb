@@ -223,13 +223,15 @@ module JCR
       #
 
       when jcr[:uri]
-        return bad_value( jcr, rule_atom, "URI", data ) unless data.is_a?( String )
-        uri = Addressable::URI.parse( data )
-        return bad_value( jcr, rule_atom, "URI", data ) unless uri.is_a?( Addressable::URI )
-      when jcr[:uri_scheme]
-        t = jcr[:uri_scheme].to_s
-        return bad_value( jcr, rule_atom, t, data ) unless data.is_a? String
-        return bad_value( jcr, rule_atom, t, data ) unless data.start_with?( t )
+        if jcr[:uri].is_a? Hash
+          t = jcr[:uri][:uri_scheme].to_s
+          return bad_value( jcr, rule_atom, t, data ) unless data.is_a? String
+          return bad_value( jcr, rule_atom, t, data ) unless data.start_with?( t )
+        else
+          return bad_value( jcr, rule_atom, "URI", data ) unless data.is_a?( String )
+          uri = Addressable::URI.parse( data )
+          return bad_value( jcr, rule_atom, "URI", data ) unless uri.is_a?( Addressable::URI )
+        end
 
       #
       # phone and email value rules

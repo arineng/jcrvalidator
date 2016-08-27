@@ -185,7 +185,7 @@ module JCR
           integer_type | integer_range | integer_value |
           sized_int_type | sized_uint_type |
           ipv4_type | ipv6_type | ipaddr_type | fqdn_type | idn_type |
-          uri_range | uri_type | phone_type | email_type |
+          uri_type | phone_type | email_type |
           datetime_type | date_type | time_type |
           hex_type | base32hex_type | base32_type | base64url_type | base64_type |
           any
@@ -197,7 +197,7 @@ module JCR
         #!             integer_type / integer_range / integer_value /
         #!             sized_int_type / sized_uint_type / ipv4_type /
         #!             ipv6_type / ipaddr_type / fqdn_type / idn_type /
-        #!             uri_range / uri_type / phone_type / email_type /
+        #!             uri_type / phone_type / email_type /
         #!             datetime_type / date_type / time_type /
         #!             hex_type / base32hex_type / base32_type /
         #!             base64url_type / base64_type / any
@@ -267,11 +267,8 @@ module JCR
     rule(:idn_type)       { str('idn').as(:idn) }
         #! idn_type = idn-kw
         #> idn-kw = "idn"
-    rule(:uri_range)       { str('uri..') >> uri_scheme }
-        #! uri_range = uri-dotdot-kw uri_scheme
-        #> uri-dotdot-kw = "uri.."
-    rule(:uri_type)       { str('uri').as(:uri) }
-        #! uri_type = uri-kw
+    rule(:uri_type)       { (str('uri') >> ( str("..") >> uri_scheme ).maybe).as(:uri) }
+        #! uri_type = uri-kw [ ".." uri-scheme ]
         #> uri-kw = "uri"
     rule(:phone_type)     { str('phone').as(:phone) }
         #! phone_type = phone-kw
