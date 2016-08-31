@@ -56,16 +56,25 @@ module JCR
       Evaluation.new( false, "Non-empty object for #{raised_rule(jcr,rule_atom)}" ), econs ) if rules.empty? && data.length != 0
 
     retval = nil
+    lastval = nil
     behavior = ObjectBehavior.new unless behavior
 
     rules.each do |rule|
 
       # short circuit logic
+=begin
       if rule[:choice_combiner] && retval && retval.success
         next
       elsif rule[:sequence_combiner] && retval && !retval.success
         return evaluate_not( annotations, retval, econs ) # short circuit
       end
+=end
+    # short circuit logic
+      if rule[:sequence_combiner] && retval && !retval.success
+        return evaluate_not( annotations, retval, econs ) # short circuit
+      end
+
+      lastval = retval
 
       repeat_min, repeat_max, repeat_step = get_repetitions( rule, econs )
 
@@ -165,9 +174,18 @@ module JCR
         else
           retval = Evaluation.new( true, nil)
         end
+      end # end if grule else
+
+      if rule[:choice_combiner]
+        if lastval && lastval.success && retval.success
+          retval = Evaluation.new( false, "XOR violation: more than one choice match for #{rule} for #{raised_rule(jcr,rule_atom)}")
+          break
+        elsif lastval && lastval.success && !retval.success
+          retval = lastval
+        end
       end
 
-    end # end if grule else
+    end # do each
 
     return evaluate_not( annotations, retval, econs )
   end
