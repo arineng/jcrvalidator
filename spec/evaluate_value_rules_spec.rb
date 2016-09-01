@@ -11,6 +11,7 @@
 # WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 # IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+require 'spec_helper'
 require 'rspec'
 require 'pp'
 require_relative '../lib/jcr/evaluate_rules'
@@ -1034,6 +1035,22 @@ describe 'evaluate_value_rules' do
     expect( e.success ).to be_truthy
   end
 
+  it 'should pass a base32hex string with padding' do
+    tree = JCR.parse( '$trule=: base32hex' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "ABcdEFV3AA======", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a base32hex string with bad padding' do
+    tree = JCR.parse( '$trule=: base32hex' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "ABcdEFV3AA=====a", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
   it 'should pass a empty base32hex string' do
     tree = JCR.parse( '$trule=: base32hex' )
     mapping = JCR.map_rule_names( tree )
@@ -1076,6 +1093,22 @@ describe 'evaluate_value_rules' do
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "ABcdEFZ3", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_truthy
+  end
+
+  it 'should pass a base32 string with padding' do
+    tree = JCR.parse( '$trule=: base32' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "ABcdEFZ3AA======", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should pass a base32 string with bad padding' do
+    tree = JCR.parse( '$trule=: base32' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "ABcdEFZ3AA=====a", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
   end
 
   it 'should pass a empty base32 string' do
@@ -1280,6 +1313,51 @@ describe 'evaluate_value_rules' do
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], "24.20.50.52", JCR::EvalConditions.new( mapping, nil ) )
     expect( e.success ).to be_falsey
+  end
+
+  it 'should pass to string' do
+    av = <<AV
+any
+ipv4
+ipv6
+ipaddr
+integer
+float
+double
+string
+date
+datetime
+time
+true
+false
+boolean
+"a string"
+/a regex/
+0..1
+0.0..1.1
+fqdn
+idn
+uri
+uri..http
+email
+phone
+hex
+base32
+base32hex
+base64
+base64url
+null
+int32
+uint32
+32
+32.0
+AV
+    tree = JCR.parse( av )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    tree.each do |r|
+      expect( JCR.value_to_s( r[:primitive_rule], true ) ).to be_an_instance_of( String )
+    end
   end
 
 end
