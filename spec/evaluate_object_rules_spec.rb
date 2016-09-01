@@ -497,7 +497,7 @@ describe 'evaluate_object_rules' do
     expect( e.success ).to be_falsey
   end
 
-  it 'should fail object w/ 3 mems against a string member and 0..6%3 group member containing a string member', :focus => true do
+  it 'should fail object w/ 3 mems against a string member and 0..6%3 group member containing a string member' do
     tree = JCR.parse( '$trule=: { "s1":string, ( /s[2-9]/:string ) *0..6%3 }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )

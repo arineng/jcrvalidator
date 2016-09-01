@@ -62,14 +62,6 @@ module JCR
     rules.each do |rule|
 
       # short circuit logic
-=begin
-      if rule[:choice_combiner] && retval && retval.success
-        next
-      elsif rule[:sequence_combiner] && retval && !retval.success
-        return evaluate_not( annotations, retval, econs ) # short circuit
-      end
-=end
-    # short circuit logic
       if rule[:sequence_combiner] && retval && !retval.success
         return evaluate_not( annotations, retval, econs ) # short circuit
       end

@@ -95,19 +95,24 @@ module JCR
 
   def self.evaluate_array_rule_ordered jcr, rule_atom, data, econs, behavior = nil
     retval = nil
+    lastval = nil
+    last_array_index = nil
 
     behavior = ArrayBehavior.new unless behavior
     array_index = behavior.last_index
-
+    furthest_index = array_index
 
     jcr.each do |rule|
 
       # short circuit logic
-      if rule[:choice_combiner] && retval && retval.success
-        next
-      elsif rule[:sequence_combiner] && retval && !retval.success
+      if rule[:sequence_combiner] && retval && !retval.success
         break
+      elsif rule[:choice_combiner]
+        array_index = last_array_index
       end
+
+      lastval = retval
+      last_array_index = array_index
 
       repeat_min, repeat_max, repeat_step = get_repetitions( rule, econs )
 
@@ -122,7 +127,8 @@ module JCR
         else
           for i in 1..repeat_min do
             if array_index == data.length
-              return Evaluation.new( false, "array is not large enough for #{raised_rule(jcr,rule_atom)}" )
+              retval = Evaluation.new( false, "array is not large enough for group in #{raised_rule(rule,rule_atom)}" )
+              break
             else
               group_behavior = ArrayBehavior.new( behavior )
               group_behavior.last_index = array_index
@@ -158,11 +164,12 @@ module JCR
         else
           for i in 1..repeat_min do
             if array_index == data.length
-              return Evaluation.new( false, "array is not large enough for #{raised_rule(jcr,rule_atom)}" )
+              retval = Evaluation.new( false, "array is not large enough for #{raised_rule(rule,rule_atom)}" )
+              break
             else
               retval = evaluate_rule( rule, rule_atom, data[ array_index ], econs, nil )
-              break unless retval.success
               array_index = array_index + 1
+              break unless retval.success
               behavior.checked_hash[ i + behavior.last_index ] = retval.success
             end
           end
@@ -178,16 +185,29 @@ module JCR
 
       end # end if grule else
 
+      if array_index > furthest_index
+        furthest_index = array_index
+      end
+
       if repeat_step && ( array_index - repeat_min ) % repeat_step != 0
         retval = Evaluation.new( false, "Matches (#{array_index }) do not meat repetition step for #{repeat_max} % #{repeat_step}")
+      end
+
+      if rule[:choice_combiner]
+        if lastval && lastval.success && retval.success
+          retval = Evaluation.new( false, "XOR violation: more than one choice match for #{rule} for #{raised_rule(jcr,rule_atom)}")
+          break
+        elsif lastval && lastval.success && !retval.success
+          retval = lastval
+        end
       end
 
     end
 
     behavior.last_index = array_index
 
-    if data.length > array_index && behavior.extra_prohibited
-      retval = Evaluation.new( false, "More itmes in array than specified for #{raised_rule(jcr,rule_atom)}" )
+    if data.length > furthest_index && behavior.extra_prohibited
+      retval = Evaluation.new( false, "More items in array than specified for #{raised_rule(jcr,rule_atom)}" )
     end
 
     return retval

@@ -98,7 +98,7 @@ describe 'evaluate_array_rules' do
   end
 
   it 'should pass an array with one string against an array rule with a string or a string' do
-    tree = JCR.parse( '$trule =: [ string | string ]' )
+    tree = JCR.parse( '$trule =: [ string | integer ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "thing" ], JCR::EvalConditions.new( mapping, nil ) )
@@ -106,7 +106,7 @@ describe 'evaluate_array_rules' do
   end
 
   it 'should fail an array with one string against an {not} annotation array rule with a string or a string' do
-    tree = JCR.parse( '$trule =: @{not} [ string | string ]' )
+    tree = JCR.parse( '$trule =: @{not} [ string | integer ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "thing" ], JCR::EvalConditions.new( mapping, nil ) )
@@ -808,6 +808,22 @@ describe 'evaluate_array_rules' do
     expect( JCR.evaluate_rule( tree[0], tree[0], [ 2, 4 ], JCR::EvalConditions.new( mapping, nil ) ).success ).to be_truthy
     expect( JCR.evaluate_rule( tree[0], tree[0], [ 1, 4 ], JCR::EvalConditions.new( mapping, nil ) ).success ).to be_truthy
     expect( JCR.evaluate_rule( tree[0], tree[0], [ 2, 3 ], JCR::EvalConditions.new( mapping, nil ) ).success ).to be_truthy
+  end
+
+  it 'should pass XOR logic' do
+    tree = JCR.parse( '$arule = [ integer , ("foo" + | "bar" + ), string *]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ 1, "foo", "fuzz" ], JCR::EvalConditions.new( mapping, nil, false) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail XOR logic' do
+    tree = JCR.parse( '$arule = [ integer , ("foo" * | "bar" * ), string *]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ 1, "foo", "bar" ], JCR::EvalConditions.new( mapping, nil, false) )
+    expect( e.success ).to be_falsey
   end
 
 end
