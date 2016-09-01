@@ -64,7 +64,7 @@ module JCR
         return bad_value( jcr, rule_atom, "integer", data ) unless data.is_a?( Fixnum )
         min = jcr[:integer_min].to_s.to_i
         return bad_value( jcr, rule_atom, min, data ) unless data >= min
-      when jcr[:integer_max] == nil && jcr[:integer_max] != nil
+      when jcr[:integer_min] == nil && jcr[:integer_max] != nil
         return bad_value( jcr, rule_atom, "integer", data ) unless data.is_a?( Fixnum )
         max = jcr[:integer_max].to_s.to_i
         return bad_value( jcr, rule_atom, max, data ) unless data <= max
@@ -469,9 +469,11 @@ module JCR
         retval =  "idn"
 
       when rule[:uri]
-        retval =  "URI"
-      when rule[:uri_scheme]
-        retval =  "URI with specific scheme #{rule[:uri_scheme].to_s}"
+        if rule[:uri].is_a? Hash
+          retval =  "URI with specific scheme #{rule[:uri][:uri_scheme].to_s}"
+        else
+          retval =  "URI"
+        end
 
       when rule[:email]
         retval =  "email"
@@ -481,8 +483,8 @@ module JCR
 
       when rule[:hex]
         retval =  "hex"
-      when rule[:base32url]
-        retval =  "base32url"
+      when rule[:base32hex]
+        retval =  "base32hex"
       when rule[:base64url]
         retval =  "base64url"
       when rule[:base64]
