@@ -826,4 +826,20 @@ describe 'evaluate_array_rules' do
     expect( e.success ).to be_falsey
   end
 
+  it 'should pass XOR logic for unordered' do
+    tree = JCR.parse( '$arule = @{unordered} [ "foo" , ("bar" | "baz" ), string * ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "foo", "bar", "thing" ], JCR::EvalConditions.new( mapping, nil, false) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail XOR logic for unordered' do
+    tree = JCR.parse( '$arule = @{unordered} [ "foo" , ("bar" | "baz" ), string * ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "foo", "bar", "baz" ], JCR::EvalConditions.new( mapping, nil, false) )
+    expect( e.success ).to be_falsey
+  end
+
 end
