@@ -274,8 +274,16 @@ describe 'evaluate_array_rules' do
     expect( e.success ).to be_truthy
   end
 
-  it 'should pass an array with three strings against an array rule with string + step 2' do
+  it 'should fail an array with three strings against an array rule with string + step 2' do
     tree = JCR.parse( '$trule =: [ string +%2 ]' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", "thing3" ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass an array with three strings against an array rule with string + step 3' do
+    tree = JCR.parse( '$trule =: [ string +%3 ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", "thing2", "thing3" ], JCR::EvalConditions.new( mapping, nil ) )

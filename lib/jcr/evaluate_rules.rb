@@ -141,7 +141,10 @@ module JCR
     elsif rule[:one_or_more]
       repeat_min = 1
       repeat_max = Float::INFINITY
-      repeat_step = rule[:repetition_step].to_s.to_i if rule[:repetition_step]
+      if rule[:repetition_step]
+        repeat_step = rule[:repetition_step].to_s.to_i
+        repeat_min = repeat_step
+      end
     elsif rule[:zero_or_more]
       repeat_min = 0
       repeat_max = Float::INFINITY
