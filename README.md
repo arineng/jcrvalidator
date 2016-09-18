@@ -82,7 +82,7 @@ American Registry for Internet Numbers (ARIN) in an effort to better describe th
 More information on JCR can be found at [json-content-rules.org](http://json-content-rules.org/). 
 The current published specification is an IETF Internet Draft (I-D) versioned as -06,
 which is now out of date and incompatible with this software. This software closely tracks
-the -07 version, a pre-release of which can be found [here](https://raw.githubusercontent.com/arineng/jcr/07/draft-newton-json-content-rules.txt)
+the -07 version, which can be found [here](https://raw.githubusercontent.com/arineng/jcr/07/draft-newton-json-content-rules.txt)
    
 ## Version History
 
@@ -102,6 +102,8 @@ the -07 version, a pre-release of which can be found [here](https://raw.githubus
   * Updates to track the latest release candidate of -07
   * Updated docs, tests, and build
 * 0.6.2 - Update of repetition syntax going into -07
+* 0.6.3 - XOR experimentation which was never merged
+* 0.6.4 - Version that matches -07 of the draft specification
 
 The current version of the JCR specification can be found 
 [here](https://raw.githubusercontent.com/arineng/jcr/07/draft-newton-json-content-rules.txt)
