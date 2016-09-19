@@ -37,6 +37,18 @@ describe 'find_roots' do
     expect( roots.length ).to eq( 0 )
   end
 
+  it 'should find one root with an empty object rule' do
+    tree = JCR.parse( '{}' )
+    roots = JCR.find_roots( tree )
+    expect( roots.length ).to eq( 1 )
+  end
+
+  it 'should find one root with an empty array rule' do
+    tree = JCR.parse( '[]' )
+    roots = JCR.find_roots( tree )
+    expect( roots.length ).to eq( 1 )
+  end
+
   it 'should find an annotated rule' do
     tree = JCR.parse( '$vrule=: @{root} [ integer* ]' )
     roots = JCR.find_roots( tree )

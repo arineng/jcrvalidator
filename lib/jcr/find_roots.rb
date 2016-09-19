@@ -88,6 +88,7 @@ module JCR
 
   def self.get_rule_by_type rule
     retval = nil
+    return retval unless rule.is_a? Hash
     case
       when rule[:array_rule]
         retval = rule[:array_rule]
