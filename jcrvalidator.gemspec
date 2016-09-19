@@ -6,7 +6,7 @@ require 'jcr/version'
 Gem::Specification.new do |s|
   s.name        = 'jcrvalidator'
   s.version     = JCR::VERSION
-  s.date        = '2016-08-26'
+  s.date        = Date.today
   s.summary     = "JCR Validator"
   s.description = "A JSON Content Rules (JCR) Validator library and command line utility. Version 0.6.x is closely following -07 of the draft."
   s.authors     = ["Andrew Newton","Pete Cordell"]

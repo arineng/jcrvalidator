@@ -104,6 +104,7 @@ the -07 version, which can be found [here](https://raw.githubusercontent.com/ari
 * 0.6.2 - Update of repetition syntax going into -07
 * 0.6.3 - XOR experimentation which was never merged
 * 0.6.4 - Version that matches -07 of the draft specification
+* 0.6.5 - Fixed a bug with roots and empty object and array rules
 
 The current version of the JCR specification can be found 
 [here](https://raw.githubusercontent.com/arineng/jcr/07/draft-newton-json-content-rules.txt)
