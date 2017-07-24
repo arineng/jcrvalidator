@@ -55,35 +55,35 @@ module JCR
       when jcr[:integer_v]
         si = jcr[:integer_v].to_s
         if si == "integer"
-          return bad_value( jcr, rule_atom, "integer", data ) unless data.is_a?( Fixnum )
+          return bad_value( jcr, rule_atom, "integer", data ) unless data.is_a?( Integer )
         end
       when jcr[:integer]
         i = jcr[:integer].to_s.to_i
         return bad_value( jcr, rule_atom, i, data ) unless data == i
       when jcr[:integer_min] != nil && jcr[:integer_max] == nil
-        return bad_value( jcr, rule_atom, "integer", data ) unless data.is_a?( Fixnum )
+        return bad_value( jcr, rule_atom, "integer", data ) unless data.is_a?( Integer )
         min = jcr[:integer_min].to_s.to_i
         return bad_value( jcr, rule_atom, min, data ) unless data >= min
       when jcr[:integer_min] == nil && jcr[:integer_max] != nil
-        return bad_value( jcr, rule_atom, "integer", data ) unless data.is_a?( Fixnum )
+        return bad_value( jcr, rule_atom, "integer", data ) unless data.is_a?( Integer )
         max = jcr[:integer_max].to_s.to_i
         return bad_value( jcr, rule_atom, max, data ) unless data <= max
       when jcr[:integer_min],jcr[:integer_max]
-        return bad_value( jcr, rule_atom, "integer", data ) unless data.is_a?( Fixnum )
+        return bad_value( jcr, rule_atom, "integer", data ) unless data.is_a?( Integer )
         min = jcr[:integer_min].to_s.to_i
         return bad_value( jcr, rule_atom, min, data ) unless data >= min
         max = jcr[:integer_max].to_s.to_i
         return bad_value( jcr, rule_atom, max, data ) unless data <= max
       when jcr[:sized_int_v]
         bits = jcr[:sized_int_v][:bits].to_i
-        return bad_value( jcr, rule_atom, "int" + bits.to_s, data ) unless data.is_a?( Fixnum )
+        return bad_value( jcr, rule_atom, "int" + bits.to_s, data ) unless data.is_a?( Integer )
         min = -(2**(bits-1))
         return bad_value( jcr, rule_atom, min, data ) unless data >= min
         max = 2**(bits-1)-1
         return bad_value( jcr, rule_atom, max, data ) unless data <= max
       when jcr[:sized_uint_v]
         bits = jcr[:sized_uint_v][:bits].to_i
-        return bad_value( jcr, rule_atom, "int" + bits.to_s, data ) unless data.is_a?( Fixnum )
+        return bad_value( jcr, rule_atom, "int" + bits.to_s, data ) unless data.is_a?( Integer )
         min = 0
         return bad_value( jcr, rule_atom, min, data ) unless data >= min
         max = 2**bits-1
