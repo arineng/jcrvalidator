@@ -273,8 +273,17 @@ module JCR
           end
           return ec
         else
-          data = JSON.parse( ARGF.read )
-          ec = cli_eval( ctx, data, options[:root_name], options[:verbose] )
+          lines = ""
+          ec = 0
+          ARGF.each do |line|
+            lines = lines + line
+            if ARGF.eof?
+              data = JSON.parse( lines )
+              tec = cli_eval( ctx, data, options[:root_name], options[:verbose] )
+              ec = tec if tec != 0 #record error but don't let non-error overwrite error
+              lines = ""
+            end
+          end
           return ec
         end
 
