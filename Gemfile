@@ -5,3 +5,4 @@ gem 'rspec', :require => false, :group => :test
 gem 'simplecov', :require => false, :group => :test
 gem 'email_address_validator'
 gem 'big-phoney'
+gem 'rake', :require => false, :group => :test
