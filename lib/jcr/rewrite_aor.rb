@@ -111,27 +111,29 @@ but the following is not
 Given that the above is true, the following algorithm should be used in the rewrite:
 
 1. traverse the tree for objects (will be going from top to bottom because the entry points for the tree are root rules)
-2. when an object is found, traverse to the lowest precedent OR and rewrite the AOR as an IOR
-3. after rewrite, go up to the next highest OR and traverse down the other side finding ORs to rewrite
-4. once all child ORs of a higher precedent OR are found, then it can be rewritten
+2. when an object is found:
+   1. recursively dereference all rule references to member and group rules.
+   2. traverse to the lowest precedent OR and rewrite the AOR as an IOR
+   3. after rewrite, go up to the next highest OR and traverse down the other side finding ORs to rewrite
+   4. once all child ORs of a higher precedent OR are found, then it can be rewritten
 
 This is rewriting the rules from the bottom to the top.
 
 The AOR to IOR rewrite is this:
 
 1. Find all member rules on the left side of the OR that are not on the right side of the OR and consider them set A
-1a. where "find" means match only on the member name or regex (no regex cannonicalization is to be performed)
+  1. where "find" means match only on the member name or regex (no regex cannonicalization is to be performed)
 2. Find all member rules on the right side of the OR that are not on the left side of the OR and consider them set B
-2a. see 1a
+  1. see 1.1
 3. Find all member rules that appear on both sides of the OR and consider them set C
-3a. see 1a
+  1. see 1.1
 4. Rewrite the left side of the OR:
-4a. Copy over set A and set C
-4b. For each rule in set B, copy it over and transform it in the following manner:
-4b1. if the rule does not have a @{not} annotation, do the following
-4b1a. change its repetition to 1
-4b1b. change its type to "any"
-4b1c. give it a @{not} annotation
+  1. Copy over set A and set C
+  2. For each rule in set B, copy it over and transform it in the following manner:
+    1. if the rule does not have a @{not} annotation, do the following
+    2. change its repetition to 1
+    3. change its type to "any"
+    4. give it a @{not} annotation
 5. Rewrite the right side of the OR by repeating step 4, but with sets B & C copied as-is and set A transformed
 
 Specifically unaccounted for in the original expression are member rules with @{not} and repetition max of 0.
