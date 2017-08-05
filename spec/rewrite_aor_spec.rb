@@ -41,13 +41,14 @@ EX
 
   it 'should do nothing find one object marked to rewrite' do
     ex = <<EX
-$r = @{root}{ "foo":string, "bar":integer }
+$r = @{root}{ "foo":string, "bar":{ "a":integer | "b":float } }
 EX
 
     ctx = JCR.ingest_ruleset( ex )
-    e = JCR.evaluate_ruleset( { "foo" => "foo", "bar" => 2 }, ctx )
+    e = JCR.evaluate_ruleset( { "foo" => "foo", "bar" => { "a" => 2 } }, ctx )
     expect( e.success ).to be_truthy
     expect( ctx.tree[0][:rule][:aors_rewritten] ).to eq( true )
+    expect( ctx.tree[0][:rule][:object_rule][2][:member_rule][:aors_rewritten] ).to eq( true )
   end
 
 end
