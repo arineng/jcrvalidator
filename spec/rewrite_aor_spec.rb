@@ -36,6 +36,7 @@ EX
     ctx = JCR.ingest_ruleset( ex )
     e = JCR.evaluate_ruleset( { "foo" => "foo", "bar" => 2 }, ctx )
     expect( e.success ).to be_truthy
+    expect( ctx.tree[0][:aors_rewritten] ).to eq( true )
   end
 
   it 'should do nothing find one object marked to rewrite' do
@@ -46,6 +47,7 @@ EX
     ctx = JCR.ingest_ruleset( ex )
     e = JCR.evaluate_ruleset( { "foo" => "foo", "bar" => 2 }, ctx )
     expect( e.success ).to be_truthy
+    expect( ctx.tree[0][:rule][:aors_rewritten] ).to eq( true )
   end
 
 end

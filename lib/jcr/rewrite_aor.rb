@@ -124,7 +124,9 @@ Steps 2.1 and 2.7 are necessary because with multiple roots and multiple rule re
 rule can be found multiple times. Not only is it more efficient to process object rules only once, but reprocessing an
 object rule good potentially cause very odd behavior.
 
-This is rewriting the rules from the bottom to the top.
+This is rewriting the rules from the bottom to the top. The purpose of doing this based on ORs means that decomposing
+any group rules found in the OR expression guarantees that they are only AND groups (because JCR doesn't allow
+mixing ORs and ANDs in the same group).
 
 The AOR to IOR rewrite is this:
 
@@ -142,6 +144,9 @@ The AOR to IOR rewrite is this:
     3. change its type to "any"
     4. give it a @{not} annotation
 5. Rewrite the right side of the OR by repeating step 4, but with sets B & C copied as-is and set A transformed
+
+Steps 4 and 5 talking about rewriting the left and right side, but the code actually needs to account for
+multiple ORs at the same level (e.g. '{ "a":string | "b":integer | "c":float }').
 
 Specifically unaccounted for in the original expression are member rules with @{not} and repetition max of 0.
 They are copied over as-is.
@@ -219,9 +224,9 @@ code where the node[:object_rule] (or equivalent) is passed around.
 
   end
 
-  def self.rewrite_object_rule( object_rule, ctx )
-    unless object_rule[:aors_rewritten]
-      object_rule[:aors_rewritten] = TrueClass
+  def self.rewrite_object_rule( containing_rule, ctx )
+    unless containing_rule[:aors_rewritten]
+      containing_rule[:aors_rewritten] = true
     end
   end
 
