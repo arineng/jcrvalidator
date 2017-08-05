@@ -20,7 +20,7 @@ require 'jcr/evaluate_rules'
 require 'jcr/map_rule_names'
 require 'jcr/jcr'
 
-module JRC
+module JCR
 
 =begin
 This file rewrites Augmented OR (AOR) expressions to Inclusive OR (IOR) expressions.
@@ -112,10 +112,17 @@ Given that the above is true, the following algorithm should be used in the rewr
 
 1. traverse the tree for objects (will be going from top to bottom because the entry points for the tree are root rules)
 2. when an object is found:
-   1. recursively dereference all rule references to member and group rules.
-   2. traverse to the lowest precedent OR and rewrite the AOR as an IOR
-   3. after rewrite, go up to the next highest OR and traverse down the other side finding ORs to rewrite
-   4. once all child ORs of a higher precedent OR are found, then it can be rewritten
+   1. if it is has been marked as rewritten, continue looking for more objects. Otherwise:
+   2. traverse to the lowest precedent OR
+   3. dereference all member rule references and group rule references recursively
+   4. rewrite the AOR as an IOR.
+   5. after rewrite, go up to the next highest OR and traverse down the other side, repeating steps 2.3 and 2.4
+   6. once all child ORs of a higher precedent OR are found, then it can be rewritten
+   7. mark the object as having been rewritten
+
+Steps 2.1 and 2.7 are necessary because with multiple roots and multiple rule references, its quite possible that a
+rule can be found multiple times. Not only is it more efficient to process object rules only once, but reprocessing an
+object rule good potentially cause very odd behavior.
 
 This is rewriting the rules from the bottom to the top.
 
@@ -139,6 +146,83 @@ The AOR to IOR rewrite is this:
 Specifically unaccounted for in the original expression are member rules with @{not} and repetition max of 0.
 They are copied over as-is.
 
+To traverse, find, and mark rules, the following examples of the JCR parse tree are provided.
+
+1. A free standing root rule:
+
+    [ integer* ]
+
+produces the following parse tree:
+
+    [{:array_rule=>
+       {:primitive_rule=>{:integer_v=>"integer"@2}, :zero_or_more=>"*"@9}}]
+
+2. The same, but with a simple two element object rule:
+
+    { "foo":string, "bar":integer }
+
+produces
+
+    [{:object_rule=>
+       [{:member_rule=>
+          {:member_name=>{:q_string=>"foo"@3},
+           :primitive_rule=>{:string=>"string"@8}}},
+        {:sequence_combiner=>","@14,
+         :member_rule=>
+          {:member_name=>{:q_string=>"bar"@17},
+           :primitive_rule=>{:integer_v=>"integer"@22}}}]}]
+
+3. Here is an assigned rule example:
+
+    $r = @{root}{ "foo":string, "bar":integer }
+
+produces
+
+    [{:rule=>
+       {:annotations=>[],
+        :rule_name=>"r"@1,
+        :object_rule=>
+         [{:root_annotation=>"root"@7},
+          {:member_rule=>
+            {:member_name=>{:q_string=>"foo"@15},
+             :primitive_rule=>{:string=>"string"@20}}},
+          {:sequence_combiner=>","@26,
+           :member_rule=>
+            {:member_name=>{:q_string=>"bar"@29},
+             :primitive_rule=>{:integer_v=>"integer"@34}}}]}}]
+
+To both rewrite a rule and to mark with a symbol indicating it has been processed will require that the
+reference needed is the Ruby object containing the rule type designation itself. This is unlike other areas of
+code where the node[:object_rule] (or equivalent) is passed around.
 =end
+
+  def self.rewrite_aors( ctx )
+
+    traverse_for_object_rules(ctx.tree, ctx )
+
+  end
+
+  def self.traverse_for_object_rules( node, ctx )
+
+    if node.is_a? Hash
+      if node[:object_rule]
+        rewrite_object_rule( node, ctx )
+      end
+      node.each do |child_node|
+        traverse_for_object_rules( child_node, ctx )
+      end
+    elsif node.is_a? Array
+      node.each do |child_node|
+        traverse_for_object_rules( child_node, ctx )
+      end
+    end
+
+  end
+
+  def self.rewrite_object_rule( object_rule, ctx )
+    unless object_rule[:aors_rewritten]
+      object_rule[:aors_rewritten] = TrueClass
+    end
+  end
 
 end
