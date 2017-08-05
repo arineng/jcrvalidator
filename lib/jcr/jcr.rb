@@ -24,6 +24,7 @@ require 'jcr/find_roots'
 require 'jcr/map_rule_names'
 require 'jcr/process_directives'
 require 'jcr/version'
+require 'jcr/rewrite_aor'
 
 module JCR
 
@@ -105,6 +106,7 @@ module JCR
     ctx.callbacks = {}
     ctx.roots = roots
     JCR.process_directives( ctx )
+    JCR.rewrite_aors( ctx )
     return ctx
   end
 

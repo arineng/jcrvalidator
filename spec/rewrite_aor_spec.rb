@@ -24,7 +24,6 @@ describe 'rewrite_aors' do
 EX
 
     ctx = JCR.ingest_ruleset( ex )
-    JCR.rewrite_aors( ctx )
     e = JCR.evaluate_ruleset( [ 2, 2, 2 ], ctx )
     expect( e.success ).to be_truthy
   end
@@ -35,7 +34,6 @@ EX
 EX
 
     ctx = JCR.ingest_ruleset( ex )
-    JCR.rewrite_aors( ctx )
     e = JCR.evaluate_ruleset( { "foo" => "foo", "bar" => 2 }, ctx )
     expect( e.success ).to be_truthy
   end
@@ -46,7 +44,6 @@ $r = @{root}{ "foo":string, "bar":integer }
 EX
 
     ctx = JCR.ingest_ruleset( ex )
-    JCR.rewrite_aors( ctx )
     e = JCR.evaluate_ruleset( { "foo" => "foo", "bar" => 2 }, ctx )
     expect( e.success ).to be_truthy
   end
