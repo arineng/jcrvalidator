@@ -94,7 +94,7 @@ module JCR
 
   end
 
-  def self.ingest_ruleset( ruleset, override = false, ruleset_alias=nil )
+  def self.ingest_ruleset( ruleset, override = false, ruleset_alias=nil, rewrite_aors = true )
     tree = JCR.parse( ruleset )
     mapping = JCR.map_rule_names( tree, override, ruleset_alias )
     JCR.check_rule_target_names( tree, mapping )
@@ -106,7 +106,7 @@ module JCR
     ctx.callbacks = {}
     ctx.roots = roots
     JCR.process_directives( ctx )
-    JCR.rewrite_aors( ctx )
+    JCR.rewrite_aors( ctx ) if rewrite_aors
     return ctx
   end
 

@@ -199,6 +199,7 @@ produces
 To both rewrite a rule and to mark with a symbol indicating it has been processed will require that the
 reference needed is the Ruby object containing the rule type designation itself. This is unlike other areas of
 code where the node[:object_rule] (or equivalent) is passed around.
+
 =end
 
   def self.rewrite_aors( ctx )
@@ -225,9 +226,42 @@ code where the node[:object_rule] (or equivalent) is passed around.
   end
 
   def self.rewrite_object_rule( containing_rule, ctx )
-    unless containing_rule[:aors_rewritten]
-      containing_rule[:aors_rewritten] = true
+    unless containing_rule[:object_aors_rewritten]
+      traverse_ors( containing_rule[:object_rule], ctx )
+      containing_rule[:object_aors_rewritten] = true
     end
+  end
+
+  def self.traverse_ors( rule_level, ctx )
+    rule_level = [ rule_level ] unless rule_level.is_a? Array
+    rule_level.each do |sub_level|
+      if sub_level[:group_rule]
+        traverse_ors( sub_level[:group_rule], ctx )
+      elsif sub_level[:target_rule_name]
+        target = ctx.mapping[ sub_level[:target_rule_name][:rule_name].to_s ]
+        raise "Target rule not in mapping. This should have been checked earlier." unless target
+        traverse_ors( target, ctx )
+      end
+    end
+    if ors_at_this_level?( rule_level )
+      # TODO rewrite here
+    end
+  end
+
+  def self.ors_at_this_level?( rule_level )
+    retval = false
+    rule_level = [ rule_level ] unless rule_level.is_a? Array
+    rule_level.each do |sub_level|
+      if sub_level[:sequence_combiner]
+        break #can't have ORs and ANDs at same level, so if you see any ANDs just return false
+      end
+      if sub_level[:choice_combiner]
+        sub_level[:level_ors_rewritten] = true #this is here for internal testing only and can go if it gets in the way
+        retval = true
+        break #just need to find one. if one is found, return true
+      end
+    end
+    return retval
   end
 
 end
