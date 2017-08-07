@@ -115,12 +115,13 @@ Given that the above is true, the following algorithm should be used in the rewr
    1. if it is has been marked as rewritten, continue looking for more objects. Otherwise:
    2. traverse to the lowest precedent OR
    3. dereference all member rule references and group rule references recursively
-   4. rewrite the AOR as an IOR.
-   5. after rewrite, go up to the next highest OR and traverse down the other side, repeating steps 2.3 and 2.4
-   6. once all child ORs of a higher precedent OR are found, then it can be rewritten
-   7. mark the object as having been rewritten
+   4. flatten all group rules (which should be all ANDs)
+   5. rewrite the AOR as an IOR.
+   6. after rewrite, go up to the next highest OR and traverse down the other side, repeating steps 2.3 and 2.4
+   7. once all child ORs of a higher precedent OR are found, then it can be rewritten
+   8. mark the object as having been rewritten
 
-Steps 2.1 and 2.7 are necessary because with multiple roots and multiple rule references, its quite possible that a
+Steps 2.1 and 2.8 are necessary because with multiple roots and multiple rule references, its quite possible that a
 rule can be found multiple times. Not only is it more efficient to process object rules only once, but reprocessing an
 object rule good potentially cause very odd behavior.
 
@@ -256,12 +257,79 @@ code where the node[:object_rule] (or equivalent) is passed around.
         break #can't have ORs and ANDs at same level, so if you see any ANDs just return false
       end
       if sub_level[:choice_combiner]
-        sub_level[:level_ors_rewritten] = true #this is here for internal testing only and can go if it gets in the way
+        sub_level[:level_ors_rewritten] = true # this is here for internal testing only and can go if it gets in the way
         retval = true
         break #just need to find one. if one is found, return true
       end
     end
     return retval
+  end
+
+  def self.dereference_object_targets( rule_level, ctx )
+    # deep copying must start at the top to avoid interference with references from other places
+    rule_level = [ rule_level ] unless rule_level.is_a? Array
+    rule_level.map! do |sub_level|
+      if sub_level[:target_rule_name]
+        target = ctx.mapping[ sub_level[:target_rule_name][:rule_name].to_s ]
+        raise "Target rule not in mapping. This should have been checked earlier." unless target
+        target_copy = Marshal.load( Marshal.dump( target ))
+        move_not_from_target( sub_level[:target_rule_name], target_copy )
+        sub_level[:group_rule] = target_copy[:group_rule] if target_copy[:group_rule]
+        sub_level[:member_rule] = target_copy[:member_rule] if target_copy[:member_rule]
+        # we purposefully don't move over repetitions
+        sub_level.delete( :target_rule_name )
+        dereference_object_targets(target_copy, ctx )
+      end
+      sub_level
+    end
+    rule_level.each do |sub_level|
+      if sub_level[:group_rule]
+        dereference_object_targets(sub_level[:group_rule], ctx )
+      end
+    end
+  end
+
+  def self.move_not_from_target( source, target )
+    # is there a @{not} on the source
+    source_not = nil
+    source[:annotations].each do |annotation|
+      source_not = annotation[:not_annotation] if annotation[:not_annotation]
+    end
+    if source_not != nil
+      # only do this if there is no @{not} on the target
+      if target[:group_rule]
+        g = target[:group_rule]
+        if g.is_a?( Hash ) && !g[:not_annotation]
+          g[:not_annotation] = source_not
+        elsif g.is_a? Array
+          not_annotation_found = false
+          g.each do |v|
+            not_annotation_found = true if v[:not_annotation]
+          end
+          g.insert( 0, source_not ) unless not_annotation_found
+        end
+      elsif target[:member_rule]
+        not_annotation_found = false
+        if target[:member_rule].is_a?( Hash ) && target[:member_rule][:not_annotation]
+          not_annotation_found = true
+        elsif target[:member_rule].is_a? Array
+          target[:member_rule].each do |v|
+            not_annotation_found = true if v[:not_annotation]
+          end
+        end
+        unless not_annotation_found
+          # member rules need to be rewritten as arrays if they are not
+          if target[:member_rule].is_a? Hash
+            a = Array.new
+            target[:member_rule].each do |k,v|
+              a << { k => v }
+            end
+            target[:member_rule] = a
+          end
+          target[:member_rule].insert( 0, { :not_annotation => source_not } )
+        end
+      end
+    end
   end
 
 end

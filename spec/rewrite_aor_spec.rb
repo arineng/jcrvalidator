@@ -97,4 +97,42 @@ EX
     expect( ctx.mapping["l1"][:group_rule][1][:group_rule][1][:level_ors_rewritten] ).to eq( true )
   end
 
+  it 'should dereference and deep copy' do
+    ex = <<EX
+{ $l1 * | @{not}$l2 | @{not}$l3 | $l4 * | @{not}$l6 | $l7 }
+$l1 = ( "a":string, ( $l5 | @{not}"e":string ) )
+$l2 = @{not}( "b":integer | "c":string )
+$l3 = @{not}"j":float
+$l4 = /^k*/:any
+$l5 = "d":integer
+$l6 = "l":float
+$l7 = "m":integer
+EX
+    # create a context where aor rewriting is turned off because we want to avoid a call to object level rewrite
+    ctx = JCR.ingest_ruleset( ex, false, nil, false )
+    JCR.dereference_object_targets(ctx.tree[0][:object_rule], ctx )
+    expect( ctx.tree[0][:object_rule][0][:group_rule] ).to_not be_nil
+    expect( ctx.tree[0][:object_rule][1][:group_rule] ).to_not be_nil
+    expect( ctx.tree[0][:object_rule][1][:choice_combiner] ).to_not be_nil
+    expect( ctx.tree[0][:object_rule][2][:member_rule] ).to_not be_nil
+    expect( ctx.tree[0][:object_rule][2][:member_rule][0][:not_annotation] ).to_not be_nil
+    expect( ctx.tree[0][:object_rule][2][:choice_combiner] ).to_not be_nil
+    expect( ctx.tree[0][:object_rule][3][:member_rule] ).to_not be_nil
+    expect( ctx.tree[0][:object_rule][3][:member_rule][:member_regex] ).to_not be_nil
+    expect( ctx.tree[0][:object_rule][3][:choice_combiner] ).to_not be_nil
+    expect( ctx.tree[0][:object_rule][4][:member_rule] ).to_not be_nil
+    expect( ctx.tree[0][:object_rule][4][:member_rule] ).to be_a( Array )
+    expect( ctx.tree[0][:object_rule][4][:member_rule][0][:not_annotation] ).to_not be_nil
+    expect( ctx.tree[0][:object_rule][4][:choice_combiner] ).to_not be_nil
+    expect( ctx.tree[0][:object_rule][5][:member_rule] ).to_not be_nil
+    expect( ctx.tree[0][:object_rule][5][:member_rule] ).to be_a( Hash )
+    expect( ctx.tree[0][:object_rule][5][:choice_combiner] ).to_not be_nil
+
+    # spot check to make sure we didn't harm the other rules
+    expect( ctx.tree[1][:rule][:group_rule][1][:group_rule][0][:target_rule_name] ).to_not be_nil
+    expect( ctx.tree[6][:rule][:rule_name].to_s ).to eq( "l6" )
+    expect( ctx.tree[6][:rule][:member_rule] ).to be_a( Hash )
+    expect( ctx.tree[6][:rule][:member_rule][:not_annotation] ).to be_nil
+  end
+
 end
