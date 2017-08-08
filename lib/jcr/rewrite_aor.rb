@@ -245,6 +245,7 @@ code where the node[:object_rule] (or equivalent) is passed around.
       end
     end
     if ors_at_this_level?( rule_level )
+      dereference_object_targets( rule_level, ctx )
       # TODO rewrite here
     end
   end
