@@ -23,8 +23,7 @@ describe 'rewrite_aors' do
 [ integer* ]
 EX
 
-    ctx = JCR.ingest_ruleset( ex )
-    e = JCR.evaluate_ruleset( [ 2, 2, 2 ], ctx )
+    e = JCR::Context.new( ex ).evaluate( [ 2, 2, 2 ] )
     expect( e.success ).to be_truthy
   end
 
@@ -33,8 +32,8 @@ EX
 { "foo":string, "bar":integer }
 EX
 
-    ctx = JCR.ingest_ruleset( ex )
-    e = JCR.evaluate_ruleset( { "foo" => "foo", "bar" => 2 }, ctx )
+    ctx = JCR::Context.new( ex )
+    e = ctx.evaluate( { "foo" => "foo", "bar" => 2 } )
     expect( e.success ).to be_truthy
     expect( ctx.tree[0][:object_aors_rewritten] ).to eq(true )
   end
@@ -44,8 +43,8 @@ EX
 $r = @{root}{ "foo":string, "bar":{ "a":integer | "b":float } }
 EX
 
-    ctx = JCR.ingest_ruleset( ex )
-    e = JCR.evaluate_ruleset( { "foo" => "foo", "bar" => { "a" => 2 } }, ctx )
+    ctx = JCR::Context.new( ex )
+    e = ctx.evaluate( { "foo" => "foo", "bar" => { "a" => 2 } } )
     expect( e.success ).to be_truthy
     expect( ctx.tree[0][:rule][:object_aors_rewritten] ).to eq(true )
     expect( ctx.tree[0][:rule][:object_rule][2][:member_rule][:object_aors_rewritten] ).to eq(true )
@@ -72,7 +71,7 @@ EX
 { ( "a":string, ( "d":integer | "e":string ) ) | ( "b":integer | "c":string ) }
 EX
     # create a context where aor rewriting is turned off because we want to avoid a call to object level rewrite
-    ctx = JCR.ingest_ruleset( ex, false, nil, false )
+    ctx = JCR::Context.new( ex, false, false )
     JCR.traverse_ors( ctx.tree[0][:object_rule], ctx )
     expect( ctx.tree[0][:object_rule][1][:level_ors_rewritten] ).to eq( true )
     expect( ctx.tree[0][:object_rule][1][:group_rule][1][:level_ors_rewritten] ).to eq( true )
@@ -88,7 +87,7 @@ $l1 = ( "a":string, ( "d":integer | "e":string ) )
 $l2 = ( "b":integer | "c":string )
 EX
     # create a context where aor rewriting is turned off because we want to avoid a call to object level rewrite
-    ctx = JCR.ingest_ruleset( ex, false, nil, false )
+    ctx = JCR::Context.new( ex, false, false )
     JCR.traverse_ors( ctx.tree[0][:object_rule], ctx )
     expect( ctx.tree[0][:object_rule][1][:level_ors_rewritten] ).to eq( true )
     expect( ctx.mapping["l2"] ).to_not be_nil
@@ -109,7 +108,7 @@ $l6 = "l":float
 $l7 = "m":integer
 EX
     # create a context where aor rewriting is turned off because we want to avoid a call to object level rewrite
-    ctx = JCR.ingest_ruleset( ex, false, nil, false )
+    ctx = JCR::Context.new( ex, false, false )
     JCR.dereference_object_targets(ctx.tree[0][:object_rule], ctx )
     expect( ctx.tree[0][:object_rule][0][:group_rule] ).to_not be_nil
     expect( ctx.tree[0][:object_rule][1][:group_rule] ).to_not be_nil

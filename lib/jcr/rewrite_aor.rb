@@ -205,7 +205,9 @@ code where the node[:object_rule] (or equivalent) is passed around.
 
   def self.rewrite_aors( ctx )
 
-    traverse_for_object_rules(ctx.tree, ctx )
+    if ctx.rewrite_aors
+      traverse_for_object_rules(ctx.tree, ctx )
+    end
 
   end
 
@@ -227,9 +229,13 @@ code where the node[:object_rule] (or equivalent) is passed around.
   end
 
   def self.rewrite_object_rule( containing_rule, ctx )
-    unless containing_rule[:object_aors_rewritten]
+    if containing_rule[:object_aors_rewritten]
+      puts("Object rule already rewritten: ", JCR.rule_to_s( containing_rule, true ) ) if ctx.trace
+    else
+      puts("Rewriting object rule:", JCR.rule_to_s( containing_rule, false ) ) if ctx.trace
       traverse_ors( containing_rule[:object_rule], ctx )
       containing_rule[:object_aors_rewritten] = true
+      puts("Object rule rewritten as:", JCR.rule_to_s( containing_rule, false ) ) if ctx.trace
     end
   end
 

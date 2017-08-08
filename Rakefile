@@ -28,3 +28,7 @@ end
 
 desc "test example ruby scripts"
 task :test_ruby_examples => [ :test_simple_rb, :test_override_rb, :test_callback_rb ]
+
+task :run_aor_rb do
+  ruby "-Ilib examples/aor.rb"
+end

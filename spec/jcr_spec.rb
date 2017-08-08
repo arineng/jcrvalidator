@@ -28,8 +28,7 @@ describe 'jcr' do
 [ integer* ]
 
 EX
-    ctx = JCR.ingest_ruleset( ex )
-    e = JCR.evaluate_ruleset( [ 2, 2, 2 ], ctx )
+    e = JCR::Context.new( ex ).evaluate( [ 2, 2, 2 ] )
     expect( e.success ).to be_truthy
   end
 
@@ -41,8 +40,7 @@ EX
 [ string* ]
 
 EX
-    ctx = JCR.ingest_ruleset( ex )
-    e = JCR.evaluate_ruleset( [ 2, 2, 2 ], ctx )
+    e = JCR::Context.new(ex ).evaluate( [ 2, 2, 2 ] )
     expect( e.success ).to be_falsey
   end
 
@@ -55,8 +53,7 @@ EX
 $my_rule =: 0..2
 
 EX
-    ctx = JCR.ingest_ruleset( ex )
-    e = JCR.evaluate_ruleset( [ 2, 2, 2 ], ctx )
+    e = JCR::Context.new( ex ).evaluate( [ 2, 2, 2 ] )
     expect( e.success ).to be_truthy
   end
 
@@ -71,8 +68,7 @@ $my_strings =: ( "foo" | "bar" )
 
 EX
     data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
-    ctx = JCR.ingest_ruleset( ex )
-    e = JCR.evaluate_ruleset( data, ctx )
+    e = JCR::Context.new( ex ).evaluate( data )
     expect( e.success ).to be_truthy
   end
 

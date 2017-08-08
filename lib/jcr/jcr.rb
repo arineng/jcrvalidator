@@ -29,7 +29,7 @@ require 'jcr/rewrite_aor'
 module JCR
 
   class Context
-    attr_accessor :mapping, :callbacks, :id, :tree, :roots, :catalog, :trace
+    attr_accessor :mapping, :callbacks, :id, :tree, :roots, :catalog, :trace, :rewrite_aors
 
     def add_ruleset_alias( ruleset_alias, alias_uri )
       unless @catalog
@@ -59,10 +59,11 @@ module JCR
       JCR.evaluate_ruleset( data, self, root_name )
     end
 
-    def initialize( ruleset = nil, trace = false )
+    def initialize( ruleset = nil, trace = false, rewrite_aors = true )
       @trace = trace
+      @rewrite_aors = rewrite_aors
       if ruleset
-        ingested = JCR.ingest_ruleset( ruleset, false, nil )
+        ingested = JCR.ingest_ruleset( ruleset, self,false, nil )
         @mapping = ingested.mapping
         @callbacks = ingested.callbacks
         @id = ingested.id
@@ -72,7 +73,7 @@ module JCR
     end
 
     def override( ruleset )
-      overridden = JCR.ingest_ruleset( ruleset, true, nil )
+      overridden = JCR.ingest_ruleset( ruleset, self, true, nil )
       mapping = {}
       mapping.merge!( @mapping )
       mapping.merge!( overridden.mapping )
@@ -86,7 +87,7 @@ module JCR
     end
 
     def override!( ruleset )
-      overridden = JCR.ingest_ruleset( ruleset, true, nil )
+      overridden = JCR.ingest_ruleset( ruleset, self, true, nil )
       @mapping.merge!( overridden.mapping )
       @callbacks.merge!( overridden.callbacks )
       @roots.concat( overridden.roots )
@@ -94,20 +95,22 @@ module JCR
 
   end
 
-  def self.ingest_ruleset( ruleset, override = false, ruleset_alias=nil, rewrite_aors = true )
+  def self.ingest_ruleset( ruleset, ctx, override = false, ruleset_alias=nil )
     tree = JCR.parse( ruleset )
     mapping = JCR.map_rule_names( tree, override, ruleset_alias )
     JCR.check_rule_target_names( tree, mapping )
     JCR.check_groups( tree, mapping )
     roots = JCR.find_roots( tree )
-    ctx = Context.new
-    ctx.tree = tree
-    ctx.mapping = mapping
-    ctx.callbacks = {}
-    ctx.roots = roots
-    JCR.process_directives( ctx )
-    JCR.rewrite_aors( ctx ) if rewrite_aors
-    return ctx
+    new_ctx = Context.new
+    new_ctx.trace = ctx.trace
+    new_ctx.rewrite_aors = ctx.rewrite_aors
+    new_ctx.tree = tree
+    new_ctx.mapping = mapping
+    new_ctx.callbacks = {}
+    new_ctx.roots = roots
+    JCR.process_directives( new_ctx )
+    JCR.rewrite_aors( new_ctx )
+    return new_ctx
   end
 
   def self.evaluate_ruleset( data, ctx, root_name = nil )

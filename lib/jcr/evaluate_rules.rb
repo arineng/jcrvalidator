@@ -429,7 +429,7 @@ module JCR
   end
 
   def self.target_to_s( jcr )
-    return annotations_to_s( jcr[:annotations] ) + " target: " + jcr[:rule_name].to_s
+    return annotations_to_s( jcr[:annotations] ) + " $" + jcr[:rule_name].to_s
   end
 
 end
