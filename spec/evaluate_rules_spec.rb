@@ -125,9 +125,29 @@ describe 'evaluate_rules' do
     expect( JCR.rule_to_s( tree[0] ) ).to eq( '( "a" : string , "b" : integer )')
   end
 
-  it 'should print out a rule assignment' do
+  it 'should print out a rule assignment to an array' do
     tree = JCR.parse( '$t = [ string ]' )
     expect( JCR.rule_to_s( tree[0] ) ).to eq( '$t = [ string ]' )
+  end
+
+  it 'should print out a rule assignment to member rule' do
+    tree = JCR.parse( '$t = "a":string' )
+    expect( JCR.rule_to_s( tree[0] ) ).to eq( '$t = "a" : string' )
+  end
+
+  it 'should print out a rule assignment to a primitive rule' do
+    tree = JCR.parse( '$t =: "foo"' )
+    expect( JCR.rule_to_s( tree[0] ) ).to eq( '$t =: "foo"' )
+  end
+
+  it 'should print repetitions in an array' do
+    tree = JCR.parse( '[ integer?, string*, float *1, boolean *1..2, null *..2, double *1.., string ? ]' )
+    expect( JCR.rule_to_s( tree[0] ) ).to eq( '[ integer ? , string * , float *1 , boolean *1..2 , null *0..2 , double *1..INF , string ? ]' )
+  end
+
+  it 'should print repetitions with steps in an array' do
+    tree = JCR.parse( '[ string*%3, boolean *1..2%3, null *..2%3, double *1..%3 ]' )
+    expect( JCR.rule_to_s( tree[0] ) ).to eq( '[ string *%3 , boolean *1..2%3 , null *0..2%3 , double *1..INF%3 ]' )
   end
 
 end
