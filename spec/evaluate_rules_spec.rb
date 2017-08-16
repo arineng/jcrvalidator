@@ -100,6 +100,11 @@ describe 'evaluate_rules' do
     expect( JCR.rule_to_s( tree[0] ) ).to eq( '[ "foo" , 2 , 2.3 , true , false , null ]')
   end
 
+  it 'should print out an array with a regex' do
+    tree = JCR.parse( '[ /foo*/ ]' )
+    expect( JCR.rule_to_s( tree[0] ) ).to eq( '[ /foo*/ ]')
+  end
+
   it 'should print out an array with ranges' do
     tree = JCR.parse( '[ 0..1, 0.., ..2, 1.1..2.2, 2.2.., ..3.3 ]' )
     expect( JCR.rule_to_s( tree[0] ) ).to eq( '[ 0..1 , 0..INF , -INF..2 , 1.1..2.2 , 2.2..INF , -INF..3.3 ]')
@@ -108,6 +113,21 @@ describe 'evaluate_rules' do
   it 'should print out an array with primitive definitions' do
     tree = JCR.parse( '[ integer, string, float, double, any, boolean ]' )
     expect( JCR.rule_to_s( tree[0] ) ).to eq( '[ integer , string , float , double , any , boolean ]')
+  end
+
+  it 'should print out sized int primitive definitions' do
+    tree = JCR.parse( '[ int8, uint16 ]')
+    expect( JCR.rule_to_s( tree[0] ) ).to eq('[ int8 , uint16 ]')
+  end
+
+  it 'should print out an array with other primitive definitions' do
+    tree = JCR.parse( '[ ipv4, ipv6, fqdn, idn, email, phone, hex, base32hex, base64url, base64, datetime, date, time ]' )
+    expect( JCR.rule_to_s( tree[0] ) ).to eq( '[ ipv4 , ipv6 , fqdn , idn , email , phone , hex , base32hex , base64url , base64 , datetime , date , time ]')
+  end
+
+  it 'should print uris' do
+    tree = JCR.parse( '[ uri, uri..https, uri..ftp ]')
+    expect( JCR.rule_to_s( tree[0] ) ).to eq( '[ uri , uri..https , uri..ftp ]' )
   end
 
   it 'should print out an array of arrays with annotations' do
