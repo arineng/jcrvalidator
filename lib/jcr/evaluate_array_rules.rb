@@ -289,6 +289,6 @@ module JCR
 
   def self.array_to_s( jcr, shallow=true )
     rules, annotations = get_rules_and_annotations( jcr )
-    return "#{annotations_to_s( annotations)} [ #{rules_to_s( rules, shallow )} ]"
+    return "#{annotations_to_s( annotations)}[ #{rules_to_s( rules, shallow )} ]"
   end
 end
