@@ -24,18 +24,10 @@ require 'jcr'
 require 'pp'
 
 ruleset = <<RULESET
-{ $l1 * | @{not}$l2 | @{not}$l3 | $l4 * | @{not}$l6 | $l7 }
-$l1 = ( "a":string, ( $l5 | @{not}"e":string ) )
-$l2 = @{not}( "b":integer | "c":string )
-$l3 = @{not}"j":float
-$l4 = /^k*/:any
-$l5 = "d":integer
-$l6 = "l":float
-$l7 = "m":integer
-
 $m1 = "a":string
 $m2 = "b":integer
 $m3 = "c":float
+$m4 = "d":boolean
 
 ; no rewrite should occur
 $o1 = { $m1, $m2 }
@@ -48,6 +40,12 @@ $o3 = { $m1 }
 $o4 = { $m1, ( $m2 | $m3 ) }
 
 $o5 = { ( $m1 , $m2 ) | $m3 }
+
+$o6 = { ( ( $m1, $m2 ) , $m4 ) | $m3 }
+
+$o7 = { ( "a":string *, @{not}"b":string ) | ( ( "c":string ) * ) | ( ( "d":string ) ) }
+
+$o8 = { ( "a":string, ( "d":integer | "e":string ) ) | ( "b":integer | "c":string ) }
 
 RULESET
 

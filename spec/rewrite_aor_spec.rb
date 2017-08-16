@@ -14,6 +14,7 @@
 
 require 'spec_helper'
 require 'rspec'
+require 'pp'
 require_relative '../lib/jcr/rewrite_aor'
 
 describe 'rewrite_aors' do
@@ -73,6 +74,9 @@ EX
     # create a context where aor rewriting is turned off because we want to avoid a call to object level rewrite
     ctx = JCR::Context.new( ex, false, false )
     JCR.traverse_ors( ctx.tree[0][:object_rule], ctx )
+    puts
+    pp ctx.tree
+    puts
     expect( ctx.tree[0][:object_rule][1][:level_ors_rewritten] ).to eq( true )
     expect( ctx.tree[0][:object_rule][1][:group_rule][1][:level_ors_rewritten] ).to eq( true )
     expect( ctx.tree[0][:object_rule][0][:group_rule][1][:group_rule][1][:level_ors_rewritten] ).to eq( true )

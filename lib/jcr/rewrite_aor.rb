@@ -258,6 +258,7 @@ code where the node[:object_rule] (or equivalent) is passed around.
     end
     if ors_at_this_level?( rule_level )
       dereference_object_targets( rule_level, ctx )
+      flatten_level( rule_level )
       # TODO rewrite here
     end
   end
@@ -343,6 +344,113 @@ code where the node[:object_rule] (or equivalent) is passed around.
         end
       end
     end
+  end
+
+  def self.flatten_level( level )
+    level.each do |sub_level|
+      raise "AND found during flattening AOR." if sub_level[:sequence_combiner]
+      #only flatten group rules
+      if sub_level[:group_rule]
+        new_group = { :group_rule => [] }
+        sub_level[:group_rule] = [ sub_level[:group_rule] ] if sub_level[:group_rule].is_a? Hash
+        sub_level[:group_rule].each do |grand_sub|
+          if grand_sub[:group_rule]
+            if ors_at_this_level?( grand_sub[:group_rule])
+              add_to_group_rule( new_group, grand_sub )
+            else
+              flatten_sub_level_ands( new_group, grand_sub )
+            end
+          else
+            add_to_group_rule( new_group, grand_sub )
+          end
+        end
+        if new_group[:group_rule].length < 2
+          sub_level[:group_rule] = new_group[:group_rule][0]
+        else
+          sub_level[:group_rule] = new_group[:group_rule]
+        end
+      end
+    end
+  end
+
+  def self.flatten_sub_level_ands( group_rule, sub_level )
+    sub_level[:group_rule] = [ sub_level[:group_rule] ] if sub_level[:group_rule].is_a? Hash
+    sub_level[:group_rule].each do |grand_sub|
+      if grand_sub[:group_rule]
+        if ors_at_this_level?( grand_sub[:group_rule])
+          add_to_group_rule( group_rule, grand_sub )
+        else
+          flatten_sub_level_ands( group_rule, grand_sub )
+        end
+      else
+        add_to_group_rule( group_rule, grand_sub )
+      end
+    end
+  end
+
+  def self.add_to_group_rule( containing_rule, rules )
+
+    # create a group rule if one is not given
+    if containing_rule == nil
+
+      containing_rule = {}
+
+      if rules.is_a( Hash ) && rules[:group_rule]
+        containing_rule[:group_rule] = rules[:group_rule]
+      else
+        containing_rule[:group_rule] = rules
+      end
+
+    else
+
+      add_sequence_combiner = true
+
+      # if the group rule is just an object, convert it to an object
+      if containing_rule[:group_rule].is_a?( Hash )
+        containing_rule[:group_rule] = [ containing_rule[:group_rule] ]
+      elsif containing_rule[:group_rule].length == 0
+        add_sequence_combiner = false
+      end
+
+      # if rules is a group rule itself
+      if rules.is_a?( Hash ) && rules[:group_rule]
+        # if group rule is a hash, that means it contains only one subordinate rule
+        # so pull that rule out and place it directly in this group
+        if rules[:group_rule].is_a?( Hash )
+          unless rules[:group_rule][:sequence_combiner]
+            rules[:group_rule][:sequence_combiner] = new_sequence_combiner if add_sequence_combiner
+          end
+          containing_rule[:group_rule] << rules[:group_rule]
+        # else if the group rule has an OR in it, we want to just add that group rule as its own subordinate
+        elsif ors_at_this_level?( rules[:group_rule] )
+          containing_rule[:group_rule] << rules
+        # else it is a group rule with ands which can be taken out and directly added here (flattened)
+        else
+          rules[:group_rule].each do |sub_rule|
+            sub_rule[:sequence_combiner] = new_sequence_combiner if !sub_rule[:sequence_combiner] && add_sequence_combiner
+            add_sequence_combiner = true
+            containing_rule[:group_rule] << sub_rule
+          end
+        end
+      elsif rules.is_a?( Hash )
+        rules[:sequence_combiner] = new_sequence_combiner if !rules[:sequence_combiner] && add_sequence_combiner
+        containing_rule[:group_rule] << rules
+      else
+        rules.each do |rule|
+          rule[:sequence_combiner] = new_sequence_combiner if !rule[:sequence_combiner] && add_sequence_combiner
+          add_sequence_combiner = true
+          containing_rule[:group_rule] << rule
+        end
+      end
+
+    end
+
+    containing_rule
+
+  end
+
+  def self.new_sequence_combiner
+    Parslet::Slice.new( Parslet::Position.new( "|", 0 ), "|" )
   end
 
 end
