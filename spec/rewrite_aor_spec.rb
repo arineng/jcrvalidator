@@ -51,34 +51,25 @@ EX
     expect( ctx.tree[0][:rule][:object_rule][2][:member_rule][:object_aors_rewritten] ).to eq(true )
   end
 
-  it 'should not have any double nested groups' do
-    ex = <<EX
+  #no double nested groups = ndng
+  ndng = <<NDNG
 $m1 = "a":string
 $m2 = "b":integer
 $m3 = "c":float
 $m4 = "d":boolean
-
-; no rewrite should occur
-$o1 = { $m1, $m2 }
-
-; should be rewritten
-$o2 = { $m1 | $m2 }
-
-$o3 = { $m1 }
-
 $o4 = { $m1, ( $m2 | $m3 ) }
-
 $o5 = { ( $m1 , $m2 ) | $m3 }
-
 $o6 = { ( ( $m1, $m2 ) , $m4 ) | $m3 }
-
 $o7 = { ( "a":string *, @{not}"b":string ) | ( ( "c":string ) * ) | ( ( "d":string ) ) }
-
 $o8 = { ( "a":string, ( "d":integer | "e":string ) ) | ( "b":integer | "c":string ) }
-EX
-
-    ctx = JCR::Context.new( ex )
-    expect( look_for_double_nested_groups( ctx.tree ) ).to be_falsey
+NDNG
+  ndng_ctx = JCR::Context.new( ndng )
+  ndng_ctx.tree.each_with_index do |rule,i|
+    it 'should not have double nested groups (ndng) ' + i.to_s do
+      test_val = look_for_double_nested_groups( rule )
+      pp "failed rule ndng #{i}", rule if test_val
+      expect( test_val ).to be_falsey
+    end
   end
 
   def look_for_double_nested_groups( rule )
@@ -95,10 +86,65 @@ EX
         else
           retval = look_for_double_nested_groups( rule[:group_rule] )
         end
+      else
+        rule.each do |k,sub_rule|
+          retval = look_for_double_nested_groups( sub_rule )
+          break if retval
+        end
       end
-    else
+    elsif rule.is_a?( Array )
       rule.each do |sub_rule|
         retval = look_for_double_nested_groups( sub_rule )
+        break if retval
+      end
+    end
+    return retval
+  end
+
+  # groups_with_both_ands_and_ors = gwbaao
+  gwbaao = <<GWBAAO
+$m1 = "a":string
+$m2 = "b":integer
+$m3 = "c":float
+$m4 = "d":boolean
+$o4 = { $m1, ( $m2 | $m3 ) }
+$o5 = { ( $m1 , $m2 ) | $m3 }
+$o6 = { ( ( $m1, $m2 ) , $m4 ) | $m3 }
+$o7 = { ( "a":string *, @{not}"b":string ) | ( ( "c":string ) * ) | ( ( "d":string ) ) }
+$o8 = { ( "a":string, ( "d":integer | "e":string ) ) | ( "b":integer | "c":string ) }
+GWBAAO
+  gwbaao_ctx = JCR::Context.new( gwbaao )
+  gwbaao_ctx.tree.each_with_index do |rule, i|
+    it 'should not have any groups with both ANDS and ORs for rule (gwbaao) ' + i.to_s do
+      test_val = look_for_groups_with_ands_and_ors( rule )
+      pp "failed rule gwbaao #{i}" ,rule if test_val
+      expect( test_val ).to be_falsey
+    end
+  end
+
+  def look_for_groups_with_ands_and_ors( rule )
+    retval = false
+    if rule.is_a?( Hash )
+      #is it a group rule as an array (cuz Hash group rules can only have one item)
+      if rule[:group_rule] && rule[:group_rule].is_a?( Array )
+        found_ands = false
+        found_ors = false
+        rule[:group_rule].each do |sub_rule|
+          found_ands = true if sub_rule[:sequence_combiner]
+          found_ors = true if sub_rule[:choice_combiner]
+        end
+        if found_ands && found_ors
+          retval = true
+        end
+      else
+        rule.each do |k,sub_rule|
+          retval = look_for_groups_with_ands_and_ors( sub_rule )
+          break if retval
+        end
+      end
+    elsif rule.is_a?( Array )
+      rule.each do |sub_rule|
+        retval = look_for_groups_with_ands_and_ors( sub_rule )
         break if retval
       end
     end

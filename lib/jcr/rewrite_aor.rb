@@ -350,7 +350,7 @@ code where the node[:object_rule] (or equivalent) is passed around.
     level.each do |sub_level|
       raise "AND found during flattening AOR." if sub_level[:sequence_combiner]
       #only flatten group rules
-      if sub_level[:group_rule]
+      if sub_level[:group_rule] && !ors_at_this_level?(sub_level[:group_rule])
         new_group = { :group_rule => [] }
         sub_level[:group_rule] = [ sub_level[:group_rule] ] if sub_level[:group_rule].is_a? Hash
         sub_level[:group_rule].each do |grand_sub|
