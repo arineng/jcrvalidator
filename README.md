@@ -206,5 +206,5 @@ $ bundle install
 To run the unit tests:
 
 ```
-rake test
+$ bundle exec rake test
 ````
