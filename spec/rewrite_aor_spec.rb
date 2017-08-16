@@ -101,6 +101,60 @@ NDNG
     return retval
   end
 
+  # groups_with_one_subrule_with_combiner = gwoswr
+  gwoswr = <<GWOSWR
+$m1 = "a":string
+$m2 = "b":integer
+$m3 = "c":float
+$m4 = "d":boolean
+$o4 = { $m1, ( $m2 | $m3 ) }
+$o5 = { ( $m1 , $m2 ) | $m3 }
+$o6 = { ( ( $m1, $m2 ) , $m4 ) | $m3 }
+$o7 = { ( "a":string *, @{not}"b":string ) | ( ( "c":string ) * ) | ( ( "d":string ) ) }
+$o8 = { ( "a":string, ( "d":integer | "e":string ) ) | ( "b":integer | "c":string ) }
+GWOSWR
+  gwoswr_ctx = JCR::Context.new( gwoswr )
+  gwoswr_ctx.tree.each_with_index do |rule, i |
+    it 'should find no groups with one subrule that has a combiner (gwoswr) ' + i.to_s do
+      test_val = look_for_groups_with_one_subrule_with_a_combiner( rule )
+      pp "failed rule gwoswr #{i}", rule if test_val
+      expect( test_val ).to be_falsey
+    end
+  end
+
+  def look_for_groups_with_one_subrule_with_a_combiner( rule )
+    retval = false
+    if rule.is_a?( Hash )
+      #is it a group rule
+      if rule[:group_rule]
+        #check to see if contains a group rule directly as a hash
+        if rule[:group_rule].is_a?( Hash )
+          if rule[:group_rule][:sequence_combiner] || rule[:group_rule][:choice_combiner]
+            retval = true
+          end
+        #check to see if contains a group rule as the only element of an array
+        elsif rule[:group_rule].length == 1 && rule[:group_rule][0].is_a?( Hash )
+          if rule[:group_rule][0][:sequence_combiner] || rule[:group_rule][0][:choice_combiner]
+            retval = true
+          end
+        else
+          retval = look_for_double_nested_groups( rule[:group_rule] )
+        end
+      else
+        rule.each do |k,sub_rule|
+          retval = look_for_double_nested_groups( sub_rule )
+          break if retval
+        end
+      end
+    elsif rule.is_a?( Array )
+      rule.each do |sub_rule|
+        retval = look_for_double_nested_groups( sub_rule )
+        break if retval
+      end
+    end
+    return retval
+  end
+
   # groups_with_both_ands_and_ors = gwbaao
   gwbaao = <<GWBAAO
 $m1 = "a":string
