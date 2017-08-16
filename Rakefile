@@ -11,6 +11,11 @@ task :test_cli do
   sh "cd examples; bash examples.sh -n"
 end
 
+desc "demonstrate command line examples"
+task :demo_cli do
+  sh "cd examples; bash examples.sh"
+end
+
 desc "run all tests"
 task :test => [:spec, :test_cli, :test_ruby_examples ]
 

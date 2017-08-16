@@ -470,9 +470,9 @@ module JCR
 
       when rule[:uri]
         if rule[:uri].is_a? Hash
-          retval =  "URI with specific scheme #{rule[:uri][:uri_scheme].to_s}"
+          retval =  "uri..#{rule[:uri][:uri_scheme].to_s}"
         else
-          retval =  "URI"
+          retval =  "uri"
         end
 
       when rule[:email]

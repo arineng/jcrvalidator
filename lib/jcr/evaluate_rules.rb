@@ -373,6 +373,20 @@ module JCR
   end
 
   def self.rule_to_s( rule, shallow=true)
+    if rule[:rule_name]
+      if rule[:primitive_rule]
+        retval = "$#{rule[:rule_name].to_s} =: #{ruletype_to_s( rule, shallow )}"
+      else
+        retval = "$#{rule[:rule_name].to_s} = #{ruletype_to_s( rule, shallow )}"
+      end
+    else
+      retval = ruletype_to_s( rule, shallow )
+    end
+    return retval
+  end
+
+  def self.ruletype_to_s( rule, shallow=true )
+
     if rule[:primitive_rule]
       retval = value_to_s( rule[:primitive_rule] )
     elsif rule[:member_rule]
@@ -393,6 +407,7 @@ module JCR
       retval = "** unknown rule definition ** #{rule}"
     end
     return retval
+
   end
 
   def self.rules_to_s( rules, shallow=true)
@@ -405,7 +420,7 @@ module JCR
       elsif rule[:sequence_combiner]
         retval = retval + " , "
       end
-      retval = retval + rule_to_s( rule, shallow )
+      retval = retval + rule_to_s( rule, shallow ) + repetitions_to_s( rule )
     end
     return retval
   end
@@ -415,13 +430,13 @@ module JCR
     annotations.each do |a|
       case
         when a[:unordered_annotation]
-          retval = retval + " @{unordered}"
+          retval = retval + "@{unordered}"
         when a[:not_annotation]
-          retval = retval + " @{not}"
+          retval = retval + "@{not}"
         when a[:root_annotation]
-          retval = retval + " @{root}"
+          retval = retval + "@{root}"
         else
-          retval = retval + " @{ ** unknown annotation ** }"
+          retval = retval + "@{ ** unknown annotation ** }"
       end
     end if annotations
     retval = retval + " " if retval.length != 0
@@ -429,7 +444,50 @@ module JCR
   end
 
   def self.target_to_s( jcr )
-    return annotations_to_s( jcr[:annotations] ) + " target: " + jcr[:rule_name].to_s
+    return annotations_to_s( jcr[:annotations] ) + "$" + jcr[:rule_name].to_s
+  end
+
+  def self.repetitions_to_s rule
+    retval = ""
+    if rule[:optional]
+      retval = "?"
+    elsif rule[:one_or_more]
+      retval = "+"
+      if rule[:repetition_step]
+        retval = "%" + rule[:repetition_step].to_s
+      end
+    elsif rule[:zero_or_more]
+      retval = "*"
+      retval = retval + "%" + rule[:repetition_step].to_s if rule[:repetition_step]
+    elsif rule[:specific_repetition] && rule[:specific_repetition].is_a?( Parslet::Slice )
+      retval = "*" + rule[:specific_repetition].to_s
+    else
+      if rule[:repetition_interval]
+        min = "0"
+        max = "INF"
+        o = rule[:repetition_min]
+        if o
+          if o.is_a?(Parslet::Slice)
+            min = o.to_s
+          end
+        end
+        o = rule[:repetition_max]
+        if o
+          if o.is_a?(Parslet::Slice)
+            max = o.to_s
+          end
+        end
+        retval = "*"+min+".."+max
+      end
+      o = rule[:repetition_step]
+      if o
+        if o.is_a?( Parslet::Slice )
+          retval = retval + "%" + o.to_s
+        end
+      end
+    end
+    retval = " " + retval if retval.length != 0
+    return retval
   end
 
 end
