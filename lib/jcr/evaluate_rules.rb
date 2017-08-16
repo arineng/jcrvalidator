@@ -373,6 +373,16 @@ module JCR
   end
 
   def self.rule_to_s( rule, shallow=true)
+    if rule[:rule_name]
+      retval = "$#{rule[:rule_name].to_s} = #{ruletype_to_s( rule, shallow )}"
+    else
+      retval = ruletype_to_s( rule, shallow )
+    end
+    return retval
+  end
+
+  def self.ruletype_to_s( rule, shallow=true )
+
     if rule[:primitive_rule]
       retval = value_to_s( rule[:primitive_rule] )
     elsif rule[:member_rule]
@@ -393,6 +403,7 @@ module JCR
       retval = "** unknown rule definition ** #{rule}"
     end
     return retval
+
   end
 
   def self.rules_to_s( rules, shallow=true)
@@ -415,13 +426,13 @@ module JCR
     annotations.each do |a|
       case
         when a[:unordered_annotation]
-          retval = retval + " @{unordered}"
+          retval = retval + "@{unordered}"
         when a[:not_annotation]
-          retval = retval + " @{not}"
+          retval = retval + "@{not}"
         when a[:root_annotation]
-          retval = retval + " @{root}"
+          retval = retval + "@{root}"
         else
-          retval = retval + " @{ ** unknown annotation ** }"
+          retval = retval + "@{ ** unknown annotation ** }"
       end
     end if annotations
     retval = retval + " " if retval.length != 0
@@ -429,7 +440,7 @@ module JCR
   end
 
   def self.target_to_s( jcr )
-    return annotations_to_s( jcr[:annotations] ) + " target: " + jcr[:rule_name].to_s
+    return annotations_to_s( jcr[:annotations] ) + "$" + jcr[:rule_name].to_s
   end
 
 end

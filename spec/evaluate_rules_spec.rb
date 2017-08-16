@@ -76,4 +76,58 @@ describe 'evaluate_rules' do
     expect( max ).to eq(1)
   end
 
+  #
+  # plain text serialization
+  #
+
+  it 'should print out an array with a rule reference' do
+    tree = JCR.parse( '[ $t ]' )
+    expect( JCR.rule_to_s( tree[0] ) ).to eq( "[ $t ]")
+  end
+
+  it 'should print out an array with two strings anded in it' do
+    tree = JCR.parse( '[ "foo", "bar" ]' )
+    expect( JCR.rule_to_s( tree[0] ) ).to eq( '[ "foo" , "bar" ]')
+  end
+
+  it 'should print out an array with two strings ored in it' do
+    tree = JCR.parse( '[ "foo"| "bar" ]' )
+    expect( JCR.rule_to_s( tree[0] ) ).to eq( '[ "foo" | "bar" ]')
+  end
+
+  it 'should print out an array with primitives' do
+    tree = JCR.parse( '[ "foo", 2, 2.3, true, false, null ]' )
+    expect( JCR.rule_to_s( tree[0] ) ).to eq( '[ "foo" , 2 , 2.3 , true , false , null ]')
+  end
+
+  it 'should print out an array with ranges' do
+    tree = JCR.parse( '[ 0..1, 0.., ..2, 1.1..2.2, 2.2.., ..3.3 ]' )
+    expect( JCR.rule_to_s( tree[0] ) ).to eq( '[ 0..1 , 0..INF , -INF..2 , 1.1..2.2 , 2.2..INF , -INF..3.3 ]')
+  end
+
+  it 'should print out an array with primitive definitions' do
+    tree = JCR.parse( '[ integer, string, float, double, any, boolean ]' )
+    expect( JCR.rule_to_s( tree[0] ) ).to eq( '[ integer , string , float , double , any , boolean ]')
+  end
+
+  it 'should print out an array of arrays with annotations' do
+    tree = JCR.parse( '[ @{not}[ integer ], @{root}[ string ] , @{unordered}[ float ] ]' )
+    expect( JCR.rule_to_s( tree[0] ) ).to eq( '[ @{not} [ integer ] , @{root} [ string ] , @{unordered} [ float ] ]')
+  end
+
+  it 'should print an object with members' do
+    tree = JCR.parse( '{ "a":string, "b":integer }' )
+    expect( JCR.rule_to_s( tree[0] ) ).to eq( '{ "a" : string , "b" : integer }')
+  end
+
+  it 'should print an group with members' do
+    tree = JCR.parse( '( "a":string, "b":integer )' )
+    expect( JCR.rule_to_s( tree[0] ) ).to eq( '( "a" : string , "b" : integer )')
+  end
+
+  it 'should print out a rule assignment' do
+    tree = JCR.parse( '$t = [ string ]' )
+    expect( JCR.rule_to_s( tree[0] ) ).to eq( '$t = [ string ]' )
+  end
+
 end
