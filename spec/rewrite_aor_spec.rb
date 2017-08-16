@@ -51,6 +51,60 @@ EX
     expect( ctx.tree[0][:rule][:object_rule][2][:member_rule][:object_aors_rewritten] ).to eq(true )
   end
 
+  it 'should not have any double nested groups' do
+    ex = <<EX
+$m1 = "a":string
+$m2 = "b":integer
+$m3 = "c":float
+$m4 = "d":boolean
+
+; no rewrite should occur
+$o1 = { $m1, $m2 }
+
+; should be rewritten
+$o2 = { $m1 | $m2 }
+
+$o3 = { $m1 }
+
+$o4 = { $m1, ( $m2 | $m3 ) }
+
+$o5 = { ( $m1 , $m2 ) | $m3 }
+
+$o6 = { ( ( $m1, $m2 ) , $m4 ) | $m3 }
+
+$o7 = { ( "a":string *, @{not}"b":string ) | ( ( "c":string ) * ) | ( ( "d":string ) ) }
+
+$o8 = { ( "a":string, ( "d":integer | "e":string ) ) | ( "b":integer | "c":string ) }
+EX
+
+    ctx = JCR::Context.new( ex )
+    expect( look_for_double_nested_groups( ctx.tree ) ).to be_falsey
+  end
+
+  def look_for_double_nested_groups( rule )
+    retval = false
+    if rule.is_a?( Hash )
+      #is it a group rule
+      if rule[:group_rule]
+        #check to see if contains a group rule directly as a hash
+        if rule[:group_rule].is_a?( Hash ) && rule[:group_rule][:group_rule]
+          retval = true
+        #check to see if contains a group rule as the only element of an array
+        elsif rule[:group_rule].length == 1 && rule[:group_rule][0].is_a?( Hash ) && rule[:group_rule][0][:group_rule]
+          retval = true
+        else
+          retval = look_for_double_nested_groups( rule[:group_rule] )
+        end
+      end
+    else
+      rule.each do |sub_rule|
+        retval = look_for_double_nested_groups( sub_rule )
+        break if retval
+      end
+    end
+    return retval
+  end
+
   #
   # internal method tests
   #
@@ -74,9 +128,6 @@ EX
     # create a context where aor rewriting is turned off because we want to avoid a call to object level rewrite
     ctx = JCR::Context.new( ex, false, false )
     JCR.traverse_ors( ctx.tree[0][:object_rule], ctx )
-    puts
-    pp ctx.tree
-    puts
     expect( ctx.tree[0][:object_rule][1][:level_ors_rewritten] ).to eq( true )
     expect( ctx.tree[0][:object_rule][1][:group_rule][1][:level_ors_rewritten] ).to eq( true )
     expect( ctx.tree[0][:object_rule][0][:group_rule][1][:group_rule][1][:level_ors_rewritten] ).to eq( true )
