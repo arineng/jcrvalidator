@@ -51,6 +51,28 @@ EX
     expect( ctx.tree[0][:rule][:object_rule][2][:member_rule][:object_aors_rewritten] ).to eq(true )
   end
 
+  it 'should check that objects do not get dereferenced if they have not ORs' do
+    ex = <<EX
+$m1 = "a":string
+$m2 = "b":integer
+$o1 = { $m1, $m2 }
+$o3 = { $m1 }
+EX
+    ctx = JCR::Context.new( ex )
+    expect( JCR.rule_to_s( ctx.tree[2]) ).to eq("$o1 = { $m1 , $m2 }")
+    expect( JCR.rule_to_s( ctx.tree[3]) ).to eq("$o3 = { $m1 }")
+  end
+
+  it 'should check that objects do get dereferenced if they have ORs' do
+    ex = <<EX
+$m1 = "a":string
+$m2 = "b":integer
+$o2 = { $m1 | $m2 }
+EX
+    ctx = JCR::Context.new( ex )
+    expect( JCR.rule_to_s( ctx.tree[2]) ).to eq('$o2 = { "a" : string | "b" : integer }')
+  end
+
   #no double nested groups = ndng
   ndng = <<NDNG
 $m1 = "a":string
