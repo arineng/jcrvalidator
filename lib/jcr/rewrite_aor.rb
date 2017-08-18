@@ -556,6 +556,7 @@ code where the node[:object_rule] (or equivalent) is passed around.
       retval.delete( :repetition_interval )
       retval.delete( :repetition_min )
       retval.delete( :repetition_max )
+      retval.delete( :specific_repetition )
 
     end
     return retval

@@ -354,10 +354,46 @@ EX
     expect( JCR.rule_to_s(xformed) ).to eql('@{not} "a" : any')
   end
 
-  it 'should not transform a member rule with a not annotation' do
-    tree = JCR.parse( '{ @{not}"a":string }' )
+  it 'should transform an optional member rule with no annotations' do
+    tree = JCR.parse( '{ "a":string ? }' )
     xformed = JCR.create_to_uncommon_aor_rule( tree[0][:object_rule] )
-    expect( JCR.rule_to_s(xformed) ).to eql('@{not} "a" : string')
+    expect( JCR.rules_to_s( [ xformed ]) ).to eql('@{not} "a" : any')
+  end
+
+  it 'should transform a zero or more member rule with no annotations' do
+    tree = JCR.parse( '{ "a":string * }' )
+    xformed = JCR.create_to_uncommon_aor_rule( tree[0][:object_rule] )
+    expect( JCR.rules_to_s( [ xformed ]) ).to eql('@{not} "a" : any')
+  end
+
+  it 'should transform a one or more member rule with no annotations' do
+    tree = JCR.parse( '{ "a":string + }' )
+    xformed = JCR.create_to_uncommon_aor_rule( tree[0][:object_rule] )
+    expect( JCR.rules_to_s( [ xformed ]) ).to eql('@{not} "a" : any')
+  end
+
+  it 'should transform a specific number  member rule with no annotations' do
+    tree = JCR.parse( '{ "a":string *3 }' )
+    xformed = JCR.create_to_uncommon_aor_rule( tree[0][:object_rule] )
+    expect( JCR.rules_to_s( [ xformed ]) ).to eql('@{not} "a" : any')
+  end
+
+  it 'should transform a specific range member rule with no annotations' do
+    tree = JCR.parse( '{ "a":string *3..4 }' )
+    xformed = JCR.create_to_uncommon_aor_rule( tree[0][:object_rule] )
+    expect( JCR.rules_to_s( [ xformed ]) ).to eql('@{not} "a" : any')
+  end
+
+  it 'should transform a specific range with skip member rule with no annotations' do
+    tree = JCR.parse( '{ "a":string *3..4%2 }' )
+    xformed = JCR.create_to_uncommon_aor_rule( tree[0][:object_rule] )
+    expect( JCR.rules_to_s( [ xformed ]) ).to eql('@{not} "a" : any')
+  end
+
+  it 'should not transform a member rule with a not annotation' do
+    tree = JCR.parse( '{ @{not}"a":string ? }' )
+    xformed = JCR.create_to_uncommon_aor_rule( tree[0][:object_rule] )
+    expect( JCR.rules_to_s( [ xformed ]) ).to eql('@{not} "a" : string ?')
   end
 
 end
