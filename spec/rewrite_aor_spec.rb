@@ -311,18 +311,67 @@ EX
     expect( ctx.tree[6][:rule][:member_rule][:not_annotation] ).to be_nil
   end
 
-  it 'should find the common and uncommon sets for three simple combinations' do
+  it 'should find and assemble the common and uncommon sets for three simple combinations' do
     tree = JCR.parse( '{ "a":string | "b":integer | "c":boolean }')
+    # test the sets
+    common_set, uncommon_sets = JCR.find_common_and_uncommon_sets( tree[0][:object_rule] )
+    expect( common_set.empty? ).to be
+    expect( uncommon_sets.length ).to eql( 3 )
+    expect( uncommon_sets[0]['"a" : string'] ).to_not be_nil
+    expect( uncommon_sets[1]['"b" : integer'] ).to_not be_nil
+    expect( uncommon_sets[1]['"b" : integer'][:choice_combiner] ).to be_nil
+    expect( uncommon_sets[2]['"c" : boolean'] ).to_not be_nil
+    expect( uncommon_sets[2]['"c" : boolean'][:choice_combiner] ).to be_nil
+    # test the assembly
+    JCR.assemble_sets( tree[0][:object_rule], common_set, uncommon_sets )
+    expected = <<EXPECTED
+{ ( "a" : string , @{not} "b" : any , @{not} "c" : any ) | ( @{not} "a" : any , "b" : integer , @{not} "c" : any ) | ( @{not} "a" : any , @{not} "b" : any , "c" : boolean ) }
+EXPECTED
+    expect( JCR.rule_to_s( tree[0], false ) ).to eql( expected.strip )
+  end
+
+  it 'should find and assemble the common and uncommon sets for three simple combinations of an annotated object rule' do
+    tree = JCR.parse( '@{root}{ "a":string | "b":integer | "c":boolean }')
+    # test the sets
     common_set, uncommon_sets = JCR.find_common_and_uncommon_sets( tree[0][:object_rule] )
     expect( common_set.empty? ).to be
     expect( uncommon_sets.length ).to eql( 3 )
     expect( uncommon_sets[0]['"a" : string'] ).to_not be_nil
     expect( uncommon_sets[1]['"b" : integer'] ).to_not be_nil
     expect( uncommon_sets[2]['"c" : boolean'] ).to_not be_nil
+    # test the assembly
+    JCR.assemble_sets( tree[0][:object_rule], common_set, uncommon_sets )
+    expected = <<EXPECTED
+@{root} { ( "a" : string , @{not} "b" : any , @{not} "c" : any ) | ( @{not} "a" : any , "b" : integer , @{not} "c" : any ) | ( @{not} "a" : any , @{not} "b" : any , "c" : boolean ) }
+EXPECTED
+    expect( JCR.rule_to_s( tree[0], false ) ).to eql( expected.strip )
   end
 
-  it 'should find the common and uncommon sets for three complex non-intersecting combinations' do
+  it 'should find and assemble the common and uncommon sets for three complex non-intersecting combinations' do
     tree = JCR.parse( '{ ("a":string,"d":string) | ("b":integer,"e":float) | ("c":boolean,"f":double) }')
+    # test the sets
+    common_set, uncommon_sets = JCR.find_common_and_uncommon_sets( tree[0][:object_rule] )
+    expect( common_set.empty? ).to be
+    expect( uncommon_sets.length ).to eql( 3 )
+    expect( uncommon_sets[0]['"a" : string'] ).to_not be_nil
+    expect( uncommon_sets[0]['"d" : string'] ).to_not be_nil
+    expect( uncommon_sets[1]['"b" : integer'] ).to_not be_nil
+    expect( uncommon_sets[1]['"e" : float'] ).to_not be_nil
+    expect( uncommon_sets[2]['"c" : boolean'] ).to_not be_nil
+    expect( uncommon_sets[2]['"f" : double'] ).to_not be_nil
+    # test the assembly
+    JCR.assemble_sets( tree[0][:object_rule], common_set, uncommon_sets )
+    expected =
+      '{ ' +
+         '( "a" : string , "d" : string , @{not} "b" : any , @{not} "e" : any , @{not} "c" : any , @{not} "f" : any ) | ' +
+         '( @{not} "a" : any , @{not} "d" : any , "b" : integer , "e" : float , @{not} "c" : any , @{not} "f" : any ) | ' +
+         '( @{not} "a" : any , @{not} "d" : any , @{not} "b" : any , @{not} "e" : any , "c" : boolean , "f" : double ) '  +
+      '}'
+    expect( JCR.rule_to_s( tree[0], false ) ).to eql( expected.strip )
+  end
+
+  it 'should find the common and uncommon sets for three complex non-intersecting combinations of an annotated object' do
+    tree = JCR.parse( '@{root}{ ("a":string,"d":string) | ("b":integer,"e":float) | ("c":boolean,"f":double) }')
     common_set, uncommon_sets = JCR.find_common_and_uncommon_sets( tree[0][:object_rule] )
     expect( common_set.empty? ).to be
     expect( uncommon_sets.length ).to eql( 3 )
@@ -334,8 +383,9 @@ EX
     expect( uncommon_sets[2]['"f" : double'] ).to_not be_nil
   end
 
-  it 'should find the common and uncommon sets for three complex intersecting combinations' do
+  it 'should find and assemble the common and uncommon sets for three complex intersecting combinations' do
     tree = JCR.parse( '{ ("a":string,"d":string) | ("a":string,"e":float) | ("a":string,"f":double) }')
+    # test the sets
     common_set, uncommon_sets = JCR.find_common_and_uncommon_sets( tree[0][:object_rule] )
     expect( common_set.length ).to eql( 1 )
     expect( common_set['"a" : string'] ).to_not be_nil
@@ -346,6 +396,15 @@ EX
     expect( uncommon_sets[1]['"e" : float'] ).to_not be_nil
     expect( uncommon_sets[2]['"a" : string'] ).to be_nil
     expect( uncommon_sets[2]['"f" : double'] ).to_not be_nil
+    # test the assembly
+    JCR.assemble_sets( tree[0][:object_rule], common_set, uncommon_sets )
+    expected =
+      '{ ' +
+        '( "a" : string , "d" : string , @{not} "e" : any , @{not} "f" : any ) | ' +
+        '( "a" : string , @{not} "d" : any , "e" : float , @{not} "f" : any ) | ' +
+        '( "a" : string , @{not} "d" : any , @{not} "e" : any , "f" : double ) '  +
+      '}'
+    expect( JCR.rule_to_s( tree[0], false ) ).to eql( expected.strip )
   end
 
   it 'should transform a member rule with no annotations' do

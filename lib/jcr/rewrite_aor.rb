@@ -395,7 +395,7 @@ code where the node[:object_rule] (or equivalent) is passed around.
 
       containing_rule = {}
 
-      if rules.is_a( Hash ) && rules[:group_rule]
+      if rules.is_a?( Hash ) && rules[:group_rule]
         containing_rule[:group_rule] = rules[:group_rule]
       else
         containing_rule[:group_rule] = rules
@@ -450,7 +450,7 @@ code where the node[:object_rule] (or equivalent) is passed around.
   end
 
   def self.new_sequence_combiner
-    Parslet::Slice.new( Parslet::Position.new( "|", 0 ), "|" )
+    Parslet::Slice.new( Parslet::Position.new( ",", 0 ), "," )
   end
 
   def self.new_not_annotation
@@ -470,6 +470,9 @@ code where the node[:object_rule] (or equivalent) is passed around.
     # into the uncommon sets. The common ones will be moved to the common set later
     level.each do |sub_level|
 
+      next unless sub_level[:group_rule] || sub_level[:member_rule]
+
+
       # create a hash for the sub_level
       sub_level_set = {}
       uncommon_sets << sub_level_set
@@ -486,7 +489,11 @@ code where the node[:object_rule] (or equivalent) is passed around.
 
       rules.each do |rule|
         h = rule_to_s( rule, false )
-        sub_level_set[ h ] = rule
+        # create a deep copy
+        new_rule = Marshal.load( Marshal.dump( rule ) )
+        # delete any choice combiner that might be there
+        new_rule.delete( :choice_combiner )
+        sub_level_set[ h ] = new_rule
       end
 
     end
@@ -560,6 +567,30 @@ code where the node[:object_rule] (or equivalent) is passed around.
 
     end
     return retval
+  end
+
+  def self.assemble_sets( level, common_set, uncommon_sets )
+    level_i = 0
+    level.each do |sub_level|
+      next unless sub_level[:member_rule] || sub_level[:group_rule]
+      unless common_set.empty?
+        new_group = add_to_group_rule( nil, common_set.values )
+      else
+        new_group = nil
+      end
+      uncommon_sets.each_with_index do |uset, uset_i|
+        uset.each_value do |rule|
+          if uset_i == level_i
+            new_group = add_to_group_rule( new_group, rule )
+          else
+            new_group = add_to_group_rule( new_group, create_to_uncommon_aor_rule( rule ) )
+          end
+        end
+      end
+      sub_level.delete( :member_rule )
+      sub_level[:group_rule] = new_group[:group_rule]
+      level_i = level_i + 1
+    end
   end
 
 end
