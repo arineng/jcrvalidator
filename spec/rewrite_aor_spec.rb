@@ -347,4 +347,19 @@ EX
     expect( uncommon_sets[2]['"a" : string'] ).to be_nil
     expect( uncommon_sets[2]['"f" : double'] ).to_not be_nil
   end
+
+  xit 'should transform a member rule with no not annotation' do
+    tree = JCR.parse( '{ "a":string }' )
+    xformed = JCR.create_to_uncommon_aor_rule( tree[0][:object_rule] )
+    pp tree,xformed
+    expect( JCR.rule_to_s(xformed) ).to eql('@{not} "a" : any')
+  end
+
+  xit 'should not transform a member rule with a not annotation' do
+    tree = JCR.parse( '{ @{not}"a":string }' )
+    pp "with not annotation",tree
+    xformed = JCR.create_to_uncommon_aor_rule( tree[0][:object_rule] )
+    expect( JCR.rule_to_s(xformed) ).to eql('@{not} "a" : string')
+  end
+
 end

@@ -453,6 +453,14 @@ code where the node[:object_rule] (or equivalent) is passed around.
     Parslet::Slice.new( Parslet::Position.new( "|", 0 ), "|" )
   end
 
+  def self.new_not_annotation
+    Parslet::Slice.new( Parslet::Position.new( "not", 0 ), "not" )
+  end
+
+  def self.new_any_type
+    Parslet::Slice.new( Parslet::Position.new( "any", 0 ), "any" )
+  end
+
   def self.find_common_and_uncommon_sets( level )
     # where level is either an object rule or group contained in an object rule that has already been flattened
     common_set = {} #a hash where rule_to_s(rule) is the key and the value is the rule
@@ -506,6 +514,48 @@ code where the node[:object_rule] (or equivalent) is passed around.
 
     return common_set, uncommon_sets
 
+  end
+
+  # this method takes a member rule from an uncommon set, copies it, and transforms it
+  def self.create_to_uncommon_aor_rule( member_rule )
+    # create a copy first
+    retval = Marshal.load( Marshal.dump( member_rule ) )
+
+    # does it have a not annotation
+    not_annotation = false
+    if retval[:member_rule][:annotations]
+      retval[:member_rule][:annotations].each do |a|
+        not_annotation = true if a[:not_annotation]
+      end
+    end
+
+    unless not_annotation
+
+      # give it a not annotation
+      if retval[:member_rule][:annotations]
+        as = retval[:member_rule][:annotations]
+      else
+        as = []
+        retval[:member_rule][:annotations] = as
+      end
+      as << { :not_annotation => new_not_annotation() }
+
+      # change it's type to any
+      retval[:member_rule][:primitive_rule] = { :any => new_any_type() }
+      retval[:member_rule].delete( :object_rule )
+      retval[:member_rule].delete( :array_rule )
+
+      # remove all repetitions so the repetition is by default 1
+      retval.delete( :optional )
+      retval.delete( :one_or_more )
+      retval.delete( :repetition_step )
+      retval.delete( :zero_or_more )
+      retval.delete( :repetition_interval )
+      retval.delete( :repetition_min )
+      retval.delete( :repetition_max )
+
+    end
+    return retval
   end
 
 end
