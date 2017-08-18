@@ -311,4 +311,40 @@ EX
     expect( ctx.tree[6][:rule][:member_rule][:not_annotation] ).to be_nil
   end
 
+  it 'should find the common and uncommon sets for three simple combinations' do
+    tree = JCR.parse( '{ "a":string | "b":integer | "c":boolean }')
+    common_set, uncommon_sets = JCR.find_common_and_uncommon_sets( tree[0][:object_rule] )
+    expect( common_set.empty? ).to be
+    expect( uncommon_sets.length ).to eql( 3 )
+    expect( uncommon_sets[0]['"a" : string'] ).to_not be_nil
+    expect( uncommon_sets[1]['"b" : integer'] ).to_not be_nil
+    expect( uncommon_sets[2]['"c" : boolean'] ).to_not be_nil
+  end
+
+  it 'should find the common and uncommon sets for three complex non-intersecting combinations' do
+    tree = JCR.parse( '{ ("a":string,"d":string) | ("b":integer,"e":float) | ("c":boolean,"f":double) }')
+    common_set, uncommon_sets = JCR.find_common_and_uncommon_sets( tree[0][:object_rule] )
+    expect( common_set.empty? ).to be
+    expect( uncommon_sets.length ).to eql( 3 )
+    expect( uncommon_sets[0]['"a" : string'] ).to_not be_nil
+    expect( uncommon_sets[0]['"d" : string'] ).to_not be_nil
+    expect( uncommon_sets[1]['"b" : integer'] ).to_not be_nil
+    expect( uncommon_sets[1]['"e" : float'] ).to_not be_nil
+    expect( uncommon_sets[2]['"c" : boolean'] ).to_not be_nil
+    expect( uncommon_sets[2]['"f" : double'] ).to_not be_nil
+  end
+
+  it 'should find the common and uncommon sets for three complex intersecting combinations' do
+    tree = JCR.parse( '{ ("a":string,"d":string) | ("a":string,"e":float) | ("a":string,"f":double) }')
+    common_set, uncommon_sets = JCR.find_common_and_uncommon_sets( tree[0][:object_rule] )
+    expect( common_set.length ).to eql( 1 )
+    expect( common_set['"a" : string'] ).to_not be_nil
+    expect( uncommon_sets.length ).to eql( 3 )
+    expect( uncommon_sets[0]['"a" : string'] ).to be_nil
+    expect( uncommon_sets[0]['"d" : string'] ).to_not be_nil
+    expect( uncommon_sets[1]['"a" : string'] ).to be_nil
+    expect( uncommon_sets[1]['"e" : float'] ).to_not be_nil
+    expect( uncommon_sets[2]['"a" : string'] ).to be_nil
+    expect( uncommon_sets[2]['"f" : double'] ).to_not be_nil
+  end
 end

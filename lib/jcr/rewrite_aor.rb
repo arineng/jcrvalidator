@@ -453,4 +453,59 @@ code where the node[:object_rule] (or equivalent) is passed around.
     Parslet::Slice.new( Parslet::Position.new( "|", 0 ), "|" )
   end
 
+  def self.find_common_and_uncommon_sets( level )
+    # where level is either an object rule or group contained in an object rule that has already been flattened
+    common_set = {} #a hash where rule_to_s(rule) is the key and the value is the rule
+    uncommon_sets = [] #an array of hashes like the one above
+
+    # iterate through each ORed sub_level ( rule | rule | rule ) and put each rule (or rules inside groups)
+    # into the uncommon sets. The common ones will be moved to the common set later
+    level.each do |sub_level|
+
+      # create a hash for the sub_level
+      sub_level_set = {}
+      uncommon_sets << sub_level_set
+
+      # get something we can iterate over. if its a group rule, iterate over its children
+      rules = [ sub_level ]
+      if sub_level[:group_rule]
+        if sub_level[:group_rule].is_a?( Hash )
+          rules = [ sub_level[:group_rule] ]
+        else
+          rules = sub_level[:group_rule]
+        end
+      end
+
+      rules.each do |rule|
+        h = rule_to_s( rule, false )
+        sub_level_set[ h ] = rule
+      end
+
+    end
+
+    # now find the ones that are common
+    uncommon_sets.each_with_index do |set, i |
+      #is in the other uncommon sets?
+      set.each do |rule_s, rule|
+        found_in_other = 0
+        uncommon_sets.each_with_index do |other_set, other_i|
+          if i != other_i && other_set[rule_s]
+            found_in_other = found_in_other + 1
+          end
+        end
+        common_set[rule_s] = rule if found_in_other == uncommon_sets.length - 1
+      end
+    end
+
+    # now remove everything found in the common set from the uncommon sets
+    uncommon_sets.each do |set|
+      set.delete_if do |rule_s,rule|
+        common_set[rule_s] != nil
+      end
+    end
+
+    return common_set, uncommon_sets
+
+  end
+
 end
