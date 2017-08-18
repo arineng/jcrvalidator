@@ -522,28 +522,31 @@ code where the node[:object_rule] (or equivalent) is passed around.
     retval = Marshal.load( Marshal.dump( member_rule ) )
 
     # does it have a not annotation
-    not_annotation = false
-    if retval[:member_rule][:annotations]
-      retval[:member_rule][:annotations].each do |a|
-        not_annotation = true if a[:not_annotation]
-      end
+    has_not_annotation = false
+    if retval[:member_rule].is_a?( Array )
+      has_not_annotation = retval[:member_rule].any? { |x| x.is_a?(Hash) && x[:not_annotation] }
     end
 
-    unless not_annotation
+    unless has_not_annotation
 
-      # give it a not annotation
-      if retval[:member_rule][:annotations]
-        as = retval[:member_rule][:annotations]
-      else
-        as = []
-        retval[:member_rule][:annotations] = as
+      # give it a not annotation, which means convert it to an array
+      mra = [ { :not_annotation => new_not_annotation() } ]
+      retval[:member_rule].each do |k,v|
+        mra << { k => v }
       end
-      as << { :not_annotation => new_not_annotation() }
+      retval[:member_rule] = mra
 
       # change it's type to any
-      retval[:member_rule][:primitive_rule] = { :any => new_any_type() }
-      retval[:member_rule].delete( :object_rule )
-      retval[:member_rule].delete( :array_rule )
+      retval[:member_rule].map! do |item|
+        if item[:primitive_rule]
+          { :primitive_rule => { :any => new_any_type() } }
+        else
+          item
+        end
+      end
+      retval[:member_rule].keep_if do |item|
+        !( item[:object_rule] || item[:array_rule] )
+      end
 
       # remove all repetitions so the repetition is by default 1
       retval.delete( :optional )
