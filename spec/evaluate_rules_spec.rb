@@ -170,4 +170,19 @@ describe 'evaluate_rules' do
     expect( JCR.rule_to_s( tree[0] ) ).to eq( '[ string *%3 , boolean *1..2%3 , null *0..2%3 , double *1..INF%3 ]' )
   end
 
+  it 'should print out the not annotation on array items' do
+    tree = JCR.parse( '[ @{not} string ]' )
+    expect( JCR.rule_to_s( tree[0] ) ).to eq( '[ @{not} string ]' )
+  end
+
+  it 'should print out the not annotation on object members in an object rule' do
+    tree = JCR.parse( '{ @{not}"a":string }' )
+    expect( JCR.rule_to_s( tree[0] ) ).to eq( '{ @{not} "a" : string }' )
+  end
+
+  it 'should print out the not annotation on a member definition in a member rule in an object rule' do
+    tree = JCR.parse( '{ "a":@{not}string }' )
+    expect( JCR.rule_to_s( tree[0] ) ).to eq( '{ "a" : @{not} string }' )
+  end
+
 end
