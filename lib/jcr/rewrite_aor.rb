@@ -259,7 +259,8 @@ code where the node[:object_rule] (or equivalent) is passed around.
     if ors_at_this_level?( rule_level )
       dereference_object_targets( rule_level, ctx )
       flatten_level( rule_level )
-      # TODO rewrite here
+      common_set, uncommon_sets = find_common_and_uncommon_sets( rule_level )
+      assemble_sets( rule_level, common_set, uncommon_sets )
     end
   end
 
@@ -523,9 +524,20 @@ code where the node[:object_rule] (or equivalent) is passed around.
 
   end
 
+  def self.create_uncommon_aor_rule( member_or_group_rule )
+    if member_or_group_rule[:member_rule]
+      return create_uncommon_member_rule( member_or_group_rule )
+    elsif member_or_group_rule[:group_rule]
+      return create_uncommon_group_rule( member_or_group_rule )
+    else
+      raise "not a member or group rule for #{member_or_group_rule.class}"
+    end
+  end
+
   # this method takes a member rule from an uncommon set, copies it, and transforms it
-  def self.create_to_uncommon_aor_rule( member_rule )
+  def self.create_uncommon_member_rule( member_rule )
     # create a copy first
+    raise "not a member rule for #{member_rule.class}" unless member_rule[:member_rule]
     retval = Marshal.load( Marshal.dump( member_rule ) )
 
     # does it have a not annotation
@@ -569,6 +581,41 @@ code where the node[:object_rule] (or equivalent) is passed around.
     return retval
   end
 
+  def self.create_uncommon_group_rule( group_rule )
+    raise "not a group rule for #{group_rule.class}" unless group_rule[:group_rule]
+    # create a copy first
+    retval = Marshal.load( Marshal.dump( group_rule ) )
+
+    # does it have a not annotation
+    has_not_annotation = false
+    if retval[ :annotations ].is_a?( Array )
+      has_not_annotation = retval[:annotations].any? { |x| x.is_a?(Hash) && x[:not_annotation] }
+    end
+
+    unless has_not_annotation
+
+      # give it a not annotation, which means convert it to an array
+      gra = [ { :not_annotation => new_not_annotation() } ]
+      retval[:group_rule].each do |k,v|
+        gra << { k => v }
+      end
+      retval[:group_rule] = gra
+
+      # remove all repetitions so the repetition is by default 1
+      retval.delete( :optional )
+      retval.delete( :one_or_more )
+      retval.delete( :repetition_step )
+      retval.delete( :zero_or_more )
+      retval.delete( :repetition_interval )
+      retval.delete( :repetition_min )
+      retval.delete( :repetition_max )
+      retval.delete( :specific_repetition )
+
+    end
+
+    return retval
+  end
+
   def self.assemble_sets( level, common_set, uncommon_sets )
     level_i = 0
     level.each do |sub_level|
@@ -583,7 +630,7 @@ code where the node[:object_rule] (or equivalent) is passed around.
           if uset_i == level_i
             new_group = add_to_group_rule( new_group, rule )
           else
-            new_group = add_to_group_rule( new_group, create_to_uncommon_aor_rule( rule ) )
+            new_group = add_to_group_rule(new_group, create_uncommon_aor_rule(rule ) )
           end
         end
       end

@@ -360,8 +360,12 @@ module JCR
   def self.slice_to_s slice
     s = find_first_slice( slice )
     if s.is_a? Parslet::Slice
-      pos = s.line_and_column
-      retval = "'#{s.inspect}' ( line #{pos[0]} column #{pos[1]} )"
+      if s.line_cache
+        pos = s.line_and_column
+        retval = "'#{s.inspect}' ( line #{pos[0]} column #{pos[1]} )"
+      else
+        retval = "'#{s.inspect}' ( inserted for AOR )"
+      end
     else
       retval = slice.to_s
     end
