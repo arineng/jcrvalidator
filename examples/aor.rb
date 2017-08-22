@@ -50,7 +50,7 @@ $o8 = { ( "a":string, ( "d":integer | "e":string ) ) | ( "b":integer | "c":strin
 RULESET
 
 ctx = JCR::Context.new( ruleset, true, true )
-#pp ctx.tree
+pp "",ctx.tree[11]
 
 =begin
 # Evaluate the first JSON

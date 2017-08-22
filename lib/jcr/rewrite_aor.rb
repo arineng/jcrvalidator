@@ -14,6 +14,7 @@
 
 require 'net/http'
 require 'uri'
+require 'pp'
 
 require 'jcr/parser'
 require 'jcr/evaluate_rules'
@@ -391,6 +392,8 @@ code where the node[:object_rule] (or equivalent) is passed around.
 
   def self.add_to_group_rule( containing_rule, rules )
 
+    investiage_contain_rule( "begin add group looking at rules", rules )
+
     # create a group rule if one is not given
     if containing_rule == nil
 
@@ -402,19 +405,26 @@ code where the node[:object_rule] (or equivalent) is passed around.
         containing_rule[:group_rule] = rules
       end
 
+      investiage_contain_rule( "end of add new group", containing_rule)
+
     else
+
+      investiage_contain_rule( "begining of add existing group", containing_rule)
 
       add_sequence_combiner = true
 
-      # if the group rule is just an object, convert it to an object
+      # if the group rule is just an object, convert it to an array
       if containing_rule[:group_rule].is_a?( Hash )
         containing_rule[:group_rule] = [ containing_rule[:group_rule] ]
       elsif containing_rule[:group_rule].length == 0
         add_sequence_combiner = false
       end
 
+      investiage_contain_rule( "after array conversion in add existing group", containing_rule)
+
       # if rules is a group rule itself
       if rules.is_a?( Hash ) && rules[:group_rule]
+        investiage_contain_rule( "beginning of rules is hash and group rule in add existing group", containing_rule)
         # if group rule is a hash, that means it contains only one subordinate rule
         # so pull that rule out and place it directly in this group
         if rules[:group_rule].is_a?( Hash )
@@ -422,17 +432,24 @@ code where the node[:object_rule] (or equivalent) is passed around.
             rules[:group_rule][:sequence_combiner] = new_sequence_combiner if add_sequence_combiner
           end
           containing_rule[:group_rule] << rules[:group_rule]
+          investiage_contain_rule( "end of group rule is a hash in add existing group", containing_rule)
         # else if the group rule has an OR in it, we want to just add that group rule as its own subordinate
         elsif ors_at_this_level?( rules[:group_rule] )
           containing_rule[:group_rule] << rules
+          investiage_contain_rule( "end of ors at this level add existing group", containing_rule)
         # else it is a group rule with ands which can be taken out and directly added here (flattened)
         else
+          investiage_contain_rule( "beginning of else add existing group", containing_rule)
           rules[:group_rule].each do |sub_rule|
-            sub_rule[:sequence_combiner] = new_sequence_combiner if !sub_rule[:sequence_combiner] && add_sequence_combiner
-            add_sequence_combiner = true
-            containing_rule[:group_rule] << sub_rule
+            if sub_rule[:group_rule] || sub_rule[:member_rule]
+              sub_rule[:sequence_combiner] = new_sequence_combiner if !sub_rule[:sequence_combiner] && add_sequence_combiner
+              add_sequence_combiner = true
+              containing_rule[:group_rule] << sub_rule
+            end
           end
+          investiage_contain_rule( "end of else add existing group", containing_rule)
         end
+        investiage_contain_rule( "end of rules is hash and group rule in add existing group", containing_rule)
       elsif rules.is_a?( Hash )
         rules[:sequence_combiner] = new_sequence_combiner if !rules[:sequence_combiner] && add_sequence_combiner
         containing_rule[:group_rule] << rules
@@ -444,10 +461,72 @@ code where the node[:object_rule] (or equivalent) is passed around.
         end
       end
 
+      investiage_contain_rule( "end of add existing group", containing_rule)
+
     end
+
+    investiage_contain_rule( "end of add group", containing_rule)
 
     containing_rule
 
+  end
+
+  def self.investiage_contain_rule( note, containing_rule )
+    if containing_rule.is_a?(Hash)
+      if containing_rule[:group_rule] && containing_rule[:member_rule]
+        pp "containing rule", containing_rule
+        raise note
+      end
+      if containing_rule[:not_annotation]
+        unless containing_rule[:group_rule] || containing_rule[:member_rule]
+          pp "containing rule", containing_rule
+          raise note
+        end
+      end
+      if containing_rule[:group_rule]
+        if containing_rule[:group_rule].is_a?(Hash)
+          containing_rule.each do |k,v|
+            unless v
+              pp "containing rule", containing_rule
+              pp "k", k, "v", v
+              raise note
+            end
+          end
+        else
+          containing_rule[:group_rule].each do |e|
+            unless e.is_a?(Hash)
+              pp "containing rule", containing_rule
+              pp "e", e
+              raise note
+            else
+              e.each do |k,v|
+                unless v
+                  pp "containing rule", containing_rule
+                  pp "k", k, "v", v
+                  raise note
+                end
+              end
+            end
+          end
+        end
+      end
+    else
+      containing_rule.each do |e|
+        unless e.is_a?(Hash)
+          pp "containing rule", containing_rule
+          pp "e", e
+          raise note
+        else
+          e.each do |k,v|
+            unless v
+              pp "containing rule", containing_rule
+              pp "k", k, "v", v
+              raise note
+            end
+          end
+        end
+      end
+    end
   end
 
   def self.new_sequence_combiner
@@ -578,6 +657,9 @@ code where the node[:object_rule] (or equivalent) is passed around.
       retval.delete( :specific_repetition )
 
     end
+
+    investiage_contain_rule( "end of create uncommon member", retval )
+
     return retval
   end
 
@@ -588,16 +670,22 @@ code where the node[:object_rule] (or equivalent) is passed around.
 
     # does it have a not annotation
     has_not_annotation = false
-    if retval[ :annotations ].is_a?( Array )
-      has_not_annotation = retval[:annotations].any? { |x| x.is_a?(Hash) && x[:not_annotation] }
+    if retval[ :group_rule ].is_a?( Array )
+      has_not_annotation = retval[:group_rule].any? { |x| x.is_a?(Hash) && x[:not_annotation] }
     end
 
     unless has_not_annotation
 
       # give it a not annotation, which means convert it to an array
       gra = [ { :not_annotation => new_not_annotation() } ]
-      retval[:group_rule].each do |k,v|
-        gra << { k => v }
+      if retval[:group_rule].is_a?( Hash )
+        retval[:group_rule].each do |k,v|
+          gra << { k => v }
+        end
+      else
+        retval[:group_rule].each do |e|
+          gra << e
+        end
       end
       retval[:group_rule] = gra
 
@@ -612,6 +700,8 @@ code where the node[:object_rule] (or equivalent) is passed around.
       retval.delete( :specific_repetition )
 
     end
+
+    investiage_contain_rule( "end of create group member", retval )
 
     return retval
   end

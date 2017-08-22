@@ -229,6 +229,83 @@ GWBAAO
   end
 
   #
+  # A set of progressively harder rewrite tests
+  #
+
+  it 'should rewrite a and and or object' do
+    ex = <<EX
+$m1 = "a":string
+$m2 = "b":integer
+$m3 = "c":float
+$o4 = { $m1, ( $m2 | $m3 ) }
+EX
+    ctx = JCR::Context.new( ex )
+    expected = '$o4 = { $m1 , ( ( "b" : integer , @{not} "c" : any ) | ( @{not} "b" : any , "c" : float ) ) }'
+    expect( JCR.rule_to_s(ctx.tree[3]) ).to eq(expected)
+  end
+
+  it 'should rewrite a and and or object with or precedent' do
+    ex = <<EX
+$m1 = "a":string
+$m2 = "b":integer
+$m3 = "c":float
+$o5 = { ( $m1 , $m2 ) | $m3 }
+EX
+    ctx = JCR::Context.new( ex )
+    expected = <<EXP
+$o5 = 
+{ ( "a" : string , "b" : integer , @{not} "c" : any ) |
+ ( @{not} "a" : any , @{not} "b" : any , "c" : float ) }
+EXP
+    expect( JCR.rule_to_s(ctx.tree[3]) ).to eq(expected.gsub("\n",""))
+  end
+
+  it 'should rewrite $o6' do
+    ex = <<EX
+$m1 = "a":string
+$m2 = "b":integer
+$m3 = "c":float
+$m4 = "d":boolean
+$o6 = { ( ( $m1, $m2 ) , $m4 ) | $m3 }
+EX
+    ctx = JCR::Context.new( ex )
+    expected = <<EXP
+$o6 = 
+{ ( "a" : string , "b" : integer , "d" : boolean , @{not} "c" : any ) |
+ ( @{not} "a" : any , @{not} "b" : any , @{not} "d" : any , "c" : float ) }
+EXP
+    expect( JCR.rule_to_s(ctx.tree[4]) ).to eq(expected.gsub("\n",""))
+  end
+
+  it 'should rewrite $o7' do
+    ex = <<EX
+$o7 = { ( "a":string *, @{not}"b":string ) | ( ( "c":string ) * ) | ( ( "d":string ) ) }
+EX
+    ctx = JCR::Context.new( ex )
+    expected = <<EXP
+$o7 = 
+{ ( "a" : string * , @{not} "b" : string , @{not} "c" : any , @{not} "d" : any ) |
+ ( @{not} "a" : any , @{not} "b" : string , "c" : string , @{not} "d" : any ) |
+ ( @{not} "a" : any , @{not} "b" : string , @{not} "c" : any , "d" : string ) }
+EXP
+    expect( JCR.rule_to_s(ctx.tree[0]) ).to eq(expected.gsub("\n",""))
+  end
+
+  xit 'should rewrite $o8' do
+    ex = <<EX
+$o8 = { ( "a":string, ( "d":integer | "e":string ) ) | ( "b":integer | "c":string ) }
+EX
+    ctx = JCR::Context.new( ex )
+    expected = <<EXP
+$o8 = 
+{ ( "a" : string , ( ( "d" : integer , @{not} "e" : any ) | ( @{not} "d" : any , "e" : string ) ) |
+ ( ( "b" : integer , @{not} "c" : any ) | ( @{not} "b" : any , "c" : string ) )
+ }
+EXP
+    expect( JCR.rule_to_s(ctx.tree[0]) ).to eq(expected.gsub("\n",""))
+  end
+
+  #
   # internal method tests
   #
 
@@ -442,6 +519,18 @@ EXPECTED
     tree = JCR.parse( '{ @{not}"a":string ? }' )
     xformed = JCR.create_uncommon_aor_rule(tree[0][:object_rule] )
     expect( JCR.rules_to_s( [ xformed ]) ).to eql('@{not} "a" : string ?')
+  end
+
+  it 'should transform a group rule with no annotations' do
+    tree = JCR.parse( '{ ( "a":string, "b":integer ) }' )
+    xformed = JCR.create_uncommon_aor_rule(tree[0][:object_rule] )
+    expect( JCR.rule_to_s(xformed) ).to eql('@{not} ( "a" : string , "b" : integer )')
+  end
+
+  xit 'should not transform a group rule with no annotations' do
+    tree = JCR.parse( '{ ( "a":string, "b":integer ) , @{not} ( "c" : integer ) }' )
+    xformed = JCR.create_uncommon_aor_rule(tree[0][:object_rule] )
+    expect( JCR.rule_to_s(xformed) ).to eql('@{not} ( "a" : string , "b" : integer )')
   end
 
 end
