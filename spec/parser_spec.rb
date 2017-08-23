@@ -1663,4 +1663,73 @@ EX12
     JCR.parse( '{ "n" : 1 *1 }' )
   end
 
+  it 'should parse an object rule with an annotated group' do
+    tree = JCR.parse( '{ "a" : string , @{not}( "b" : integer, "c" : boolean ) }')
+    # produces the following tree
+    # [{:object_rule=>
+    #       [{:member_rule=>
+    #             {:member_name=>{:q_string=>"a"@3},
+    #              :primitive_rule=>{:string=>"string"@8}}},
+    #        {:sequence_combiner=>","@15,
+    #         :group_rule=>
+    #             [{:not_annotation=>"not"@19},
+    #              {:member_rule=>
+    #                   {:member_name=>{:q_string=>"b"@26},
+    #                    :primitive_rule=>{:integer_v=>"integer"@31}}},
+    #              {:sequence_combiner=>","@38,
+    #               :member_rule=>
+    #                   {:member_name=>{:q_string=>"c"@41},
+    #                    :primitive_rule=>{:boolean_v=>"boolean"@46}}}]}]}]
+    expect(tree[0][:object_rule][1][:group_rule][0][:not_annotation]).to_not be_nil
+  end
+
+  it 'should parse an object rule with an annotated group and a repetition' do
+    tree = JCR.parse( '{ "a" : string , @{not}( "b" : integer, "c" : boolean ) ? }')
+    # produces the following tree
+    # [{:object_rule=>
+    #       [{:member_rule=>
+    #             {:member_name=>{:q_string=>"a"@3},
+    #              :primitive_rule=>{:string=>"string"@8}}},
+    #        {:sequence_combiner=>","@15,
+    #         :group_rule=>
+    #             [{:not_annotation=>"not"@19},
+    #              {:member_rule=>
+    #                   {:member_name=>{:q_string=>"b"@26},
+    #                    :primitive_rule=>{:integer_v=>"integer"@31}}},
+    #              {:sequence_combiner=>","@38,
+    #               :member_rule=>
+    #                   {:member_name=>{:q_string=>"c"@41},
+    #                    :primitive_rule=>{:boolean_v=>"boolean"@46}}}],
+    #         :optional=>"?"@56}]}]
+    expect(tree[0][:object_rule][1][:group_rule][0][:not_annotation]).to_not be_nil
+    expect(tree[0][:object_rule][1][:optional]).to_not be_nil
+  end
+
+  it 'should parse an array rule with an annotated group' do
+    tree = JCR.parse( '[ string , @{not} ( integer * ) ]')
+    # produces the following tree
+    # [{:array_rule=>
+    #       [{:primitive_rule=>{:string=>"string"@2}},
+    #        {:sequence_combiner=>","@9,
+    #         :group_rule=>
+    #             [{:not_annotation=>"not"@13},
+    #              {:primitive_rule=>{:integer_v=>"integer"@20},
+    #               :zero_or_more=>"*"@28}]}]}]
+    expect(tree[0][:array_rule][1][:group_rule][0][:not_annotation]).to_not be_nil
+  end
+
+  it 'should parse an array rule with an annotated group and a repetition' do
+    tree = JCR.parse( '[ string , @{not} ( integer * ) ? ]')
+    # produces the following tree
+    # [{:array_rule=>
+    #       [{:primitive_rule=>{:string=>"string"@2}},
+    #        {:sequence_combiner=>","@9,
+    #         :group_rule=>
+    #             [{:not_annotation=>"not"@13},
+    #              {:primitive_rule=>{:integer_v=>"integer"@20}, :zero_or_more=>"*"@28}],
+    #         :optional=>"?"@32}]}]
+    expect(tree[0][:array_rule][1][:group_rule][0][:not_annotation]).to_not be_nil
+    expect(tree[0][:array_rule][1][:optional]).to_not be_nil
+  end
+
 end
