@@ -317,8 +317,8 @@ module JCR
         #! object_item = object_item_types spcCmnt? [ repetition ]
     rule(:object_item_types) { object_group | member_rule | target_rule_name }
         #! object_item_types = object_group / member_rule / target_rule_name
-    rule(:object_group) { ( str('(') >> spcCmnt? >> object_items.maybe >> spcCmnt? >> str(')') ).as(:group_rule) }
-        #! object_group = "(" spcCmnt? [ object_items spcCmnt? ] ")"
+    rule(:object_group) { ( annotations >> str('(') >> spcCmnt? >> object_items.maybe >> spcCmnt? >> str(')') ).as(:group_rule) }
+        #! object_group = annotations "(" spcCmnt? [ object_items spcCmnt? ] ")"
         #!
 
       rule(:array_rule)   { ( annotations >>
@@ -332,8 +332,8 @@ module JCR
         #! array_item = array_item_types spcCmnt? [ repetition ]
     rule(:array_item_types) { array_group | type_rule | explicit_type_choice }
         #! array_item_types = array_group / type_rule / explicit_type_choice
-    rule(:array_group)  { ( str('(') >> spcCmnt? >> array_items.maybe >> spcCmnt? >> str(')') ).as(:group_rule) }
-        #! array_group = "(" spcCmnt? [ array_items spcCmnt? ] ")"
+    rule(:array_group)  { ( annotations >> str('(') >> spcCmnt? >> array_items.maybe >> spcCmnt? >> str(')') ).as(:group_rule) }
+        #! array_group = annotations "(" spcCmnt? [ array_items spcCmnt? ] ")"
         #!
 
     rule(:group_rule)   { ( annotations >> str('(') >> spcCmnt? >> group_items.maybe >> spcCmnt? >> str(')') ).as(:group_rule) }
