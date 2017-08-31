@@ -135,29 +135,29 @@ any              = any-kw
 
 object-rule      = annotations "{" *sp-cmt
                    [ object-items *sp-cmt ] "}"
-object-items     = object-item (*( sequence-combiner object-item ) /
-                   *( choice-combiner object-item ) )
-object-item      = object-item-types *sp-cmt [ repetition ]
+object-items     = object-item [ 1*( sequence-combiner object-item ) /
+                   1*( choice-combiner object-item ) ]
+object-item      = object-item-types *sp-cmt [ repetition *sp-cmt ]
 object-item-types = object-group / member-rule / target-rule-name
-object-group     = "(" *sp-cmt [ object-items *sp-cmt ] ")"
+object-group     = annotations "(" *sp-cmt [ object-items *sp-cmt ] ")"
 
 array-rule       = annotations "[" *sp-cmt [ array-items *sp-cmt ] "]"
-array-items      = array-item (*( sequence-combiner array-item ) /
-                   *( choice-combiner array-item ) )
-array-item       = array-item-types *sp-cmt [ repetition ]
+array-items      = array-item [ 1*( sequence-combiner array-item ) /
+                   1*( choice-combiner array-item ) ]
+array-item       = array-item-types *sp-cmt [ repetition *sp-cmt ]
 array-item-types = array-group / type-rule / explicit-type-choice
-array-group      = "(" *sp-cmt [ array-items *sp-cmt ] ")"
+array-group      = annotations "(" *sp-cmt [ array-items *sp-cmt ] ")"
 
 group-rule       = annotations "(" *sp-cmt [ group-items *sp-cmt ] ")"
-group-items      = group-item (*( sequence-combiner group-item ) /
-                   *( choice-combiner group-item ) )
-group-item       = group-item-types *sp-cmt [ repetition ]
+group-items      = group-item [ 1*( sequence-combiner group-item ) /
+                   1*( choice-combiner group-item ) ]
+group-item       = group-item-types *sp-cmt [ repetition *sp-cmt ]
 group-item-types = group-group / member-rule /
                    type-rule / explicit-type-choice
 group-group      = group-rule
 
-sequence-combiner = *sp-cmt "," *sp-cmt
-choice-combiner  = *sp-cmt "|" *sp-cmt
+sequence-combiner = "," *sp-cmt
+choice-combiner  = "|" *sp-cmt
 
 repetition       = optional / one-or-more /
                    repetition-range / zero-or-more
