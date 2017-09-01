@@ -65,10 +65,6 @@ describe 'check_groups' do
     expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
-  it 'should error with group with both member-rule and type-rule' do
-    expect{ JCR.parse( '$grule = ( "m1" :ipv4 | ipv6 )' ) }.to raise_error Parslet::ParseFailed
-  end
-
   it 'should error with group with member included in type-choice' do
     tree = JCR.parse( '$grule = ( "m1" : (ipv4 | ipv6) )  $mrule = "thing" :( integer | $grule ) ' )
     mapping = JCR.map_rule_names( tree )
