@@ -65,8 +65,12 @@ describe 'check_groups' do
     expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
-  it 'should error with member with group of value OR rulename with AND' do
-    tree = JCR.parse( '$grule = ( "m1" :ipv4 | ipv6 )  $mrule = "thing" :( integer | $grule ) ' )
+  it 'should error with group with both member-rule and type-rule' do
+    expect{ JCR.parse( '$grule = ( "m1" :ipv4 | ipv6 )' ) }.to raise_error Parslet::ParseFailed
+  end
+
+  it 'should error with group with member included in type-choice' do
+    tree = JCR.parse( '$grule = ( "m1" : (ipv4 | ipv6) )  $mrule = "thing" :( integer | $grule ) ' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
@@ -118,7 +122,7 @@ describe 'check_groups' do
   end
 
   it 'should error with value with group with member' do
-    tree = JCR.parse( '$trule =: any  $grule = ( ipv4 | "thing": $trule )  $arule = "thing" :( integer | $grule ) ' )
+    tree = JCR.parse( '$trule =: any  $grule = ( "this" : ipv4 | "that": $trule )  $arule = "thing" :( integer | $grule ) ' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
@@ -156,7 +160,7 @@ describe 'check_groups' do
   end
 
   it 'should error with array with group of value OR rulename with member' do
-    tree = JCR.parse( '$trule =: any  $grule = ( ipv4 , "thing": $trule )  $arule =: [ ( integer | $grule ) ]' )
+    tree = JCR.parse( '$trule =: any  $grule = ( "this" : ipv4 | "that": $trule )  $arule =: [ ( integer | $grule ) ]' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
@@ -194,14 +198,14 @@ describe 'check_groups' do
   end
 
   it 'should error with object with group of value OR rulename with value' do
-    tree = JCR.parse( '$trule =: any  $grule = ( ipv4 , "thing": $trule )  $arule =: { ( "m2" :integer | $grule ) }' )
+    tree = JCR.parse( '$trule =: any  $grule = ( ipv4 | $trule )  $arule =: { ( "m2" :integer | $grule ) }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
   end
 
   it 'should error with object with group of value OR rulename with member' do
-    tree = JCR.parse( '$trule =: any  $grule = ( ipv4 , "thing": $trule )  $arule =: { ( "m2" :integer | "m1": $grule ) }' )
+    tree = JCR.parse( '$trule =: any  $grule = ( "this" : ipv4 | "that": $trule )  $arule =: { ( "m2" :integer | "m1": $grule ) }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
@@ -222,7 +226,7 @@ describe 'check_groups' do
   end
 
   it 'should error with object with group of value OR rulename with array' do
-    tree = JCR.parse( '$trule =: any  $grule = ( [ ipv4 ], "thing" :$trule )  $arule =: { ( "m2" :integer | $grule ) }' )
+    tree = JCR.parse( '$trule =: any  $grule = ( [ ipv4 ], $trule )  $arule =: { ( "m2" :integer | $grule ) }' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     expect{ JCR.check_groups( tree, mapping ) }.to raise_error RuntimeError
