@@ -337,7 +337,8 @@ module JCR
 
     rule(:group_rule)   { ( annotations >>
               str('(') >> spcCmnt? >> (object_items.maybe >> str(')') | array_items.maybe >> str(')')) ).as(:group_rule) }
-        #! group_rule = annotations "(" spcCmnt? ( [object_items] ")" / [array_items] ")" )
+        #! group_rule = annotations "(" spcCmnt?
+        #!                ( [object_items] ")" / [array_items] ")" )
         #!
 
     rule(:sequence_combiner)  { str(',').as(:sequence_combiner) >> spcCmnt? }

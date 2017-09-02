@@ -147,7 +147,8 @@ array-item       = array-item-types *sp-cmt [ repetition *sp-cmt ]
 array-item-types = array-group / type-rule / explicit-type-choice
 array-group      = annotations "(" *sp-cmt [ array-items *sp-cmt ] ")"
 
-group-rule       = annotations "(" *sp-cmt ( [object-items] ")" / [array-items] ")" )
+group-rule       = annotations "(" *sp-cmt
+                   ( [object-items] ")" / [array-items] ")" )
 
 sequence-combiner = "," *sp-cmt
 choice-combiner  = "|" *sp-cmt
