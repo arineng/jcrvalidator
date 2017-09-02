@@ -148,13 +148,8 @@ array-item       = array-item-types *sp-cmt [ repetition *sp-cmt ]
 array-item-types = array-group / type-rule / explicit-type-choice
 array-group      = annotations "(" *sp-cmt [ array-items *sp-cmt ] ")"
 
-group-rule       = annotations "(" *sp-cmt [ group-items *sp-cmt ] ")"
-group-items      = group-item [ 1*( sequence-combiner group-item ) /
-                   1*( choice-combiner group-item ) ]
-group-item       = group-item-types *sp-cmt [ repetition *sp-cmt ]
-group-item-types = group-group / member-rule /
-                   type-rule / explicit-type-choice
-group-group      = group-rule
+group-rule       = annotations "(" *sp-cmt
+                   ( [object-items] ")" / [array-items] ")" )
 
 sequence-combiner = "," *sp-cmt
 choice-combiner  = "|" *sp-cmt
