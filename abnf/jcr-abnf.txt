@@ -133,14 +133,15 @@ base64url-type   = base64url-kw
 base64-type      = base64-kw
 any              = any-kw
 
-object-rule      = annotations "{" *sp-cmt [ object-items ] "}"
+object-rule      = annotations "{" *sp-cmt
+                   [ object-items *sp-cmt ] "}"
 object-items     = object-item [ 1*( sequence-combiner object-item ) /
                    1*( choice-combiner object-item ) ]
 object-item      = object-item-types *sp-cmt [ repetition *sp-cmt ]
 object-item-types = object-group / member-rule / target-rule-name
 object-group     = annotations "(" *sp-cmt [ object-items *sp-cmt ] ")"
 
-array-rule       = annotations "[" *sp-cmt [ array-items ] "]"
+array-rule       = annotations "[" *sp-cmt [ array-items *sp-cmt ] "]"
 array-items      = array-item [ 1*( sequence-combiner array-item ) /
                    1*( choice-combiner array-item ) ]
 array-item       = array-item-types *sp-cmt [ repetition *sp-cmt ]
