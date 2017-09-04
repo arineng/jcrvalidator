@@ -336,10 +336,19 @@ module JCR
         #! array_group = annotations "(" spcCmnt? [ array_items spcCmnt? ] ")"
         #!
 
-    rule(:group_rule)   { ( annotations >>
-              str('(') >> spcCmnt? >> (object_items.maybe >> str(')') | array_items.maybe >> str(')')) ).as(:group_rule) }
-        #! group_rule = annotations "(" spcCmnt?
-        #!                ( [object_items] ")" / [array_items] ")" )
+    rule(:group_rule)   { ( annotations >> str('(') >> spcCmnt? >> group_items.maybe >> spcCmnt? >> str(')') ).as(:group_rule) }
+        #! group_rule = annotations "(" spcCmnt? [ group_items spcCmnt? ] ")"
+    rule(:group_items)  { group_item >> (( sequence_combiner >> group_item ).repeat(1) |
+                                         ( choice_combiner >> group_item ).repeat(1) ).maybe }
+        #! group_items = group_item [ 1*( sequence_combiner group_item ) /
+        #!                           1*( choice_combiner group_item ) ]
+    rule(:group_item)   { group_item_types >> spcCmnt? >> ( repetition >> spcCmnt? ).maybe }
+        #! group_item = group_item_types spcCmnt? [ repetition spcCmnt? ]
+    rule(:group_item_types) { group_group | member_rule | type_rule | explicit_type_choice }
+        #! group_item_types = group_group / member_rule /
+        #!                    type_rule / explicit_type_choice
+    rule(:group_group)  { group_rule }
+        #! group_group = group_rule
         #!
 
     rule(:sequence_combiner)  { str(',').as(:sequence_combiner) >> spcCmnt? }

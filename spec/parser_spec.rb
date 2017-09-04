@@ -890,10 +890,6 @@ describe 'parser' do
     expect(tree[0][:rule][:rule_name]).to eq("trule")
   end
 
-  it 'should error with group with both member-rule and type-rule' do
-    expect{ JCR.parse( '$trule = ( "m1" :ipv4 | ipv6 )' ) }.to raise_error Parslet::ParseFailed
-  end
-
   it 'should parse an object rule with a group rule and a rulename' do
     tree = JCR.parse( '$trule = :{ ( $my_rule1, $my_rule2 ), $my_rule3 }' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
