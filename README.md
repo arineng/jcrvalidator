@@ -1,5 +1,6 @@
 # JSON Content Rules Validator
 
+[![Gem Version](https://badge.fury.io/rb/jcrvalidator.svg)](https://badge.fury.io/rb/jcrvalidator)
 [![Build Status](https://travis-ci.org/arineng/jcrvalidator.svg)](https://travis-ci.org/arineng/jcrvalidator)
 
 ## Background
