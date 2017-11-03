@@ -8,7 +8,8 @@
 JSON Content Rules (JCR) is a language for specifying and testing the interchange of data in JSON 
 format used by computer protocols and processes.  The syntax of JCR is a superset of JSON
 possessing the conciseness and utility that has made JSON popular. It was created by the 
-American Registry for Internet Numbers (ARIN) in an effort to better describe the JSON structures in protocols such as RDAP.
+American Registry for Internet Numbers (ARIN) in an effort to better describe the JSON structures 
+in protocols such as RDAP.
 
 ### A First Example: Specifying Content
 
@@ -81,9 +82,9 @@ American Registry for Internet Numbers (ARIN) in an effort to better describe th
 ### More Information on JCR
 
 More information on JCR can be found at [json-content-rules.org](http://json-content-rules.org/). 
-The current published specification is an IETF Internet Draft (I-D) versioned as -06,
-which is now out of date and incompatible with this software. This software closely tracks
-the -07 version, which can be found [here](https://raw.githubusercontent.com/arineng/jcr/07/draft-newton-json-content-rules.txt)
+The current published specification is an IETF Internet Draft (I-D) versioned as -09,
+This software closely tracks the -09 version, 
+which can be found [here](https://raw.githubusercontent.com/arineng/jcr/09/draft-newton-json-content-rules-09.txt)
    
 ## Version History
 
@@ -129,7 +130,7 @@ To install the JCR Validator:
 gem install jcrvalidator
 ```
 
-This code was written and tested on Ruby 2.0. 
+This code was written and tested on Ruby 2.1, 2.3, and 2.4. 
 
 ## Command Line Usage
 
