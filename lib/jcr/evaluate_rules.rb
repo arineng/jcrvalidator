@@ -54,9 +54,9 @@ module JCR
   end
 
   class EvalConditions
-    attr_accessor :mapping, :callbacks, :trace, :trace_stack, :first_failure
+    attr_accessor :mapping, :callbacks, :trace, :trace_stack, :failures
     def initialize mapping, callbacks, trace = false
-      @first_failure = nil
+      @failures = []
       @mapping = mapping
       @trace = trace
       @trace_stack = []
@@ -65,6 +65,21 @@ module JCR
       else
         @callbacks = {}
       end
+    end
+  end
+
+  class Failure
+    attr_accessor :data, :json, :evaluation, :message, :rule, :pos, :offset, :type, :definition
+    def initialize data, jcr, type, message, evaluation
+      @json = data.to_json
+      @data = JCR::rule_data( data )
+      @rule = JCR::find_first_slice( jcr )
+      @pos = @rule.line_and_column
+      @offset = @rule.offset
+      @type = type
+      @message = message
+      @evaluation = evaluation
+      @definition = JCR::rule_def( type, jcr )
     end
   end
 
@@ -278,20 +293,47 @@ module JCR
     return s
   end
 
+  def self.rule_data data=nil
+    if data
+      if data.is_a? String
+        s = '"' + data + '"'
+      else
+        s = data.pretty_print_inspect
+      end
+      return elide(s)
+    end
+    #else
+    return nil
+  end
+
   def self.trace econs, message, data = nil
     if econs.trace
       if data
-        if data.is_a? String
-          s = '"' + data + '"'
-        else
-          s = data.pretty_print_inspect
-        end
-        message = "#{message} data: #{elide(s)}"
+        message = "#{message} data: #{rule_data( data )}"
       end
       last = econs.trace_stack.last
       pos = "#{last.line_and_column}@#{last.offset}" if last
       puts "[ #{econs.trace_stack.length}:#{pos} ] #{message}"
     end
+  end
+
+  def self.rule_def type, jcr
+    s = ""
+    case type
+      when "value"
+        s = elide(value_to_s(jcr))
+      when "member"
+        s = elide(member_to_s(jcr))
+      when "object"
+        s = elide(object_to_s(jcr))
+      when "array"
+        s = elide(array_to_s(jcr))
+      when "group"
+        s = elide(group_to_s(jcr))
+      else
+        s = "** unknown rule **"
+    end
+    return "#{type} definition: #{s}"
   end
 
   def self.trace_def econs, type, jcr, data
@@ -311,7 +353,7 @@ module JCR
         else
           s = "** unknown rule **"
       end
-      trace( econs, "#{type} definition: #{s}", data)
+      trace( econs, rule_def( type, jcr ) )
     end
   end
 
@@ -319,9 +361,10 @@ module JCR
     if evaluation.success
       trace( econs, "#{message} evaluation is true" )
     else
+      failure = Failure.new( data, jcr, type, message, evaluation )
+      econs.failures << failure
       trace( econs, "#{message} evaluation failed: #{evaluation.reason}")
-      unless econs.first_failure
-        econs.first_failure = evaluation
+      unless econs.failures.length > 1
         trace( econs, "** LIKELY ROOT CAUSE FOR FAILURE **" )
         trace( econs, "***********************************" )
         rule = find_first_slice( jcr )
