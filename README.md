@@ -107,6 +107,13 @@ which can be found [here](https://raw.githubusercontent.com/arineng/jcr/09/draft
 * 0.6.3 - XOR experimentation which was never merged
 * 0.6.4 - Version that matches -07 of the draft specification
 * 0.6.5 - Fixed a bug with roots and empty object and array rules
+* next
+  * Tracks the -09 draft
+  * Fixes to allow annotations for groups in arrays and objects
+  * Text output is now proper JCR
+  * Fixed issue with multiple files on the command line with MacOS
+  * Support for Ruby 2.4
+  * Dropped Ruby 1.8, 1.9, and 2.0. Now only testing against 2.1, 2.3 and 2.4
 
 The current version of the JCR specification can be found 
 [here](https://raw.githubusercontent.com/arineng/jcr/07/draft-newton-json-content-rules.txt)
