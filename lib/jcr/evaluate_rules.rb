@@ -56,7 +56,7 @@ module JCR
   class EvalConditions
     attr_accessor :mapping, :callbacks, :trace, :trace_stack, :failures
     def initialize mapping, callbacks, trace = false
-      @failures = []
+      @failures = {}
       @mapping = mapping
       @trace = trace
       @trace_stack = []
@@ -66,20 +66,28 @@ module JCR
         @callbacks = {}
       end
     end
+
+    def report_failure failure
+      @failures[ failure.stack_level ] = Array.new unless @failures[ failure.stack_level ]
+      @failures[ failure.stack_level ] << failure
+    end
   end
 
   class Failure
-    attr_accessor :data, :json, :evaluation, :message, :rule, :pos, :offset, :type, :definition
-    def initialize data, jcr, type, message, evaluation
+    attr_accessor :data, :json, :json_elided, :evaluation, :rule, :pos, :offset, :type, :definition, :stack_level, :reason_elided
+    def initialize data, jcr, type, evaluation, stack_level
       @json = data.to_json
+      @json_elided = JCR::elide(@json)
       @data = JCR::rule_data( data )
       @rule = JCR::find_first_slice( jcr )
       @pos = @rule.line_and_column
       @offset = @rule.offset
       @type = type
-      @message = message
       @evaluation = evaluation
+      @reason_elided = "unknown reason"
+      @reason_elided = JCR::elide( @evaluation.reason ) if @evaluation.reason
       @definition = JCR::rule_def( type, jcr )
+      @stack_level = stack_level
     end
   end
 
@@ -286,8 +294,8 @@ module JCR
   end
 
   def self.elide s
-    if s.length > 60
-      s = s[0..56]
+    if s.length > 45
+      s = s[0..41]
       s = s + " ..."
     end
     return s
@@ -361,20 +369,9 @@ module JCR
     if evaluation.success
       trace( econs, "#{message} evaluation is true" )
     else
-      failure = Failure.new( data, jcr, type, message, evaluation )
-      econs.failures << failure
+      failure = Failure.new( data, jcr, type, evaluation, econs.trace_stack.length )
+      econs.report_failure( failure )
       trace( econs, "#{message} evaluation failed: #{evaluation.reason}")
-      unless econs.failures.length > 1
-        trace( econs, "** LIKELY ROOT CAUSE FOR FAILURE **" )
-        trace( econs, "***********************************" )
-        rule = find_first_slice( jcr )
-        pos = "Failed rule at line,column: #{rule.line_and_column} file position offset: #{rule.offset}"
-        trace( econs, pos )
-        trace_def( econs, type, jcr, data )
-        data_s = "JSON that failed to validate: #{data.to_json}"
-        trace( econs, data_s )
-        trace( econs, "***********************************" )
-      end
     end
   end
 

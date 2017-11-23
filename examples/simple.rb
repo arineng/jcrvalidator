@@ -42,7 +42,7 @@ e2 = ctx.evaluate( data2 )
 # Should be true
 puts "Ruleset evaluation of JSON = " + e2.success.to_s
 
-#return the evaluations as an exit code
+# return the evaluations as an exit code
 exit e1.success && e2.success
 
 

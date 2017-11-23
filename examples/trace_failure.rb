@@ -12,7 +12,10 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 # IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-# This example demonstrates overriding rules in a ruleset with a secondary ruleset
+# This example demonstrates using the JCR Validator with a ruleset to
+# evaluate two different sets of JSON data
+# This example demonstrates using the tracing feature of the JcRValidator
+# for troubleshooting validation issues.
 
 require 'jcr'
 
@@ -20,37 +23,26 @@ ruleset = <<RULESET
 # ruleset-id rfcXXXX
 # jcr-version 0.7
 
-[ $my_integers *2, $my_strings *2 ]
-$my_integers =:0..2
-$my_strings =: ( "foo" | "bar" )
-
+[ $my_integers *2, $my_strings *2, $my_object ]
+$my_integers =: 0..2
+$my_strings = ( "foo" | "bar" )
+$my_object = { "name" : "bob" }
 RULESET
 
-override = <<OVERRIDE
-$my_integers =:0..1
-OVERRIDE
+json = <<JSON
+[ 1, 2, "foo", "bar", { "name" : "alice" } ]
+JSON
 
 # Create a JCR context.
-ctx = JCR::Context.new( ruleset )
+ctx = JCR::Context.new( ruleset, true )
 
-# Evaluate the JSON without the override
-data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
-e1 = ctx.evaluate( data )
-# Should be true
+# Evaluate the JSON
+data1 = JSON.parse( json )
+e1 = ctx.evaluate( data1 )
+# Should be false
 puts "Ruleset evaluation of JSON = " + e1.success.to_s
 
-# Create a new context with overriden rules
-new_ctx = ctx.override( override )
-e2 = new_ctx.evaluate( data )
-# Should be false
-puts "New Context Ruleset evaluation of JSON = " + e2.success.to_s
-
-# The first context can be modified as well
-ctx.override!( override )
-e3 = ctx.evaluate( data )
-# Should be false
-puts "Overriden Ruleset evaluation of JSON = " + e3.success.to_s
-
 # return the evaluations as an exit code
-exit e1.success && !e2.success && !e3.success
+exit !e1.success
+
 

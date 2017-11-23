@@ -28,7 +28,7 @@ require 'jcr/version'
 module JCR
 
   class Context
-    attr_accessor :mapping, :callbacks, :id, :tree, :roots, :catalog, :trace
+    attr_accessor :mapping, :callbacks, :id, :tree, :roots, :catalog, :trace, :failed_roots
 
     def add_ruleset_alias( ruleset_alias, alias_uri )
       unless @catalog
@@ -60,6 +60,7 @@ module JCR
 
     def initialize( ruleset = nil, trace = false )
       @trace = trace
+      @failed_roots = []
       if ruleset
         ingested = JCR.ingest_ruleset( ruleset, false, nil )
         @mapping = ingested.mapping
@@ -91,6 +92,17 @@ module JCR
       @roots.concat( overridden.roots )
     end
 
+  end
+
+  class RootInfo
+    attr_accessor :root_rule, :root_name, :slice, :pos, :offset, :failures
+    def initialize root_rule, root_name = nil
+      @root_rule = root_rule
+      @root_name = root_name
+      @slice = JCR::find_first_slice( root_rule )
+      @pos = @slice.line_and_column
+      @offset = @slice.offset
+    end
   end
 
   def self.ingest_ruleset( ruleset, override = false, ruleset_alias=nil )
@@ -126,11 +138,37 @@ module JCR
     root_rules.each do |r|
       pp "Evaluating Root:", rule_to_s( r, false ) if ctx.trace
       raise "Root rules cannot be member rules" if r[:member_rule]
-      retval = JCR.evaluate_rule( r, r, data, EvalConditions.new( ctx.mapping, ctx.callbacks, ctx.trace ) )
+      econs = EvalConditions.new( ctx.mapping, ctx.callbacks, ctx.trace )
+      retval = JCR.evaluate_rule( r, r, data, econs )
       break if retval.success
+      # else
+      root_info = RootInfo.new( r, root_name )
+      root_info.failures = econs.failures
+      ctx.failed_roots << root_info
     end
 
+    trace_failures( ctx )
     return retval
+  end
+
+  def self.trace_failures ctx
+    if ctx.trace
+      ctx.failed_roots.each do |failed_root|
+        puts
+        if failed_root.root_name
+          puts "* Failures for root rule named `#{failed_root.root_name}`"
+        else
+          puts "* Failures for root rule at line #{failed_root.pos[0]}"
+        end
+        failed_root.failures.sort.map do |stack_level, failures|
+          puts "failure at rule depth #{stack_level} caused by"
+          failures.each_with_index do |failure, index|
+            puts "    or" if index > 0
+            puts "  #{failure.json_elided} failed rule #{failure.definition} at #{failure.pos} because #{failure.reason_elided}"
+          end
+        end
+      end
+    end
   end
 
   def self.main my_argv=nil

@@ -31,5 +31,9 @@ task :test_callback_rb do
   ruby "-Ilib examples/callback.rb"
 end
 
+task :test_trace_failure_rb do
+  ruby "-Ilib examples/trace_failure.rb"
+end
+
 desc "test example ruby scripts"
 task :test_ruby_examples => [ :test_simple_rb, :test_override_rb, :test_callback_rb ]
