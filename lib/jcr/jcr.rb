@@ -149,7 +149,7 @@ module JCR
 
     ctx.failure_report = failure_report( ctx )
     if ctx.trace
-      report.each do |line|
+      ctx.failure_report.each do |line|
         puts line
       end
     end

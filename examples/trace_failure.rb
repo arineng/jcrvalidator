@@ -25,6 +25,8 @@ ruleset = <<RULESET
 $my_integers =: 0..2
 $my_strings = ( "foo" | "bar" )
 $my_object = { "name" : "bob" }
+
+@{root} $second_root = [ $my_integers *1, $my_strings *2, $my_object ]
 RULESET
 
 json = <<JSON
