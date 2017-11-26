@@ -28,7 +28,7 @@ require 'jcr/version'
 module JCR
 
   class Context
-    attr_accessor :mapping, :callbacks, :id, :tree, :roots, :catalog, :trace, :failed_roots
+    attr_accessor :mapping, :callbacks, :id, :tree, :roots, :catalog, :trace, :failed_roots, :failure_report
 
     def add_ruleset_alias( ruleset_alias, alias_uri )
       unless @catalog
@@ -147,28 +147,35 @@ module JCR
       ctx.failed_roots << root_info
     end
 
-    trace_failures( ctx )
+    ctx.failure_report = failure_report( ctx )
+    if ctx.trace
+      report.each do |line|
+        puts line
+      end
+    end
     return retval
   end
 
-  def self.trace_failures ctx
-    if ctx.trace
-      ctx.failed_roots.each do |failed_root|
-        puts
-        if failed_root.root_name
-          puts "* Failures for root rule named `#{failed_root.root_name}`"
+  def self.failure_report ctx
+    report = []
+    ctx.failed_roots.each do |failed_root|
+      if failed_root.root_name
+        report << "- ** Failures for root rule named `#{failed_root.root_name}`"
+      else
+        report << "- ** Failures for root rule at line #{failed_root.pos[0]}"
+      end
+      failed_root.failures.sort.map do |stack_level, failures|
+        if failures.length > 1
+          report << "  - failure at rule depth #{stack_level} caused by one of the following #{failures.length} reasons"
         else
-          puts "* Failures for root rule at line #{failed_root.pos[0]}"
+          report << "  - failure at rule depth #{stack_level} caused by"
         end
-        failed_root.failures.sort.map do |stack_level, failures|
-          puts "failure at rule depth #{stack_level} caused by"
-          failures.each_with_index do |failure, index|
-            puts "    or" if index > 0
-            puts "  #{failure.json_elided} failed rule #{failure.definition} at #{failure.pos} because #{failure.reason_elided}"
-          end
+        failures.each_with_index do |failure, index|
+          report << "    - #{failure.json_elided} failed rule #{failure.definition} at #{failure.pos} because #{failure.reason_elided}"
         end
       end
     end
+    return report
   end
 
   def self.main my_argv=nil

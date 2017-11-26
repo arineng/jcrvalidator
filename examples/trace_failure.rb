@@ -12,8 +12,6 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 # IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-# This example demonstrates using the JCR Validator with a ruleset to
-# evaluate two different sets of JSON data
 # This example demonstrates using the tracing feature of the JcRValidator
 # for troubleshooting validation issues.
 
@@ -34,13 +32,20 @@ json = <<JSON
 JSON
 
 # Create a JCR context.
-ctx = JCR::Context.new( ruleset, true )
+# We explicitly put tracing to false.
+ctx = JCR::Context.new( ruleset, false )
 
 # Evaluate the JSON
 data1 = JSON.parse( json )
 e1 = ctx.evaluate( data1 )
 # Should be false
 puts "Ruleset evaluation of JSON = " + e1.success.to_s
+
+# however, we still have access to failure data
+# including a report.
+ctx.failure_report.each do |line|
+  puts line
+end
 
 # return the evaluations as an exit code
 exit !e1.success
