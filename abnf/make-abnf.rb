@@ -82,7 +82,7 @@ def do_name_mappings( line )
     for mapping_from in mapping_keys_sorted_longest_first
         line.gsub!( mapping_from, $mappings[mapping_from] )
     end
-    line.gsub!( '_', '-' )
+    line.gsub!( /(\w)_(\w)/, '\1-\2' )
     return line
 end
 

@@ -55,7 +55,7 @@ rule-name        = name
 target-rule-name = annotations "$"
                    [ ruleset-id-alias "." ]
                    rule-name
-name             = ALPHA *( ALPHA / DIGIT / "-" / "-" )
+name             = ALPHA *( ALPHA / DIGIT / "-" / "_" )
 
 rule-def         = member-rule / type-designator rule-def-type-rule /
                    array-rule / object-rule / group-rule /
