@@ -2,6 +2,8 @@
 
 [![Gem Version](https://badge.fury.io/rb/jcrvalidator.svg)](https://badge.fury.io/rb/jcrvalidator)
 [![Build Status](https://travis-ci.org/arineng/jcrvalidator.svg)](https://travis-ci.org/arineng/jcrvalidator)
+[![Dependency Status](https://gemnasium.com/badges/github.com/arineng/jcrvalidator.svg)](https://gemnasium.com/github.com/arineng/jcrvalidator)
+
 
 ## Background
 
