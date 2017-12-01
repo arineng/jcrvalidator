@@ -40,13 +40,14 @@ ctx = JCR::Context.new( ruleset, false )
 # Evaluate the JSON
 data1 = JSON.parse( json )
 e1 = ctx.evaluate( data1 )
-# Should be false
-puts "Ruleset evaluation of JSON = " + e1.success.to_s
 
+unless e1.success
 # however, we still have access to failure data
 # including a report.
-ctx.failure_report.each do |line|
-  puts line
+  puts "DEMONSTRATION OF FAILURE OUTPUT"
+  ctx.failure_report.each do |line|
+    puts line
+  end
 end
 
 # return the evaluations as an exit code

@@ -147,7 +147,7 @@ module JCR
     report = []
     ctx.failed_roots.each do |failed_root|
       if failed_root.name
-        report << "- ** Failures for root rule named `#{failed_root.name}`"
+        report << "- ** Failures for root rule named '#{failed_root.name}'"
       else
         report << "- ** Failures for root rule at line #{failed_root.pos[0]}"
       end

@@ -474,4 +474,25 @@ RULESET
     expect{ JCR.main( ['-R', '$mrule = "mname" : integer', '-J', '["mname",12]', '-S', '$mrule'] ) }.to raise_error RuntimeError
   end
 
+  it 'should use line numbers in unnamed root failures' do
+    ctx = JCR::Context.new( '[ 0..2 *2, ( "foo" | "bar" ) ]', false )
+    data = JSON.parse( '[1,2,"fuz","bar"]')
+    e = ctx.evaluate( data )
+    expect( ctx.failure_report[0] ).to eq( "- ** Failures for root rule at line 1")
+  end
+
+  it 'should use names in specified root failures' do
+    ctx = JCR::Context.new( '$root = [ 0..2 *2, ( "foo" | "bar" ) ]', false )
+    data = JSON.parse( '[1,2,"fuz","bar"]')
+    e = ctx.evaluate( data, "root" )
+    expect( ctx.failure_report[0] ).to eq( "- ** Failures for root rule named 'root'")
+  end
+
+  it 'should use names in annotated root failures' do
+    ctx = JCR::Context.new( '@{root} $root = [ 0..2 *2, ( "foo" | "bar" ) ]', false )
+    data = JSON.parse( '[1,2,"fuz","bar"]')
+    e = ctx.evaluate( data )
+    expect( ctx.failure_report[0] ).to eq( "- ** Failures for root rule named 'root'")
+  end
+
 end
