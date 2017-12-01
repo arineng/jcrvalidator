@@ -217,6 +217,64 @@ EX
     expect( e.success ).to be_truthy
   end
 
+  it 'should evaluate JSON against multiple roots with root in assignment' do
+    ex = <<EX
+# ruleset-id rfcXXXX
+# jcr-version 0.7
+
+[ $my_integers *2, $my_strings *2 ]
+@{root} $oroot =: [ $my_strings *2, $my_integers *2 ]
+$my_integers=:0..2
+$my_strings=:( "foo" | "bar" )
+
+EX
+    data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
+    e = JCR::Context.new( ex ).evaluate( data )
+    expect( e.success ).to be_truthy
+    e = JCR::Context.new( ex ).evaluate( data, "oroot" )
+    expect( e.success ).to be_falsey
+    data = JSON.parse( '[ "foo", "bar", 1, 2 ]')
+    e = JCR::Context.new( ex ).evaluate( data )
+    expect( e.success ).to be_truthy
+    e = JCR::Context.new( ex ).evaluate( data, "oroot" )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should evaluate JSON against multiple roots of all 3 types' do
+    ex = <<EX
+# ruleset-id rfcXXXX
+# jcr-version 0.7
+
+[ $my_integers *2, $my_strings *2 ]
+@{root} $oroot =: [ $my_strings *2, $my_integers *2 ]
+$aroot =: @{root} [ $my_strings *2, boolean *2 ]
+$my_integers=:0..2
+$my_strings=:( "foo" | "bar" )
+
+EX
+    data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
+    e = JCR::Context.new( ex ).evaluate( data )
+    expect( e.success ).to be_truthy
+    e = JCR::Context.new( ex ).evaluate( data, "oroot" )
+    expect( e.success ).to be_falsey
+    e = JCR::Context.new( ex ).evaluate( data, "aroot" )
+    expect( e.success ).to be_falsey
+    data = JSON.parse( '[ "foo", "bar", 1, 2 ]')
+    e = JCR::Context.new( ex ).evaluate( data )
+    expect( e.success ).to be_truthy
+    e = JCR::Context.new( ex ).evaluate( data, "oroot" )
+    expect( e.success ).to be_truthy
+    e = JCR::Context.new( ex ).evaluate( data, "aroot" )
+    expect( e.success ).to be_falsey
+    data = JSON.parse( '[ "foo", "bar", true, false ]')
+    e = JCR::Context.new( ex ).evaluate( data )
+    expect( e.success ).to be_truthy
+    e = JCR::Context.new( ex ).evaluate( data, "oroot" )
+    expect( e.success ).to be_falsey
+    e = JCR::Context.new( ex ).evaluate( data, "aroot" )
+    expect( e.success ).to be_truthy
+  end
+
   it 'should evaluate JSON against multiple nameless roots' do
     ex = <<EX
 # jcr-version 0.7

@@ -52,18 +52,41 @@ module JCR
     rn = node[:rule][:rule_name].to_str
     rule = node[:rule]
     ruledef = get_rule_by_type( rule )
-    if ruledef
+    new_root = nil
+    # look to see if the root_annotation is in the name before assignment ( @{root} $r = ... )
+    if rule[:annotations]
+      if rule[:annotations].is_a? Array
+        rule[:annotations].each do |annotation|
+          if annotation[:root_annotation]
+            new_root = Root.new(node, rn)
+            roots << new_root
+            # root is found, now look into subrule for unnamed roots
+            subrule = get_rule_by_type( ruledef )
+            roots.concat( find_roots_in_unnamed( subrule ) ) if subrule
+          end
+        end
+      elsif rule[:annotations][:root_annotation]
+        new_root = Root.new(node, rn)
+        roots << new_root
+        # root is found, now look into subrule for unnamed roots
+        subrule = get_rule_by_type( ruledef )
+        roots.concat( find_roots_in_unnamed( subrule ) ) if subrule
+      end
+    end
+    if ruledef && !new_root
       if ruledef.is_a? Array
         ruledef.each do |rdi|
+          # if it has a @{root} annotation in the rule definition
           if rdi[:root_annotation]
-            roots << Root.new( node, rn )
-          elsif (subrule = get_rule_by_type( rdi ))
-            roots.concat( find_roots_in_unnamed( subrule ) )
+            roots << Root.new(node, rn)
+            # else look into the definition further and examine subrules
+          elsif (subrule = get_rule_by_type(rdi))
+            roots.concat(find_roots_in_unnamed(subrule))
           end
         end
       elsif ruledef.is_a? Hash
-        subrule = get_rule_by_type( ruledef )
-        roots.concat( find_roots_in_unnamed( subrule ) ) if subrule
+        subrule = get_rule_by_type(ruledef)
+        roots.concat(find_roots_in_unnamed(subrule)) if subrule
       end
     end
     return roots
