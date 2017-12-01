@@ -8,12 +8,12 @@ task :default => :test
 
 desc "test command line examples"
 task :test_cli do
-  sh "cd examples; bash examples.sh -n"
+  sh "cd examples; bash examples.sh"
 end
 
 desc "demonstrate command line examples"
 task :demo_cli do
-  sh "cd examples; bash examples.sh"
+  sh "cd examples; bash examples.sh -n"
 end
 
 desc "run all tests"

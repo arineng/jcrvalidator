@@ -462,7 +462,7 @@ RULESET
   end
 
   it 'should parse from the command line' do
-    ex = JCR.main( ['-R', '[ integer *2 ]', '-J', '[ 1, 2 ]'] )
+    ex = JCR.main( ['-R', '[ integer *2 ]', '-J', '[ 1, 2 ]', '-q'] )
     expect(ex).to eq(0)
   end
 
