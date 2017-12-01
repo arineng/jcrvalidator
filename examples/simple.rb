@@ -29,7 +29,13 @@ RULESET
 
 # Create a JCR context.
 # This is done for effeciency sake when evaluating multiple JSON
-ctx = JCR::Context.new( ruleset )
+begin
+  ctx = JCR::Context.new( ruleset )
+rescue Parslet::ParseFailed => failure
+  # if the JCR fails to parse, this will be thrown
+  puts failure.parse_failure_cause.ascii_tree unless options[:quiet]
+  return 1
+end
 
 # Evaluate the first JSON
 data1 = JSON.parse( '[ 1, 2, "foo", "bar" ]')
