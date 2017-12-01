@@ -466,6 +466,30 @@ RULESET
     expect(ex).to eq(0)
   end
 
+  it 'should parse from the command line and not output' do
+    expect{
+      JCR.main( ['-R', '[ integer *2 ]', '-J', '[ 1, 2 ]', '-q'] )
+    }.to_not output.to_stdout
+  end
+
+  it 'should parse from the command line and output' do
+    expect{
+      JCR.main( ['-R', '[ integer *2 ]', '-J', '[ 1, 2 ]' ] )
+    }.to output.to_stdout
+  end
+
+  it 'should parse from the command line and output' do
+    expect{
+      JCR.main( ['-R', '[ integer *2 ]', '-J', '[ 1, 2 ]', '-v', '-q' ] )
+    }.to output.to_stdout
+  end
+
+  it 'should print some help' do
+    expect{
+      JCR.main( ['-h' ] )
+    }.to output.to_stdout
+  end
+
   it 'should parse from the command line' do
     expect{ JCR.main( ['-R', '$mrule = "mname" : integer', '-J', '["mname",12]'] ) }.to raise_error RuntimeError
   end
