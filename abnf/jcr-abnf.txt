@@ -24,12 +24,13 @@ jcr-version-d    = jcr-version-kw DSPs major-version
                    *( DSPs "+" [ DSPs ] extension-id )
 major-version    = non-neg-integer
 minor-version    = non-neg-integer
-extension-id     = ALPHA *not-space
+extension-id     = id
+id               = ALPHA *id-tail
+id-tail          = %x21-7C / %x7E-10FFFF ; not spaces, not }
 ruleset-id-d     = ruleset-id-kw DSPs ruleset-id
 import-d         = import-kw DSPs ruleset-id
                    [ DSPs as-kw DSPs ruleset-id-alias ]
-ruleset-id       = ALPHA *not-space
-not-space        = %x21-10FFFF
+ruleset-id       = id
 ruleset-id-alias = name
 one-line-tbd-directive-d = directive-name
                    [ WSP one-line-directive-parameters ]
@@ -54,7 +55,7 @@ rule-name        = name
 target-rule-name = annotations "$"
                    [ ruleset-id-alias "." ]
                    rule-name
-name             = ALPHA *( ALPHA / DIGIT / "-" / "-" )
+name             = ALPHA *( ALPHA / DIGIT / "-" / "_" )
 
 rule-def         = member-rule / type-designator rule-def-type-rule /
                    array-rule / object-rule / group-rule /

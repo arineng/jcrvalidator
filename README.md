@@ -2,6 +2,8 @@
 
 [![Gem Version](https://badge.fury.io/rb/jcrvalidator.svg)](https://badge.fury.io/rb/jcrvalidator)
 [![Build Status](https://travis-ci.org/arineng/jcrvalidator.svg)](https://travis-ci.org/arineng/jcrvalidator)
+[![Dependency Status](https://gemnasium.com/badges/github.com/arineng/jcrvalidator.svg)](https://gemnasium.com/github.com/arineng/jcrvalidator)
+[![Coverage Status](https://coveralls.io/repos/github/arineng/jcrvalidator/badge.svg?branch=master)](https://coveralls.io/github/arineng/jcrvalidator?branch=master)
 
 ## Background
 
@@ -107,6 +109,13 @@ which can be found [here](https://raw.githubusercontent.com/arineng/jcr/09/draft
 * 0.6.3 - XOR experimentation which was never merged
 * 0.6.4 - Version that matches -07 of the draft specification
 * 0.6.5 - Fixed a bug with roots and empty object and array rules
+* next
+  * Tracks the -09 draft
+  * Fixes to allow annotations for groups in arrays and objects
+  * Text output is now proper JCR
+  * Fixed issue with multiple files on the command line with MacOS
+  * Support for Ruby 2.4
+  * Dropped Ruby 1.8, 1.9, and 2.0. Now only testing against 2.1, 2.3 and 2.4
 
 The current version of the JCR specification can be found 
 [here](https://raw.githubusercontent.com/arineng/jcr/07/draft-newton-json-content-rules.txt)

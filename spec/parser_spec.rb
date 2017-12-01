@@ -1230,6 +1230,17 @@ EX5a
     expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
   end
 
+  it 'should parse multi-line jcr-version directive major and minor numbers with 2 extensions with immediate closing brace' do
+    ex = %q[
+#{ jcr-version
+   4.0
+   + foo_1 + bar_4}
+]
+    tree = JCR.parse( ex )
+    expect(tree[0][:directive][:jcr_version_d][:major_version]).to eq("4")
+    expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
+  end
+
   it 'should parse directives with spaces after them' do
   # Note: ~ characters in JCR below changed to spaces by the gsub() regular expression
     ex5b = <<EX5b
@@ -1254,10 +1265,48 @@ EX5c
     expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
   end
 
+  it 'should parse multi-line jcr-version directive major and minor numbers with immediate closing brace' do
+    ex5c = <<'EX5c' # 'EX5c' to prevent #{/...} string interpolation
+#{jcr-version
+  4.0}
+# ruleset-id my_awesome_rules
+# import http://arin.net/otherexamples as otherrules
+EX5c
+    tree = JCR.parse( ex5c )
+    expect(tree[0][:directive][:jcr_version_d][:major_version]).to eq("4")
+    expect(tree[0][:directive][:jcr_version_d][:minor_version]).to eq("0")
+  end
+
+  it 'should parse multi-line ruleset-id with immediate closing brace' do
+    ex = %q[
+#{ruleset-id my_awesome_rules}
+]
+    tree = JCR.parse( ex )
+    expect(tree[0][:directive][:ruleset_id_d][:ruleset_id]).to eq("my_awesome_rules")
+  end
+
+  it 'should parse multi-line import with immediate closing brace' do
+    ex = %q[
+#{import my_awesome_rules}
+]
+    tree = JCR.parse( ex )
+    expect(tree[0][:directive][:import_d][:ruleset_id]).to eq("my_awesome_rules")
+  end
+
   it 'should permit parsing multi-line unknown directives' do
     ex5d = <<'EX5d' # 'EX5d' to prevent #{/...} string interpolation
 #{constraint foo
   $name }
+# ruleset-id my_awesome_rules
+# import http://arin.net/otherexamples as otherrules
+EX5d
+    tree = JCR.parse( ex5d )
+  end
+
+  it 'should permit parsing multi-line unknown directives with immediate closing brace' do
+    ex5d = <<'EX5d' # 'EX5d' to prevent #{/...} string interpolation
+#{constraint foo
+  $name}
 # ruleset-id my_awesome_rules
 # import http://arin.net/otherexamples as otherrules
 EX5d

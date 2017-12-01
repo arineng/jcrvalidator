@@ -72,8 +72,12 @@ module JCR
         #> jcr-version-kw = "jcr-version"
         #! major_version = non_neg_integer
         #! minor_version = non_neg_integer
-    rule(:extension_id)  { match('[a-zA-Z]') >> match('[\S]').repeat }
-        #! extension_id = ALPHA *not-space
+    rule(:extension_id)  { id }
+        #! extension_id = id
+    rule(:id)  { match('[a-zA-Z]') >> id_tail.repeat }
+        #! id = ALPHA *id-tail
+    rule(:id_tail)  { match('[^\s}]') }
+        #! id-tail = %x21-7C / %x7E-10FFFF ; not spaces, not }
     rule(:ruleset_id_d)  { (str('ruleset-id') >> dsps >> ruleset_id.as(:ruleset_id)).as(:ruleset_id_d) }
         #! ruleset_id_d = ruleset-id-kw DSPs ruleset_id
         #> ruleset-id-kw = "ruleset-id"
@@ -82,9 +86,8 @@ module JCR
         #!            [ DSPs as_kw DSPs ruleset_id_alias ]
         #> import-kw = "import"
         #> as-kw = "as"
-    rule(:ruleset_id)        { match('[a-zA-Z]') >> match('[\S]').repeat }
-        #! ruleset_id = ALPHA *not-space
-        #! not-space = %x21-10FFFF
+    rule(:ruleset_id)        { id }
+        #! ruleset_id = id
     rule(:ruleset_id_alias)  { name.as(:ruleset_id_alias) }
         #! ruleset_id_alias = name
     rule(:one_line_tbd_directive_d) { name.as(:directive_name) >> ( wsp >> match('[^\r\n]').repeat.as(:directive_parameters) ).maybe }
