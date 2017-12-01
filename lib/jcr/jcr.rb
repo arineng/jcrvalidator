@@ -135,11 +135,6 @@ module JCR
     end
 
     ctx.failure_report = failure_report( ctx )
-    if ctx.trace
-      ctx.failure_report.each do |line|
-        puts line
-      end
-    end
     return retval
   end
 
@@ -237,6 +232,10 @@ module JCR
         options[:verbose] = true
       end
 
+      opt.on("-q","quiet") do |quiet|
+        options[:quiet] = true
+      end
+
       opt.on("-h","display help") do |help|
         options[:help] = true
       end
@@ -275,7 +274,7 @@ module JCR
 
         if options[:verbose]
           pp "Ruleset Parse Tree", ctx.tree
-          pp "Ruleset Map"
+          puts "Ruleset Map"
           ctx.mapping.each do |name,rule|
             puts "Parsed Rule: #{name}"
             puts rule_to_s( rule, false )
@@ -290,7 +289,7 @@ module JCR
           return 0
         elsif options[:json]
           data = JSON.parse( options[:json] )
-          ec = cli_eval( ctx, data, options[:root_name], options[:verbose] )
+          ec = cli_eval( ctx, data, options[:root_name], options[:quiet] )
           return ec
         elsif $stdin.tty?
           ec = 0
@@ -299,7 +298,7 @@ module JCR
           else
             my_argv.each do |fn|
               data = JSON.parse( File.open( fn ).read )
-              tec = cli_eval( ctx, data, options[:root_name], options[:verbose] )
+              tec = cli_eval( ctx, data, options[:root_name], options[:quiet] )
               ec = tec if tec != 0 #record error but don't let non-error overwrite error
             end
           end
@@ -311,7 +310,7 @@ module JCR
             lines = lines + line
             if ARGF.eof?
               data = JSON.parse( lines )
-              tec = cli_eval( ctx, data, options[:root_name], options[:verbose] )
+              tec = cli_eval( ctx, data, options[:root_name], options[:quiet] )
               ec = tec if tec != 0 #record error but don't let non-error overwrite error
               lines = ""
             end
@@ -320,23 +319,27 @@ module JCR
         end
 
       rescue Parslet::ParseFailed => failure
-        puts failure.cause.ascii_tree
+        puts failure.parse_failure_cause.ascii_tree unless options[:quiet]
+        return 1
       end
     end
 
   end
 
-  def self.cli_eval ctx, data, root_name, verbose
+  def self.cli_eval ctx, data, root_name, quiet
     ec = 2
     e = ctx.evaluate( data, root_name )
     if e.success
-      if verbose
+      unless quiet
         puts "Success!"
       end
       ec = 0
     else
-      if verbose
-        puts "Failure: #{e.reason}"
+      unless quiet
+        puts "Failure! Use -v for more information."
+        ctx.failure_report.each do |line|
+          puts line
+        end
       end
       ec = 3
     end
