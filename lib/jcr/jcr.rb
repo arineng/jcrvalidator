@@ -321,7 +321,14 @@ module JCR
       rescue Parslet::ParseFailed => failure
         puts failure.parse_failure_cause.ascii_tree unless options[:quiet]
         return 1
+      rescue JSON::ParserError => parser_error
+        unless options[:quiet]
+          puts "Unable to parse JSON"
+          puts parser_error.message.inspect
+        end
+        return 3
       end
+
     end
 
   end
