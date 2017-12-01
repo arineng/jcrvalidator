@@ -94,17 +94,6 @@ module JCR
 
   end
 
-  class RootInfo
-    attr_accessor :root_rule, :root_name, :slice, :pos, :offset, :failures
-    def initialize root_rule, root_name = nil
-      @root_rule = root_rule
-      @root_name = root_name
-      @slice = JCR::find_first_slice( root_rule )
-      @pos = @slice.line_and_column
-      @offset = @slice.offset
-    end
-  end
-
   def self.ingest_ruleset( ruleset, override = false, ruleset_alias=nil )
     tree = JCR.parse( ruleset )
     mapping = JCR.map_rule_names( tree, override, ruleset_alias )
@@ -121,30 +110,28 @@ module JCR
   end
 
   def self.evaluate_ruleset( data, ctx, root_name = nil )
-    root_rules = []
+    roots = []
     if root_name
       root_rule = ctx.mapping[root_name]
       raise "No rule by the name of #{root_name} for a root rule has been found" unless root_rule
-      root_rules << root_rule
+      root = JCR::Root.new( root_rule, root_name )
+      roots << root
     else
-      ctx.roots.each do |r|
-        root_rules << r.rule
-      end
+      roots = ctx.roots
     end
 
-    raise "No root rule defined. Specify a root rule name" if root_rules.empty?
+    raise "No root rule defined. Specify a root rule name" if roots.empty?
 
     retval = nil
-    root_rules.each do |r|
-      pp "Evaluating Root:", rule_to_s( r, false ) if ctx.trace
-      raise "Root rules cannot be member rules" if r[:member_rule]
+    roots.each do |r|
+      pp "Evaluating Root:", rule_to_s( r.rule, false ) if ctx.trace
+      raise "Root rules cannot be member rules" if r.rule[:member_rule]
       econs = EvalConditions.new( ctx.mapping, ctx.callbacks, ctx.trace )
-      retval = JCR.evaluate_rule( r, r, data, econs )
+      retval = JCR.evaluate_rule( r.rule, r.rule, data, econs )
       break if retval.success
       # else
-      root_info = RootInfo.new( r, root_name )
-      root_info.failures = econs.failures
-      ctx.failed_roots << root_info
+      r.failures = econs.failures
+      ctx.failed_roots << r
     end
 
     ctx.failure_report = failure_report( ctx )
@@ -159,8 +146,8 @@ module JCR
   def self.failure_report ctx
     report = []
     ctx.failed_roots.each do |failed_root|
-      if failed_root.root_name
-        report << "- ** Failures for root rule named `#{failed_root.root_name}`"
+      if failed_root.name
+        report << "- ** Failures for root rule named `#{failed_root.name}`"
       else
         report << "- ** Failures for root rule at line #{failed_root.pos[0]}"
       end
