@@ -149,4 +149,15 @@ EX7
     expect( roots.length ).to eq( 3 )
   end
 
+  it 'should find a root annotated with the name' do
+    tree = JCR.parse( "@{root} $r = [ integer * ]" )
+    roots = JCR.find_roots( tree )
+    expect( roots.length ).to eq( 1 )
+    expect( roots[0] ).to be_an( JCR::Root )
+    expect( roots[0].name ).to eq( "r" )
+    expect( roots[0].nameless ).to be_falsey
+    expect( roots[0].rule ).to be_an( Hash )
+    expect( roots[0].rule[:rule] ).to be_truthy
+  end
+
 end
