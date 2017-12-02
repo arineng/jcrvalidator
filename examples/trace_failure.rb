@@ -1,4 +1,4 @@
-# Copyright (C) 2015 American Registry for Internet Numbers (ARIN)
+# Copyright (C) 2015-2017 American Registry for Internet Numbers (ARIN)
 #
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -12,8 +12,8 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 # IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-# This example demonstrates using the JCR Validator with a ruleset to
-# evaluate two different sets of JSON data
+# This example demonstrates using the tracing feature of the JcRValidator
+# for troubleshooting validation issues.
 
 require 'jcr'
 
@@ -21,34 +21,36 @@ ruleset = <<RULESET
 # ruleset-id rfcXXXX
 # jcr-version 0.7
 
-[ $my_integers *2, $my_strings *2 ]
+[ $my_integers *2, $my_strings *2, $my_object ]
 $my_integers =: 0..2
-$my_strings =: ( "foo" | "bar" )
+$my_strings = ( "foo" | "bar" )
+$my_object = { "name" : "bob" }
 
+@{root} $second_root = [ $my_integers *1, $my_strings *2, $my_object ]
 RULESET
 
+json = <<JSON
+[ 1, 2, "foo", "bar", { "name" : "alice" } ]
+JSON
+
 # Create a JCR context.
-# This is done for effeciency sake when evaluating multiple JSON
-begin
-  ctx = JCR::Context.new( ruleset )
-rescue Parslet::ParseFailed => failure
-  # if the JCR fails to parse, this will be thrown
-  puts failure.parse_failure_cause.ascii_tree unless options[:quiet]
-  return 1
+# We explicitly put tracing to false.
+ctx = JCR::Context.new( ruleset, false )
+
+# Evaluate the JSON
+data1 = JSON.parse( json )
+e1 = ctx.evaluate( data1 )
+
+unless e1.success
+# however, we still have access to failure data
+# including a report.
+  puts "DEMONSTRATION OF FAILURE OUTPUT"
+  ctx.failure_report.each do |line|
+    puts line
+  end
 end
 
-# Evaluate the first JSON
-data1 = JSON.parse( '[ 1, 2, "foo", "bar" ]')
-e1 = ctx.evaluate( data1 )
-# Should be true
-puts "Ruleset evaluation of JSON = " + e1.success.to_s
-
-data2 = JSON.parse( '[ 2, 1, "bar", "foo" ]')
-e2 = ctx.evaluate( data2 )
-# Should be true
-puts "Ruleset evaluation of JSON = " + e2.success.to_s
-
 # return the evaluations as an exit code
-exit e1.success && e2.success
+exit !e1.success
 
 

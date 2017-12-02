@@ -8,12 +8,12 @@ task :default => :test
 
 desc "test command line examples"
 task :test_cli do
-  sh "cd examples; bash examples.sh -n"
+  sh "cd examples; bash examples.sh"
 end
 
 desc "demonstrate command line examples"
 task :demo_cli do
-  sh "cd examples; bash examples.sh"
+  sh "cd examples; bash examples.sh -n"
 end
 
 desc "run all tests"
@@ -31,5 +31,9 @@ task :test_callback_rb do
   ruby "-Ilib examples/callback.rb"
 end
 
+task :test_trace_failure_rb do
+  ruby "-Ilib examples/trace_failure.rb"
+end
+
 desc "test example ruby scripts"
-task :test_ruby_examples => [ :test_simple_rb, :test_override_rb, :test_callback_rb ]
+task :test_ruby_examples => [ :test_simple_rb, :test_override_rb, :test_callback_rb, :test_trace_failure_rb ]

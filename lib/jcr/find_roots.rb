@@ -1,4 +1,4 @@
-# Copyright (c) 2015-2016 American Registry for Internet Numbers
+# Copyright (c) 2015-2017 American Registry for Internet Numbers
 #
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -18,7 +18,7 @@ require 'jcr/evaluate_rules'
 module JCR
 
   class Root
-    attr_accessor :nameless, :name, :rule, :default
+    attr_accessor :nameless, :name, :rule, :default, :slice, :pos, :offset, :failures
 
     def initialize rule, name = nil, nameless = true, default = false
       @rule = rule
@@ -28,6 +28,9 @@ module JCR
         @nameless = false
       end
       @default = default
+      @slice = JCR::find_first_slice( rule )
+      @pos = @slice.line_and_column
+      @offset = @slice.offset
     end
   end
 

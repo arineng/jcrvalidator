@@ -17,13 +17,13 @@
 # 'jcr' command to your execution path.
 export PATH=$PATH:../bin
 
-VF="-v"
-args="$(getopt -n "$0" -l no-verbose n $*)" \
+QF="-q"
+args="$(getopt -n "$0" -l no-quiet n $*)" \
 || exit -1
 for arg in $args; do
     case "$arg" in
-        -n|--no-verbose)
-            VF="";;
+        -n|--no-quiet)
+            QF="";;
     esac
 done
 
@@ -35,52 +35,52 @@ done
 # Pass JSON into the JCR validator against a ruleset given on the command line
 # from JSON given in standard input
 # This one should succeed
-echo "[ 1, 2]" | jcr $VF -R "[ integer * ]"
+echo "[ 1, 2]" | jcr $QF -R "[ integer * ]"
 assert "echo $?" 0
 
 # Pass JSON into the JCR validator against a ruleset given on the command line
 # from JSON given on the command line
 # This one should succeed
-jcr $VF -R "[ integer * ]" -J "[ 1, 2]"
+jcr $QF -R "[ integer * ]" -J "[ 1, 2]"
 assert "echo $?" 0
 
 # Pass JSON into the JCR validator against a ruleset given on the command line
 # This one should fail
-echo "[ 1, 2]" | jcr $VF -R "[ string * ]"
+echo "[ 1, 2]" | jcr $QF -R "[ string * ]"
 assert "echo $?" 3
 
 # Pass JSON into the JCR validator from a file with a ruleset specified in a file
 # This one should succeed
-jcr $VF -r example1.jcr example1a.json
+jcr $QF -r example1.jcr example1a.json
 assert "echo $?" 0
 
 # Pass JSON into the JCR validator from a file with a ruleset specified in a file
 # This one should succeed
-jcr $VF -r example1.jcr example1b.json
+jcr $QF -r example1.jcr example1b.json
 assert "echo $?" 0
 
 # Pass multiple JSON files into the JCR validator using a ruleset specified in a file
-jcr $VF -r example1.jcr example1*.json
+jcr $QF -r example1.jcr example1*.json
 assert "echo $?" 0
 
 # Override a rule from the command line
 # Should succeed
-jcr $VF -r example1.jcr -O "\$my_integers =:0..2" example1a.json
+jcr $QF -r example1.jcr -O "\$my_integers =:0..2" example1a.json
 assert "echo $?" 0
 
 # Override a rule from the command line
 # Should fail
-jcr $VF -r example1.jcr -O "\$my_integers =:0..2" example1b.json
+jcr $QF -r example1.jcr -O "\$my_integers =:0..2" example1b.json
 assert "echo $?" 3
 
 # Override a rule from a file
 # Should succeed
-jcr $VF -r example1.jcr -o example1_override.jcr example1a.json
+jcr $QF -r example1.jcr -o example1_override.jcr example1a.json
 assert "echo $?" 0
 
 # Override a rule from a file
 # Should fail
-jcr $VF -r example1.jcr -o example1_override.jcr example1b.json
+jcr $QF -r example1.jcr -o example1_override.jcr example1b.json
 assert "echo $?" 3
 
 assert_end examples

@@ -51,6 +51,6 @@ e3 = ctx.evaluate( data )
 # Should be false
 puts "Overriden Ruleset evaluation of JSON = " + e3.success.to_s
 
-#return the evaluations as an exit code
+# return the evaluations as an exit code
 exit e1.success && !e2.success && !e3.success
 

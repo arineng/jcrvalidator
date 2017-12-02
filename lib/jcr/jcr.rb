@@ -1,4 +1,4 @@
-# Copyright (c) 2015-2016 American Registry for Internet Numbers
+# Copyright (c) 2015-2017 American Registry for Internet Numbers
 #
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -28,7 +28,7 @@ require 'jcr/version'
 module JCR
 
   class Context
-    attr_accessor :mapping, :callbacks, :id, :tree, :roots, :catalog, :trace
+    attr_accessor :mapping, :callbacks, :id, :tree, :roots, :catalog, :trace, :failed_roots, :failure_report
 
     def add_ruleset_alias( ruleset_alias, alias_uri )
       unless @catalog
@@ -60,6 +60,7 @@ module JCR
 
     def initialize( ruleset = nil, trace = false )
       @trace = trace
+      @failed_roots = []
       if ruleset
         ingested = JCR.ingest_ruleset( ruleset, false, nil )
         @mapping = ingested.mapping
@@ -109,28 +110,54 @@ module JCR
   end
 
   def self.evaluate_ruleset( data, ctx, root_name = nil )
-    root_rules = []
+    roots = []
     if root_name
       root_rule = ctx.mapping[root_name]
       raise "No rule by the name of #{root_name} for a root rule has been found" unless root_rule
-      root_rules << root_rule
+      root = JCR::Root.new( root_rule, root_name )
+      roots << root
     else
-      ctx.roots.each do |r|
-        root_rules << r.rule
-      end
+      roots = ctx.roots
     end
 
-    raise "No root rule defined. Specify a root rule name" if root_rules.empty?
+    raise "No root rule defined. Specify a root rule name" if roots.empty?
 
     retval = nil
-    root_rules.each do |r|
-      pp "Evaluating Root:", rule_to_s( r, false ) if ctx.trace
-      raise "Root rules cannot be member rules" if r[:member_rule]
-      retval = JCR.evaluate_rule( r, r, data, EvalConditions.new( ctx.mapping, ctx.callbacks, ctx.trace ) )
+    roots.each do |r|
+      pp "Evaluating Root:", rule_to_s( r.rule, false ) if ctx.trace
+      raise "Root rules cannot be member rules" if r.rule[:member_rule]
+      econs = EvalConditions.new( ctx.mapping, ctx.callbacks, ctx.trace )
+      retval = JCR.evaluate_rule( r.rule, r.rule, data, econs )
       break if retval.success
+      # else
+      r.failures = econs.failures
+      ctx.failed_roots << r
     end
 
+    ctx.failure_report = failure_report( ctx )
     return retval
+  end
+
+  def self.failure_report ctx
+    report = []
+    ctx.failed_roots.each do |failed_root|
+      if failed_root.name
+        report << "- ** Failures for root rule named '#{failed_root.name}'"
+      else
+        report << "- ** Failures for root rule at line #{failed_root.pos[0]}"
+      end
+      failed_root.failures.sort.map do |stack_level, failures|
+        if failures.length > 1
+          report << "  - failure at rule depth #{stack_level} caused by one of the following #{failures.length} reasons"
+        else
+          report << "  - failure at rule depth #{stack_level} caused by"
+        end
+        failures.each_with_index do |failure, index|
+          report << "    - #{failure.json_elided} failed rule #{failure.definition} at #{failure.pos} because #{failure.reason_elided}"
+        end
+      end
+    end
+    return report
   end
 
   def self.main my_argv=nil
@@ -205,6 +232,10 @@ module JCR
         options[:verbose] = true
       end
 
+      opt.on("-q","quiet") do |quiet|
+        options[:quiet] = true
+      end
+
       opt.on("-h","display help") do |help|
         options[:help] = true
       end
@@ -243,7 +274,7 @@ module JCR
 
         if options[:verbose]
           pp "Ruleset Parse Tree", ctx.tree
-          pp "Ruleset Map"
+          puts "Ruleset Map"
           ctx.mapping.each do |name,rule|
             puts "Parsed Rule: #{name}"
             puts rule_to_s( rule, false )
@@ -258,7 +289,7 @@ module JCR
           return 0
         elsif options[:json]
           data = JSON.parse( options[:json] )
-          ec = cli_eval( ctx, data, options[:root_name], options[:verbose] )
+          ec = cli_eval( ctx, data, options[:root_name], options[:quiet] )
           return ec
         elsif $stdin.tty?
           ec = 0
@@ -267,7 +298,7 @@ module JCR
           else
             my_argv.each do |fn|
               data = JSON.parse( File.open( fn ).read )
-              tec = cli_eval( ctx, data, options[:root_name], options[:verbose] )
+              tec = cli_eval( ctx, data, options[:root_name], options[:quiet] )
               ec = tec if tec != 0 #record error but don't let non-error overwrite error
             end
           end
@@ -279,7 +310,7 @@ module JCR
             lines = lines + line
             if ARGF.eof?
               data = JSON.parse( lines )
-              tec = cli_eval( ctx, data, options[:root_name], options[:verbose] )
+              tec = cli_eval( ctx, data, options[:root_name], options[:quiet] )
               ec = tec if tec != 0 #record error but don't let non-error overwrite error
               lines = ""
             end
@@ -288,23 +319,34 @@ module JCR
         end
 
       rescue Parslet::ParseFailed => failure
-        puts failure.cause.ascii_tree
+        puts failure.parse_failure_cause.ascii_tree unless options[:quiet]
+        return 1
+      rescue JSON::ParserError => parser_error
+        unless options[:quiet]
+          puts "Unable to parse JSON"
+          puts parser_error.message.inspect
+        end
+        return 3
       end
+
     end
 
   end
 
-  def self.cli_eval ctx, data, root_name, verbose
+  def self.cli_eval ctx, data, root_name, quiet
     ec = 2
     e = ctx.evaluate( data, root_name )
     if e.success
-      if verbose
+      unless quiet
         puts "Success!"
       end
       ec = 0
     else
-      if verbose
-        puts "Failure: #{e.reason}"
+      unless quiet
+        puts "Failure! Use -v for more information."
+        ctx.failure_report.each do |line|
+          puts line
+        end
       end
       ec = 3
     end

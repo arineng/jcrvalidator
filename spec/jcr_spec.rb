@@ -1,4 +1,4 @@
-# Copyright (C) 2015-2016 American Registry for Internet Numbers (ARIN)
+# Copyright (C) 2015-2017 American Registry for Internet Numbers (ARIN)
 #
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -462,8 +462,32 @@ RULESET
   end
 
   it 'should parse from the command line' do
-    ex = JCR.main( ['-R', '[ integer *2 ]', '-J', '[ 1, 2 ]'] )
+    ex = JCR.main( ['-R', '[ integer *2 ]', '-J', '[ 1, 2 ]', '-q'] )
     expect(ex).to eq(0)
+  end
+
+  it 'should parse from the command line and not output' do
+    expect{
+      JCR.main( ['-R', '[ integer *2 ]', '-J', '[ 1, 2 ]', '-q'] )
+    }.to_not output.to_stdout
+  end
+
+  it 'should parse from the command line and output' do
+    expect{
+      JCR.main( ['-R', '[ integer *2 ]', '-J', '[ 1, 2 ]' ] )
+    }.to output.to_stdout
+  end
+
+  it 'should parse from the command line and output' do
+    expect{
+      JCR.main( ['-R', '[ integer *2 ]', '-J', '[ 1, 2 ]', '-v', '-q' ] )
+    }.to output.to_stdout
+  end
+
+  it 'should print some help' do
+    expect{
+      JCR.main( ['-h' ] )
+    }.to output.to_stdout
   end
 
   it 'should parse from the command line' do
@@ -472,6 +496,27 @@ RULESET
 
   it 'should parse from the command line and fail' do
     expect{ JCR.main( ['-R', '$mrule = "mname" : integer', '-J', '["mname",12]', '-S', '$mrule'] ) }.to raise_error RuntimeError
+  end
+
+  it 'should use line numbers in unnamed root failures' do
+    ctx = JCR::Context.new( '[ 0..2 *2, ( "foo" | "bar" ) ]', false )
+    data = JSON.parse( '[1,2,"fuz","bar"]')
+    e = ctx.evaluate( data )
+    expect( ctx.failure_report[0] ).to eq( "- ** Failures for root rule at line 1")
+  end
+
+  it 'should use names in specified root failures' do
+    ctx = JCR::Context.new( '$root = [ 0..2 *2, ( "foo" | "bar" ) ]', false )
+    data = JSON.parse( '[1,2,"fuz","bar"]')
+    e = ctx.evaluate( data, "root" )
+    expect( ctx.failure_report[0] ).to eq( "- ** Failures for root rule named 'root'")
+  end
+
+  it 'should use names in annotated root failures' do
+    ctx = JCR::Context.new( '@{root} $root = [ 0..2 *2, ( "foo" | "bar" ) ]', false )
+    data = JSON.parse( '[1,2,"fuz","bar"]')
+    e = ctx.evaluate( data )
+    expect( ctx.failure_report[0] ).to eq( "- ** Failures for root rule named 'root'")
   end
 
 end
