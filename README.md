@@ -109,13 +109,18 @@ which can be found [here](https://raw.githubusercontent.com/arineng/jcr/09/draft
 * 0.6.3 - XOR experimentation which was never merged
 * 0.6.4 - Version that matches -07 of the draft specification
 * 0.6.5 - Fixed a bug with roots and empty object and array rules
-* next
+* 0.7.0
   * Tracks the -09 draft
   * Fixes to allow annotations for groups in arrays and objects
   * Text output is now proper JCR
   * Fixed issue with multiple files on the command line with MacOS
   * Support for Ruby 2.4
-  * Dropped Ruby 1.8, 1.9, and 2.0. Now only testing against 2.1, 2.3 and 2.4
+  * Dropped Ruby 1.8, 1.9, and 2.0. CI testing on:
+    * Linux 2.1, 2.3, 2.4, and JRuby 9.1
+    * OSX 2.3 and 2.4
+  * Fixes to ABNF in multi-line directives
+  * Much better CLI and programmatic validation failure information and structures 
+  * Fixes to print errors when the JCR fails to parse
 
 The current version of the JCR specification can be found 
 [here](https://raw.githubusercontent.com/arineng/jcr/07/draft-newton-json-content-rules.txt)
@@ -165,6 +170,7 @@ Usage: jcr [OPTIONS] [JSON_FILES]
 
 Evaluates JSON against JSON Content Rules (JCR).
 
+If -J is not specified, JSON_FILES is used.
 If JSON_FILES is not specified, standard input (STDIN) is used.
 
 Use -v to see results, otherwise check the exit code.
@@ -172,11 +178,22 @@ Use -v to see results, otherwise check the exit code.
 Options
     -r FILE                          file containing ruleset
     -R STRING                        string containing ruleset. Should probably be quoted
-    -s STRING                        name of root rule. All roots will be tried if none is specified
+        --test-jcr                   parse and test the JCR only
+    -S STRING                        name of root rule. All roots will be tried if none is specified
     -o FILE                          file containing overide ruleset (option can be repeated)
     -O STRING                        string containing overide rule (option can be repeated)
+    -J STRING                        string containing JSON to evaluate. Should probably be quoted
     -v                               verbose
+    -q                               quiet
     -h                               display help
+
+Return codes:
+ 0 = success
+ 1 = parsing or other bad condition
+ 2 = fall through bad condition
+ 3 = unsuccessful evaluation of JSON
+
+JCR Version 0.7.0
 ```
 
 ## Usage as a Library
@@ -186,6 +203,7 @@ It is easy to call the JCR Validator from Ruby programs. The `examples` director
 * `simple.rb` is a simple and basic example
 * `override.rb` shows how to override specific rules in a ruleset.
 * `callback.rb` demonstrates how to do custom validation with callbacks
+* `trace_failures.rb` demonstrates how to access validation failure information
 
 ### Custom Validation Using Callbacks
 
