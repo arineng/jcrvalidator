@@ -24,6 +24,7 @@ require 'jcr/find_roots'
 require 'jcr/map_rule_names'
 require 'jcr/process_directives'
 require 'jcr/version'
+require 'jcr/parts'
 
 module JCR
 
@@ -198,6 +199,10 @@ module JCR
         options[:testjcr] = true
       end
 
+      opt.on("--process-parts", "creates smaller files for specification writing" ) do |parts|
+        options[:process_parts] = true
+      end
+
       opt.on("-S STRING","name of root rule. All roots will be tried if none is specified") do |root_name|
         if options[:root_name]
           puts "A root has already been specified. Use -h for help.", ""
@@ -281,6 +286,11 @@ module JCR
             puts "Parsed Rule Structure: #{name}"
             pp rule
           end
+        end
+
+        if options[:process_parts]
+          parts = JCR::JcrParts.new
+          parts.process_ruleset( options[:ruleset] )
         end
 
         if options[:testjcr]
