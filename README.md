@@ -121,6 +121,7 @@ which can be found [here](https://raw.githubusercontent.com/arineng/jcr/09/draft
   * Fixes to ABNF in multi-line directives
   * Much better CLI and programmatic validation failure information and structures 
   * Fixes to print errors when the JCR fails to parse
+* 0.8.0 - Adds the --process-parts command line option
 
 The current version of the JCR specification can be found 
 [here](https://raw.githubusercontent.com/arineng/jcr/07/draft-newton-json-content-rules.txt)
@@ -179,6 +180,7 @@ Options
     -r FILE                          file containing ruleset
     -R STRING                        string containing ruleset. Should probably be quoted
         --test-jcr                   parse and test the JCR only
+        --process-parts              creates smaller files for specification writing
     -S STRING                        name of root rule. All roots will be tried if none is specified
     -o FILE                          file containing overide ruleset (option can be repeated)
     -O STRING                        string containing overide rule (option can be repeated)
@@ -193,7 +195,7 @@ Return codes:
  2 = fall through bad condition
  3 = unsuccessful evaluation of JSON
 
-JCR Version 0.7.0
+JCR Version 0.8.0
 ```
 
 ## Usage as a Library
@@ -215,6 +217,30 @@ The `callback.rb` demonstrates the usage of custom code for evaluation of rules.
 4. If the callback simply returns true, this is turned into a `JCR::Evaluation` signifying a passed evaluation.
 5. If the callback returns false or a string, this is turned into a `JCR::Evaluation` signifying a failed evaluation. In cases where a string is returned, the string is used as the reason for failing the evaluation.
 6. For validation of rules inside arrays and objects, a failed evaluation will usually result in the terminating the evaluation of the rest of the sibling rules of the containing array or object.
+
+## Using the `--process-parts` Option
+
+The `--process-parts` option extracts parts of a JCR file into multiple files based
+on comments in the file. It can also create a new file without the
+comments. This is useful for JCR going into specification documents
+where it is nice to break the JCR up for illustrative purposes in
+the specification but to also have one JCR file for programmatic
+testing purposes.
+
+The file parts are extracted using the comments
+
+    ; start_part FILENAME
+    
+and
+
+    ; end_part
+    
+The comments must also be the only thing present on the line
+though leading whitespace is allowed if desired.
+
+To get a new file with all parts but these comments, use this
+
+    ; all_parts FILENAME
 
 ## Building
 
