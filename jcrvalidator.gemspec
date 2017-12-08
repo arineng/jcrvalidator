@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version     = JCR::VERSION
   s.date        = Date.today
   s.summary     = "JCR Validator"
-  s.description = "A JSON Content Rules (JCR) Validator library and command line utility. Version 0.6.x is closely following -07 of the draft."
+  s.description = "A JSON Content Rules (JCR) Validator library and command line utility."
   s.authors     = ["Andrew Newton","Pete Cordell"]
   s.email       = 'andy@arin.net'
   s.files       = Dir["lib/**/*"].entries
