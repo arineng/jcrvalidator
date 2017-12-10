@@ -68,7 +68,7 @@ module JCR
 
     # processes the lines
     # ruleset is to be a string read in using File.read
-    def process_ruleset( ruleset )
+    def process_ruleset( ruleset, dirname = nil )
       all_file_names = []
       all_parts = []
       all_parts_name = nil
@@ -76,8 +76,10 @@ module JCR
       current_part_name = nil
       ruleset.lines do |line|
         if !all_parts_name && ( all_parts_name = get_all( line ) )
+          all_parts_name = File.join( dirname, all_parts_name ) if dirname
           all_file_names << all_parts_name
         elsif ( current_part_name = get_start( line ) )
+          current_part_name = File.join( dirname, current_part_name ) if dirname
           if current_part
             current_part.close
           end

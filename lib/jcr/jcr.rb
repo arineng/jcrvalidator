@@ -200,8 +200,9 @@ module JCR
         options[:testjcr] = true
       end
 
-      opt.on("--process-parts", "creates smaller files for specification writing" ) do |parts|
+      opt.on("--process-parts [DIRECTORY]", "creates smaller files for specification writing" ) do |directory|
         options[:process_parts] = true
+        options[:process_parts_directory] = directory
       end
 
       opt.on("-S STRING","name of root rule. All roots will be tried if none is specified") do |root_name|
@@ -298,11 +299,11 @@ module JCR
 
         if options[:process_parts]
           parts = JCR::JcrParts.new
-          parts.process_ruleset( options[:ruleset] )
+          parts.process_ruleset( options[:ruleset], options[:process_parts_directory] )
           if options[:overrides ]
             options[:overrides].each do |ov|
               parts = JCR::JcrParts.new
-              parts.process_ruleset( ov )
+              parts.process_ruleset( ov, options[:process_parts_directory] )
             end
           end
         end
