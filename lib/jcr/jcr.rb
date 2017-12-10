@@ -299,6 +299,12 @@ module JCR
         if options[:process_parts]
           parts = JCR::JcrParts.new
           parts.process_ruleset( options[:ruleset] )
+          if options[:overrides ]
+            options[:overrides].each do |ov|
+              parts = JCR::JcrParts.new
+              parts.process_ruleset( ov )
+            end
+          end
         end
 
         if options[:testjcr]

@@ -70,6 +70,8 @@ describe 'parts' do
   end
 
   it 'should process parts' do
+
+    #setup ruleset
     rulest_fn = File.join( @work_dir, "ruleset.jcr" )
     all_parts_fn = File.join( @work_dir, "all.jcr" )
     part1_fn = File.join(@work_dir, "part1.jcr")
@@ -116,12 +118,74 @@ XMLREFS
     r = File.open( rulest_fn, "w" )
     r.write( ruleset )
     r.close
-    JCR.main( [ "-r", rulest_fn, "--test-jcr", "--process-parts" ] )
+
+    #setup override ruleset
+    override_fn = File.join( @work_dir, "override.jcr" )
+    ov_all_fn = File.join( @work_dir, "ov_all.jcr" )
+    ov_p1_fn = File.join( @work_dir, "ov_p1.jcr" )
+    ov_p2_fn = File.join( @work_dir, "ov_p2.jcr" )
+    override = <<OVERRIDE
+; all_parts #{ov_all_fn}
+; my jcr ruleset
+
+$thing1 = [ string * ]
+
+; start_part #{ov_p1_fn}
+$thing2 = [ integer * ]
+
+; end_part
+
+$thing3 =: "bar"
+; start_part #{ov_p2_fn}
+$thing4 = [ boolean *]
+; end_part
+OVERRIDE
+    ov_all = <<OV_ALL
+; my jcr ruleset
+
+$thing1 = [ string * ]
+
+$thing2 = [ integer * ]
+
+
+$thing3 =: "bar"
+$thing4 = [ boolean *]
+OV_ALL
+    ov_p1 = <<OV_P1
+$thing2 = [ integer * ]
+
+OV_P1
+    ov_p2 = <<OV_P2
+$thing4 = [ boolean *]
+OV_P2
+    ov_xml_refs = <<OV_XMLREFS
+<!ENTITY ov_all PUBLIC '' '#{ov_all_fn}'>
+<!ENTITY ov_p1 PUBLIC '' '#{ov_p1_fn}'>
+<!ENTITY ov_p2 PUBLIC '' '#{ov_p2_fn}'>
+OV_XMLREFS
+    o = File.open( override_fn, "w" )
+    o.write( override )
+    o.close
+
+    # EXECUTE!!!
+    JCR.main( [ "-r", rulest_fn, "-o", override_fn, "--test-jcr", "--process-parts" ] )
+
+    # Test the ruleset
     expect( File.open(all_parts_fn).read ).to eq( all_parts )
     expect( File.open(part1_fn).read ).to eq( part1 )
     expect( File.open(part2_fn).read ).to eq( part2 )
     xml_fn = File.join( @work_dir, "all_xml_entity_refs" )
     expect( File.open(xml_fn).read ).to eq( xml_refs )
+
+    # Test the overrides
+    expect( File.open(ov_all_fn).read ).to eq( ov_all )
+    expect( File.open(ov_p1_fn).read ).to eq( ov_p1 )
+    expect( File.open(ov_p2_fn).read ).to eq( ov_p2 )
+    ov_xml_fn = File.join( @work_dir, "ov_all_xml_entity_refs" )
+    expect( File.open(ov_xml_fn).read ).to eq( ov_xml_refs )
+
   end
+
+  #TODO write tests for --process-parts when a directory is given
 
 end

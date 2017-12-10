@@ -525,6 +525,9 @@ RULESET
     expect( @ec ).to eq( 3 )
   end
 
+  #TODO write test for --test-jcr of ruleset and overrides
+  #TODO write fail test for --test-jcr of ruleset and overrides
+
   it 'should use line numbers in unnamed root failures' do
     ctx = JCR::Context.new( '[ 0..2 *2, ( "foo" | "bar" ) ]', false )
     data = JSON.parse( '[1,2,"fuz","bar"]')
