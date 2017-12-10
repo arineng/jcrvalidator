@@ -108,6 +108,11 @@ PART1
     part2 = <<PART2
 $thing4 = [ float *]
 PART2
+    xml_refs = <<XMLREFS
+<!ENTITY all PUBLIC '' '#{all_parts_fn}'>
+<!ENTITY part1 PUBLIC '' '#{part1_fn}'>
+<!ENTITY part2 PUBLIC '' '#{part2_fn}'>
+XMLREFS
     r = File.open( rulest_fn, "w" )
     r.write( ruleset )
     r.close
@@ -115,6 +120,8 @@ PART2
     expect( File.open(all_parts_fn).read ).to eq( all_parts )
     expect( File.open(part1_fn).read ).to eq( part1 )
     expect( File.open(part2_fn).read ).to eq( part2 )
+    xml_fn = File.join( @work_dir, "all_xml_entity_refs" )
+    expect( File.open(xml_fn).read ).to eq( xml_refs )
   end
 
 end
