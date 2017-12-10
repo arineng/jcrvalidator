@@ -17,6 +17,7 @@ require 'rubygems'
 require 'json'
 require 'pp'
 
+require 'jcr/jcr_validator_error'
 require 'jcr/parser'
 require 'jcr/evaluate_rules'
 require 'jcr/check_groups'
@@ -114,19 +115,19 @@ module JCR
     roots = []
     if root_name
       root_rule = ctx.mapping[root_name]
-      raise "No rule by the name of #{root_name} for a root rule has been found" unless root_rule
+      raise JcrValidatorError, "No rule by the name of #{root_name} for a root rule has been found" unless root_rule
       root = JCR::Root.new( root_rule, root_name )
       roots << root
     else
       roots = ctx.roots
     end
 
-    raise "No root rule defined. Specify a root rule name" if roots.empty?
+    raise JcrValidatorError, "No root rule defined. Specify a root rule name" if roots.empty?
 
     retval = nil
     roots.each do |r|
       pp "Evaluating Root:", rule_to_s( r.rule, false ) if ctx.trace
-      raise "Root rules cannot be member rules" if r.rule[:member_rule]
+      raise JcrValidatorError, "Root rules cannot be member rules" if r.rule[:member_rule]
       econs = EvalConditions.new( ctx.mapping, ctx.callbacks, ctx.trace )
       retval = JCR.evaluate_rule( r.rule, r.rule, data, econs )
       break if retval.success
@@ -248,15 +249,22 @@ module JCR
       opt.separator  ""
       opt.separator  "Return codes:"
       opt.separator  " 0 = success"
-      opt.separator  " 1 = parsing or other bad condition"
-      opt.separator  " 2 = fall through bad condition"
+      opt.separator  " 1 = bad JCR parsing or other bad condition"
+      opt.separator  " 2 = invalid option or bad use of command"
       opt.separator  " 3 = unsuccessful evaluation of JSON"
 
       opt.separator  ""
       opt.separator  "JCR Version " + JCR::VERSION
     end
 
-    opt_parser.parse! my_argv
+    begin
+      opt_parser.parse! my_argv
+    rescue OptionParser::InvalidOption => e
+      puts "Unable to interpret command or options"
+      puts e.message
+      puts "", "Use -h for help"
+      return 2
+    end
 
     if options[:help]
       puts "HELP","----",""
@@ -264,7 +272,7 @@ module JCR
       return 2
     elsif !options[:ruleset]
       puts "No ruleset passed! Use -R or -r options.", ""
-      puts opt_parser
+      puts "Use -h for help"
       return 2
     else
 
@@ -328,6 +336,9 @@ module JCR
           return ec
         end
 
+      rescue JCR::JcrValidatorError => jcr_error
+        puts jcr_error.message
+        return 1
       rescue Parslet::ParseFailed => failure
         puts failure.parse_failure_cause.ascii_tree unless options[:quiet]
         return 1

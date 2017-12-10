@@ -491,11 +491,38 @@ RULESET
   end
 
   it 'should parse from the command line' do
-    expect{ JCR.main( ['-R', '$mrule = "mname" : integer', '-J', '["mname",12]'] ) }.to raise_error RuntimeError
+    expect{ @ec = JCR.main( ['-R', '$mrule = "mname" : integer', '-J', '["mname",12]'] ) }.to output.to_stdout
+    expect( @ec ).to eq( 1 )
   end
 
   it 'should parse from the command line and fail' do
-    expect{ JCR.main( ['-R', '$mrule = "mname" : integer', '-J', '["mname",12]', '-S', '$mrule'] ) }.to raise_error RuntimeError
+    expect{ @ec = JCR.main( ['-R', '$mrule = "mname" : integer', '-J', '["mname",12]', '-S', 'mrule'] ) }.to output.to_stdout
+    expect( @ec ).to eq( 1 )
+  end
+
+  it 'should fail to parse command line options' do
+    expect{ @ec = JCR.main( ['-Q'] ) }.to output.to_stdout
+    expect( @ec ).to eq( 2 )
+  end
+
+  it 'should error out when no rule is found' do
+    expect{ @ec = JCR.main( ['-R', '$mrule = [ integer ]', '-J', '["mname",12]', '-S', 'orule'] ) }.to output.to_stdout
+    expect( @ec ).to eq( 1 )
+  end
+
+  it 'should not be quiet' do
+    expect{ @ec = JCR.main( ['-R', '$mrule = [ integer ]', '-J', '[12]', '-S', 'mrule'] ) }.to output.to_stdout
+    expect( @ec ).to eq( 0 )
+  end
+
+  it 'should be quiet' do
+    expect{ @ec = JCR.main( ['-q', '-R', '$mrule = [ integer ]', '-J', '[12]', '-S', 'mrule'] ) }.to_not output.to_stdout
+    expect( @ec ).to eq( 0 )
+  end
+
+  it 'should be quiet even if validation is bad' do
+    expect{ @ec = JCR.main( ['-q', '-R', '$mrule = [ string ]', '-J', '[12]', '-S', 'mrule'] ) }.to_not output.to_stdout
+    expect( @ec ).to eq( 3 )
   end
 
   it 'should use line numbers in unnamed root failures' do
