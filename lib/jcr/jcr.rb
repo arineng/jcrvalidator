@@ -158,7 +158,7 @@ module JCR
           report << "  - failure at rule depth #{stack_level} caused by"
         end
         failures.each_with_index do |failure, index|
-          lines = breakup_message( "#{failure.json_elided} failed rule #{failure.definition} at #{failure.pos} because #{failure.evaluation.reason}", 75 )
+          lines = breakup_message( "<< #{failure.json_elided} >> failed rule #{failure.definition} at #{failure.pos} because #{failure.evaluation.reason}", 75 )
           lines.each_with_index do |l,i|
             if i == 0
               report << "    - #{l}"

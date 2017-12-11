@@ -92,11 +92,11 @@ module JCR
         end
 
         if successes == 0 && repeat_min > 0
-          retval = Evaluation.new( false, "object does not contain group #{rule} for #{raised_rule(jcr,rule_atom)}")
+          retval = Evaluation.new( false, "object does not contain group #{jcr_to_s(rule)} for #{raised_rule(jcr,rule_atom)}")
         elsif successes < repeat_min
-          retval = Evaluation.new( false, "object does not have contain necessary number of group #{rule} for #{raised_rule(jcr,rule_atom)}")
+          retval = Evaluation.new( false, "object does not have contain necessary number of group #{jcr_to_s(rule)} for #{raised_rule(jcr,rule_atom)}")
         elsif repeat_step && ( successes - repeat_min ) % repeat_step != 0
-          retval = Evaluation.new( false, "object matches (#{successes}) do not have contain repetition #{repeat_max} % #{repeat_step} of group #{rule} for #{raised_rule(jcr,rule_atom)}")
+          retval = Evaluation.new( false, "object matches (#{successes}) do not have contain repetition #{repeat_max} % #{repeat_step} of group #{jcr_to_s(rule)} for #{raised_rule(jcr,rule_atom)}")
         else
           retval = Evaluation.new( true, nil )
         end
@@ -155,13 +155,13 @@ module JCR
 
         trace( econs, "Found #{repeat_results.length} matching members repetitions in object with min #{repeat_min} and max #{repeat_max}" )
         if repeat_results.length == 0 && repeat_min > 0
-          retval = Evaluation.new( false, "object does not contain #{rule} for #{raised_rule(jcr,rule_atom)}")
+          retval = Evaluation.new( false, "object does not contain #{jcr_to_s(rule)} for #{raised_rule(jcr,rule_atom)}")
         elsif repeat_results.length < repeat_min
-          retval = Evaluation.new( false, "object does not have enough #{rule} for #{raised_rule(jcr,rule_atom)}")
+          retval = Evaluation.new( false, "object does not have enough #{jcr_to_s(rule)} for #{raised_rule(jcr,rule_atom)}")
         elsif repeat_results.length > repeat_max
-          retval = Evaluation.new( false, "object has too many #{rule} for #{raised_rule(jcr,rule_atom)}")
+          retval = Evaluation.new( false, "object has too many #{jcr_to_s(rule)} for #{raised_rule(jcr,rule_atom)}")
         elsif repeat_step && ( repeat_results.length - repeat_min ) % repeat_step != 0
-          retval = Evaluation.new( false, "object matches (#{repeat_results.length}) does not match repetition step of #{repeat_max} & #{repeat_step} for #{rule} for #{raised_rule(jcr,rule_atom)}")
+          retval = Evaluation.new( false, "object matches (#{repeat_results.length}) does not match repetition step of #{repeat_max} & #{repeat_step} for #{jcr_to_s(rule)} for #{raised_rule(jcr,rule_atom)}")
         else
           retval = Evaluation.new( true, nil)
         end

@@ -401,7 +401,7 @@ module JCR
   end
 
   def self.bad_value jcr, rule_atom, expected, actual
-    Evaluation.new( false, "expected #{expected} but got #{actual} for #{raised_rule(jcr,rule_atom)}" )
+    Evaluation.new( false, "expected << #{expected} >> but got << #{actual} >> for #{raised_rule(jcr,rule_atom)}" )
   end
 
   def self.value_to_s( jcr, shallow=true )

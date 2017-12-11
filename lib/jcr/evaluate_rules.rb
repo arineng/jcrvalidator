@@ -341,7 +341,7 @@ module JCR
       else
         s = "** unknown rule **"
     end
-    return "#{type} definition: #{s}"
+    return "#{type} definition << #{s} >>"
   end
 
   def self.trace_def econs, type, jcr, data
@@ -409,7 +409,7 @@ module JCR
   end
 
   def self.raised_rule jcr, rule_atom
-    " rule at #{slice_to_s(jcr)} [ #{jcr_to_s(jcr)} ] from rule at #{slice_to_s(rule_atom)}"
+    " rule at #{slice_to_s(jcr)} #{jcr_to_s(jcr)} from rule at #{slice_to_s(rule_atom)}"
   end
 
   def self.jcr_to_s( jcr, shallow=true )
@@ -430,7 +430,7 @@ module JCR
         retval = rule_to_s( jcr, shallow )
       end
     end
-    return retval
+    return "<< " + retval + " >>"
   end
 
   def self.rule_to_s( rule, shallow=true)

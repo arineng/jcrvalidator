@@ -187,7 +187,7 @@ module JCR
     behavior.last_index = array_index
 
     if data.length > array_index && behavior.extra_prohibited
-      retval = Evaluation.new( false, "More itmes in array than specified for #{raised_rule(jcr,rule_atom)}" )
+      retval = Evaluation.new( false, "More items in array than specified for #{raised_rule(jcr,rule_atom)}" )
     end
 
     return retval
@@ -236,13 +236,13 @@ module JCR
         end
 
         if successes == 0 && repeat_min > 0
-          retval = Evaluation.new( false, "array does not contain #{rule} for #{raised_rule(jcr,rule_atom)}")
+          retval = Evaluation.new( false, "array does not contain #{jcr_to_s(rule)} for #{raised_rule(jcr,rule_atom)}")
         elsif successes < repeat_min
-          retval = Evaluation.new( false, "array does not have enough #{rule} for #{raised_rule(jcr,rule_atom)}")
+          retval = Evaluation.new( false, "array does not have enough #{jcr_to_s(rule)} for #{raised_rule(jcr,rule_atom)}")
         elsif successes > repeat_max
-          retval = Evaluation.new( false, "array has too many #{rule} for #{raised_rule(jcr,rule_atom)}")
+          retval = Evaluation.new( false, "array has too many #{jcr_to_s(rule)} for #{raised_rule(jcr,rule_atom)}")
         elsif repeat_step && ( successes - repeat_min ) % repeat_step != 0
-          retval = Evaluation.new( false, "array matches (#{successes}) do not meet repetition step of #{repeat_max} % #{repeat_step} with #{rule} for #{raised_rule(jcr,rule_atom)}")
+          retval = Evaluation.new( false, "array matches (#{successes}) do not meet repetition step of #{repeat_max} % #{repeat_step} with #{jcr_to_s(rule)} for #{raised_rule(jcr,rule_atom)}")
         else
           retval = Evaluation.new( true, nil )
         end
@@ -263,13 +263,13 @@ module JCR
         end
 
         if successes == 0 && repeat_min > 0
-          retval = Evaluation.new( false, "array does not contain #{rule} for #{raised_rule(jcr,rule_atom)}")
+          retval = Evaluation.new( false, "array does not contain #{jcr_to_s(rule)} for #{raised_rule(jcr,rule_atom)}")
         elsif successes < repeat_min
-          retval = Evaluation.new( false, "array does not have enough #{rule} for #{raised_rule(jcr,rule_atom)}")
+          retval = Evaluation.new( false, "array does not have enough #{jcr_to_s(rule)} for #{raised_rule(jcr,rule_atom)}")
         elsif successes > repeat_max
-          retval = Evaluation.new( false, "array has too many #{rule} for #{raised_rule(jcr,rule_atom)}")
+          retval = Evaluation.new( false, "array has too many #{jcr_to_s(rule)} for #{raised_rule(jcr,rule_atom)}")
         elsif repeat_step && ( successes - repeat_min ) % repeat_step != 0
-          retval = Evaluation.new( false, "array matches (#{successes}) do not meet repetition step of #{repeat_max} % #{repeat_step} with #{rule} for #{raised_rule(jcr,rule_atom)}")
+          retval = Evaluation.new( false, "array matches (#{successes}) do not meet repetition step of #{repeat_max} % #{repeat_step} with #{jcr_to_s(rule)} for #{raised_rule(jcr,rule_atom)}")
         else
           retval = Evaluation.new( true, nil)
         end
@@ -281,7 +281,7 @@ module JCR
     behavior.last_index = highest_index
 
     if data.length > behavior.checked_hash.length && behavior.extra_prohibited
-      retval = Evaluation.new( false, "More itmes in array than specified for #{raised_rule(jcr,rule_atom)}" )
+      retval = Evaluation.new( false, "More items in array than specified for #{raised_rule(jcr,rule_atom)}" )
     end
 
     return retval
