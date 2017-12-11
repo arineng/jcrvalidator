@@ -12,11 +12,12 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 # IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+require 'jcr/jcr_validator_error'
 require 'jcr/parser'
 
 module JCR
 
-  def self.map_rule_names( tree, override = false, ruleset_alias = nil )
+  def self.map_rule_names( tree, ruleset_alias = nil )
     prefix = ""
     if ruleset_alias
       prefix = ruleset_alias
@@ -31,8 +32,8 @@ module JCR
     tree.each do |node|
       if node[:rule]
         rn = prefix + node[:rule][:rule_name].to_str
-        if rule_name_maping[ rn ] && !override
-          raise "Rule #{rn} already exists and is defined more than once"
+        if rule_name_maping[ rn ]
+          raise JCR::JcrValidatorError, "Rule #{rn} already exists and is defined more than once"
         else
           rule_name_maping[ rn ] = node[:rule]
         end
@@ -76,7 +77,8 @@ module JCR
   def self.raise_rule_name_missing rule_name
     pos = rule_name.line_and_column
     name = rule_name.to_str
-    raise "rule '" + name + "' at line " + pos[0].to_s + " column " + pos[1].to_s + " does not exist"
+    raise JCR::JcrValidatorError,
+          "rule '" + name + "' at line " + pos[0].to_s + " column " + pos[1].to_s + " does not exist"
   end
 
 end

@@ -64,7 +64,7 @@ module JCR
       @trace = trace
       @failed_roots = []
       if ruleset
-        ingested = JCR.ingest_ruleset( ruleset, false, nil )
+        ingested = JCR.ingest_ruleset( ruleset, nil, nil )
         @mapping = ingested.mapping
         @callbacks = ingested.callbacks
         @id = ingested.id
@@ -74,7 +74,7 @@ module JCR
     end
 
     def override( ruleset )
-      overridden = JCR.ingest_ruleset( ruleset, true, nil )
+      overridden = JCR.ingest_ruleset( ruleset, @mapping, nil )
       mapping = {}
       mapping.merge!( @mapping )
       mapping.merge!( overridden.mapping )
@@ -88,7 +88,7 @@ module JCR
     end
 
     def override!( ruleset )
-      overridden = JCR.ingest_ruleset( ruleset, true, nil )
+      overridden = JCR.ingest_ruleset( ruleset, @mapping, nil )
       @mapping.merge!( overridden.mapping )
       @callbacks.merge!( overridden.callbacks )
       @roots.concat( overridden.roots )
@@ -96,11 +96,14 @@ module JCR
 
   end
 
-  def self.ingest_ruleset( ruleset, override = false, ruleset_alias=nil )
+  def self.ingest_ruleset( ruleset, existing_mapping = nil, ruleset_alias=nil )
     tree = JCR.parse( ruleset )
-    mapping = JCR.map_rule_names( tree, override, ruleset_alias )
-    JCR.check_rule_target_names( tree, mapping )
-    JCR.check_groups( tree, mapping )
+    mapping = JCR.map_rule_names( tree, ruleset_alias )
+    combined_mapping = {}
+    combined_mapping.merge!( existing_mapping ) if existing_mapping
+    combined_mapping.merge!( mapping )
+    JCR.check_rule_target_names( tree, combined_mapping )
+    JCR.check_groups( tree, combined_mapping )
     roots = JCR.find_roots( tree )
     ctx = Context.new
     ctx.tree = tree

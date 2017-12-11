@@ -152,6 +152,53 @@ OV
     expect( e.success ).to be_truthy
   end
 
+  it 'should allow an override! rule to reference a ruleset rule' do
+    ctx = JCR::Context.new( "$b=:2" )
+    ctx.override!( "$a=[$b]")
+  end
+
+  it 'should fail default rule referencing two rules and no override' do
+    ex = <<EX
+# ruleset-id rfcXXXX
+# jcr-version 0.7
+
+[ $my_integers *2, $my_strings *2 ]
+$my_integers=:integer
+$fuz=:"fuz"
+$foo=:"foo"
+$bar=:"bar"
+$my_strings=type ( $fuz | $bar )
+
+EX
+    data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
+    ctx = JCR::Context.new( ex )
+    e = ctx.evaluate( data )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass default rule referencing two rules and replacement override referencing ruleset' do
+    ex = <<EX
+# ruleset-id rfcXXXX
+# jcr-version 0.7
+
+[ $my_integers *2, $my_strings *2 ]
+$my_integers=:integer
+$fuz=:"fuz"
+$foo=:"foo"
+$bar=:"bar"
+$my_strings=type ( $fuz | $bar )
+
+EX
+    ov = <<OV
+$my_strings=:( $foo | $bar )
+OV
+    data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
+    ctx = JCR::Context.new( ex )
+    ctx.override!( ov )
+    e = ctx.evaluate( data )
+    expect( e.success ).to be_truthy
+  end
+
   it 'should fail default rule referencing two rules with JSON and override!' do
     ex = <<EX
 # ruleset-id rfcXXXX
@@ -172,7 +219,7 @@ OV
     expect( e.success ).to be_falsey
   end
 
-  it 'should fail default rule referencing two rules with JSON and override!' do
+  it 'should fail default rule referencing two rules with JSON and override' do
     ex = <<EX
 # ruleset-id rfcXXXX
 # jcr-version 0.7
@@ -192,6 +239,32 @@ OV
     expect( e.success ).to be_truthy
     e = new_ctx.evaluate( data )
     expect( e.success ).to be_falsey
+  end
+
+  it 'should pass default rule referencing two rules and override! referencing ruleset' do
+    ex = <<EX
+# ruleset-id rfcXXXX
+# jcr-version 0.7
+
+[ $my_integers *2, $my_strings *2 ]
+$my_integers =:integer
+
+$foo=:"foo"
+$fuz=:"fuz"
+$bar=:"bar"
+$my_strings =:( $fuz | $bar )
+
+EX
+    ov = <<OV
+$my_strings =:( $foo | $bar )
+OV
+    data = JSON.parse( '[ 1, 2, "foo", "bar" ]')
+    ctx = JCR::Context.new( ex )
+    new_ctx = ctx.override( ov )
+    e = ctx.evaluate( data )
+    expect( e.success ).to be_falsey
+    e = new_ctx.evaluate( data )
+    expect( e.success ).to be_truthy
   end
 
   it 'should evaluate JSON against multiple roots' do
@@ -525,8 +598,50 @@ RULESET
     expect( @ec ).to eq( 3 )
   end
 
-  #TODO write test for --test-jcr of ruleset and overrides
-  #TODO write fail test for --test-jcr of ruleset and overrides
+  it 'should --test-jcr' do
+    expect{ @ec = JCR.main( ['-R', '$mrule = [ string ]', '--test-jcr'] ) }.to_not output.to_stdout
+    expect( @ec ).to eq( 0 )
+  end
+
+  it 'should complain with bad jcr and --test-jcr' do
+    expect{ @ec = JCR.main( ['-R', 'mrule == [ string ]', '--test-jcr'] ) }.to output.to_stdout
+    expect( @ec ).to eq( 1 )
+  end
+
+  it 'should complain with good jcr and bad override --test-jcr' do
+    expect{ @ec = JCR.main( ['-R', '$b = [ string ]','-O', '$a==:"foo"', '--test-jcr'] ) }.to output.to_stdout
+    expect( @ec ).to eq( 1 )
+  end
+
+  it 'should complain with bad jcr and good override --test-jcr' do
+    expect{ @ec = JCR.main( ['-R', '$b == [ string ]','-O', '$a=:"foo"', '--test-jcr'] ) }.to output.to_stdout
+    expect( @ec ).to eq( 1 )
+  end
+
+  it 'should pass with good jcr and good override --test-jcr' do
+    expect{ @ec = JCR.main( ['-R', '$b=[ string ]','-O', '$a=:"foo"', '--test-jcr'] ) }.to_not output.to_stdout
+    expect( @ec ).to eq( 0 )
+  end
+
+  it 'should fail with a duplicate rule name' do
+    expect{ @ec = JCR.main( ['-R', '$b=[ integer] $b=[ string ]', '--test-jcr'] ) }.to output.to_stdout
+    expect( @ec ).to eq( 1 )
+  end
+
+  it 'should fail when a reference rule name doesnot exist' do
+    expect{ @ec = JCR.main( ['-R', '$a=[ $b ]', '--test-jcr'] ) }.to output.to_stdout
+    expect( @ec ).to eq( 1 )
+  end
+
+  it 'should allow overrides to reference the ruleset' do
+     expect{ @ec = JCR.main( ['-R', '$b=:"foo"','-O', '$a=[ $b ]', '--test-jcr'] ) }.to_not output.to_stdout
+     expect( @ec ).to eq( 0 )
+  end
+
+  it 'should fail if overrides references nonexistent rule' do
+    expect{ @ec = JCR.main( ['-R', '$b=:"foo"','-O', '$a=[ $c ]', '--test-jcr'] ) }.to output.to_stdout
+    expect( @ec ).to eq( 1 )
+  end
 
   it 'should use line numbers in unnamed root failures' do
     ctx = JCR::Context.new( '[ 0..2 *2, ( "foo" | "bar" ) ]', false )

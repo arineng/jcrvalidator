@@ -74,7 +74,7 @@ module JCR
         ruleset = File.open( uri.path )
     end
 
-    import_ctx = JCR.ingest_ruleset( ruleset, false, ruleset_alias )
+    import_ctx = JCR.ingest_ruleset( ruleset, nil, ruleset_alias )
     ctx.mapping.merge!( import_ctx.mapping )
     ctx.roots.concat( import_ctx.roots )
 
