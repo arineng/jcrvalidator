@@ -409,7 +409,28 @@ module JCR
   end
 
   def self.raised_rule jcr, rule_atom
-    " rule at #{slice_to_s(jcr)} [ #{jcr} ] from rule at #{slice_to_s(rule_atom)}"
+    " rule at #{slice_to_s(jcr)} [ #{jcr_to_s(jcr)} ] from rule at #{slice_to_s(rule_atom)}"
+  end
+
+  def self.jcr_to_s( jcr, shallow=true )
+    if jcr.is_a? Array
+      retval = ""
+      jcr.each_with_index do |item,idx|
+        if idx > 1
+          retval = retval + " , "
+        end
+        retval = retval + jcr_to_s( item, shallow )
+      end
+    elsif jcr.is_a? Parslet::Slice
+      retval = slice_to_s( jcr )
+    else
+      if jcr[:q_string]
+        retval = value_to_s( jcr )
+      else
+        retval = rule_to_s( jcr, shallow )
+      end
+    end
+    return retval
   end
 
   def self.rule_to_s( rule, shallow=true)

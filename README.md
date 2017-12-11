@@ -127,6 +127,7 @@ which can be found [here](https://raw.githubusercontent.com/arineng/jcr/09/draft
   * --process-parts now takes an optional directory
   * --process-parts now creates an XML entity reference file snippet
   * override rules can now reference rules in the original ruleset
+  * more readable failure report
 
 The current version of the JCR specification can be found 
 [here](https://raw.githubusercontent.com/arineng/jcr/07/draft-newton-json-content-rules.txt)

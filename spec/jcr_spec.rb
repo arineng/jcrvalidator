@@ -647,21 +647,33 @@ RULESET
     ctx = JCR::Context.new( '[ 0..2 *2, ( "foo" | "bar" ) ]', false )
     data = JSON.parse( '[1,2,"fuz","bar"]')
     e = ctx.evaluate( data )
-    expect( ctx.failure_report[0] ).to eq( "- ** Failures for root rule at line 1")
+    expect( ctx.failure_report[0] ).to eq( "- Failures for root rule at line 1")
   end
 
   it 'should use names in specified root failures' do
     ctx = JCR::Context.new( '$root = [ 0..2 *2, ( "foo" | "bar" ) ]', false )
     data = JSON.parse( '[1,2,"fuz","bar"]')
     e = ctx.evaluate( data, "root" )
-    expect( ctx.failure_report[0] ).to eq( "- ** Failures for root rule named 'root'")
+    expect( ctx.failure_report[0] ).to eq( "- Failures for root rule named 'root'")
   end
 
   it 'should use names in annotated root failures' do
     ctx = JCR::Context.new( '@{root} $root = [ 0..2 *2, ( "foo" | "bar" ) ]', false )
     data = JSON.parse( '[1,2,"fuz","bar"]')
     e = ctx.evaluate( data )
-    expect( ctx.failure_report[0] ).to eq( "- ** Failures for root rule named 'root'")
+    expect( ctx.failure_report[0] ).to eq( "- Failures for root rule named 'root'")
+  end
+
+  it 'should breakup long lines' do
+    lines = JCR.breakup_message( "12345  abcde ABCD", 6)
+    expect( lines[0] ).to eq( "12345" )
+    expect( lines[1] ).to eq( "abcde" )
+    expect( lines[2] ).to eq( "ABCD" )
+  end
+
+  it 'should try to break up a long line' do
+    lines = JCR.breakup_message( "12345abcdeABCD", 6)
+    expect( lines[0] ).to eq( "12345abcdeABCD" )
   end
 
 end

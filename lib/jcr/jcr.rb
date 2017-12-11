@@ -147,9 +147,9 @@ module JCR
     report = []
     ctx.failed_roots.each do |failed_root|
       if failed_root.name
-        report << "- ** Failures for root rule named '#{failed_root.name}'"
+        report << "- Failures for root rule named '#{failed_root.name}'"
       else
-        report << "- ** Failures for root rule at line #{failed_root.pos[0]}"
+        report << "- Failures for root rule at line #{failed_root.pos[0]}"
       end
       failed_root.failures.sort.map do |stack_level, failures|
         if failures.length > 1
@@ -158,11 +158,27 @@ module JCR
           report << "  - failure at rule depth #{stack_level} caused by"
         end
         failures.each_with_index do |failure, index|
-          report << "    - #{failure.json_elided} failed rule #{failure.definition} at #{failure.pos} because #{failure.reason_elided}"
+          lines = breakup_message( "#{failure.json_elided} failed rule #{failure.definition} at #{failure.pos} because #{failure.evaluation.reason}", 75 )
+          lines.each_with_index do |l,i|
+            if i == 0
+              report << "    - #{l}"
+            else
+              report << "      #{l}"
+            end
+          end
         end
       end
     end
     return report
+  end
+
+  def self.breakup_message( message, line_length )
+    line = message.gsub(/(.{1,#{line_length}})(\s+|\Z)/, "\\1\n")
+    lines = []
+    line.each_line do |l|
+      lines << l.strip
+    end
+    return lines
   end
 
   def self.main my_argv=nil
