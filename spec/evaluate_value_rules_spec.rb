@@ -75,6 +75,14 @@ describe 'evaluate_value_rules' do
     expect( e.success ).to be_falsey
   end
 
+  it 'should fail when a string matches a string constant with {not} annotation on target rule' do
+    tree = JCR.parse( '$trule= @{not}$c $c=:"a string constant"' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], "a string constant", JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
   it 'should fail when a string does not match a string constant' do
     tree = JCR.parse( '$trule=: "a string constant"' )
     mapping = JCR.map_rule_names( tree )

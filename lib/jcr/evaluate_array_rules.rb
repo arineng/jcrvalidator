@@ -45,19 +45,24 @@ module JCR
     end
   end
 
-  def self.evaluate_array_rule jcr, rule_atom, data, econs, behavior = nil
+  def self.evaluate_array_rule jcr, rule_atom, data, econs, behavior = nil, target_annotations = nil
 
     push_trace_stack( econs, jcr )
-    trace( econs, "Evaluating array rule starting at #{slice_to_s(jcr)} against", data )
-    trace_def( econs, "array", jcr, data )
-    retval = evaluate_array( jcr, rule_atom, data, econs, behavior )
+    if behavior
+      trace( econs, "Evaluating group in array rule starting at #{slice_to_s(jcr)} against", data )
+      trace_def( econs, "array group", jcr, data )
+    else
+      trace( econs, "Evaluating array rule starting at #{slice_to_s(jcr)} against", data )
+      trace_def( econs, "array", jcr, data )
+    end
+    retval = evaluate_array( jcr, rule_atom, data, econs, behavior, target_annotations )
     trace_eval( econs, "Array", retval, jcr, data, "array" )
     pop_trace_stack( econs )
     return retval
 
   end
 
-  def self.evaluate_array jcr, rule_atom, data, econs, behavior = nil
+  def self.evaluate_array jcr, rule_atom, data, econs, behavior = nil, target_annotations = nil
 
     rules, annotations = get_rules_and_annotations( jcr )
 
@@ -76,20 +81,24 @@ module JCR
 
     # if the data is not an array
     return evaluate_not( annotations,
-      Evaluation.new( false, "#{data} is not an array #{raised_rule(jcr,rule_atom)}"), econs ) unless data.is_a? Array
+      Evaluation.new( false, "#{data} is not an array #{raised_rule(jcr,rule_atom)}"),
+                         econs, target_annotations ) unless data.is_a? Array
 
     # if the array is zero length and there are zero sub-rules (it is suppose to be empty)
     return evaluate_not( annotations,
-      Evaluation.new( true, nil ), econs ) if rules.empty? && data.empty?
+      Evaluation.new( true, nil ), econs, target_annotations ) if rules.empty? && data.empty?
 
     # if the array is not empty and there are zero sub-rules (it is suppose to be empty)
     return evaluate_not( annotations,
-      Evaluation.new( false, "Non-empty array for #{raised_rule(jcr,rule_atom)}" ), econs ) if rules.empty? && data.length != 0
+      Evaluation.new( false, "Non-empty array for #{raised_rule(jcr,rule_atom)}" ),
+                         econs, target_annotations ) if rules.empty? && data.length != 0
 
     if ordered
-      return evaluate_not( annotations, evaluate_array_rule_ordered( rules, rule_atom, data, econs, behavior ), econs )
+      return evaluate_not( annotations, evaluate_array_rule_ordered( rules, rule_atom, data, econs, behavior ),
+                           econs, target_annotations )
     else
-      return evaluate_not( annotations, evaluate_array_rule_unordered( rules, rule_atom, data, econs, behavior ), econs )
+      return evaluate_not( annotations, evaluate_array_rule_unordered( rules, rule_atom, data, econs, behavior ),
+                           econs, target_annotations )
     end
   end
 
@@ -115,7 +124,8 @@ module JCR
       # groups require the effects of the evaluation to be discarded if they are false
       # groups must also be given the entire array
 
-      if (grule = get_group(rule, econs))
+      grule, target_annotations = get_group( rule, econs )
+      if grule
 
         if repeat_min == 0
           retval = Evaluation.new( true, nil )
@@ -126,7 +136,7 @@ module JCR
             else
               group_behavior = ArrayBehavior.new( behavior )
               group_behavior.last_index = array_index
-              retval = evaluate_rule( grule, rule_atom, data, econs, group_behavior )
+              retval = evaluate_rule( grule, rule_atom, data, econs, group_behavior, target_annotations )
               if retval.success
                 behavior.checked_hash.merge!( group_behavior.checked_hash )
                 array_index = group_behavior.last_index
@@ -141,7 +151,7 @@ module JCR
             break if array_index == data.length
             group_behavior = ArrayBehavior.new( behavior )
             group_behavior.last_index = array_index
-            e = evaluate_rule( grule, rule_atom, data, econs, group_behavior )
+            e = evaluate_rule( grule, rule_atom, data, econs, group_behavior, target_annotations )
             if e.success
               behavior.checked_hash.merge!( group_behavior.checked_hash )
               array_index = group_behavior.last_index
@@ -218,14 +228,15 @@ module JCR
       # groups require the effects of the evaluation to be discarded if they are false
       # groups must also be given the entire array
 
-      if (grule = get_group(rule, econs))
+      grule,target_annotations = get_group(rule, econs)
+      if grule
 
         successes = 0
         for i in 0..repeat_max-1
           group_behavior = ArrayBehavior.new( behavior )
           group_behavior.last_index = highest_index
           group_behavior.ordered = false
-          e = evaluate_rule( grule, rule_atom, data, econs, group_behavior )
+          e = evaluate_rule( grule, rule_atom, data, econs, group_behavior, target_annotations )
           if e.success
             highest_index = group_behavior.last_index
             behavior.checked_hash.merge!( group_behavior.checked_hash )

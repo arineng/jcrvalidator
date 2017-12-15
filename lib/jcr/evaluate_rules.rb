@@ -91,7 +91,7 @@ module JCR
     end
   end
 
-  def self.evaluate_rule jcr, rule_atom, data, econs, behavior = nil
+  def self.evaluate_rule jcr, rule_atom, data, econs, behavior = nil, target_annotations = nil
     if jcr.is_a?( Hash )
       if jcr[:rule_name]
         rn = slice_to_s( jcr[:rule_name] )
@@ -102,26 +102,24 @@ module JCR
     retval = Evaluation.new( false, "failed to evaluate rule properly" )
     case
       when behavior.is_a?( ArrayBehavior )
-        retval = evaluate_array_rule( jcr, rule_atom, data, econs, behavior)
+        retval = evaluate_array_rule( jcr, rule_atom, data, econs, behavior, target_annotations )
       when behavior.is_a?( ObjectBehavior )
-        retval = evaluate_object_rule( jcr, rule_atom, data, econs, behavior)
+        retval = evaluate_object_rule( jcr, rule_atom, data, econs, behavior, target_annotations )
       when jcr[:rule]
-        retval = evaluate_rule( jcr[:rule], rule_atom, data, econs, behavior)
+        retval = evaluate_rule( jcr[:rule], rule_atom, data, econs, behavior, target_annotations)
       when jcr[:target_rule_name]
-        target = econs.mapping[ jcr[:target_rule_name][:rule_name].to_s ]
-        raise "Target rule not in mapping. This should have been checked earlier." unless target
-        trace( econs, "Referencing target rule #{slice_to_s(target)} from #{slice_to_s( jcr[:target_rule_name][:rule_name] )}" )
-        retval = evaluate_rule( target, target, data, econs, behavior )
+        target, target_annotations = get_target_rule( jcr, econs )
+        retval = evaluate_rule( target, target, data, econs, behavior, target_annotations )
       when jcr[:primitive_rule]
-        retval = evaluate_value_rule( jcr[:primitive_rule], rule_atom, data, econs)
+        retval = evaluate_value_rule( jcr[:primitive_rule], rule_atom, data, econs, nil, target_annotations )
       when jcr[:group_rule]
-        retval = evaluate_group_rule( jcr[:group_rule], rule_atom, data, econs, behavior)
+        retval = evaluate_group_rule( jcr[:group_rule], rule_atom, data, econs, behavior, target_annotations)
       when jcr[:array_rule]
-        retval = evaluate_array_rule( jcr[:array_rule], rule_atom, data, econs, behavior)
+        retval = evaluate_array_rule( jcr[:array_rule], rule_atom, data, econs, behavior, target_annotations )
       when jcr[:object_rule]
-        retval = evaluate_object_rule( jcr[:object_rule], rule_atom, data, econs, behavior)
+        retval = evaluate_object_rule( jcr[:object_rule], rule_atom, data, econs, behavior, target_annotations)
       when jcr[:member_rule]
-        retval = evaluate_member_rule( jcr[:member_rule], rule_atom, data, econs)
+        retval = evaluate_member_rule( jcr[:member_rule], rule_atom, data, econs, nil, target_annotations)
       else
         retval = Evaluation.new( true, nil )
     end
@@ -151,6 +149,13 @@ module JCR
     end
     trace( econs, "Callback #{callback} given evaluation of #{e.success} and returned #{retval}")
     return retval
+  end
+
+  def self.get_target_rule jcr, econs
+    target = econs.mapping[ jcr[:target_rule_name][:rule_name].to_s ]
+    raise "Target rule not in mapping. This should have been checked earlier." unless target
+    trace( econs, "Referencing target rule #{slice_to_s(target)} from #{slice_to_s( jcr[:target_rule_name][:rule_name] )}" )
+    return target,jcr[:target_rule_name][:annotations]
   end
 
   def self.get_repetitions rule, econs
@@ -245,11 +250,20 @@ module JCR
     return new_rule
   end
 
-  def self.evaluate_not annotations, evaluation, econs
+  def self.evaluate_not annotations, evaluation, econs, target_annotations = nil
     is_not = false
+
+    target_annotations.each do |a|
+      if a[:not_annotation]
+        trace( econs, "Not annotation found on reference to rule.")
+        is_not = !is_not
+        break
+      end
+    end if target_annotations
+
     annotations.each do |a|
       if a[:not_annotation]
-        is_not = true
+        is_not = !is_not
         break
       end
     end
@@ -262,27 +276,23 @@ module JCR
   end
 
   def self.get_group rule, econs
-    return rule[:group_rule] if rule[:group_rule]
+    return rule[:group_rule], nil if rule[:group_rule]
     #else
     if rule[:target_rule_name]
-      target = econs.mapping[ rule[:target_rule_name][:rule_name].to_s ]
-      raise "Target rule not in mapping. This should have been checked earlier." unless target
-      trace( econs, "Referencing target rule #{slice_to_s(target)} from #{slice_to_s( rule[:target_rule_name][:rule_name] )}" )
-      return get_group( target, econs )
+      target, target_annotations = get_target_rule( rule, econs )
+      return get_group( target, econs )[0], target_annotations
     end
     #else
-    return false
+    return false, nil
   end
 
   def self.get_leaf_rule rule, econs
     if rule[:target_rule_name ]
-      target = econs.mapping[ rule[:target_rule_name][:rule_name].to_s ]
-      raise "Target rule not in mapping. This should have been checked earlier." unless target
-      trace( econs, "Referencing target rule #{slice_to_s(target)} from #{slice_to_s( rule[:target_rule_name][:rule_name] )}" )
-      return target
+      target, target_annotations = get_target_rule( rule, econs )
+      return target, target_annotations
     end
     #else
-    return rule
+    return rule, nil
   end
 
   def self.push_trace_stack econs, jcr
@@ -334,7 +344,11 @@ module JCR
         s = elide(member_to_s(jcr))
       when "object"
         s = elide(object_to_s(jcr))
+      when "object group"
+        s = elide(group_to_s(jcr))
       when "array"
+        s = elide(array_to_s(jcr))
+      when "array group"
         s = elide(array_to_s(jcr))
       when "group"
         s = elide(group_to_s(jcr))
@@ -354,7 +368,11 @@ module JCR
           s = elide( member_to_s( jcr  ) )
         when "object"
           s = elide( object_to_s( jcr ) )
+        when "object group"
+          s = elide( group_to_s( jcr ) )
         when "array"
+          s = elide( array_to_s( jcr ) )
+        when "array group"
           s = elide( array_to_s( jcr ) )
         when "group"
           s = elide( group_to_s( jcr ) )

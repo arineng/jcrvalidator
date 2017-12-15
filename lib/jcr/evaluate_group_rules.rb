@@ -26,19 +26,19 @@ require 'jcr/evaluate_rules'
 
 module JCR
 
-  def self.evaluate_group_rule jcr, rule_atom, data, econs, behavior = nil
+  def self.evaluate_group_rule jcr, rule_atom, data, econs, behavior = nil, target_annotations = nil
 
     push_trace_stack( econs, jcr )
     trace( econs, "Evaluating group rule against ", data )
     trace_def( econs, "group", jcr, data )
-    retval = evaluate_group( jcr, rule_atom, data, econs, behavior )
+    retval = evaluate_group( jcr, rule_atom, data, econs, behavior, target_annotations )
     trace_eval( econs, "Group", retval, jcr, data, "group" )
     pop_trace_stack( econs )
     return retval
 
   end
 
-  def self.evaluate_group jcr, rule_atom, data, econs, behavior = nil
+  def self.evaluate_group jcr, rule_atom, data, econs, behavior = nil, target_annotations = nil
 
     rules, annotations = get_rules_and_annotations( jcr )
 
@@ -46,14 +46,14 @@ module JCR
 
     rules.each do |rule|
       if rule[:choice_combiner] && retval && retval.success
-        return evaluate_not( annotations, retval, econs ) # short circuit
+        return evaluate_not( annotations, retval, econs, target_annotations ) # short circuit
       elsif rule[:sequence_combiner] && retval && !retval.success
-        return evaluate_not( annotations, retval, econs ) # short circuit
+        return evaluate_not( annotations, retval, econs, target_annotations ) # short circuit
       end
       retval = evaluate_rule( rule, rule_atom, data, econs, behavior )
     end
 
-    return evaluate_not( annotations, retval, econs )
+    return evaluate_not( annotations, retval, econs, target_annotations )
   end
 
   def self.group_to_s( jcr, shallow=true)

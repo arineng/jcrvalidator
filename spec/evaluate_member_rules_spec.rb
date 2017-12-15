@@ -138,4 +138,36 @@ describe 'evaluate_member_rules' do
     expect( e.success ).to be_falsey
   end
 
+  it 'should pass a referenced value' do
+    tree = JCR.parse( '$mrule = "foo":$s $s=:"bar"' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "foo", "bar" ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a referenced value' do
+    tree = JCR.parse( '$mrule = "foo":$s $s=:"bar"' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "foo", "buz" ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass a referenced @{not} value' do
+    tree = JCR.parse( '$mrule = "foo":@{not}$s $s=:"bar"' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "foo", "buz" ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a referenced @{not} value' do
+    tree = JCR.parse( '$mrule = "foo":@{not}$s $s=:"bar"' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "foo", "bar" ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
 end

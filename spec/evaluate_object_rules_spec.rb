@@ -658,4 +658,157 @@ describe 'evaluate_object_rules' do
     expect( e.success ).to be_falsey
   end
 
+  #
+  # @{not}, groups, and target groups
+  #
+
+  it 'should pass a @{not} with group group missing' do
+    tree = JCR.parse( '{ "foo":integer , @{not} ( "bar": string ) }')
+    # produces the following tree
+    # [{:object_rule=>
+    #       [{:member_rule=>
+    #             {:member_name=>{:q_string=>"foo"@3},
+    #              :primitive_rule=>{:integer_v=>"integer"@8}}},
+    #        {:sequence_combiner=>","@16,
+    #         :group_rule=>
+    #             [{:not_annotation=>"not"@20},
+    #              {:member_rule=>
+    #                   {:member_name=>{:q_string=>"bar"@28},
+    #                    :primitive_rule=>{:string=>"string"@34}}}]}]}]
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"foo"=>1}, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a with group missing' do
+    tree = JCR.parse( '{ "foo":integer , ( "bar": string ) }')
+    # produces the following tree
+    # [{:object_rule=>
+    #       [{:member_rule=>
+    #             {:member_name=>{:q_string=>"foo"@3},
+    #              :primitive_rule=>{:integer_v=>"integer"@8}}},
+    #        {:sequence_combiner=>","@16,
+    #         :group_rule=>
+    #             {:member_rule=>
+    #                  {:member_name=>{:q_string=>"bar"@21},
+    #                   :primitive_rule=>{:string=>"string"@27}}}}]}]
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"foo"=>1}, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass a @{not} group with unknown element' do
+    tree = JCR.parse( '{ "foo":integer , @{not} ( "bar": string ) }')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"foo"=>1,"other"=>2}, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a group missing with unknown element' do
+    tree = JCR.parse( '{ "foo":integer , ( "bar": string ) }')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"foo"=>1,"other"=>2}, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass a @{not} group with bad value' do
+    tree = JCR.parse( '{ "foo":integer , @{not} ( "bar": string ) }')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"foo"=>1,"bar"=>2}, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a group with bad value' do
+    tree = JCR.parse( '{ "foo":integer , ( "bar": string ) }')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"foo"=>1,"bar"=>2}, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a @{not} group' do
+    tree = JCR.parse( '{ "foo":integer , @{not} ( "bar": string ) }')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"foo"=>1,"bar"=>"thing"}, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass a group' do
+    tree = JCR.parse( '{ "foo":integer , @{not} ( "bar": string ) }')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"foo"=>1,"bar"=>"thing"}, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass a @{not} with target group group missing' do
+    tree = JCR.parse( '{ "foo":integer , @{not} $g } $g = ("bar":string)')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"foo"=>1}, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a with target group group missing' do
+    tree = JCR.parse( '{ "foo":integer , $g } $g = ("bar":string)')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"foo"=>1}, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass a @{not} target group with unknown element' do
+    tree = JCR.parse( '{ "foo":integer , @{not} $g } $g=("bar":string)')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"foo"=>1,"other"=>2}, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a target group missing with unknown element' do
+    tree = JCR.parse( '{ "foo":integer , $g } $g=("bar":string)')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"foo"=>1,"other"=>2}, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass a @{not} target group with bad value' do
+    tree = JCR.parse( '{ "foo":integer , @{not} $g } $g=("bar":string)')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"foo"=>1,"bar"=>2}, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
+  it 'should fail a target group with bad value' do
+    tree = JCR.parse( '{ "foo":integer , $g } $g=("bar":string)')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"foo"=>1,"bar"=>2}, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should fail a @{not} target group' do
+    tree = JCR.parse( '{ "foo":integer , @{not} $g } $g=("bar":string)')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"foo"=>1,"bar"=>"thing"}, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass a target group' do
+    tree = JCR.parse( '{ "foo":integer , @{not} $g } $g=("bar":string)')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"foo"=>1,"bar"=>"thing"}, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
 end
