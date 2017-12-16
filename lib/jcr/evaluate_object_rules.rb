@@ -38,7 +38,11 @@ module JCR
       trace_def( econs, "object", jcr, data )
     end
     retval = evaluate_object( jcr, rule_atom, data, econs, behavior, target_annotations )
-    trace_eval( econs, "Object", retval, jcr, data, "object" )
+    if behavior
+      trace_eval( econs, "Object group", retval, jcr, data, "object" )
+    else
+      trace_eval( econs, "Object", retval, jcr, data, "object" )
+    end
     pop_trace_stack( econs )
     return retval
 

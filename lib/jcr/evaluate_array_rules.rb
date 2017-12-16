@@ -56,7 +56,11 @@ module JCR
       trace_def( econs, "array", jcr, data )
     end
     retval = evaluate_array( jcr, rule_atom, data, econs, behavior, target_annotations )
-    trace_eval( econs, "Array", retval, jcr, data, "array" )
+    if behavior
+      trace_eval( econs, "Array group", retval, jcr, data, "array" )
+    else
+      trace_eval( econs, "Array", retval, jcr, data, "array" )
+    end
     pop_trace_stack( econs )
     return retval
 
@@ -197,7 +201,7 @@ module JCR
     behavior.last_index = array_index
 
     if data.length > array_index && behavior.extra_prohibited
-      retval = Evaluation.new( false, "More items in array than specified for #{raised_rule(jcr,rule_atom)}" )
+      retval = Evaluation.new( false, "More items in array (#{data.length}) than specified (#{array_index}) for #{raised_rule(jcr,rule_atom)}" )
     end
 
     return retval
