@@ -68,8 +68,14 @@ module JCR
     end
 
     def report_failure failure
-      @failures[ failure.stack_level ] = Array.new unless @failures[ failure.stack_level ]
-      @failures[ failure.stack_level ] << failure
+      coord = JCR::trace_coord( self )
+      @failures[ coord ] = Array.new unless @failures[ coord ]
+      @failures[ coord ] << failure
+    end
+
+    def report_success
+      coord = JCR::trace_coord( self )
+      @failures.delete( coord )
     end
   end
 
@@ -330,9 +336,14 @@ module JCR
         message = "#{message} data: #{rule_data( data )}"
       end
       last = econs.trace_stack.last
-      pos = "#{last.line_and_column}@#{last.offset}" if last
-      puts "[ #{econs.trace_stack.length}:#{pos} ] #{message}"
+      puts "[ depth=#{econs.trace_stack.length}:#{trace_coord(econs)} ] #{message}"
     end
+  end
+
+  def self.trace_coord econs
+    last = econs.trace_stack.last
+    pos = "#{last.line_and_column}" if last
+    return "pos=#{pos}"
   end
 
   def self.rule_def type, jcr
@@ -385,6 +396,7 @@ module JCR
 
   def self.trace_eval econs, message, evaluation, jcr, data, type
     if evaluation.success
+      econs.report_success
       trace( econs, "#{message} evaluation is true" )
     else
       failure = Failure.new( data, jcr, type, evaluation, econs.trace_stack.length )

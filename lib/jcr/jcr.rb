@@ -153,9 +153,9 @@ module JCR
       end
       failed_root.failures.sort.map do |stack_level, failures|
         if failures.length > 1
-          report << "  - failure at rule depth #{stack_level} caused by one of the following #{failures.length} reasons"
+          report << "  - failure at rule #{stack_level} caused by one of the following #{failures.length} reasons"
         else
-          report << "  - failure at rule depth #{stack_level} caused by"
+          report << "  - failure at rule #{stack_level} caused by"
         end
         failures.each_with_index do |failure, index|
           lines = breakup_message( "<< #{failure.json_elided} >> failed rule #{failure.definition} at #{failure.pos} because #{failure.evaluation.reason}", 75 )
