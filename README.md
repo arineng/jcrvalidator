@@ -122,6 +122,15 @@ which can be found [here](https://raw.githubusercontent.com/arineng/jcr/09/draft
   * Much better CLI and programmatic validation failure information and structures 
   * Fixes to print errors when the JCR fails to parse
 * 0.8.0 - Adds the --process-parts command line option
+* 0.8.1
+  * Various issues with stack traces at the command line instead of proper errors
+  * --process-parts now takes an optional directory
+  * --process-parts now creates an XML entity reference file snippet
+  * override rules can now reference rules in the original ruleset
+  * more readable failure report
+  * more readable verbose messages
+  * @{not} annotation on targer rules were not honored but now fixed
+  * better checking for groups referenced from arrays and objects
 
 The current version of the JCR specification can be found 
 [here](https://raw.githubusercontent.com/arineng/jcr/07/draft-newton-json-content-rules.txt)
@@ -180,7 +189,7 @@ Options
     -r FILE                          file containing ruleset
     -R STRING                        string containing ruleset. Should probably be quoted
         --test-jcr                   parse and test the JCR only
-        --process-parts              creates smaller files for specification writing
+        --process-parts [DIRECTORY]  creates smaller files for specification writing
     -S STRING                        name of root rule. All roots will be tried if none is specified
     -o FILE                          file containing overide ruleset (option can be repeated)
     -O STRING                        string containing overide rule (option can be repeated)
@@ -191,11 +200,11 @@ Options
 
 Return codes:
  0 = success
- 1 = parsing or other bad condition
- 2 = fall through bad condition
+ 1 = bad JCR parsing or other bad condition
+ 2 = invalid option or bad use of command
  3 = unsuccessful evaluation of JSON
 
-JCR Version 0.8.0
+JCR Version 0.8.1
 ```
 
 ## Usage as a Library
@@ -222,8 +231,8 @@ The `callback.rb` demonstrates the usage of custom code for evaluation of rules.
 
 The `--process-parts` option extracts parts of a JCR file into multiple files based
 on comments in the file. It can also create a new file without the
-comments. This is useful for JCR going into specification documents
-where it is nice to break the JCR up for illustrative purposes in
+comments. This is useful for rulesets going into specification documents
+where it is nice to break the rulesets up for illustrative purposes in
 the specification but to also have one JCR file for programmatic
 testing purposes.
 
@@ -241,6 +250,9 @@ though leading whitespace is allowed if desired.
 To get a new file with all parts but these comments, use this
 
     ; all_parts FILENAME
+    
+The `--process-parts` parameter will also take an optional directory name where it
+will write the files.
 
 ## Building
 

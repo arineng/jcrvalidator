@@ -25,19 +25,19 @@ require 'jcr/check_groups'
 
 module JCR
 
-  def self.evaluate_member_rule jcr, rule_atom, data, econs
+  def self.evaluate_member_rule jcr, rule_atom, data, econs, behavior, target_annotations
 
     push_trace_stack( econs, jcr )
     trace( econs, "Evaluating member rule for key '#{data[0]}' starting at #{slice_to_s(jcr)} against ", data[1])
     trace_def( econs, "member", jcr, data )
-    retval = evaluate_member( jcr, rule_atom, data, econs )
+    retval = evaluate_member( jcr, rule_atom, data, econs, behavior, target_annotations )
     trace_eval( econs, "Member", retval, jcr, data, "member" )
     pop_trace_stack( econs )
     return retval
 
   end
 
-  def self.evaluate_member jcr, rule_atom, data, econs
+  def self.evaluate_member jcr, rule_atom, data, econs, behavior, target_annotations
 
     # unlike the other evaluate functions, here data is not just the json data.
     # it is an array, the first element being the member name or regex and the
@@ -68,13 +68,14 @@ module JCR
     end
 
     if member_match
-      e = evaluate_rule( rule, rule_atom, data[ 1 ], econs )
+      e = evaluate_rule( rule, rule_atom, data[ 1 ], econs, nil, target_annotations )
       e.member_found = true
-      return evaluate_not( annotations, e, econs )
+      return evaluate_not( annotations, e, econs, target_annotations )
     end
 
     return evaluate_not( annotations,
-       Evaluation.new( false, "#{match_spec} does not match #{data[0]} for #{raised_rule( jcr, rule_atom)}" ), econs )
+       Evaluation.new( false, "#{match_spec} does not match #{data[0]} for #{raised_rule( jcr, rule_atom)}" ),
+                         econs, target_annotations )
 
   end
 

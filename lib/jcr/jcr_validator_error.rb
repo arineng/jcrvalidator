@@ -1,4 +1,4 @@
-# Copyright (c) 2016-2017 American Registry for Internet Numbers
+# Copyright (c) 2017 American Registry for Internet Numbers
 #
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -12,9 +12,10 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 # IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-
 module JCR
 
-  VERSION = "0.8.1"
+  class JcrValidatorError < StandardError
+
+  end
 
 end

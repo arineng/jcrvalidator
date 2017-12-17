@@ -78,8 +78,6 @@ module JCR
       disallowed_group_in_member?( trule, mapping )
     elsif node[:group_rule]
       disallowed_group_in_member?( node[:group_rule], mapping )
-    else
-      check_groups( node, mapping )
     end
   end
 
@@ -117,8 +115,6 @@ module JCR
         disallowed_group_in_array?(trule, mapping)
       elsif node[:group_rule]
         disallowed_group_in_array?(node[:group_rule], mapping)
-      else
-        check_groups(node, mapping)
       end
     end
   end
@@ -132,9 +128,7 @@ module JCR
         disallowed_group_in_array?( groupee[:group_rule], mapping )
       elsif groupee[:target_rule_name]
         trule = get_name_mapping( groupee[:target_rule_name][:rule_name], mapping )
-        if trule[:group_rule]
-          disallowed_group_in_array?( trule[:group_rule], mapping )
-        end
+        disallowed_group_in_array?( trule, mapping )
       elsif groupee[:member_rule]
         raise_group_error( "groups in array rules cannot have member rules", groupee[:member_rule] )
       else
@@ -154,8 +148,6 @@ module JCR
         disallowed_group_in_object?(trule, mapping)
       elsif node[:group_rule]
         disallowed_group_in_object?(node[:group_rule], mapping)
-      else
-        check_groups(node, mapping)
       end
     end
   end
@@ -169,9 +161,7 @@ module JCR
         disallowed_group_in_object?( groupee[:group_rule], mapping )
       elsif groupee[:target_rule_name]
         trule = get_name_mapping( groupee[:target_rule_name][:rule_name], mapping )
-        if trule[:group_rule]
-          disallowed_group_in_object?( trule[:group_rule], mapping )
-        end
+        disallowed_group_in_object?( trule, mapping )
       elsif groupee[:array_rule]
         raise_group_error( "groups in object rules cannot have array rules", groupee[:member_rule] )
       elsif groupee[:object_rule]
@@ -188,9 +178,9 @@ module JCR
     if node.is_a?( Parslet::Slice )
       pos = node.line_and_column
       name = node.to_str
-      raise "group rule error at line " + pos[0].to_s + " column " + pos[1].to_s + " name '" + name + "' :" + str
+      raise JCR::JcrValidatorError, "group rule error at line " + pos[0].to_s + " column " + pos[1].to_s + " name '" + name + "' :" + str
     else
-      raise "group rule error with '" + node.to_s + "' :" + str
+      raise JCR::JcrValidatorError, "group rule error with '" + node.to_s + "' :" + str
     end
   end
 

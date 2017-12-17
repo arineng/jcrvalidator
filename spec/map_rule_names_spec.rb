@@ -49,7 +49,7 @@ EX7
   it 'should raise error with missing member rule' do
     tree = JCR.parse( '$vrule =: integer  $mrule = "thing" : $missingrule' )
     mapping = JCR.map_rule_names( tree )
-    expect{ JCR.check_rule_target_names( tree, mapping ) }.to raise_error RuntimeError
+    expect{ JCR.check_rule_target_names( tree, mapping ) }.to raise_error JCR::JcrValidatorError
   end
 
   it 'should find rule names in array' do
@@ -67,30 +67,18 @@ EX7
   it 'should not find rule names in array of array' do
     tree = JCR.parse( '$vrule1 =: integer  $arule =: [ $vrule1, [ $vrule2 ] ]' )
     mapping = JCR.map_rule_names( tree )
-    expect{ JCR.check_rule_target_names( tree, mapping ) }.to raise_error RuntimeError
+    expect{ JCR.check_rule_target_names( tree, mapping ) }.to raise_error JCR::JcrValidatorError
   end
 
   it 'should not find rule names in array of array in array' do
     tree = JCR.parse( '$vrule1 =: integer  $arule =: [ $vrule1, [ $vrule1, [ $vrule2 ] ] ]' )
     mapping = JCR.map_rule_names( tree )
-    expect{ JCR.check_rule_target_names( tree, mapping ) }.to raise_error RuntimeError
+    expect{ JCR.check_rule_target_names( tree, mapping ) }.to raise_error JCR::JcrValidatorError
   end
 
   it 'should not allow rules with the same name' do
     tree = JCR.parse( '$vrule =: integer  $vrule =: string' )
-    expect{ JCR.map_rule_names( tree ) }.to raise_error RuntimeError
-  end
-
-  it 'should  allow rules with the same name' do
-    tree = JCR.parse( '$vrule =: integer  $vrule =: string' )
-    mapping = JCR.map_rule_names( tree, true )
-    JCR.check_rule_target_names( tree, mapping )
-  end
-
-  it 'should map just a default rule' do
-    tree = JCR.parse( '[ integer* ]' )
-    mapping = JCR.map_rule_names( tree, true )
-    JCR.check_rule_target_names( tree, mapping )
+    expect{ JCR.map_rule_names( tree ) }.to raise_error JCR::JcrValidatorError
   end
 
   it 'should map rule names with prefix' do
@@ -108,7 +96,7 @@ $root =: {
 }
 EX7
     tree = JCR.parse( ex7 )
-    mapping = JCR.map_rule_names( tree, false, "rfc4267" )
+    mapping = JCR.map_rule_names( tree, "rfc4267" )
     expect( mapping["rfc4267.width"][:rule_name].to_str ).to eq( "width" )
     expect( mapping["rfc4267.height"][:rule_name].to_str ).to eq( "height" )
     expect( mapping["rfc4267.root"][:rule_name].to_str ).to eq( "root" )
@@ -129,7 +117,7 @@ $root =: {
 }
 EX7
     tree = JCR.parse( ex7 )
-    mapping = JCR.map_rule_names( tree, false, "rfc4267." )
+    mapping = JCR.map_rule_names( tree, "rfc4267." )
     expect( mapping["rfc4267.width"][:rule_name].to_str ).to eq( "width" )
     expect( mapping["rfc4267.height"][:rule_name].to_str ).to eq( "height" )
     expect( mapping["rfc4267.root"][:rule_name].to_str ).to eq( "root" )

@@ -17,6 +17,7 @@ require 'rubygems'
 require 'json'
 require 'pp'
 
+require 'jcr/jcr_validator_error'
 require 'jcr/parser'
 require 'jcr/evaluate_rules'
 require 'jcr/check_groups'
@@ -63,7 +64,7 @@ module JCR
       @trace = trace
       @failed_roots = []
       if ruleset
-        ingested = JCR.ingest_ruleset( ruleset, false, nil )
+        ingested = JCR.ingest_ruleset( ruleset, nil, nil )
         @mapping = ingested.mapping
         @callbacks = ingested.callbacks
         @id = ingested.id
@@ -73,7 +74,7 @@ module JCR
     end
 
     def override( ruleset )
-      overridden = JCR.ingest_ruleset( ruleset, true, nil )
+      overridden = JCR.ingest_ruleset( ruleset, @mapping, nil )
       mapping = {}
       mapping.merge!( @mapping )
       mapping.merge!( overridden.mapping )
@@ -87,7 +88,7 @@ module JCR
     end
 
     def override!( ruleset )
-      overridden = JCR.ingest_ruleset( ruleset, true, nil )
+      overridden = JCR.ingest_ruleset( ruleset, @mapping, nil )
       @mapping.merge!( overridden.mapping )
       @callbacks.merge!( overridden.callbacks )
       @roots.concat( overridden.roots )
@@ -95,11 +96,14 @@ module JCR
 
   end
 
-  def self.ingest_ruleset( ruleset, override = false, ruleset_alias=nil )
+  def self.ingest_ruleset( ruleset, existing_mapping = nil, ruleset_alias=nil )
     tree = JCR.parse( ruleset )
-    mapping = JCR.map_rule_names( tree, override, ruleset_alias )
-    JCR.check_rule_target_names( tree, mapping )
-    JCR.check_groups( tree, mapping )
+    mapping = JCR.map_rule_names( tree, ruleset_alias )
+    combined_mapping = {}
+    combined_mapping.merge!( existing_mapping ) if existing_mapping
+    combined_mapping.merge!( mapping )
+    JCR.check_rule_target_names( tree, combined_mapping )
+    JCR.check_groups( tree, combined_mapping )
     roots = JCR.find_roots( tree )
     ctx = Context.new
     ctx.tree = tree
@@ -114,19 +118,19 @@ module JCR
     roots = []
     if root_name
       root_rule = ctx.mapping[root_name]
-      raise "No rule by the name of #{root_name} for a root rule has been found" unless root_rule
+      raise JcrValidatorError, "No rule by the name of #{root_name} for a root rule has been found" unless root_rule
       root = JCR::Root.new( root_rule, root_name )
       roots << root
     else
       roots = ctx.roots
     end
 
-    raise "No root rule defined. Specify a root rule name" if roots.empty?
+    raise JcrValidatorError, "No root rule defined. Specify a root rule name" if roots.empty?
 
     retval = nil
     roots.each do |r|
       pp "Evaluating Root:", rule_to_s( r.rule, false ) if ctx.trace
-      raise "Root rules cannot be member rules" if r.rule[:member_rule]
+      raise JcrValidatorError, "Root rules cannot be member rules" if r.rule[:member_rule]
       econs = EvalConditions.new( ctx.mapping, ctx.callbacks, ctx.trace )
       retval = JCR.evaluate_rule( r.rule, r.rule, data, econs )
       break if retval.success
@@ -143,22 +147,38 @@ module JCR
     report = []
     ctx.failed_roots.each do |failed_root|
       if failed_root.name
-        report << "- ** Failures for root rule named '#{failed_root.name}'"
+        report << "- Failures for root rule named '#{failed_root.name}'"
       else
-        report << "- ** Failures for root rule at line #{failed_root.pos[0]}"
+        report << "- Failures for root rule at line #{failed_root.pos[0]}"
       end
       failed_root.failures.sort.map do |stack_level, failures|
         if failures.length > 1
-          report << "  - failure at rule depth #{stack_level} caused by one of the following #{failures.length} reasons"
+          report << "  - failure at rule #{stack_level} caused by one of the following #{failures.length} reasons"
         else
-          report << "  - failure at rule depth #{stack_level} caused by"
+          report << "  - failure at rule #{stack_level} caused by"
         end
         failures.each_with_index do |failure, index|
-          report << "    - #{failure.json_elided} failed rule #{failure.definition} at #{failure.pos} because #{failure.reason_elided}"
+          lines = breakup_message( "<< #{failure.json_elided} >> failed rule #{failure.definition} at #{failure.pos} because #{failure.evaluation.reason}", 75 )
+          lines.each_with_index do |l,i|
+            if i == 0
+              report << "    - #{l}"
+            else
+              report << "      #{l}"
+            end
+          end
         end
       end
     end
     return report
+  end
+
+  def self.breakup_message( message, line_length )
+    line = message.gsub(/(.{1,#{line_length}})(\s+|\Z)/, "\\1\n")
+    lines = []
+    line.each_line do |l|
+      lines << l.strip
+    end
+    return lines
   end
 
   def self.main my_argv=nil
@@ -199,8 +219,9 @@ module JCR
         options[:testjcr] = true
       end
 
-      opt.on("--process-parts", "creates smaller files for specification writing" ) do |parts|
+      opt.on("--process-parts [DIRECTORY]", "creates smaller files for specification writing" ) do |directory|
         options[:process_parts] = true
+        options[:process_parts_directory] = directory
       end
 
       opt.on("-S STRING","name of root rule. All roots will be tried if none is specified") do |root_name|
@@ -248,15 +269,22 @@ module JCR
       opt.separator  ""
       opt.separator  "Return codes:"
       opt.separator  " 0 = success"
-      opt.separator  " 1 = parsing or other bad condition"
-      opt.separator  " 2 = fall through bad condition"
+      opt.separator  " 1 = bad JCR parsing or other bad condition"
+      opt.separator  " 2 = invalid option or bad use of command"
       opt.separator  " 3 = unsuccessful evaluation of JSON"
 
       opt.separator  ""
       opt.separator  "JCR Version " + JCR::VERSION
     end
 
-    opt_parser.parse! my_argv
+    begin
+      opt_parser.parse! my_argv
+    rescue OptionParser::InvalidOption => e
+      puts "Unable to interpret command or options"
+      puts e.message
+      puts "", "Use -h for help"
+      return 2
+    end
 
     if options[:help]
       puts "HELP","----",""
@@ -264,7 +292,7 @@ module JCR
       return 2
     elsif !options[:ruleset]
       puts "No ruleset passed! Use -R or -r options.", ""
-      puts opt_parser
+      puts "Use -h for help"
       return 2
     else
 
@@ -290,7 +318,13 @@ module JCR
 
         if options[:process_parts]
           parts = JCR::JcrParts.new
-          parts.process_ruleset( options[:ruleset] )
+          parts.process_ruleset( options[:ruleset], options[:process_parts_directory] )
+          if options[:overrides ]
+            options[:overrides].each do |ov|
+              parts = JCR::JcrParts.new
+              parts.process_ruleset( ov, options[:process_parts_directory] )
+            end
+          end
         end
 
         if options[:testjcr]
@@ -328,6 +362,9 @@ module JCR
           return ec
         end
 
+      rescue JCR::JcrValidatorError => jcr_error
+        puts jcr_error.message
+        return 1
       rescue Parslet::ParseFailed => failure
         puts failure.parse_failure_cause.ascii_tree unless options[:quiet]
         return 1

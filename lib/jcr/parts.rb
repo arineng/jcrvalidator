@@ -68,19 +68,23 @@ module JCR
 
     # processes the lines
     # ruleset is to be a string read in using File.read
-    def process_ruleset( ruleset )
+    def process_ruleset( ruleset, dirname = nil )
+      all_file_names = []
       all_parts = []
       all_parts_name = nil
       current_part = nil
       current_part_name = nil
       ruleset.lines do |line|
         if !all_parts_name && ( all_parts_name = get_all( line ) )
-          # do_nothing
+          all_parts_name = File.join( dirname, all_parts_name ) if dirname
+          all_file_names << all_parts_name
         elsif ( current_part_name = get_start( line ) )
+          current_part_name = File.join( dirname, current_part_name ) if dirname
           if current_part
             current_part.close
           end
           current_part = File.open( current_part_name, "w" )
+          all_file_names << current_part_name
         elsif get_end( line ) && current_part
           current_part.close
           current_part = nil
@@ -100,6 +104,16 @@ module JCR
           f.puts( line )
         end
         f.close
+      end
+      if all_file_names.length
+        xml_fn = File.basename( all_file_names[0],".*" ) + "_xml_entity_refs"
+        xml_fn = File.join( File.dirname( all_file_names[0] ), xml_fn )
+        xml = File.open( xml_fn, "w" )
+        all_file_names.each do |fn|
+          bn = File.basename( fn, ".*" )
+          xml.puts( "<!ENTITY #{bn} PUBLIC '' '#{fn}'>")
+        end
+        xml.close
       end
     end
 

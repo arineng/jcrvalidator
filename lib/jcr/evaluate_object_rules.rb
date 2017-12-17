@@ -27,33 +27,44 @@ module JCR
     end
   end
 
-  def self.evaluate_object_rule jcr, rule_atom, data, econs, behavior = nil
+  def self.evaluate_object_rule jcr, rule_atom, data, econs, behavior = nil, target_annotations = nil
 
     push_trace_stack( econs, jcr )
-    trace( econs, "Evaluating object rule starting at #{slice_to_s(jcr)} against", data )
-    trace_def( econs, "object", jcr, data )
-    retval = evaluate_object( jcr, rule_atom, data, econs, behavior )
-    trace_eval( econs, "Object", retval, jcr, data, "object" )
+    if behavior
+      trace( econs, "Evaluating group in object rule starting at #{slice_to_s(jcr)} against", data )
+      trace_def( econs, "object group", jcr, data )
+    else
+      trace( econs, "Evaluating object rule starting at #{slice_to_s(jcr)} against", data )
+      trace_def( econs, "object", jcr, data )
+    end
+    retval = evaluate_object( jcr, rule_atom, data, econs, behavior, target_annotations )
+    if behavior
+      trace_eval( econs, "Object group", retval, jcr, data, "object" )
+    else
+      trace_eval( econs, "Object", retval, jcr, data, "object" )
+    end
     pop_trace_stack( econs )
     return retval
 
   end
 
-  def self.evaluate_object jcr, rule_atom, data, econs, behavior = nil
+  def self.evaluate_object jcr, rule_atom, data, econs, behavior = nil, target_annotations = nil
 
     rules, annotations = get_rules_and_annotations( jcr )
 
     # if the data is not an object (Hash)
     return evaluate_not( annotations,
-      Evaluation.new( false, "#{data} is not an object for #{raised_rule(jcr,rule_atom)}"), econs ) unless data.is_a? Hash
+      Evaluation.new( false, "#{data} is not an object for #{raised_rule(jcr,rule_atom)}"),
+                      econs, target_annotations ) unless data.is_a? Hash
 
     # if the object has no members and there are zero sub-rules (it is suppose to be empty)
     return evaluate_not( annotations,
-      Evaluation.new( true, nil ), econs ) if rules.empty? && data.length == 0
+      Evaluation.new( true, nil ), econs, target_annotations ) if rules.empty? && data.length == 0
 
     # if the object has members and there are zero sub-rules (it is suppose to be empty)
     return evaluate_not( annotations,
-      Evaluation.new( false, "Non-empty object for #{raised_rule(jcr,rule_atom)}" ), econs ) if rules.empty? && data.length != 0
+      Evaluation.new( false, "Non-empty object for #{raised_rule(jcr,rule_atom)}" ),
+                         econs, target_annotations ) if rules.empty? && data.length != 0
 
     retval = nil
     behavior = ObjectBehavior.new unless behavior
@@ -64,7 +75,7 @@ module JCR
       if rule[:choice_combiner] && retval && retval.success
         next
       elsif rule[:sequence_combiner] && retval && !retval.success
-        return evaluate_not( annotations, retval, econs ) # short circuit
+        return evaluate_not( annotations, retval, econs, target_annotations ) # short circuit
       end
 
       repeat_min, repeat_max, repeat_step = get_repetitions( rule, econs )
@@ -76,13 +87,14 @@ module JCR
       # Also, groups must be handed the entire object, not key/values
       # as member rules use.
 
-      if (grule = get_group(rule, econs))
+      grule,gtarget_annotations = get_group(rule, econs)
+      if grule
 
         successes = 0
         for i in 0..repeat_max-1
           group_behavior = ObjectBehavior.new
           group_behavior.checked_hash.merge!( behavior.checked_hash )
-          e = evaluate_rule( grule, rule_atom, data, econs, group_behavior )
+          e = evaluate_rule( grule, rule_atom, data, econs, group_behavior, gtarget_annotations )
           if e.success
             behavior.checked_hash.merge!( group_behavior.checked_hash )
             successes = successes + 1
@@ -92,11 +104,11 @@ module JCR
         end
 
         if successes == 0 && repeat_min > 0
-          retval = Evaluation.new( false, "object does not contain group #{rule} for #{raised_rule(jcr,rule_atom)}")
+          retval = Evaluation.new( false, "object does not contain group #{jcr_to_s(rule)} for #{raised_rule(jcr,rule_atom)}")
         elsif successes < repeat_min
-          retval = Evaluation.new( false, "object does not have contain necessary number of group #{rule} for #{raised_rule(jcr,rule_atom)}")
+          retval = Evaluation.new( false, "object does not have contain necessary number of group #{jcr_to_s(rule)} for #{raised_rule(jcr,rule_atom)}")
         elsif repeat_step && ( successes - repeat_min ) % repeat_step != 0
-          retval = Evaluation.new( false, "object matches (#{successes}) do not have contain repetition #{repeat_max} % #{repeat_step} of group #{rule} for #{raised_rule(jcr,rule_atom)}")
+          retval = Evaluation.new( false, "object matches (#{successes}) do not have contain repetition #{repeat_max} % #{repeat_step} of group #{jcr_to_s(rule)} for #{raised_rule(jcr,rule_atom)}")
         else
           retval = Evaluation.new( true, nil )
         end
@@ -109,7 +121,7 @@ module JCR
         # if defined by a name, and not a regex, just pluck it from the object
         # and short-circuit the enumeration
 
-        lookahead = get_leaf_rule( rule, econs )
+        lookahead, ltarget_annotations = get_leaf_rule( rule, econs )
         lrules, lannotations = get_rules_and_annotations( lookahead[:member_rule] )
         if lrules[0][:member_name]
 
@@ -118,13 +130,13 @@ module JCR
           v = data[k]
           if v
             unless behavior.checked_hash[k]
-              e = evaluate_rule(rule, rule_atom, [k, v], econs, nil)
+              e = evaluate_rule(rule, rule_atom, [k, v], econs, nil, nil)
               behavior.checked_hash[k] = e.success
               repeat_results[ k ] = v if e.success
             end
           else
             trace( econs, "No member '#{k}' found in object.")
-            e = evaluate_rule(rule, rule_atom, [nil, nil], econs, nil)
+            e = evaluate_rule(rule, rule_atom, [nil, nil], econs, nil, nil)
             repeat_results[ nil ] = nil if e.success
           end
 
@@ -137,7 +149,7 @@ module JCR
           repeat_results = data.select do |k,v|
             unless behavior.checked_hash[k]
               if i < repeat_max
-                e = evaluate_rule(rule, rule_atom, [k, v], econs, nil)
+                e = evaluate_rule(rule, rule_atom, [k, v], econs, nil, nil)
                 behavior.checked_hash[k] = e.success
                 i = i + 1 if e.success
                 found = true if e.member_found
@@ -147,7 +159,7 @@ module JCR
           end
           unless found
             trace( econs, "No member matching #{regex} found in object.")
-            e = evaluate_rule(rule, rule_atom, [nil, nil], econs, nil)
+            e = evaluate_rule(rule, rule_atom, [nil, nil], econs, nil, nil)
             repeat_results[ nil ] = nil if e.success
           end
 
@@ -155,13 +167,13 @@ module JCR
 
         trace( econs, "Found #{repeat_results.length} matching members repetitions in object with min #{repeat_min} and max #{repeat_max}" )
         if repeat_results.length == 0 && repeat_min > 0
-          retval = Evaluation.new( false, "object does not contain #{rule} for #{raised_rule(jcr,rule_atom)}")
+          retval = Evaluation.new( false, "object does not contain #{jcr_to_s(rule)} for #{raised_rule(jcr,rule_atom)}")
         elsif repeat_results.length < repeat_min
-          retval = Evaluation.new( false, "object does not have enough #{rule} for #{raised_rule(jcr,rule_atom)}")
+          retval = Evaluation.new( false, "object does not have enough #{jcr_to_s(rule)} for #{raised_rule(jcr,rule_atom)}")
         elsif repeat_results.length > repeat_max
-          retval = Evaluation.new( false, "object has too many #{rule} for #{raised_rule(jcr,rule_atom)}")
+          retval = Evaluation.new( false, "object has too many #{jcr_to_s(rule)} for #{raised_rule(jcr,rule_atom)}")
         elsif repeat_step && ( repeat_results.length - repeat_min ) % repeat_step != 0
-          retval = Evaluation.new( false, "object matches (#{repeat_results.length}) does not match repetition step of #{repeat_max} & #{repeat_step} for #{rule} for #{raised_rule(jcr,rule_atom)}")
+          retval = Evaluation.new( false, "object matches (#{repeat_results.length}) does not match repetition step of #{repeat_max} & #{repeat_step} for #{jcr_to_s(rule)} for #{raised_rule(jcr,rule_atom)}")
         else
           retval = Evaluation.new( true, nil)
         end
@@ -169,7 +181,7 @@ module JCR
 
     end # end if grule else
 
-    return evaluate_not( annotations, retval, econs )
+    return evaluate_not( annotations, retval, econs, target_annotations )
   end
 
   def self.object_to_s( jcr, shallow=true )
