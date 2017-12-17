@@ -811,4 +811,12 @@ describe 'evaluate_object_rules' do
     expect( e.success ).to be_falsey
   end
 
+  it 'should pass a target group with its own reference' do
+    tree = JCR.parse( '{ "foo":integer , @{not} $g } $g=($m) $m="bar":string')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"foo"=>1,"bar"=>"thing"}, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
 end

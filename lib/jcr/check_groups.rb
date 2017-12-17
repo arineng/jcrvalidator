@@ -188,9 +188,9 @@ module JCR
     if node.is_a?( Parslet::Slice )
       pos = node.line_and_column
       name = node.to_str
-      raise "group rule error at line " + pos[0].to_s + " column " + pos[1].to_s + " name '" + name + "' :" + str
+      raise JCR::JcrValidatorError, "group rule error at line " + pos[0].to_s + " column " + pos[1].to_s + " name '" + name + "' :" + str
     else
-      raise "group rule error with '" + node.to_s + "' :" + str
+      raise JCR::JcrValidatorError, "group rule error with '" + node.to_s + "' :" + str
     end
   end
 
