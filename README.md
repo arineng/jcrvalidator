@@ -128,6 +128,9 @@ which can be found [here](https://raw.githubusercontent.com/arineng/jcr/09/draft
   * --process-parts now creates an XML entity reference file snippet
   * override rules can now reference rules in the original ruleset
   * more readable failure report
+  * more readable verbose messages
+  * @{not} annotation on targer rules were not honored but now fixed
+  * better checking for groups referenced from arrays and objects
 
 The current version of the JCR specification can be found 
 [here](https://raw.githubusercontent.com/arineng/jcr/07/draft-newton-json-content-rules.txt)
@@ -186,7 +189,7 @@ Options
     -r FILE                          file containing ruleset
     -R STRING                        string containing ruleset. Should probably be quoted
         --test-jcr                   parse and test the JCR only
-        --process-parts              creates smaller files for specification writing
+        --process-parts [DIRECTORY]  creates smaller files for specification writing
     -S STRING                        name of root rule. All roots will be tried if none is specified
     -o FILE                          file containing overide ruleset (option can be repeated)
     -O STRING                        string containing overide rule (option can be repeated)
@@ -197,11 +200,11 @@ Options
 
 Return codes:
  0 = success
- 1 = parsing or other bad condition
- 2 = fall through bad condition
+ 1 = bad JCR parsing or other bad condition
+ 2 = invalid option or bad use of command
  3 = unsuccessful evaluation of JSON
 
-JCR Version 0.8.0
+JCR Version 0.8.1
 ```
 
 ## Usage as a Library
