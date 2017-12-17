@@ -169,6 +169,13 @@ describe 'check_groups' do
     expect{ JCR.check_groups( tree, mapping ) }.to raise_error JCR::JcrValidatorError
   end
 
+  it 'should error with array with group referencing a member' do
+    tree = JCR.parse( '$t=[$g] $g=($m) $m="foo":string' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error JCR::JcrValidatorError
+  end
+
   #
   # object rule tests
   #
@@ -258,6 +265,13 @@ describe 'check_groups' do
 
   it 'should error with group with both member-rule and type-rule inserted into object-rule' do
     tree = JCR.parse( '$grule = ( "m1" :ipv4 | ipv6 )  $mrule = { $grule }' )
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    expect{ JCR.check_groups( tree, mapping ) }.to raise_error JCR::JcrValidatorError
+  end
+
+  it 'should error with group with both object-rule' do
+    tree = JCR.parse( '$t={$g} $g=($m) $m={"foo":string}' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     expect{ JCR.check_groups( tree, mapping ) }.to raise_error JCR::JcrValidatorError
