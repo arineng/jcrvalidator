@@ -56,7 +56,7 @@ module JCR
         disallowed_group_in_value?( groupee[:group_rule], mapping )
       elsif groupee[:target_rule_name]
         trule = get_name_mapping( groupee[:target_rule_name][:rule_name], mapping )
-        disallowed_group_in_value?( trule, mapping )
+        disallowed_group_in_value?( trule[:rule], mapping )
       elsif groupee[:member_rule]
         raise_group_error( "groups in value rules cannot have member rules", groupee[:member_rule] )
       elsif groupee[:object_rule]
@@ -78,8 +78,6 @@ module JCR
       disallowed_group_in_member?( trule, mapping )
     elsif node[:group_rule]
       disallowed_group_in_member?( node[:group_rule], mapping )
-    else
-      check_groups( node, mapping )
     end
   end
 
@@ -117,8 +115,6 @@ module JCR
         disallowed_group_in_array?(trule, mapping)
       elsif node[:group_rule]
         disallowed_group_in_array?(node[:group_rule], mapping)
-      else
-        check_groups(node, mapping)
       end
     end
   end
@@ -152,8 +148,6 @@ module JCR
         disallowed_group_in_object?(trule, mapping)
       elsif node[:group_rule]
         disallowed_group_in_object?(node[:group_rule], mapping)
-      else
-        check_groups(node, mapping)
       end
     end
   end
