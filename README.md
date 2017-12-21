@@ -131,6 +131,9 @@ which can be found [here](https://raw.githubusercontent.com/arineng/jcr/09/draft
   * more readable verbose messages
   * @{not} annotation on targer rules were not honored but now fixed
   * better checking for groups referenced from arrays and objects
+* 0.8.2
+  * Fixed bug with optional object members passing if their values were incorrect
+  * Fixed bug with unordered arrays that caused the evaluation to read past the end
 
 The current version of the JCR specification can be found 
 [here](https://raw.githubusercontent.com/arineng/jcr/07/draft-newton-json-content-rules.txt)
