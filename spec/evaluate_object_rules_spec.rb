@@ -819,4 +819,20 @@ describe 'evaluate_object_rules' do
     expect( e.success ).to be_falsey
   end
 
+  it 'should fail to validate a member that exists but wrong value if optional' do
+    tree = JCR.parse( '{ "addrs":[ ipv6+ ] ? }')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"addrs"=>["192.168.0.1"]}, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_falsey
+  end
+
+  it 'should pass a member not specified if optional' do
+    tree = JCR.parse( '{ "addrs":[ ipv6+ ] ? }')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], {"ipv6"=>["192.168.0.1"]}, JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
 end

@@ -864,4 +864,12 @@ describe 'evaluate_array_rules' do
     expect( e.success ).to be_falsey
   end
 
+  it 'should pass arrays inside array' do
+    tree = JCR.parse( '[ "thing", [ "thing" ] ]')
+    mapping = JCR.map_rule_names( tree )
+    JCR.check_rule_target_names( tree, mapping )
+    e = JCR.evaluate_rule( tree[0], tree[0], [ "thing", [ "thing" ] ], JCR::EvalConditions.new( mapping, nil ) )
+    expect( e.success ).to be_truthy
+  end
+
 end

@@ -98,6 +98,7 @@ module JCR
   end
 
   def self.evaluate_rule jcr, rule_atom, data, econs, behavior = nil, target_annotations = nil
+    trace( econs, "Dispatching rule for #{jcr_to_s(jcr)} with data: #{data}")
     if jcr.is_a?( Hash )
       if jcr[:rule_name]
         rn = slice_to_s( jcr[:rule_name] )

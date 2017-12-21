@@ -265,7 +265,7 @@ module JCR
       else # else not group rule
 
         successes = 0
-        for i in behavior.last_index..data.length
+        for i in behavior.last_index..data.length-1
           break if successes == repeat_max
           unless behavior.checked_hash[ i ]
             e = evaluate_rule( rule, rule_atom, data[ i ], econs, nil )
@@ -296,7 +296,7 @@ module JCR
     behavior.last_index = highest_index
 
     if data.length > behavior.checked_hash.length && behavior.extra_prohibited
-      retval = Evaluation.new( false, "More items in array than specified for #{raised_rule(jcr,rule_atom)}" )
+      retval = Evaluation.new( false, "More items in array #{data.length} than specified #{behavior.checked_hash.length} for #{raised_rule(jcr,rule_atom)}" )
     end
 
     return retval

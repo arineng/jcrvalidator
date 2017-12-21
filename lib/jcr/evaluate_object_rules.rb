@@ -116,6 +116,7 @@ module JCR
       else # if not grule
 
         repeat_results = nil
+        member_found = false
 
         # do a little lookahead for member rules defined by names
         # if defined by a name, and not a regex, just pluck it from the object
@@ -132,6 +133,7 @@ module JCR
             unless behavior.checked_hash[k]
               e = evaluate_rule(rule, rule_atom, [k, v], econs, nil, nil)
               behavior.checked_hash[k] = e.success
+              member_found = true if e.member_found
               repeat_results[ k ] = v if e.success
             end
           else
@@ -153,6 +155,7 @@ module JCR
                 behavior.checked_hash[k] = e.success
                 i = i + 1 if e.success
                 found = true if e.member_found
+                member_found = true if e.member_found
                 e.success
               end
             end
@@ -174,6 +177,8 @@ module JCR
           retval = Evaluation.new( false, "object has too many #{jcr_to_s(rule)} for #{raised_rule(jcr,rule_atom)}")
         elsif repeat_step && ( repeat_results.length - repeat_min ) % repeat_step != 0
           retval = Evaluation.new( false, "object matches (#{repeat_results.length}) does not match repetition step of #{repeat_max} & #{repeat_step} for #{jcr_to_s(rule)} for #{raised_rule(jcr,rule_atom)}")
+        elsif member_found && repeat_results.length == 0 && repeat_max > 0
+          retval = Evaluation.new( false, "object contains #{jcr_to_s(rule)} with member name though incorrect value for #{raised_rule(jcr,rule_atom)}")
         else
           retval = Evaluation.new( true, nil)
         end
