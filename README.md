@@ -2,6 +2,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/jcrvalidator.svg)](https://badge.fury.io/rb/jcrvalidator)
 [![Build Status](https://travis-ci.org/arineng/jcrvalidator.svg)](https://travis-ci.org/arineng/jcrvalidator)
+[![Build status](https://ci.appveyor.com/api/projects/status/h4vyvejioaqwcs4u?svg=true)](https://ci.appveyor.com/project/anewton1998/jcrvalidator)
 [![Dependency Status](https://gemnasium.com/badges/github.com/arineng/jcrvalidator.svg)](https://gemnasium.com/github.com/arineng/jcrvalidator)
 [![Coverage Status](https://coveralls.io/repos/github/arineng/jcrvalidator/badge.svg?branch=master)](https://coveralls.io/github/arineng/jcrvalidator?branch=master)
 
@@ -90,50 +91,8 @@ which can be found [here](https://raw.githubusercontent.com/arineng/jcr/09/draft
    
 ## Version History
 
-* 0.5.0 - First test GEM push.
-* 0.5.1 - First public beta.
-  * Small fix to bin/jcr to capture exit codes properly
-  * Small enhancement to bin/jcr to suck in multiple JSON files
-  * At present, this software is ahead of the specification.
-* 0.5.2 - Minor tweaks
-  * Added -J command line option
-  * Changed command line option -s to -S to be more consistent
-  * Will no longer allow member rules to be root rules
-  * More group rule checking (code was there, just wan't being invoked)
-* 0.5.3 - Fixes to the gem dependencies
-* 0.6.0 - Fixes from 0.5.3 plus closer tracking to -07
-* 0.6.1 - Towards -07
-  * Updates to track the latest release candidate of -07
-  * Updated docs, tests, and build
-* 0.6.2 - Update of repetition syntax going into -07
-* 0.6.3 - XOR experimentation which was never merged
-* 0.6.4 - Version that matches -07 of the draft specification
-* 0.6.5 - Fixed a bug with roots and empty object and array rules
-* 0.7.0
-  * Tracks the -09 draft
-  * Fixes to allow annotations for groups in arrays and objects
-  * Text output is now proper JCR
-  * Fixed issue with multiple files on the command line with MacOS
-  * Support for Ruby 2.4
-  * Dropped Ruby 1.8, 1.9, and 2.0. CI testing on:
-    * Linux 2.1, 2.3, 2.4, and JRuby 9.1
-    * OSX 2.3 and 2.4
-  * Fixes to ABNF in multi-line directives
-  * Much better CLI and programmatic validation failure information and structures 
-  * Fixes to print errors when the JCR fails to parse
-* 0.8.0 - Adds the --process-parts command line option
-* 0.8.1
-  * Various issues with stack traces at the command line instead of proper errors
-  * --process-parts now takes an optional directory
-  * --process-parts now creates an XML entity reference file snippet
-  * override rules can now reference rules in the original ruleset
-  * more readable failure report
-  * more readable verbose messages
-  * @{not} annotation on targer rules were not honored but now fixed
-  * better checking for groups referenced from arrays and objects
-* 0.8.2
-  * Fixed bug with optional object members passing if their values were incorrect
-  * Fixed bug with unordered arrays that caused the evaluation to read past the end
+The version history can be seen in the [CHANGE LOG](https://github.com/arineng/jcrvalidator/wiki/CHANGELOG)
+on the project wiki.
 
 The current version of the JCR specification can be found 
 [here](https://raw.githubusercontent.com/arineng/jcr/07/draft-newton-json-content-rules.txt)
@@ -273,8 +232,13 @@ From there, tell bundler to go get the rest of the gems:
 $ bundle install
 ```
 
-To run the unit tests:
+To run the unit tests on Linux or Unix-like OS (including Windows Subsystem for Linux):
 
 ```
 $ bundle exec rake test
+````
+To run the unit tests on native Windows (Ruby installed via RubyInstaller):
+
+```
+$ bundle exec rake win_test
 ````
