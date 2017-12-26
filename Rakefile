@@ -19,6 +19,9 @@ end
 desc "run all tests"
 task :test => [:spec, :test_cli, :test_ruby_examples ]
 
+desc "run windows tests"
+task :win_test => [:spec, :test_ruby_examples ]
+
 task :test_simple_rb do
   ruby "-Ilib examples/simple.rb"
 end

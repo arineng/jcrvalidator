@@ -27,7 +27,7 @@ describe 'parts' do
   end
 
   after(:each) do
-    FileUtils.rm_r( @work_dir )
+    FileUtils.rm_rf( @work_dir )
   end
 
   it 'should recognize a line with start_part in it' do
