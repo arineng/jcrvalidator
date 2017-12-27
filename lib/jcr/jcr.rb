@@ -31,6 +31,7 @@ module JCR
 
   class Context
     attr_accessor :mapping, :callbacks, :id, :tree, :roots, :catalog, :trace, :failed_roots, :failure_report
+    attr_accessor :failure_report_line_length
 
     def add_ruleset_alias( ruleset_alias, alias_uri )
       unless @catalog
@@ -71,6 +72,7 @@ module JCR
         @tree = ingested.tree
         @roots = ingested.roots
       end
+      @failure_report_line_length = 80
     end
 
     def override( ruleset )
@@ -153,12 +155,12 @@ module JCR
       end
       failed_root.failures.sort.map do |stack_level, failures|
         if failures.length > 1
-          report << "  - failure at rule #{stack_level} caused by one of the following #{failures.length} reasons"
+          report << "  - failure at rule level #{stack_level} caused by one of the following #{failures.length} reasons"
         else
-          report << "  - failure at rule #{stack_level} caused by"
+          report << "  - failure at rule level #{stack_level} caused by"
         end
         failures.each_with_index do |failure, index|
-          lines = breakup_message( "<< #{failure.json_elided} >> failed rule #{failure.definition} at #{failure.pos} because #{failure.evaluation.reason}", 75 )
+          lines = breakup_message( "<< #{failure.json_elided} >> failed rule #{failure.definition}", ctx.failure_report_line_length - 5 )
           lines.each_with_index do |l,i|
             if i == 0
               report << "    - #{l}"

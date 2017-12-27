@@ -68,21 +68,25 @@ module JCR
     end
 
     def report_failure failure
-      coord = JCR::trace_coord( self )
-      @failures[ coord ] = Array.new unless @failures[ coord ]
-      @failures[ coord ] << failure
+      stack_level = trace_stack.length
+      @failures[ stack_level ] = Array.new unless @failures[ stack_level ]
+      @failures[ stack_level ] << failure
     end
 
     def report_success
-      coord = JCR::trace_coord( self )
-      @failures.delete( coord )
+      stack_level = trace_stack.length
+      @failures.delete( stack_level )
     end
   end
 
   class Failure
     attr_accessor :data, :json, :json_elided, :evaluation, :rule, :pos, :offset, :type, :definition, :stack_level, :reason_elided
     def initialize data, jcr, type, evaluation, stack_level
-      @json = data.to_json
+      if type == "member"
+        @json = "\"#{data[0]}\" : #{data[1].to_json} "
+      else
+        @json = data.to_json
+      end
       @json_elided = JCR::elide(@json)
       @data = JCR::rule_data( data )
       @rule = JCR::find_first_slice( jcr )
