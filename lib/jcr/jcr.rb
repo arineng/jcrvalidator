@@ -153,7 +153,7 @@ module JCR
       else
         report << "- Failures for root rule at line #{failed_root.pos[0]}"
       end
-      failed_root.failures.sort.map do |stack_level, failures|
+      failed_root.failures.each_with_index do |failures,stack_level|
         if failures.length > 1
           report << "  - failure at rule level #{stack_level} caused by one of the following #{failures.length} reasons"
         else

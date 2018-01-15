@@ -56,7 +56,7 @@ module JCR
   class EvalConditions
     attr_accessor :mapping, :callbacks, :trace, :trace_stack, :failures
     def initialize mapping, callbacks, trace = false
-      @failures = {}
+      @failures = []
       @mapping = mapping
       @trace = trace
       @trace_stack = []
@@ -68,14 +68,14 @@ module JCR
     end
 
     def report_failure failure
-      stack_level = trace_stack.length
+      stack_level = trace_stack.length - 1
       @failures[ stack_level ] = Array.new unless @failures[ stack_level ]
       @failures[ stack_level ] << failure
     end
 
     def report_success
-      stack_level = trace_stack.length
-      @failures.delete( stack_level )
+      stack_level = trace_stack.length - 1
+      @failures.slice!( stack_level..-1 )
     end
   end
 

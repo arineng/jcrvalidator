@@ -55,8 +55,8 @@ describe 'trace fails' do
     data = JSON.parse( '["bar"]')
     e = ctx.evaluate( data )
     expect( ctx.failed_roots[0].failures.length ).to eq( 2 )
+    expect( ctx.failed_roots[0].failures[0].length ).to eq( 1 )
     expect( ctx.failed_roots[0].failures[1].length ).to eq( 1 )
-    expect( ctx.failed_roots[0].failures[2].length ).to eq( 1 )
   end
 
   it 'should have two fail level w/ one fail' do
@@ -64,8 +64,8 @@ describe 'trace fails' do
     data = JSON.parse( '[1, "bar"]')
     e = ctx.evaluate( data )
     expect( ctx.failed_roots[0].failures.length ).to eq( 2 )
+    expect( ctx.failed_roots[0].failures[0].length ).to eq( 1 )
     expect( ctx.failed_roots[0].failures[1].length ).to eq( 1 )
-    expect( ctx.failed_roots[0].failures[2].length ).to eq( 1 )
   end
 
   it 'should have two fail level w/ one fail also' do
@@ -73,8 +73,8 @@ describe 'trace fails' do
     data = JSON.parse( '["bar", 1]')
     e = ctx.evaluate( data )
     expect( ctx.failed_roots[0].failures.length ).to eq( 2 )
+    expect( ctx.failed_roots[0].failures[0].length ).to eq( 1 )
     expect( ctx.failed_roots[0].failures[1].length ).to eq( 1 )
-    expect( ctx.failed_roots[0].failures[2].length ).to eq( 1 )
   end
 
   it 'should have two fail level w/ or' do
@@ -82,8 +82,8 @@ describe 'trace fails' do
     data = JSON.parse( '["baz"]')
     e = ctx.evaluate( data )
     expect( ctx.failed_roots[0].failures.length ).to eq( 2 )
-    expect( ctx.failed_roots[0].failures[1].length ).to eq( 1 )
-    expect( ctx.failed_roots[0].failures[2].length ).to eq( 2 )
+    expect( ctx.failed_roots[0].failures[0].length ).to eq( 1 )
+    expect( ctx.failed_roots[0].failures[1].length ).to eq( 2 )
   end
 
   it 'should have two fail level w/ two fail' do
@@ -91,9 +91,9 @@ describe 'trace fails' do
     data = JSON.parse( '["baz", 3]')
     e = ctx.evaluate( data )
     expect( ctx.failed_roots[0].failures.length ).to eq( 3 )
+    expect( ctx.failed_roots[0].failures[0].length ).to eq( 1 )
     expect( ctx.failed_roots[0].failures[1].length ).to eq( 1 )
-    expect( ctx.failed_roots[0].failures[2].length ).to eq( 1 )
-    expect( ctx.failed_roots[0].failures[3].length ).to eq( 2 )
+    expect( ctx.failed_roots[0].failures[2].length ).to eq( 2 )
   end
 
 end
