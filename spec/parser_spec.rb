@@ -92,6 +92,18 @@ describe 'parser' do
     expect(tree[0][:rule][:primitive_rule][:q_string]).to eq("a string constant")
   end
 
+  it 'should parse a single quoted string constant' do
+    tree = JCR.parse( "$trule = type 'a string constant'" )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:primitive_rule][:q_string]).to eq("a string constant")
+  end
+
+  it 'should parse a single quoted string constant' do
+    tree = JCR.parse( "$trule = :'a string constant'" )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:primitive_rule][:q_string]).to eq("a string constant")
+  end
+
   it 'should parse a string' do
     tree = JCR.parse( '$trule = type string' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")

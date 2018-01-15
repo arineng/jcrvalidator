@@ -84,7 +84,7 @@ annotation-name  = name
 annotation-parameters = multi-line-parameters
 
 primitive-rule   = annotations primitive-def
-primitive-def    = string-type / string-range / string-value /
+primitive-def    = string-type / string-range / string-value1 / string-value2 /
                    null-type / boolean-type / true-value /
                    false-value / double-type / float-type /
                    float-range / float-value /
@@ -100,7 +100,8 @@ boolean-type     = boolean-kw
 true-value       = true-kw
 false-value      = false-kw
 string-type      = string-kw
-string-value     = q-string
+string-value1    = sq-string
+string-value2    = q-string
 string-range     = regex
 double-type      = double-kw
 float-type       = float-kw
@@ -194,22 +195,31 @@ exp              = e [ minus / plus ] 1*DIGIT
 e                = %x65 / %x45                   ; e E
 zero             = %x30                          ; 0
 
-q-string         = quotation-mark *char quotation-mark 
-                   ; From RFC 7159
+q-string         = quotation-mark *char quotation-mark
+                   ; Derive from RFC 7159
+quotation-mark   = %x22      ; "    quotation mark  U+0022
 char             = unescaped /
                    escape (
-                   %x22 /          ; "    quotation mark  U+0022
-                   %x5C /          ; \    reverse solidus U+005C
+                   quotation-mark /
+                   escape-codes )
+unescaped        = %x20-21 / %x23-5B / %x5D-10FFFF
+escape           = %x5C              ; \
+escape-codes     = 
                    %x2F /          ; /    solidus         U+002F
                    %x62 /          ; b    backspace       U+0008
                    %x66 /          ; f    form feed       U+000C
                    %x6E /          ; n    line feed       U+000A
                    %x72 /          ; r    carriage return U+000D
                    %x74 /          ; t    tab             U+0009
-                   %x75 4HEXDIG )  ; uXXXX                U+XXXX
-escape           = %x5C              ; \
-quotation-mark   = %x22      ; "
-unescaped        = %x20-21 / %x23-5B / %x5D-10FFFF
+                   %x75 4HEXDIG    ; uXXXX                U+XXXX
+
+sq-string        = single-quote-mark *sq-char single-quote-mark
+single-quote-mark = %x27      ; '    single quotation mark  U+0027
+sq-char          = sq-unescaped /
+                   escape (
+                   single-quote-mark /
+                   escape-codes )
+sq-unescaped     = %x20-26 / %x28-5B / %x5D-10FFFF ; Not ' or \
 
 regex            = "/" *( escape "/" / not-slash ) "/"
                    [ regex-modifiers ]
