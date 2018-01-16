@@ -65,7 +65,7 @@ rule-def-type-rule = value-rule / type-choice
 value-rule       = primitive-rule / array-rule / object-rule
 member-rule      = annotations
                    member-name-spec *sp-cmt ":" *sp-cmt type-rule
-member-name-spec = regex / q-string
+member-name-spec = backtick-regex / q-string
 type-rule        = value-rule / type-choice / target-rule-name
 type-choice      = annotations "(" type-choice-items
                    *( choice-combiner type-choice-items ) ")"
@@ -227,6 +227,9 @@ not-slash        = HTAB / CR / LF / %x20-2E / %x30-10FFFF
                    ; Any char except "/"
 regex-modifiers  = *( "i" / "s" / "x" )
 
+backtick-regex   = "`" *( escape "`" / not-backtick ) "`"
+not-backtick     = HTAB / CR / LF / %x20-5F / %x61-10FFFF
+                   ; Any char except "`"
 uri-scheme       = 1*ALPHA
 
 ;; Keywords

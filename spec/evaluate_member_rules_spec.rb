@@ -83,7 +83,7 @@ describe 'evaluate_member_rules' do
   #
 
   it 'should pass a member with regex and any value' do
-    tree = JCR.parse( '$mrule = /ab.*/ :any' )
+    tree = JCR.parse( '$mrule = `ab.*` :any' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "abc", "anything" ], JCR::EvalConditions.new( mapping, nil ) )
@@ -91,7 +91,7 @@ describe 'evaluate_member_rules' do
   end
 
   it 'should fail a member with regex and any value with {not} annotation' do
-    tree = JCR.parse( '$mrule = @{not} /ab.*/ :any' )
+    tree = JCR.parse( '$mrule = @{not} `ab.*` :any' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "abc", "anything" ], JCR::EvalConditions.new( mapping, nil ) )
@@ -99,7 +99,7 @@ describe 'evaluate_member_rules' do
   end
 
   it 'should pass a member with regex and an integer' do
-    tree = JCR.parse( '$mrule = /ab*/ :integer' )
+    tree = JCR.parse( '$mrule = `ab*` :integer' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "abc", 2 ], JCR::EvalConditions.new( mapping, nil ) )
@@ -107,7 +107,7 @@ describe 'evaluate_member_rules' do
   end
 
   it 'should fail a member with mismatch regex and an integer' do
-    tree = JCR.parse( '$mrule = /ab.*/ :integer' )
+    tree = JCR.parse( '$mrule = `ab.*` :integer' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "blah", 2 ], JCR::EvalConditions.new( mapping, nil ) )
@@ -115,7 +115,7 @@ describe 'evaluate_member_rules' do
   end
 
   it 'should pass a member with mismatch regex and an integer with {not} annotation' do
-    tree = JCR.parse( '$mrule = @{not} /ab.*/ :integer' )
+    tree = JCR.parse( '$mrule = @{not} `ab.*` :integer' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "blah", 2 ], JCR::EvalConditions.new( mapping, nil ) )
@@ -123,7 +123,7 @@ describe 'evaluate_member_rules' do
   end
 
   it 'should fail a member with regex and an integer against member with string' do
-    tree = JCR.parse( '$mrule = /ab.*/ :integer' )
+    tree = JCR.parse( '$mrule = `ab.*` :integer' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "abc", "a string" ], JCR::EvalConditions.new( mapping, nil ) )
@@ -131,7 +131,7 @@ describe 'evaluate_member_rules' do
   end
 
   it 'should fail a member with mismatch regex and an integer against member with string' do
-    tree = JCR.parse( '$mrule = /ab.*/ :integer' )
+    tree = JCR.parse( '$mrule = `ab.*` :integer' )
     mapping = JCR.map_rule_names( tree )
     JCR.check_rule_target_names( tree, mapping )
     e = JCR.evaluate_rule( tree[0], tree[0], [ "blah", "a string" ], JCR::EvalConditions.new( mapping, nil ) )

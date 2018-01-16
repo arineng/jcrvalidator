@@ -143,8 +143,8 @@ module JCR
     rule(:member_rule)       { ( annotations >> member_name_spec >> spcCmnt? >> str(':') >> spcCmnt? >> type_rule ).as(:member_rule) }
         #! member_rule = annotations
         #!               member_name_spec spcCmnt? ":" spcCmnt? type_rule
-    rule(:member_name_spec)  { regex.as(:member_regex) | q_string.as(:member_name) }
-        #! member_name_spec = regex / q_string
+    rule(:member_name_spec)  { backtick_regex.as(:member_regex) | q_string.as(:member_name) }
+        #! member_name_spec = backtick_regex / q_string
     rule(:type_rule)         { value_rule | type_choice | target_rule_name }
         #! type_rule = value_rule / type_choice / target_rule_name
     rule(:type_choice)       { ( annotations >> str('(') >> type_choice_items >> ( choice_combiner >> type_choice_items ).repeat >> str(')') ).as(:group_rule) }
@@ -466,6 +466,11 @@ module JCR
     rule(:regex_modifiers) { match('[isx]').repeat.as(:regex_modifiers) }
         #! regex_modifiers = *( "i" / "s" / "x" )
         #!
+
+    rule(:backtick_regex)     { str('`') >> (str('\\`') | match('[^`]+')).repeat.as(:regex) >> str('`') }
+        #! backtick_regex = "`" *( escape "`" / not-backtick ) "`"
+        #! not-backtick = HTAB / CR / LF / %x20-5F / %x61-10FFFF
+        #!             ; Any char except "`"
 
     rule(:uri_scheme) { ( match('[a-zA-Z]').repeat(1) ).as(:uri_scheme) }
         #! uri_scheme = 1*ALPHA
