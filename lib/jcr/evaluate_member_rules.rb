@@ -60,7 +60,7 @@ module JCR
         match_spec = Regexp.new( "" )
         trace( econs, "Noting empty regular expression." )
       else
-        match_spec = Regexp.new( rule[:member_regex][:regex].to_s )
+        match_spec = Regexp.new( "^#{rule[:member_regex][:regex].to_s}$" )
       end
       if match_spec =~ data[ 0 ]
         member_match = true
