@@ -54,6 +54,11 @@ describe 'parser' do
     expect(tree[0][:rule][:primitive_rule][:ipv4]).to eq("ipv4")
   end
 
+  it 'should parse an ipv4 value defintion 4' do
+    tree = JCR.parse( '$trule = ipv4 ' )
+    expect(tree[0][:rule][:primitive_rule][:ipv4]).to eq("ipv4")
+  end
+
   it 'should parse an ipv6 value defintion 1' do
     tree = JCR.parse( '$trule = type ipv6' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
@@ -104,6 +109,12 @@ describe 'parser' do
     expect(tree[0][:rule][:primitive_rule][:q_string]).to eq("a string constant")
   end
 
+  it 'should parse a single quoted string constant without leading colon' do
+    tree = JCR.parse( "$trule = 'a string constant'" )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:primitive_rule][:q_string]).to eq("a string constant")
+  end
+
   it 'should parse a string' do
     tree = JCR.parse( '$trule = type string' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
@@ -112,6 +123,12 @@ describe 'parser' do
 
   it 'should parse a regex 1' do
     tree = JCR.parse( '$trule = type /a.regex.goes.here.*/' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule")
+    expect(tree[0][:rule][:primitive_rule][:regex]).to eq("a.regex.goes.here.*")
+  end
+
+  it 'should parse a regex without leading colon' do
+    tree = JCR.parse( '$trule = /a.regex.goes.here.*/' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
     expect(tree[0][:rule][:primitive_rule][:regex]).to eq("a.regex.goes.here.*")
   end
@@ -160,6 +177,11 @@ describe 'parser' do
     expect(tree[0][:rule][:primitive_rule][:uri]).to eq("uri")
   end
 
+  it 'should parse a uri without type keyword' do
+    tree = JCR.parse( '$trule = uri' )
+    expect(tree[0][:rule][:primitive_rule][:uri]).to eq("uri")
+  end
+
   it 'should parse a uri scheme' do
     tree = JCR.parse( '$trule = type uri..http' )
     expect(tree[0][:rule][:primitive_rule][:uri][:uri_scheme]).to eq("http")
@@ -189,6 +211,11 @@ describe 'parser' do
     expect(tree[0][:rule][:primitive_rule][:boolean_v]).to eq("boolean")
   end
 
+  it 'should parse boolean without type keyword' do
+    tree = JCR.parse( '$trule = boolean' )
+    expect(tree[0][:rule][:primitive_rule][:boolean_v]).to eq("boolean")
+  end
+
   it 'should parse null' do
     tree = JCR.parse( '$trule = type null' )
     expect(tree[0][:rule][:primitive_rule][:null]).to eq("null")
@@ -199,8 +226,18 @@ describe 'parser' do
     expect(tree[0][:rule][:primitive_rule][:integer_v]).to eq("integer")
   end
 
+  it 'should parse a integer value without a range without type keyword' do
+    tree = JCR.parse( '$trule = integer' )
+    expect(tree[0][:rule][:primitive_rule][:integer_v]).to eq("integer")
+  end
+
   it 'should parse a integer constant' do
     tree = JCR.parse( '$trule = type 2' )
+    expect(tree[0][:rule][:primitive_rule][:integer]).to eq("2")
+  end
+
+  it 'should parse a integer constant without type keyword' do
+    tree = JCR.parse( '$trule = 2' )
     expect(tree[0][:rule][:primitive_rule][:integer]).to eq("2")
   end
 
@@ -209,8 +246,19 @@ describe 'parser' do
     expect(tree[0][:rule][:primitive_rule][:integer]).to eq("-2")
   end
 
+  it 'should parse a negative integer constant without : prefix' do
+    tree = JCR.parse( '$trule = -2' )
+    expect(tree[0][:rule][:primitive_rule][:integer]).to eq("-2")
+  end
+
   it 'should parse an integer full range' do
     tree = JCR.parse( '$trule = :0..100' )
+    expect(tree[0][:rule][:primitive_rule][:integer_min]).to eq("0")
+    expect(tree[0][:rule][:primitive_rule][:integer_max]).to eq("100")
+  end
+
+  it 'should parse an integer full range without : prefix' do
+    tree = JCR.parse( '$trule = 0..100' )
     expect(tree[0][:rule][:primitive_rule][:integer_min]).to eq("0")
     expect(tree[0][:rule][:primitive_rule][:integer_max]).to eq("100")
   end
@@ -227,8 +275,19 @@ describe 'parser' do
     expect(tree[0][:rule][:primitive_rule][:integer_max]).to eq("-1")
   end
 
+  it 'should parse a negative integer full range without : prefix' do
+    tree = JCR.parse( '$trule = -100..-1' )
+    expect(tree[0][:rule][:primitive_rule][:integer_min]).to eq("-100")
+    expect(tree[0][:rule][:primitive_rule][:integer_max]).to eq("-1")
+  end
+
   it 'should parse an integer range with a min range' do
     tree = JCR.parse( '$trule = :0..' )
+    expect(tree[0][:rule][:primitive_rule][:integer_min]).to eq("0")
+  end
+
+  it 'should parse an integer range with a min range without : prefix' do
+    tree = JCR.parse( '$trule = 0..' )
     expect(tree[0][:rule][:primitive_rule][:integer_min]).to eq("0")
   end
 
@@ -237,13 +296,28 @@ describe 'parser' do
     expect(tree[0][:rule][:primitive_rule][:integer_max]).to eq("100")
   end
 
+  it 'should parse an integer rangge with a max range without : prefix' do
+    tree = JCR.parse( '$trule = ..100' )
+    expect(tree[0][:rule][:primitive_rule][:integer_max]).to eq("100")
+  end
+
   it 'should parse a negative integer range with a max range' do
     tree = JCR.parse( '$trule = :..-100' )
     expect(tree[0][:rule][:primitive_rule][:integer_max]).to eq("-100")
   end
 
+  it 'should parse a negative integer range with a max range without : prefix' do
+    tree = JCR.parse( '$trule = ..-100' )
+    expect(tree[0][:rule][:primitive_rule][:integer_max]).to eq("-100")
+  end
+
   it 'should parse a sized int value without a range' do
     tree = JCR.parse( '$trule = :int32' )
+    expect(tree[0][:rule][:primitive_rule][:sized_int_v][:bits]).to eq("32")
+  end
+
+  it 'should parse a sized int value without a range without : prefix' do
+    tree = JCR.parse( '$trule = int32' )
     expect(tree[0][:rule][:primitive_rule][:sized_int_v][:bits]).to eq("32")
   end
 
@@ -257,6 +331,11 @@ describe 'parser' do
     expect(tree[0][:rule][:primitive_rule][:double_v]).to eq("double")
   end
 
+  it 'should parse a double value without : prefix' do
+    tree = JCR.parse( '$trule = double' )
+    expect(tree[0][:rule][:primitive_rule][:double_v]).to eq("double")
+  end
+
   it 'should parse a float value' do
     tree = JCR.parse( '$trule = :float' )
     expect(tree[0][:rule][:primitive_rule][:float_v]).to eq("float")
@@ -267,13 +346,29 @@ describe 'parser' do
     expect(tree[0][:rule][:primitive_rule][:float]).to eq("2.0")
   end
 
+  it 'should parse a float constant without : prefix' do
+    tree = JCR.parse( '$trule = 2.0' )
+    expect(tree[0][:rule][:primitive_rule][:float]).to eq("2.0")
+  end
+
   it 'should parse a negative float constant' do
     tree = JCR.parse( '$trule = :-2.0' )
     expect(tree[0][:rule][:primitive_rule][:float]).to eq("-2.0")
   end
 
+  it 'should parse a negative float constant without : prefix' do
+    tree = JCR.parse( '$trule = -2.0' )
+    expect(tree[0][:rule][:primitive_rule][:float]).to eq("-2.0")
+  end
+
   it 'should parse a float range with a full range' do
     tree = JCR.parse( '$trule = :0.0..100.0' )
+    expect(tree[0][:rule][:primitive_rule][:float_min]).to eq("0.0")
+    expect(tree[0][:rule][:primitive_rule][:float_max]).to eq("100.0")
+  end
+
+  it 'should parse a float range with a full range without : prefix' do
+    tree = JCR.parse( '$trule = 0.0..100.0' )
     expect(tree[0][:rule][:primitive_rule][:float_min]).to eq("0.0")
     expect(tree[0][:rule][:primitive_rule][:float_max]).to eq("100.0")
   end
@@ -289,8 +384,18 @@ describe 'parser' do
     expect(tree[0][:rule][:primitive_rule][:float_min]).to eq("0.3939")
   end
 
+  it 'should parse a float range with a min range without : prefix' do
+    tree = JCR.parse( '$trule = 0.3939..' )
+    expect(tree[0][:rule][:primitive_rule][:float_min]).to eq("0.3939")
+  end
+
   it 'should parse a float range with a max range' do
     tree = JCR.parse( '$trule = :..100.003' )
+    expect(tree[0][:rule][:primitive_rule][:float_max]).to eq("100.003")
+  end
+
+  it 'should parse a float range with a max range without : prefix' do
+    tree = JCR.parse( '$trule = ..100.003' )
     expect(tree[0][:rule][:primitive_rule][:float_max]).to eq("100.003")
   end
 
@@ -328,6 +433,12 @@ describe 'parser' do
 
   it 'should parse two rules' do
     tree = JCR.parse( '$vrule = :integer $mrule ="thing": $vrule' )
+    expect(tree[0][:rule][:rule_name]).to eq("vrule")
+    expect(tree[1][:rule][:rule_name]).to eq("mrule")
+  end
+
+  it 'should parse two rules without : prefix' do
+    tree = JCR.parse( '$vrule = integer $mrule ="thing": $vrule' )
     expect(tree[0][:rule][:rule_name]).to eq("vrule")
     expect(tree[1][:rule][:rule_name]).to eq("mrule")
   end
@@ -929,6 +1040,12 @@ describe 'parser' do
 
   it 'should parse two rules on the same line' do
     tree = JCR.parse( '$trule1 = :/.*/  $trule2 = `.*` : $target_rule' )
+    expect(tree[0][:rule][:rule_name]).to eq("trule1")
+    expect(tree[1][:rule][:rule_name]).to eq("trule2")
+  end
+
+  it 'should parse two rules on the same line without : prefix' do
+    tree = JCR.parse( '$trule1 = /.*/  $trule2 = `.*` : $target_rule' )
     expect(tree[0][:rule][:rule_name]).to eq("trule1")
     expect(tree[1][:rule][:rule_name]).to eq("trule2")
   end

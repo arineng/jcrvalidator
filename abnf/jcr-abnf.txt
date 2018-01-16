@@ -58,8 +58,7 @@ target-rule-name = annotations "$"
 name             = ALPHA *( ALPHA / DIGIT / "-" / "_" )
 
 rule-def         = member-rule / type-designator rule-def-type-rule /
-                   array-rule / object-rule / group-rule /
-                   target-rule-name
+                   value-rule / group-rule / target-rule-name
 type-designator  = type-kw 1*sp-cmt / ":" *sp-cmt
 rule-def-type-rule = value-rule / type-choice
 value-rule       = primitive-rule / array-rule / object-rule

@@ -129,10 +129,9 @@ module JCR
         #!
 
     rule(:rule_def)          { member_rule | (type_designator >> rule_def_type_rule) | 
-                               array_rule | object_rule | group_rule | target_rule_name }
+                               value_rule | group_rule | target_rule_name }
         #! rule_def = member_rule / type_designator rule_def_type_rule /
-        #!            array_rule / object_rule / group_rule /
-        #!            target_rule_name
+        #!            value_rule / group_rule / target_rule_name
     rule(:type_designator)   { str('type') >> spcCmnt.repeat(1) | str(':') >> spcCmnt? }
         #! type_designator = type-kw 1*spcCmnt / ":" spcCmnt?
         #> type-kw = "type"
