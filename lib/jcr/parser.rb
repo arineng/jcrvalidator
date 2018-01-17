@@ -430,9 +430,10 @@ module JCR
         #!   escape (
         #!     quotation-mark /
         #!     escape_codes )
-        #! unescaped = %x20-21 / %x23-5B / %x5D-10FFFF
+        #! unescaped = %x20-21 / %x23-5B / %x5D-10FFFF ; Not " or \
         #! escape = %x5C              ; \
         #! escape_codes =
+        #!   %x5C /          ; \    reverse solidus U+005C
         #!   %x2F /          ; /    solidus         U+002F
         #!   %x62 /          ; b    backspace       U+0008
         #!   %x66 /          ; f    form feed       U+000C
