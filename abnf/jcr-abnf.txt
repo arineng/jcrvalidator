@@ -200,10 +200,10 @@ quotation-mark   = %x22      ; "    quotation mark  U+0022
 char             = unescaped /
                    escape (
                    quotation-mark /
-                   escape-codes )
+                   escape-code )
 unescaped        = %x20-21 / %x23-5B / %x5D-10FFFF ; Not " or \
 escape           = %x5C              ; \
-escape-codes     = 
+escape-code      = 
                    %x5C /          ; \    reverse solidus U+005C
                    %x2F /          ; /    solidus         U+002F
                    %x62 /          ; b    backspace       U+0008
@@ -218,16 +218,17 @@ single-quote-mark = %x27      ; '    single quotation mark  U+0027
 sq-char          = sq-unescaped /
                    escape (
                    single-quote-mark /
-                   escape-codes )
+                   escape-code )
 sq-unescaped     = %x20-26 / %x28-5B / %x5D-10FFFF ; Not ' or \
 
-regex            = "/" *( escape "/" / not-slash ) "/"
+regex            = "/" *( escape re-escape-code / not-slash ) "/"
                    [ regex-modifiers ]
+re-escape-code   = %x20-7F ; Specific codes listed elsewhere
 not-slash        = HTAB / CR / LF / %x20-2E / %x30-10FFFF
                    ; Any char except "/"
 regex-modifiers  = *( "i" / "s" / "x" )
 
-backtick-regex   = "`" *( escape "`" / not-backtick ) "`"
+backtick-regex   = "`" *( escape re-escape-code / not-backtick ) "`"
 not-backtick     = HTAB / CR / LF / %x20-5F / %x61-10FFFF
                    ; Any char except "`"
 uri-scheme       = 1*ALPHA

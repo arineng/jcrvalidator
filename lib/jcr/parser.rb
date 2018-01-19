@@ -429,10 +429,10 @@ module JCR
         #! char = unescaped /
         #!   escape (
         #!     quotation-mark /
-        #!     escape_codes )
+        #!     escape_code )
         #! unescaped = %x20-21 / %x23-5B / %x5D-10FFFF ; Not " or \
         #! escape = %x5C              ; \
-        #! escape_codes =
+        #! escape_code =
         #!   %x5C /          ; \    reverse solidus U+005C
         #!   %x2F /          ; /    solidus         U+002F
         #!   %x62 /          ; b    backspace       U+0008
@@ -454,13 +454,14 @@ module JCR
         #! sq_char = sq_unescaped /
         #!   escape (
         #!     single-quote-mark /
-        #!     escape_codes )
+        #!     escape_code )
         #! sq_unescaped = %x20-26 / %x28-5B / %x5D-10FFFF ; Not ' or \
         #!
 
     rule(:regex)     { str('/') >> (str('\\/') | match('[^/]+')).repeat.as(:regex) >> str('/') >> regex_modifiers.maybe }
-        #! regex = "/" *( escape "/" / not-slash ) "/"
+        #! regex = "/" *( escape re_escape_code / not-slash ) "/"
         #!         [ regex_modifiers ]
+        #! re_escape_code = %x20-7F ; Specific codes listed elsewhere
         #! not-slash = HTAB / CR / LF / %x20-2E / %x30-10FFFF
         #!             ; Any char except "/"
     rule(:regex_modifiers) { match('[isx]').repeat.as(:regex_modifiers) }
@@ -468,7 +469,7 @@ module JCR
         #!
 
     rule(:backtick_regex)     { str('`') >> (str('\\`') | match('[^`]+')).repeat.as(:regex) >> str('`') }
-        #! backtick_regex = "`" *( escape "`" / not-backtick ) "`"
+        #! backtick_regex = "`" *( escape re_escape_code / not-backtick ) "`"
         #! not-backtick = HTAB / CR / LF / %x20-5F / %x61-10FFFF
         #!             ; Any char except "`"
 
