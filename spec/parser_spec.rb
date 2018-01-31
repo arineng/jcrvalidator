@@ -97,24 +97,6 @@ describe 'parser' do
     expect(tree[0][:rule][:primitive_rule][:q_string]).to eq("a string constant")
   end
 
-  it 'should parse a single quoted string constant' do
-    tree = JCR.parse( "$trule = type 'a string constant'" )
-    expect(tree[0][:rule][:rule_name]).to eq("trule")
-    expect(tree[0][:rule][:primitive_rule][:q_string]).to eq("a string constant")
-  end
-
-  it 'should parse a single quoted string constant' do
-    tree = JCR.parse( "$trule = :'a string constant'" )
-    expect(tree[0][:rule][:rule_name]).to eq("trule")
-    expect(tree[0][:rule][:primitive_rule][:q_string]).to eq("a string constant")
-  end
-
-  it 'should parse a single quoted string constant without leading colon' do
-    tree = JCR.parse( "$trule = 'a string constant'" )
-    expect(tree[0][:rule][:rule_name]).to eq("trule")
-    expect(tree[0][:rule][:primitive_rule][:q_string]).to eq("a string constant")
-  end
-
   it 'should parse a string' do
     tree = JCR.parse( '$trule = type string' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
@@ -460,25 +442,19 @@ describe 'parser' do
   end
 
   it 'should parse an any member rule with integer value' do
-    tree = JCR.parse( '$trule = `.*` : integer' )
+    tree = JCR.parse( '$trule = /.*/ : integer' )
     expect(tree[0][:rule][:member_rule][:member_regex][:regex]).to eq(".*")
     expect(tree[0][:rule][:member_rule][:primitive_rule][:integer_v]).to eq("integer")
   end
 
-  it 'should parse an any member rule of `.*`' do
-    tree = JCR.parse( '$trule = `.*` : integer' )
+  it 'should parse an any member rule of /.*/' do
+    tree = JCR.parse( '$trule = /.*/ : integer' )
     expect(tree[0][:rule][:member_rule][:member_regex][:regex]).to eq(".*")
-    expect(tree[0][:rule][:member_rule][:primitive_rule][:integer_v]).to eq("integer")
-  end
-
-  it 'should parse an any member rule of `` treated as `.*`' do
-    tree = JCR.parse( '$trule = `` : integer' )
-    expect(tree[0][:rule][:member_rule][:member_regex][:regex]).to eq([])
     expect(tree[0][:rule][:member_rule][:primitive_rule][:integer_v]).to eq("integer")
   end
 
   it 'should parse an regex member rule with string value' do
-    tree = JCR.parse( '$trule = `a.regex\\.goes.here.*` : string' )
+    tree = JCR.parse( '$trule = /a.regex\\.goes.here.*/ : string' )
     expect(tree[0][:rule][:member_rule][:member_regex][:regex]).to eq("a.regex\\.goes.here.*")
     expect(tree[0][:rule][:member_rule][:primitive_rule][:string]).to eq("string")
   end
@@ -970,17 +946,17 @@ describe 'parser' do
   end
 
   it 'should parse a group rule with a member rule specified with a regex that has a value rule' do
-    tree = JCR.parse( '$trule = ( `.*` : integer )' )
+    tree = JCR.parse( '$trule = ( /.*/ : integer )' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
   end
 
   it 'should parse a group rule with a member rule specified with a regex and repetition that has a value rule' do
-    tree = JCR.parse( '$trule = ( `.*` : integer *0..15 )' )
+    tree = JCR.parse( '$trule = ( /.*/ : integer *0..15 )' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
   end
 
   it 'should parse a group rule with a member rule specified with a regex and only repetition min that has a value rule' do
-    tree = JCR.parse( '$trule = ( `.*` : integer * 1.. )' )
+    tree = JCR.parse( '$trule = ( /.*/ : integer * 1.. )' )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
   end
 
@@ -1040,18 +1016,18 @@ describe 'parser' do
   end
 
   it 'should parse a member regex rule with a comment' do
-    tree = JCR.parse( "$trule = `.*` : $target_rule ;\;;\n" )
+    tree = JCR.parse( "$trule = /.*/ : $target_rule ;\;;\n" )
     expect(tree[0][:rule][:rule_name]).to eq("trule")
   end
 
   it 'should parse two rules on the same line' do
-    tree = JCR.parse( '$trule1 = :/.*/  $trule2 = `.*` : $target_rule' )
+    tree = JCR.parse( '$trule1 = :/.*/  $trule2 = /.*/ : $target_rule' )
     expect(tree[0][:rule][:rule_name]).to eq("trule1")
     expect(tree[1][:rule][:rule_name]).to eq("trule2")
   end
 
   it 'should parse two rules on the same line without : prefix' do
-    tree = JCR.parse( '$trule1 = /.*/  $trule2 = `.*` : $target_rule' )
+    tree = JCR.parse( '$trule1 = /.*/  $trule2 = /.*/ : $target_rule' )
     expect(tree[0][:rule][:rule_name]).to eq("trule1")
     expect(tree[1][:rule][:rule_name]).to eq("trule2")
   end
@@ -1107,7 +1083,7 @@ describe 'parser' do
 ;comment 3
 ;comment 4
 #jcr-version 4.0
-$trule2 =`.*` :$target_rule
+$trule2 =/.*/ :$target_rule
 EX
     tree = JCR.parse( ex )
     expect(tree[1][:rule][:rule_name]).to eq("trule2")
@@ -1120,7 +1096,7 @@ $trule1= type /.*/
 ;comment 2
 ;comment 3
 ;comment 4
-$trule2 =`.*` :$target_rule
+$trule2 =/.*/ :$target_rule
 EX
     tree = JCR.parse( ex )
     expect(tree[0][:rule][:rule_name]).to eq("trule1")
@@ -1134,7 +1110,7 @@ $trule1
 	;comment 2
 	=:
 /.*/
-$trule2 = `.*`: $target_rule
+$trule2 = /.*/: $target_rule
 EX
     tree = JCR.parse( ex )
     expect(tree[0][:rule][:rule_name]).to eq("trule1")
@@ -1538,7 +1514,7 @@ EX8
 
   it 'should parse ex4 from I-D' do
     ex9 = <<EX9
-$any_member = `.*` : any
+$any_member = /.*/ : any
 
 $object_of_anything =: { $any_member* }
 EX9
@@ -1548,7 +1524,7 @@ EX9
 
   it 'should parse ex5 from I-D' do
     ex10 = <<EX10
-$object_of_anything = :{ `.*`:any* }
+$object_of_anything = :{ /.*/:any* }
 EX10
     tree = JCR.parse( ex10 )
     expect(tree[0][:rule][:rule_name]).to eq("object_of_anything")
