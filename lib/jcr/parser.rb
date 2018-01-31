@@ -149,8 +149,6 @@ module JCR
     rule(:type_choice)       { ( annotations >> str('(') >> type_choice_items >> ( choice_combiner >> type_choice_items ).repeat >> str(')') ).as(:group_rule) }
         #! type_choice = annotations "(" type_choice_items
         #!               *( choice_combiner type_choice_items ) ")"
-    rule(:explicit_type_choice) { type_designator >> type_choice }
-        #! explicit_type_choice = type_designator type_choice
     rule(:type_choice_items) { spcCmnt? >> (type_choice | type_rule) >> spcCmnt? }
         #! type_choice_items = spcCmnt? ( type_choice / type_rule ) spcCmnt?
         #!
@@ -332,8 +330,8 @@ module JCR
         #!                           1*( choice_combiner array_item ) ]
     rule(:array_item)   { array_item_types >> spcCmnt? >> ( repetition >> spcCmnt? ).maybe }
         #! array_item = array_item_types spcCmnt? [ repetition spcCmnt? ]
-    rule(:array_item_types) { array_group | type_rule | explicit_type_choice }
-        #! array_item_types = array_group / type_rule / explicit_type_choice
+    rule(:array_item_types) { array_group | type_rule }
+        #! array_item_types = array_group / type_rule
     rule(:array_group)  { ( annotations >> str('(') >> spcCmnt? >> array_items.maybe >> spcCmnt? >> str(')') ).as(:group_rule) }
         #! array_group = annotations "(" spcCmnt? [ array_items spcCmnt? ] ")"
         #!
@@ -346,9 +344,8 @@ module JCR
         #!                           1*( choice_combiner group_item ) ]
     rule(:group_item)   { group_item_types >> spcCmnt? >> ( repetition >> spcCmnt? ).maybe }
         #! group_item = group_item_types spcCmnt? [ repetition spcCmnt? ]
-    rule(:group_item_types) { group_group | member_rule | type_rule | explicit_type_choice }
-        #! group_item_types = group_group / member_rule /
-        #!                    type_rule / explicit_type_choice
+    rule(:group_item_types) { group_group | member_rule | type_rule }
+        #! group_item_types = group_group / member_rule / type_rule
     rule(:group_group)  { group_rule }
         #! group_group = group_rule
         #!

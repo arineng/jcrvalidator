@@ -68,7 +68,6 @@ member-name-spec = regex / q-string
 type-rule        = value-rule / type-choice / target-rule-name
 type-choice      = annotations "(" type-choice-items
                    *( choice-combiner type-choice-items ) ")"
-explicit-type-choice = type-designator type-choice
 type-choice-items = *sp-cmt ( type-choice / type-rule ) *sp-cmt
 
 annotations      = *( "@{" *sp-cmt annotation-set *sp-cmt "}"
@@ -145,15 +144,14 @@ array-rule       = annotations "[" *sp-cmt [ array-items *sp-cmt ] "]"
 array-items      = array-item [ 1*( sequence-combiner array-item ) /
                    1*( choice-combiner array-item ) ]
 array-item       = array-item-types *sp-cmt [ repetition *sp-cmt ]
-array-item-types = array-group / type-rule / explicit-type-choice
+array-item-types = array-group / type-rule
 array-group      = annotations "(" *sp-cmt [ array-items *sp-cmt ] ")"
 
 group-rule       = annotations "(" *sp-cmt [ group-items *sp-cmt ] ")"
 group-items      = group-item [ 1*( sequence-combiner group-item ) /
                    1*( choice-combiner group-item ) ]
 group-item       = group-item-types *sp-cmt [ repetition *sp-cmt ]
-group-item-types = group-group / member-rule /
-                   type-rule / explicit-type-choice
+group-item-types = group-group / member-rule / type-rule
 group-group      = group-rule
 
 sequence-combiner = "," *sp-cmt
