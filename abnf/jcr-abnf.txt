@@ -64,7 +64,7 @@ rule-def-type-rule = value-rule / type-choice
 value-rule       = primitive-rule / array-rule / object-rule
 member-rule      = annotations
                    member-name-spec *sp-cmt ":" *sp-cmt type-rule
-member-name-spec = backtick-regex / q-string
+member-name-spec = regex / q-string
 type-rule        = value-rule / type-choice / target-rule-name
 type-choice      = annotations "(" type-choice-items
                    *( choice-combiner type-choice-items ) ")"
@@ -83,7 +83,7 @@ annotation-name  = name
 annotation-parameters = multi-line-parameters
 
 primitive-rule   = annotations primitive-def
-primitive-def    = string-type / string-range / string-value1 / string-value2 /
+primitive-def    = string-type / string-range / string-value /
                    null-type / boolean-type / true-value /
                    false-value / double-type / float-type /
                    float-range / float-value /
@@ -99,8 +99,7 @@ boolean-type     = boolean-kw
 true-value       = true-kw
 false-value      = false-kw
 string-type      = string-kw
-string-value1    = sq-string
-string-value2    = q-string
+string-value     = q-string
 string-range     = regex
 double-type      = double-kw
 float-type       = float-kw
@@ -194,16 +193,11 @@ exp              = e [ minus / plus ] 1*DIGIT
 e                = %x65 / %x45                   ; e E
 zero             = %x30                          ; 0
 
-q-string         = quotation-mark *char quotation-mark
-                   ; Derive from RFC 7159
-quotation-mark   = %x22      ; "    quotation mark  U+0022
+q-string         = quotation-mark *char quotation-mark 
+                   ; From RFC 7159
 char             = unescaped /
                    escape (
-                   quotation-mark /
-                   escape-code )
-unescaped        = %x20-21 / %x23-5B / %x5D-10FFFF ; Not " or \
-escape           = %x5C              ; \
-escape-code      = 
+                   %x22 /          ; "    quotation mark  U+0022
                    %x5C /          ; \    reverse solidus U+005C
                    %x2F /          ; /    solidus         U+002F
                    %x62 /          ; b    backspace       U+0008
@@ -211,15 +205,10 @@ escape-code      =
                    %x6E /          ; n    line feed       U+000A
                    %x72 /          ; r    carriage return U+000D
                    %x74 /          ; t    tab             U+0009
-                   %x75 4HEXDIG    ; uXXXX                U+XXXX
-
-sq-string        = single-quote-mark *sq-char single-quote-mark
-single-quote-mark = %x27      ; '    single quotation mark  U+0027
-sq-char          = sq-unescaped /
-                   escape (
-                   single-quote-mark /
-                   escape-code )
-sq-unescaped     = %x20-26 / %x28-5B / %x5D-10FFFF ; Not ' or \
+                   %x75 4HEXDIG )  ; uXXXX                U+XXXX
+escape           = %x5C              ; \
+quotation-mark   = %x22      ; "
+unescaped        = %x20-21 / %x23-5B / %x5D-10FFFF
 
 regex            = "/" *( escape re-escape-code / not-slash ) "/"
                    [ regex-modifiers ]
@@ -228,9 +217,6 @@ not-slash        = HTAB / CR / LF / %x20-2E / %x30-10FFFF
                    ; Any char except "/"
 regex-modifiers  = *( "i" / "s" / "x" )
 
-backtick-regex   = "`" *( escape re-escape-code / not-backtick ) "`"
-not-backtick     = HTAB / CR / LF / %x20-5F / %x61-10FFFF
-                   ; Any char except "`"
 uri-scheme       = 1*ALPHA
 
 ;; Keywords
