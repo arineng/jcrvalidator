@@ -142,15 +142,13 @@ module JCR
     rule(:member_rule)       { ( annotations >> member_name_spec >> spcCmnt? >> str(':') >> spcCmnt? >> type_rule ).as(:member_rule) }
         #! member_rule = annotations
         #!               member_name_spec spcCmnt? ":" spcCmnt? type_rule
-    rule(:member_name_spec)  { backtick_regex.as(:member_regex) | q_string.as(:member_name) }
-        #! member_name_spec = backtick_regex / q_string
+    rule(:member_name_spec)  { regex.as(:member_regex) | q_string.as(:member_name) }
+        #! member_name_spec = regex / q_string
     rule(:type_rule)         { value_rule | type_choice | target_rule_name }
         #! type_rule = value_rule / type_choice / target_rule_name
     rule(:type_choice)       { ( annotations >> str('(') >> type_choice_items >> ( choice_combiner >> type_choice_items ).repeat >> str(')') ).as(:group_rule) }
         #! type_choice = annotations "(" type_choice_items
         #!               *( choice_combiner type_choice_items ) ")"
-    rule(:explicit_type_choice) { type_designator >> type_choice }
-        #! explicit_type_choice = type_designator type_choice
     rule(:type_choice_items) { spcCmnt? >> (type_choice | type_rule) >> spcCmnt? }
         #! type_choice_items = spcCmnt? ( type_choice / type_rule ) spcCmnt?
         #!
@@ -181,7 +179,7 @@ module JCR
         #! primitive_rule = annotations primitive_def
 
     rule(:primitive_def) {
-          string_type | string_range | string_value1 | string_value2 |
+          string_type | string_range | string_value |
           null_type | boolean_type | true_value | false_value |
           double_type | float_type | float_range | float_value |
           integer_type | integer_range | integer_value |
@@ -192,7 +190,7 @@ module JCR
           hex_type | base32hex_type | base32_type | base64url_type | base64_type |
           any
     }
-        #! primitive_def = string_type / string_range / string_value1 / string_value2 /
+        #! primitive_def = string_type / string_range / string_value /
         #!             null_type / boolean_type / true_value /
         #!             false_value / double_type / float_type /
         #!             float_range / float_value /
@@ -218,10 +216,8 @@ module JCR
     rule(:string_type)    { str('string').as(:string) }
         #! string_type = string-kw
         #> string-kw = "string"
-    rule(:string_value1)    { sq_string }
-        #! string_value1 = sq_string
-    rule(:string_value2)    { q_string }
-        #! string_value2 = q_string
+    rule(:string_value)    { q_string }
+        #! string_value = q_string
     rule(:string_range)    { regex }
         #! string_range = regex
     rule(:double_type)     { str('double').as(:double_v) }
@@ -334,8 +330,8 @@ module JCR
         #!                           1*( choice_combiner array_item ) ]
     rule(:array_item)   { array_item_types >> spcCmnt? >> ( repetition >> spcCmnt? ).maybe }
         #! array_item = array_item_types spcCmnt? [ repetition spcCmnt? ]
-    rule(:array_item_types) { array_group | type_rule | explicit_type_choice }
-        #! array_item_types = array_group / type_rule / explicit_type_choice
+    rule(:array_item_types) { array_group | type_rule }
+        #! array_item_types = array_group / type_rule
     rule(:array_group)  { ( annotations >> str('(') >> spcCmnt? >> array_items.maybe >> spcCmnt? >> str(')') ).as(:group_rule) }
         #! array_group = annotations "(" spcCmnt? [ array_items spcCmnt? ] ")"
         #!
@@ -348,9 +344,8 @@ module JCR
         #!                           1*( choice_combiner group_item ) ]
     rule(:group_item)   { group_item_types >> spcCmnt? >> ( repetition >> spcCmnt? ).maybe }
         #! group_item = group_item_types spcCmnt? [ repetition spcCmnt? ]
-    rule(:group_item_types) { group_group | member_rule | type_rule | explicit_type_choice }
-        #! group_item_types = group_group / member_rule /
-        #!                    type_rule / explicit_type_choice
+    rule(:group_item_types) { group_group | member_rule | type_rule }
+        #! group_item_types = group_group / member_rule / type_rule
     rule(:group_group)  { group_rule }
         #! group_group = group_rule
         #!
@@ -416,23 +411,16 @@ module JCR
         #! zero          = %x30                          ; 0
         #!
 
-    rule(:q_string)  { # (Double) quoted string
+    rule(:q_string)  {
       str('"') >>
-        # ( str('\\') >> match('[^\r\n]') | str('"').absent? >> match('[^\r\n]') ).repeat.as(:q_string) >>
         ( match('\.') | match('[^"]') ).repeat.as(:q_string) >>
       str('"')
     }
-
-        #! q_string = quotation-mark *char quotation-mark
-        #!            ; Derive from RFC 7159
-        #! quotation-mark = %x22      ; "    quotation mark  U+0022
+        #! q_string = quotation-mark *char quotation-mark 
+        #!            ; From RFC 7159
         #! char = unescaped /
         #!   escape (
-        #!     quotation-mark /
-        #!     escape_code )
-        #! unescaped = %x20-21 / %x23-5B / %x5D-10FFFF ; Not " or \
-        #! escape = %x5C              ; \
-        #! escape_code =
+        #!   %x22 /          ; "    quotation mark  U+0022
         #!   %x5C /          ; \    reverse solidus U+005C
         #!   %x2F /          ; /    solidus         U+002F
         #!   %x62 /          ; b    backspace       U+0008
@@ -440,22 +428,10 @@ module JCR
         #!   %x6E /          ; n    line feed       U+000A
         #!   %x72 /          ; r    carriage return U+000D
         #!   %x74 /          ; t    tab             U+0009
-        #!   %x75 4HEXDIG    ; uXXXX                U+XXXX
-        #!
-
-    rule(:sq_string)  { # Single quoted string
-      str("'") >>
-        ( str('\\') >> match('[^\r\n]') | str("'").absent? >> match('[^\r\n]') ).repeat.as(:q_string) >>
-      str("'")
-    }
-
-        #! sq_string = single-quote-mark *sq_char single-quote-mark
-        #! single-quote-mark = %x27      ; '    single quotation mark  U+0027
-        #! sq_char = sq_unescaped /
-        #!   escape (
-        #!     single-quote-mark /
-        #!     escape_code )
-        #! sq_unescaped = %x20-26 / %x28-5B / %x5D-10FFFF ; Not ' or \
+        #!   %x75 4HEXDIG )  ; uXXXX                U+XXXX
+        #! escape = %x5C              ; \
+        #! quotation-mark = %x22      ; "
+        #! unescaped = %x20-21 / %x23-5B / %x5D-10FFFF
         #!
 
     rule(:regex)     { str('/') >> (str('\\/') | match('[^/]+')).repeat.as(:regex) >> str('/') >> regex_modifiers.maybe }
@@ -467,11 +443,6 @@ module JCR
     rule(:regex_modifiers) { match('[isx]').repeat.as(:regex_modifiers) }
         #! regex_modifiers = *( "i" / "s" / "x" )
         #!
-
-    rule(:backtick_regex)     { str('`') >> (str('\\`') | match('[^`]+')).repeat.as(:regex) >> str('`') }
-        #! backtick_regex = "`" *( escape re_escape_code / not-backtick ) "`"
-        #! not-backtick = HTAB / CR / LF / %x20-5F / %x61-10FFFF
-        #!             ; Any char except "`"
 
     rule(:uri_scheme) { ( match('[a-zA-Z]').repeat(1) ).as(:uri_scheme) }
         #! uri_scheme = 1*ALPHA
