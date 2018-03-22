@@ -81,7 +81,7 @@ unordered-annotation = unordered-kw
 root-annotation  = root-kw
 exclude-min-annotation = exclude-min-kw
 exclude-max-annotation = exclude-max-kw
-default-annotation = annotation-name spaces primitive-value
+default-annotation = default-kw spaces primitive-value
 primitive-value  = false-value / null-type / true-value /
                    float-value / integer-value / string-value
 tbd-annotation   = annotation-name [ spaces annotation-parameters ]

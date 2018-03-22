@@ -179,7 +179,7 @@ module JCR
         #! exclude_max_annotation = exclude-max-kw
         #> exclude-max-kw = "exclude-max"
     rule(:default_annotation)    { str('default').as(:default_annotation) >> spaces >> primitive_value }
-        #! default_annotation = annotation_name spaces primitive-value
+        #! default_annotation = default-kw spaces primitive-value
         #> default-kw = "default"
     rule(:primitive_value) { false_value | null_type | true_value | float_value | integer_value | string_value }
         #! primitive_value = false_value / null_type / true_value /
