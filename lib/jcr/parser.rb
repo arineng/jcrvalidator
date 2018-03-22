@@ -156,9 +156,13 @@ module JCR
     rule(:annotations)       { ( str('@{') >> spcCmnt? >> annotation_set >> spcCmnt? >> str('}') >> spcCmnt? ).repeat }
         #! annotations = *( "@{" spcCmnt? annotation_set spcCmnt? "}"
         #!                  spcCmnt? )
-    rule(:annotation_set)    { not_annotation | unordered_annotation | root_annotation | tbd_annotation }
+    rule(:annotation_set)    { not_annotation | unordered_annotation | root_annotation |
+                               exclude_min_annotation | exclude_max_annotation |
+                               tbd_annotation }
         #! annotation_set = not_annotation / unordered_annotation /
-        #!                  root_annotation / tbd_annotation
+        #!                  root_annotation /
+        #!                  exclude_min_annotation / exclude_max_annotation /
+        #!                  tbd_annotation
     rule(:not_annotation) { str('not').as(:not_annotation) }
         #! not_annotation = not-kw
         #> not-kw = "not"
@@ -168,6 +172,12 @@ module JCR
     rule(:root_annotation)   { str('root').as(:root_annotation) }
         #! root_annotation = root-kw
         #> root-kw = "root"
+    rule(:exclude_min_annotation)   { str('exclude-min').as(:exclude_min_annotation) }
+        #! exclude_min_annotation = exclude-min-kw
+        #> exclude-min-kw = "exclude-min"
+    rule(:exclude_max_annotation)   { str('exclude-max').as(:exclude_max_annotation) }
+        #! exclude_max_annotation = exclude-max-kw
+        #> exclude-max-kw = "exclude-max"
     rule(:tbd_annotation)    { name.as(:annotation_name) >> ( spaces >> annotation_parameters.as(:annotation_parameters) ).maybe }
         #! tbd_annotation = annotation_name [ spaces annotation_parameters ]
         #! annotation_name = name

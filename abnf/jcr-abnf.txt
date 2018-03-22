@@ -73,10 +73,14 @@ type-choice-items = *sp-cmt ( type-choice / type-rule ) *sp-cmt
 annotations      = *( "@{" *sp-cmt annotation-set *sp-cmt "}"
                    *sp-cmt )
 annotation-set   = not-annotation / unordered-annotation /
-                   root-annotation / tbd-annotation
+                   root-annotation /
+                   exclude-min-annotation / exclude-max-annotation /
+                   tbd-annotation
 not-annotation   = not-kw
 unordered-annotation = unordered-kw
 root-annotation  = root-kw
+exclude-min-annotation = exclude-min-kw
+exclude-max-annotation = exclude-max-kw
 tbd-annotation   = annotation-name [ spaces annotation-parameters ]
 annotation-name  = name
 annotation-parameters = multi-line-parameters
@@ -229,6 +233,8 @@ date-kw          = %x64.61.74.65                   ; "date"
 datetime-kw      = %x64.61.74.65.74.69.6D.65       ; "datetime"
 double-kw        = %x64.6F.75.62.6C.65             ; "double"
 email-kw         = %x65.6D.61.69.6C                ; "email"
+exclude-max-kw   = %x65.78.63.6C.75.64.65.2D.6D.61.78 ; "exclude-max"
+exclude-min-kw   = %x65.78.63.6C.75.64.65.2D.6D.69.6E ; "exclude-min"
 false-kw         = %x66.61.6C.73.65                ; "false"
 float-kw         = %x66.6C.6F.61.74                ; "float"
 fqdn-kw          = %x66.71.64.6E                   ; "fqdn"

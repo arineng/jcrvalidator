@@ -1732,6 +1732,14 @@ EX12
     expect(tree[0][:rule][:rule_name]).to eq("trule")
   end
 
+  it 'should parse member rule with {exclude-min} annotation directive' do
+    tree = JCR.parse( '$my_mem = "count" : @{exclude-min} 0..100' )
+  end
+
+  it 'should parse member rule with {exclude-max} annotation directive' do
+    tree = JCR.parse( '$my_mem = "count" : @{exclude-max} 0..100' )
+  end
+
   it 'should parse an unknown annotation' do
     tree = JCR.parse( '$my_int =: @{assert $ % 3 == 0} 2' )
     expect(tree[0][:rule][:rule_name]).to eq("my_int")
