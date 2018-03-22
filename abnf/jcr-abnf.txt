@@ -75,12 +75,15 @@ annotations      = *( "@{" *sp-cmt annotation-set *sp-cmt "}"
 annotation-set   = not-annotation / unordered-annotation /
                    root-annotation /
                    exclude-min-annotation / exclude-max-annotation /
-                   tbd-annotation
+                   default-annotation / tbd-annotation
 not-annotation   = not-kw
 unordered-annotation = unordered-kw
 root-annotation  = root-kw
 exclude-min-annotation = exclude-min-kw
 exclude-max-annotation = exclude-max-kw
+default-annotation = annotation-name spaces primitive-value
+primitive-value  = false-value / null-type / true-value /
+                   float-value / integer-value / string-value
 tbd-annotation   = annotation-name [ spaces annotation-parameters ]
 annotation-name  = name
 annotation-parameters = multi-line-parameters
@@ -231,6 +234,7 @@ base64url-kw     = %x62.61.73.65.36.34.75.72.6C    ; "base64url"
 boolean-kw       = %x62.6F.6F.6C.65.61.6E          ; "boolean"
 date-kw          = %x64.61.74.65                   ; "date"
 datetime-kw      = %x64.61.74.65.74.69.6D.65       ; "datetime"
+default-kw       = %x64.65.66.61.75.6C.74          ; "default"
 double-kw        = %x64.6F.75.62.6C.65             ; "double"
 email-kw         = %x65.6D.61.69.6C                ; "email"
 exclude-max-kw   = %x65.78.63.6C.75.64.65.2D.6D.61.78 ; "exclude-max"

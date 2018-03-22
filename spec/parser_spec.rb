@@ -1740,6 +1740,30 @@ EX12
     tree = JCR.parse( '$my_mem = "count" : @{exclude-max} 0..100' )
   end
 
+  it 'should parse member rule with {default null} annotation directive' do
+    tree = JCR.parse( '$my_mem = "count" : @{default null} (null | boolean)' )
+  end
+
+  it 'should parse member rule with {default true} annotation directive' do
+    tree = JCR.parse( '$my_mem = "count" : @{default true} boolean' )
+  end
+
+  it 'should parse member rule with {default false} annotation directive' do
+    tree = JCR.parse( '$my_mem = "count" : @{default false} boolean' )
+  end
+
+  it 'should parse member rule with {default 123} annotation directive' do
+    tree = JCR.parse( '$my_mem = "count" : @{default 123} integer' )
+  end
+
+  it 'should parse member rule with {default 123.2} annotation directive' do
+    tree = JCR.parse( '$my_mem = "count" : @{default 123.2} float' )
+  end
+
+  it 'should parse member rule with {default "open"} annotation directive' do
+    tree = JCR.parse( '$my_mem = "count" : @{default "open"} string' )
+  end
+
   it 'should parse an unknown annotation' do
     tree = JCR.parse( '$my_int =: @{assert $ % 3 == 0} 2' )
     expect(tree[0][:rule][:rule_name]).to eq("my_int")
