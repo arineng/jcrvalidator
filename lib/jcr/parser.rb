@@ -102,11 +102,11 @@ module JCR
         #!                   [ 1*spcCmnt multi_line_directive_parameters ]
     rule(:multi_line_directive_parameters) { multi_line_parameters }
         #! multi_line_directive_parameters = multi_line_parameters
-    rule(:multi_line_parameters) { (comment | q_string | regex | match('[^"/;}]')).repeat }
-        #! multi_line_parameters = *(comment / q_string / regex /
+    rule(:multi_line_parameters) { (comment | q_string | match('[^";}]')).repeat }
+        #! multi_line_parameters = *(comment / q_string /
         #!                         not_multi_line_special)
-        #! not_multi_line_special = spaces / %x21 / %x23-2E / %x30-3A /
-        #!                          %x3C-7C / %x7E-10FFFF ; not ", /, ; or }
+        #! not_multi_line_special = spaces / %x21 / %x23-3A /
+        #!                          %x3C-7C / %x7E-10FFFF ; not ", ; or }
         #!
 
     rule(:root_rule) { value_rule | group_rule } # N.B. Not target_rule_name

@@ -41,10 +41,10 @@ eol              = CR / LF
 multi-line-tbd-directive-d = directive-name
                    [ 1*sp-cmt multi-line-directive-parameters ]
 multi-line-directive-parameters = multi-line-parameters
-multi-line-parameters = *(comment / q-string / regex /
+multi-line-parameters = *(comment / q-string /
                    not-multi-line-special)
-not-multi-line-special = spaces / %x21 / %x23-2E / %x30-3A /
-                   %x3C-7C / %x7E-10FFFF ; not ", /, ; or }
+not-multi-line-special = spaces / %x21 / %x23-3A /
+                   %x3C-7C / %x7E-10FFFF ; not ", ; or }
 
 root-rule        = value-rule / group-rule
 

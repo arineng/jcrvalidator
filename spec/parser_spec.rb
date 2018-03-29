@@ -1424,10 +1424,10 @@ EX5e
     expect(tree[0][:directive][:directive_name]).to eq("constraint")
   end
 
-  it 'should parse multi-line unknown directives with comment, q_strings and regexs' do
+  it 'should parse multi-line unknown directives with comment, q_strings and regex style functions' do
     ex5f = %q[
 #{constraint foo
-  $name == /p\d{1,5}/ && ; Must allow } and { in comments
+  $name == re("/p\d{1,5}/i") && ; Must allow } and { in comments
   $when == "} with {"
 }
 # ruleset-id my_awesome_rules
@@ -1742,8 +1742,8 @@ EX12
     expect(tree[0][:rule][:rule_name]).to eq("my_int")
   end
 
-  it 'should parse an unknown annotation with comments, q_string and regexs' do
-    tree = JCR.parse( '$my_int =: @{assert $name == /p\d{1,5}/ && ; Must allow } and { in comments
+  it 'should parse an unknown annotation with comments, q_string and regex style functions' do
+    tree = JCR.parse( '$my_int =: @{assert $name == re("/p\d{1,5}/") && ; Must allow } and { in comments
                           $when == "} with {"
                           } 2' )
     expect(tree[0][:rule][:rule_name]).to eq("my_int")
