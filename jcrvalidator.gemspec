@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.license       = 'ISC'
   s.executables << 'jcr'
   s.add_dependency 'parslet', ['~> 1.7']
-  s.add_dependency 'addressable', [ '= 2.3.8']
+  s.add_dependency 'addressable', [ '= 2.7.0']
   s.add_dependency 'email_address_validator', ['~> 2.0']
   s.add_dependency 'big-phoney', ['= 0.1.4']
 end
